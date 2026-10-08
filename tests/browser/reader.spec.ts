@@ -8,7 +8,7 @@ test('operational checklists have compact aligned controls, individual names and
   expect(layout.length).toBeGreaterThan(10);for(const row of layout){expect(row.width).toBe(20);expect(row.height).toBe(20);}expect(new Set(layout.map(n=>n.name)).size).toBe(layout.length);
   const first=checks.first();await first.focus();await page.keyboard.press('Space');await expect(first).toBeChecked();await page.reload();await expect(first).toBeChecked();
   await page.getByRole('button',{name:'Сбросить учебные отметки'}).click();await expect(first).not.toBeChecked();
-  for(const width of [320,360,768,1024,1440]){await page.setViewportSize({width,height:900});await page.locator('#ch-22').scrollIntoViewIfNeeded();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
+  for(const width of [320,360,768,1024,1440]){await page.setViewportSize({width,height:900});await page.locator('#ch-22').evaluate(n=>n.scrollIntoView({block:'start'}));expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(await page.locator('#ch-22').evaluate(n=>n.getBoundingClientRect().top)).toBeLessThanOrEqual(160);await expect(page.locator('.chapter-sticky>span').first()).toContainText('22 /');}
   await page.locator('#ch-22').evaluate(n=>n.scrollIntoView({block:'start'}));await page.screenshot({path:'docs/screenshots/checklist-desktop.png'});await page.setViewportSize({width:360,height:900});await page.locator('#ch-22').evaluate(n=>n.scrollIntoView({block:'start'}));await page.screenshot({path:'docs/screenshots/checklist-mobile.png'});
 });
 test('form controls remain usable at narrow widths and dropdown/disclosures support keyboard',async({page})=>{

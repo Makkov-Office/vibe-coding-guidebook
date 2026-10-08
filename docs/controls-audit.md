@@ -14,10 +14,13 @@
 | Radio controls наследуют стили text fields | Частичные overrides ширины/min-height | Отдельные dimensions/padding; selected scenario имеет видимый фон/границу и focus state |
 | Dropdown и filter fields | Browser arrow и свободная ширина flex label | Native select сохранён; Tabler ChevronDown, достаточный right padding, mobile stack, длинные значения не расширяют страницу |
 | Неодинаковые состояния controls | Неявные placeholders и disabled appearance | Явный muted placeholder, hover borders, disabled appearance; reset не активен до hydration |
+| Переход к главе оставляет неверный active chapter на mobile | Одновременно scroll-padding 120px и scroll-margin 128px: heading top 247.6px | Единственный offset на html; target виден под sticky chrome, active chapter соответствует переходу |
 
 ## Проверка
 
 Regression сначала воспроизвёл ошибку: expected checkbox width 20, received 774. После исправления прошли keyboard Space, persistence/reload/reset и индивидуальные names всех пунктов. Label clickable area измерена: 44px, focus outline 2px, checked state работает. Text input/select в mobile filter — 48px height, reset button — 44px; поля остаются внутри контейнера.
+
+Отдельный regression воспроизвёл двойной navigation offset: expected heading top <=160px, received 247.6px. После устранения margin duplication проверяется положение заголовка и active chapter на всех пяти ширинах.
 
 11 browser tests passed: дополнительно narrow-width form geometry, dropdown keyboard selection/reset, radio dimensions и Enter disclosure toggle. Остальные tests покрывают search/clear/close, drawer, glossary navigation, panel selection, copy success/failure, storage denial, print/no-JS, axe и Mermaid. Typecheck, ESLint и 4 content tests passed. Учебный source/download не изменён; 0 unexplained glossary gaps.
 
