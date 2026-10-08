@@ -58,3 +58,7 @@ Replaced loose previous/next text with full clickable cards, clear direction lab
 ### Footer alignment and interface copy — 2026-10-09
 
 Footer actions now share a three-column grid, icons and equal 44 px height; mobile uses a single column. Removed repeated sticky chapter title and chapter-number/pace kicker globally. Removed the footer example disclaimer, permanent table-scroll caption and repeated term-click hint. Teaching content and essential limitations are unchanged. Local browser verified footer geometry at 320/360/768/1052/1440 px, no overflow, and removal across home/chapter 22/glossary; console errors=0. Typecheck passed.
+
+### Navigation hierarchy and redundant labels — 2026-10-09
+
+Removed chapter numbers, sidebar content heading and repeated group icons from desktop/mobile navigation. Five milestone groups have stronger headings, borders and spacing. Removed visible local-outline/filter/selected-node captions and generic empty search instructions. Drawer/search titles remain screen-reader-only with intact dialog names and input labels. Map retains its educational-model limitation and guided step counter. Browser verified 0 chapter-number/sidebar-label nodes, active chapter, all group separators, 360 px drawer with no overflow and Escape, chapter 02 caption; console errors=0. Typecheck/lint passed.
