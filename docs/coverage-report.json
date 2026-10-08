@@ -1,0 +1,1152 @@
+{
+  "topics": 12,
+  "definitions": 451,
+  "recognized": 2537,
+  "linked": 2470,
+  "exceptions": [
+    {
+      "block": "ch-00-b016",
+      "term": "term-vibe-coding",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-architecture",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-source-truth",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-harness",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-wsl",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-ubuntu",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-devcontainer",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-codex",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-claude",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-ticket",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-dor",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-lifecycle",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-preflight",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-context-engineering",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-spec",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-adr",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-docs-impact",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-git",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-github",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-ci",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-risk",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-risk",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-risk",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-agent",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-merge-order",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-review",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-post-merge",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-least-privilege",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-ai-artefacts",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-failure-mode",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-maturity",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-acc",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-00-b016",
+      "term": "term-glossary",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-01-b005",
+      "term": "term-intent",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-01-b005",
+      "term": "term-spec",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-01-b005",
+      "term": "term-ticket",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-01-b005",
+      "term": "term-preflight",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-01-b005",
+      "term": "term-primary-author",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-01-b005",
+      "term": "term-validation",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-01-b005",
+      "term": "term-ci",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-01-b005",
+      "term": "term-review",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-01-b005",
+      "term": "term-gate",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-01-b005",
+      "term": "term-merge",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-01-b005",
+      "term": "term-sync",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-founder",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-linear",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-product-hq",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-roadmap",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-ticket",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-harness",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-context",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-preflight",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-repository",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-architecture",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-adr",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-contract",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-figma",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-intent",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-codex",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-claude",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-bounded-execution",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-branch",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-worktree",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-github",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-pr",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-diff",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-ci",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-reviewer",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-gate",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-main",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-vercel",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-deployment",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-evidence",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-02-b004",
+      "term": "term-slack",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-wsl",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-ubuntu",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-filesystem",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-docker-engine",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-endpoint",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-repository",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-checkout",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-devcontainer",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-toolchain",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-agent",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-bootstrap",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-test",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-socket",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b004",
+      "term": "term-privilege",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-04-b008",
+      "term": "term-vscode",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-04-b014",
+      "term": "term-docker",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-04-b014",
+      "term": "term-container",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-04-b017",
+      "term": "term-docker",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-04-b017",
+      "term": "term-wsl",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-04-b017",
+      "term": "term-backend",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-04-b019",
+      "term": "term-devcontainer",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-04-b019",
+      "term": "term-spec",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-template",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-linear",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-ai-artefacts",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-outcome",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-scope",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-empty-state",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-ai",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-authentication",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-normalization",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-dependency",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-spec",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-repository",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-ui-ux",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-contract",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-risk",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-severity",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-owner",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-primary-author",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-session",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-branch",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-ticket",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-task-tracker",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-delivery",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-pr",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-merge",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-validation",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-contract-test",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-interface",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-06-b004",
+      "term": "term-check",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-backlog",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-dor",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-todo",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-preflight",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-pass-fail",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-owner",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-in-progress",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-pr",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-review",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-in-review",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-fix",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-founder",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-authorization",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-merge",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-done",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-post-merge",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-07-b003",
+      "term": "term-delivery",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-11-b003",
+      "term": "term-git",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-11-b003",
+      "term": "term-worktree",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-11-b005",
+      "term": "term-canonical",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-11-b005",
+      "term": "term-bootstrap",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-11-b005",
+      "term": "term-ai-artefacts",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-11-b005",
+      "term": "term-git",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-11-b005",
+      "term": "term-branch",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-11-b005",
+      "term": "term-worktree",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-11-b005",
+      "term": "term-fetch",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-11-b005",
+      "term": "term-remote",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-11-b005",
+      "term": "term-ref",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-11-b005",
+      "term": "term-main",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-11-b005",
+      "term": "term-origin-main",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-11-b018",
+      "term": "term-github",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-11-b018",
+      "term": "term-check",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-11-b019",
+      "term": "term-github",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-11-b019",
+      "term": "term-branch",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-13-b010",
+      "term": "term-pr",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-13-b010",
+      "term": "term-contract",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-13-b010",
+      "term": "term-provider-consumer",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-13-b010",
+      "term": "term-merge",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-13-b010",
+      "term": "term-refresh",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-13-b010",
+      "term": "term-main",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-13-b010",
+      "term": "term-intent",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-13-b010",
+      "term": "term-collision",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-13-b010",
+      "term": "term-validation",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-13-b010",
+      "term": "term-review",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-13-b010",
+      "term": "term-head",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-13-b010",
+      "term": "term-gate",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-17-b004",
+      "term": "term-untrusted",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-17-b004",
+      "term": "term-pr",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-17-b004",
+      "term": "term-tool",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-17-b004",
+      "term": "term-primary-author",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-17-b004",
+      "term": "term-founder",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-17-b004",
+      "term": "term-authorization",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-17-b004",
+      "term": "term-capability",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-17-b004",
+      "term": "term-policy",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-17-b004",
+      "term": "term-evidence",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-17-b004",
+      "term": "term-check",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-17-b004",
+      "term": "term-gate",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-17-b004",
+      "term": "term-merge",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-17-b004",
+      "term": "term-release",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-18-b008",
+      "term": "term-pr",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-18-b012",
+      "term": "term-pr",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-18-b012",
+      "term": "term-pr",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-18-b019",
+      "term": "term-pr",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-linear",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-event",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-adapter",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-normalized-events",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-github",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-pr",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-check",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-merge",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-runtime",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-tool",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-event-log",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-read-model",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-acc",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-ui-ux",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-command-request",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-authorization",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b007",
+      "term": "term-policy",
+      "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-21-b010",
+      "term": "term-event",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-21-b010",
+      "term": "term-run",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-21-b010",
+      "term": "term-github",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-21-b010",
+      "term": "term-review",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-21-b010",
+      "term": "term-timestamp",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-21-b010",
+      "term": "term-payload",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-21-b010",
+      "term": "term-verdict",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-24-b003",
+      "term": "term-branch",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-git",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-worktree",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-vscode",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-wsl",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-docker",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-wsl",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-backend",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-docker",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-container",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-devcontainer",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-spec",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-github",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-branch",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-github",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-24-b005",
+      "term": "term-required-check",
+      "reason": "existing link or semantic control"
+    }
+  ],
+  "ambiguous": [],
+  "unexplainedGaps": 0,
+  "renderedLinked": 2631,
+  "renderedGaps": []
+}
