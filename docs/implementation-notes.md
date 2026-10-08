@@ -66,3 +66,7 @@ Removed chapter numbers, sidebar content heading and repeated group icons from d
 ### Motion and interactive feedback — 2026-10-09
 
 Added reader entry, hover lift/arrow motion, press response, selected-node pulse, staggered achievements, drawer/search entry and progressive CSS details height transitions. Panel selection animates existing detail content with Web Animations without remounting focused controls. All effects are gated by prefers-reduced-motion; print restores fully visible details. No dependencies added. Browser verified node selection updates to Linear, selected animation name, expanded details with 260 ms transition, mobile drawer animation and no overflow, Escape and no console errors. Typecheck/lint passed. Reduced-motion gating checked in source; OS preference was not changed.
+
+### Tooltip placement — 2026-10-09
+
+Tooltip placement now prefers above the trigger with an 8 px gap; falls below when top space is insufficient, clamped to a 12 px viewport margin. Existing zoom and horizontal constraints retained. Browser verified Entrypoint tooltip above its trigger at desktop and 360 px, within horizontal viewport, Escape closes. Typecheck/lint passed.
