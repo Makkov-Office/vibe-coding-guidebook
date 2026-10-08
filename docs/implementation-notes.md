@@ -54,3 +54,7 @@ Added thin graphite scrollbars to desktop navigation, chapter outline and mobile
 ### Chapter navigation cards — 2026-10-09
 
 Replaced loose previous/next text with full clickable cards, clear direction labels, stronger chapter titles and filled accent next action. Desktop cards share equal row height; mobile cards stack and grow for long titles. Explicit previous/next classes fix the final glossary card alignment. Browser checked all 22 chapter routes at 320 px: correct neighbors and no page/card overflow. Checked equal 120 px desktop cards at 1052 px, 1440 px grid, keyboard Enter into glossary and the single final previous card. Browser errors=0; typecheck passed.
+
+### Footer alignment and interface copy — 2026-10-09
+
+Footer actions now share a three-column grid, icons and equal 44 px height; mobile uses a single column. Removed repeated sticky chapter title and chapter-number/pace kicker globally. Removed the footer example disclaimer, permanent table-scroll caption and repeated term-click hint. Teaching content and essential limitations are unchanged. Local browser verified footer geometry at 320/360/768/1052/1440 px, no overflow, and removal across home/chapter 22/glossary; console errors=0. Typecheck passed.
