@@ -46,3 +46,7 @@ Fresh branding verification: 10 browser combinations (home and chapter22 at320/3
 ### Primary actions and progress alignment — 2026-10-09
 
 Continue reading now uses the shared filled accent action style. Progress actions use a wrapping flex row with aligned 44 px controls; mobile actions occupy full width. Removed the legacy resume top margin. Unmarked chapter completion uses the same accent style; reset remains secondary. Verified local browser at 320, 360, 768, 1024, 1052 and 1440 px: no horizontal overflow, equal desktop button positions/heights, no link underline, successful resume navigation, no browser console errors. Typecheck and lint passed.
+
+### Navigation scrollbars and reading position — 2026-10-09
+
+Added thin graphite scrollbars to desktop navigation, chapter outline and mobile navigation drawer. The main page uses a 2 px accent reading-position line immediately below the header; native vertical page scrollbar is hidden after hydration. Position updates on scroll, resize and content expansion (ResizeObserver). No-JS and forced-colors retain native page scrollbars. Local browser verified top=0, intermediate scroll=0.723125, bottom=1, desktop outline at 1440 px and mobile drawer at 360 px; keyboard scrolling and menu Escape work, console errors=0.
