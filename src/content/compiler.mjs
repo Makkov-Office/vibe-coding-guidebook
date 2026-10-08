@@ -10,6 +10,10 @@ import { toString } from 'mdast-util-to-string';
 import { toText } from 'hast-util-to-text';
 import { inflections, occurrenceOverrides, contextualTokens, resolveContext } from './term-overrides.mjs';
 import { createPanels } from '../interactive/registry.mjs';
+import {createElement} from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {icons,iconProps,chapterIcons} from '../design/icons.mjs';
+const iconMarkup=name=>renderToStaticMarkup(createElement(icons[name],iconProps));
 
 const el = (tagName, properties={}, children=[]) => ({type:'element',tagName,properties,children});
 const txt = value => ({type:'text',value});
@@ -162,7 +166,11 @@ export async function compileHandbook(source) {
       if(/^h[23]$/.test(node.tagName)) node.children.push(el('a',{href:`#${id}`,className:['permalink'],'aria-label':`Ссылка на ${toText(node)}`},[txt('#')]));
     }
     counters[chapter]=counter;
-    const html=stringify(hast);
+    // Trusted library SVG is added after source sanitization; source HTML cannot supply SVG.
+    const html=stringify(hast)
+      .replace(/(<h2\b[^>]*>)/,`$1${iconMarkup(chapterIcons[chapter]??'book')}`)
+      .replace(/(<h3\b[^>]*>)/g,chapter==='ch-23'?`$1${iconMarkup('tags')}`:'$1')
+      .replace(/<summary>/g,`<summary>${iconMarkup('chevronRight')}`);
     if(chapter==='ch-00') intro+=html;
     else chapters.push({id:chapter,number:chapter.slice(3),title,html,outline});
   }

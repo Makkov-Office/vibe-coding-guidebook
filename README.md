@@ -25,6 +25,8 @@ Glоssary registry извлекается из главы 23. Explicit disambigu
 
 ## Дизайн и хранение
 
+Иконки: [Tabler Icons](https://github.com/tabler/tabler-icons), Outline, **20 × 20 px, stroke 1.75**, `currentColor`. Единый registry: `src/design/icons.mjs`, React wrapper: `ProjectIcon`. Иконки декоративные (`aria-hidden`, `focusable=false`); названия и доступные labels остаются текстом. Смысловые chapter icons совпадают в sidebar, drawer и заголовках. Переход внутри руководства — ArrowRight/Left, возврат к началу — ArrowUp, раскрытие — ChevronRight. Стрелки в учебных примерах и диаграммах являются контентом. Новые UI-иконки добавляйте в registry, без локальных size/stroke overrides.
+
 [Linear design reference](https://getdesign.md/linear.app/design-md), фон #010102, графитовые поверхности, акцент #5e6ad2. Manrope и JetBrains Mono self-hosted, Latin/Cyrillic; лицензии в `public/fonts/`. Прогресс и чеклисты хранятся локально в браузере. Нет внешнего поиска, аналитики, интеграций или настоящего исполнения демонстрационных сценариев.
 
 Sites ID хранится в `.openai/hosting.json`; публикация выполняется native Sites workflow, owner-private. Build не требует доступов к исходным историческим ссылкам. Эти ссылки сохранены с оговоркой о доступности.

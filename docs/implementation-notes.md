@@ -1,5 +1,11 @@
 # Фактическая проверка — 2026-10-08
 
+## Обновление иконок
+
+Tabler Outline применяется ко всем 24 canonical chapter headings и orientation 00, группам sidebar/drawer, темам глоссария и ключевым UI-заголовкам. Прежние UI glyphs заменены единым набором, включая навигационные стрелки, раскрытие и закрытие. Стандарт: 20px / stroke 1.75 / currentColor; исходный Markdown и raw copied examples не изменены. Public-доступ, установленный владельцем после первоначальной публикации, сохраняется по прямому подтверждению пользователя.
+
+После обновления: 4 content tests и 9 browser tests прошли; typecheck и ESLint прошли. Дополнительная DOM-проверка: 25 основных заголовков с иконками, единственная пара computed size/stroke — `20px/1.75`, все icons декоративные, 0 текстовых arrow glyphs в UI controls. Desktop, mobile drawer и lifecycle screenshots обновлены; отдельный capture `screenshots/chapter-icons.png` показывает заголовок главы и навигацию. Лицензия Tabler: `public/licenses/tabler-icons-MIT.txt`.
+
 ## Реализация
 
 Учебная часть оригинального руководства выделена до маркера «Конец учебного руководства». Исходные документы не редактировались. Single source `content/handbook.md` генерирует initial HTML, index и downloadable Markdown. Inventory: orientation 00, 24 главы, 451 определение, 12 тем, 7 Mermaid-схем.
