@@ -50,3 +50,7 @@ Continue reading now uses the shared filled accent action style. Progress action
 ### Navigation scrollbars and reading position — 2026-10-09
 
 Added thin graphite scrollbars to desktop navigation, chapter outline and mobile navigation drawer. The main page uses a 2 px accent reading-position line immediately below the header; native vertical page scrollbar is hidden after hydration. Position updates on scroll, resize and content expansion (ResizeObserver). No-JS and forced-colors retain native page scrollbars. Local browser verified top=0, intermediate scroll=0.723125, bottom=1, desktop outline at 1440 px and mobile drawer at 360 px; keyboard scrolling and menu Escape work, console errors=0.
+
+### Chapter navigation cards — 2026-10-09
+
+Replaced loose previous/next text with full clickable cards, clear direction labels, stronger chapter titles and filled accent next action. Desktop cards share equal row height; mobile cards stack and grow for long titles. Explicit previous/next classes fix the final glossary card alignment. Browser checked all 22 chapter routes at 320 px: correct neighbors and no page/card overflow. Checked equal 120 px desktop cards at 1052 px, 1440 px grid, keyboard Enter into glossary and the single final previous card. Browser errors=0; typecheck passed.
