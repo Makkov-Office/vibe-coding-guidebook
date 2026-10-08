@@ -98,3 +98,24 @@ html:not(.js-enabled) .reading-progress-track{display:none}
 @media(max-width:767px){.footer-actions{grid-template-columns:1fr}}
 
 .nav-group{margin-top:24px}.nav-group+.nav-group{border-top:1px solid var(--line);padding-top:24px}.nav-group>p{font-size:.75rem;font-weight:600;letter-spacing:.03em;color:var(--muted);margin:0 8px 12px}.local-outline nav{margin-top:0}.drawer .dialog-header,.search-dialog .dialog-header{justify-content:flex-end}
+
+/* Lightweight motion: transform/opacity, no animation runtime dependency. */
+@media(prefers-reduced-motion:no-preference){
+#reader{animation:reader-enter 320ms cubic-bezier(.22,1,.36,1)}
+.chapter-pagination a,.achievement,.node-list button,.footer-actions>a,.footer-actions>button,.nav-group a,.orientation-link,.primary-action{transition:transform 180ms cubic-bezier(.22,1,.36,1),background-color 180ms ease,border-color 180ms ease,box-shadow 180ms ease,color 180ms ease}
+.chapter-pagination a .project-icon,.primary-action .project-icon{transition:transform 180ms ease}
+button:active,.primary-action:active,.chapter-pagination a:active{transform:scale(.985)}
+.node-list button[aria-pressed=true]{animation:node-selected 500ms ease-out}
+.achievement.earned{animation:achievement-earned 480ms cubic-bezier(.22,1,.36,1)}
+.achievement-list .achievement{animation:reader-enter 320ms cubic-bezier(.22,1,.36,1) backwards}.achievement-list .achievement:nth-child(2){animation-delay:45ms}.achievement-list .achievement:nth-child(3){animation-delay:90ms}.achievement-list .achievement:nth-child(4){animation-delay:135ms}
+.dialog-header+nav,.search-results{animation:reader-enter 220ms ease-out}.drawer[open]{animation:drawer-enter 260ms cubic-bezier(.22,1,.36,1)}.search-dialog[open]{animation:reader-enter 220ms cubic-bezier(.22,1,.36,1)}
+details[open]>:not(summary){animation:detail-enter 240ms ease-out}details summary .project-icon{transition:transform 200ms ease}
+@keyframes reader-enter{from{opacity:.2;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes detail-enter{from{opacity:.25;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@keyframes drawer-enter{from{opacity:.4;transform:translateX(28px)}to{opacity:1;transform:none}}
+@keyframes node-selected{from{box-shadow:0 0 0 5px #5e6ad230}to{box-shadow:0 0 0 0 transparent}}
+@keyframes achievement-earned{0%{transform:scale(.97)}55%{transform:scale(1.025)}100%{transform:none}}
+}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.chapter-pagination a:hover,.achievement:hover,.footer-actions>a:hover,.footer-actions>button:hover{transform:translateY(-3px);box-shadow:0 8px 22px #0003}.nav-group a:hover,.orientation-link:hover{transform:translateX(3px)}.pagination-next:hover .project-icon,.primary-action:hover .project-icon{transform:translateX(3px)}.pagination-previous:hover .project-icon{transform:translateX(-3px)}.node-list button:hover{transform:translateY(-2px)}}
+@supports(interpolate-size:allow-keywords){@media(prefers-reduced-motion:no-preference){details{interpolate-size:allow-keywords}details::details-content{block-size:0;overflow:clip;transition:block-size 260ms ease,content-visibility 260ms;transition-behavior:allow-discrete}details[open]::details-content{block-size:auto}}}
+@media print{#reader,details::details-content{animation:none!important;transform:none!important}details::details-content{block-size:auto!important;content-visibility:visible!important;overflow:visible!important}}

@@ -62,3 +62,7 @@ Footer actions now share a three-column grid, icons and equal 44 px height; mobi
 ### Navigation hierarchy and redundant labels — 2026-10-09
 
 Removed chapter numbers, sidebar content heading and repeated group icons from desktop/mobile navigation. Five milestone groups have stronger headings, borders and spacing. Removed visible local-outline/filter/selected-node captions and generic empty search instructions. Drawer/search titles remain screen-reader-only with intact dialog names and input labels. Map retains its educational-model limitation and guided step counter. Browser verified 0 chapter-number/sidebar-label nodes, active chapter, all group separators, 360 px drawer with no overflow and Escape, chapter 02 caption; console errors=0. Typecheck/lint passed.
+
+### Motion and interactive feedback — 2026-10-09
+
+Added reader entry, hover lift/arrow motion, press response, selected-node pulse, staggered achievements, drawer/search entry and progressive CSS details height transitions. Panel selection animates existing detail content with Web Animations without remounting focused controls. All effects are gated by prefers-reduced-motion; print restores fully visible details. No dependencies added. Browser verified node selection updates to Linear, selected animation name, expanded details with 260 ms transition, mobile drawer animation and no overflow, Escape and no console errors. Typecheck/lint passed. Reduced-motion gating checked in source; OS preference was not changed.
