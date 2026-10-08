@@ -1,5 +1,9 @@
 # Фактическая проверка — 2026-10-08
 
+## Исправление чеклистов и control audit
+
+Глава 22: input sizing bug воспроизведён (774px checkbox width), исправлен (20 × 20px, 44px hit target). Отдельные правила boolean controls, читаемый grid checklist и уникальные accessible names. Скорректированы radio states, dropdown темы, mobile filter layout, placeholders, hover/focus/disabled states. Storage keys и учебный Markdown сохранены. Подробности: `controls-audit.md`. Новые regression tests проверяют checkbox geometry/names/persistence/reset и keyboard/width behavior controls; итоговый browser suite — 11 tests.
+
 ## Обновление иконок
 
 Tabler Outline применяется ко всем 24 canonical chapter headings и orientation 00, группам sidebar/drawer, темам глоссария и ключевым UI-заголовкам. Прежние UI glyphs заменены единым набором, включая навигационные стрелки, раскрытие и закрытие. Стандарт: 20px / stroke 1.75 / currentColor; исходный Markdown и raw copied examples не изменены. Public-доступ, установленный владельцем после первоначальной публикации, сохраняется по прямому подтверждению пользователя.

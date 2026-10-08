@@ -103,6 +103,74 @@
       "line": 0,
       "specs": [
         {
+          "title": "operational checklists have compact aligned controls, individual names and persistent keyboard toggles",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8316,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T11:15:17.968Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "74de4b60cc20d5f05aaf-6955a7c35adb1b09078f",
+          "file": "reader.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "form controls remain usable at narrow widths and dropdown/disclosures support keyboard",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6364,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T11:15:26.689Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "74de4b60cc20d5f05aaf-51496c30aa275048b14a",
+          "file": "reader.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
           "title": "initial HTML contains every chapter; all internal anchors and definitions resolve",
           "ok": true,
           "tags": [],
@@ -118,12 +186,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 47067,
+                  "duration": 2354,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T10:57:18.682Z",
+                  "startTime": "2026-10-08T11:15:33.072Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -133,7 +201,7 @@
           ],
           "id": "74de4b60cc20d5f05aaf-3ed921d4fc50848eafa4",
           "file": "reader.spec.ts",
-          "line": 4,
+          "line": 21,
           "column": 1
         },
         {
@@ -152,12 +220,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 12821,
+                  "duration": 5621,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T10:58:06.999Z",
+                  "startTime": "2026-10-08T11:15:35.442Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -167,7 +235,7 @@
           ],
           "id": "74de4b60cc20d5f05aaf-75cff30d76011e7fd717",
           "file": "reader.spec.ts",
-          "line": 9,
+          "line": 26,
           "column": 1
         },
         {
@@ -186,12 +254,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 12515,
+                  "duration": 7817,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T10:58:19.858Z",
+                  "startTime": "2026-10-08T11:15:41.080Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -201,7 +269,7 @@
           ],
           "id": "74de4b60cc20d5f05aaf-3bc04421d71371ead4c8",
           "file": "reader.spec.ts",
-          "line": 16,
+          "line": 33,
           "column": 1
         },
         {
@@ -220,12 +288,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 22125,
+                  "duration": 12598,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T10:58:32.403Z",
+                  "startTime": "2026-10-08T11:15:48.914Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -235,7 +303,7 @@
           ],
           "id": "74de4b60cc20d5f05aaf-015d50fca9144f197547",
           "file": "reader.spec.ts",
-          "line": 21,
+          "line": 38,
           "column": 1
         },
         {
@@ -254,12 +322,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7915,
+                  "duration": 3604,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T10:58:54.558Z",
+                  "startTime": "2026-10-08T11:16:01.534Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -269,7 +337,7 @@
           ],
           "id": "74de4b60cc20d5f05aaf-54a808a95d0ab2fef526",
           "file": "reader.spec.ts",
-          "line": 26,
+          "line": 43,
           "column": 1
         },
         {
@@ -288,12 +356,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10698,
+                  "duration": 5207,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T10:59:02.503Z",
+                  "startTime": "2026-10-08T11:16:05.161Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -303,7 +371,7 @@
           ],
           "id": "74de4b60cc20d5f05aaf-a5766bfc4bfa534187ac",
           "file": "reader.spec.ts",
-          "line": 31,
+          "line": 48,
           "column": 1
         },
         {
@@ -322,12 +390,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 13493,
+                  "duration": 5130,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T10:59:13.224Z",
+                  "startTime": "2026-10-08T11:16:10.386Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -337,7 +405,7 @@
           ],
           "id": "74de4b60cc20d5f05aaf-c010f86c4cade61f50df",
           "file": "reader.spec.ts",
-          "line": 36,
+          "line": 53,
           "column": 1
         },
         {
@@ -356,12 +424,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 38376,
+                  "duration": 13942,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T10:59:26.751Z",
+                  "startTime": "2026-10-08T11:16:15.536Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -371,7 +439,7 @@
           ],
           "id": "74de4b60cc20d5f05aaf-a495dc9d0c5f115ab948",
           "file": "reader.spec.ts",
-          "line": 40,
+          "line": 57,
           "column": 1
         },
         {
@@ -390,12 +458,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 15004,
+                  "duration": 7036,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T11:00:05.189Z",
+                  "startTime": "2026-10-08T11:16:29.495Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -405,7 +473,7 @@
           ],
           "id": "74de4b60cc20d5f05aaf-482c881b332e538b981c",
           "file": "reader.spec.ts",
-          "line": 45,
+          "line": 62,
           "column": 1
         }
       ]
@@ -413,9 +481,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-08T10:57:17.038Z",
-    "duration": 189305.07100000003,
-    "expected": 9,
+    "startTime": "2026-10-08T11:15:17.386Z",
+    "duration": 79718.792,
+    "expected": 11,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

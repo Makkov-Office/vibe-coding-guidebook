@@ -1,6 +1,6 @@
 import {
   IconArrowRight, IconArrowLeft, IconArrowUp, IconArrowDown, IconArrowUpRight,
-  IconChevronRight, IconSearch, IconMenu2, IconX, IconBook2, IconDownload,
+  IconChevronRight, IconChevronDown, IconSearch, IconMenu2, IconX, IconBook2, IconDownload,
   IconRotateClockwise, IconCompass, IconTopologyStar3, IconRobot,
   IconTerminal2, IconUsers, IconChecklist, IconRoute, IconPlaneDeparture,
   IconBrain, IconFileText, IconGitBranch, IconAlertTriangle, IconGitMerge,
@@ -13,7 +13,7 @@ import {
 export const iconProps={size:20,stroke:1.75,'aria-hidden':true,focusable:false,className:'project-icon'};
 export const icons={
   arrowRight:IconArrowRight,arrowLeft:IconArrowLeft,arrowUp:IconArrowUp,
-  arrowDown:IconArrowDown,arrowUpRight:IconArrowUpRight,chevronRight:IconChevronRight,
+  arrowDown:IconArrowDown,arrowUpRight:IconArrowUpRight,chevronRight:IconChevronRight,chevronDown:IconChevronDown,
   search:IconSearch,menu:IconMenu2,close:IconX,book:IconBook2,download:IconDownload,
   reset:IconRotateClockwise,compass:IconCompass,architecture:IconTopologyStar3,
   robot:IconRobot,terminal:IconTerminal2,users:IconUsers,checklist:IconChecklist,

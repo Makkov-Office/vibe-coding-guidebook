@@ -155,10 +155,16 @@ export async function compileHandbook(source) {
         }
       } else {
         if(chapter!=='ch-23') annotate(node,{id,chapter});
-        visit(node,'element',n=>{
+        visit(node,'element',(n,index,parent)=>{
           if(n.tagName==='a' && n.properties.href?.startsWith('chatgpt-conversation:')) n.children.push(txt(' (историческая переписка; может быть доступна только владельцу)'));
           if(n.tagName==='a' && /^https?:/.test(n.properties.href??'')) n.properties.rel=['noopener','noreferrer'];
-          if(n.tagName==='input' && n.properties.type==='checkbox') {n.properties.disabled=false;n.properties['data-practice']=`${id}-${offset++}`;n.properties['aria-label']=`Учебный пункт: ${toText(node)}`;}
+          if(n.tagName==='input' && n.properties.type==='checkbox') {n.properties.disabled=false;n.properties['data-practice']=`${id}-${offset++}`;n.properties['aria-label']=`Учебный пункт: ${toText(parent??node).trim().replace(/\s+/g,' ')}`;}
+        });
+        visit(node,'element',item=>{
+          if(item.tagName!=='li'||!item.properties.className?.includes('task-list-item'))return;
+          const checkbox=item.children.find(child=>child.type==='element'&&child.tagName==='input'&&child.properties.type==='checkbox');
+          if(!checkbox)return;
+          item.children=[el('label',{className:['practice-toggle']},[checkbox]),el('div',{className:['practice-text']},item.children.filter(child=>child!==checkbox))];
         });
         const text=toText(node);if(text.trim()) search.push({id,chapter,title:title||'Ориентация',type:/^h/.test(node.tagName)?'заголовок':'текст',text});
       }

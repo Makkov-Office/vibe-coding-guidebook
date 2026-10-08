@@ -1,6 +1,23 @@
 import {test,expect} from '@playwright/test';
 import fs from 'node:fs';
 const generated=JSON.parse(fs.readFileSync('src/content/generated.json','utf8')) as {blocks:{id:string;language:string;raw:string}[]};
+test('operational checklists have compact aligned controls, individual names and persistent keyboard toggles',async({page})=>{
+  await page.goto('/#ch-22');await page.waitForSelector('html.js-enabled');
+  const checks=page.locator('[data-chapter="ch-22"] [data-practice]');
+  const layout=await checks.evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();return {width:r.width,height:r.height,name:n.getAttribute('aria-label')};}));
+  expect(layout.length).toBeGreaterThan(10);for(const row of layout){expect(row.width).toBe(20);expect(row.height).toBe(20);}expect(new Set(layout.map(n=>n.name)).size).toBe(layout.length);
+  const first=checks.first();await first.focus();await page.keyboard.press('Space');await expect(first).toBeChecked();await page.reload();await expect(first).toBeChecked();
+  await page.getByRole('button',{name:'Сбросить учебные отметки'}).click();await expect(first).not.toBeChecked();
+  for(const width of [320,360,768,1024,1440]){await page.setViewportSize({width,height:900});await page.locator('#ch-22').scrollIntoViewIfNeeded();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
+  await page.locator('#ch-22').evaluate(n=>n.scrollIntoView({block:'start'}));await page.screenshot({path:'docs/screenshots/checklist-desktop.png'});await page.setViewportSize({width:360,height:900});await page.locator('#ch-22').evaluate(n=>n.scrollIntoView({block:'start'}));await page.screenshot({path:'docs/screenshots/checklist-mobile.png'});
+});
+test('form controls remain usable at narrow widths and dropdown/disclosures support keyboard',async({page})=>{
+  await page.goto('/#ch-23');await page.waitForSelector('html.js-enabled');const filter=page.locator('.glossary-filter');
+  for(const width of [320,360,768,1024,1440]){await page.setViewportSize({width,height:900});const bounds=await filter.evaluate(n=>{const r=n.getBoundingClientRect();return [...n.querySelectorAll('input,select,button')].map(e=>{const b=e.getBoundingClientRect();return {height:b.height,fits:b.left>=r.left&&b.right<=r.right};});});for(const b of bounds){expect(b.height).toBeGreaterThanOrEqual(44);expect(b.fits).toBe(true);}}
+  const topic=page.getByRole('combobox',{name:'Тема'});await topic.focus();await page.keyboard.press('ArrowDown');await page.keyboard.press('Enter');await expect(topic).not.toHaveValue('');await page.getByRole('button',{name:'Сбросить фильтр'}).click();await expect(topic).toHaveValue('');
+  await page.goto('/#ch-07');const radios=page.locator('.scenarios input');for(let i=0;i<await radios.count();i++){await expect(radios.nth(i)).toHaveCSS('width','20px');await expect(radios.nth(i)).toHaveCSS('height','20px');}
+  const disclosure=page.locator('[data-panel="lifecycle"] details');await disclosure.locator('summary').focus();await page.keyboard.press('Enter');await expect(disclosure).toHaveAttribute('open','');await page.keyboard.press('Enter');await expect(disclosure).not.toHaveAttribute('open','');
+});
 test('initial HTML contains every chapter; all internal anchors and definitions resolve',async({page,request})=>{
   const response=await request.get('/');expect(response.status()).toBe(200);const html=await response.text();expect(html).toContain('Полный тематический глоссарий');expect(html).not.toContain('## 17. README и handoff');
   await page.goto('/');await expect(page.locator('[data-chapter]')).toHaveCount(24);await expect(page.locator('.term-definition')).toHaveCount(451);
