@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import {brandTitle} from "../src/design/brand";
 
 export const metadata: Metadata = {
-  title: "Agentic Engineering — практическое руководство",
+  title: brandTitle,
   description: "Русскоязычное руководство по управляемой разработке с AI: контекст, агенты, evidence, review и интеграция.",
   other: {
     "codex-preview": "development",

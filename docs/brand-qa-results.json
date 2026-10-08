@@ -1,0 +1,68 @@
+{
+  "cases": [
+    {
+      "width": 320,
+      "route": "/",
+      "overflow": false,
+      "images": true
+    },
+    {
+      "width": 320,
+      "route": "/chapters/22",
+      "overflow": false,
+      "images": true
+    },
+    {
+      "width": 360,
+      "route": "/",
+      "overflow": false,
+      "images": true
+    },
+    {
+      "width": 360,
+      "route": "/chapters/22",
+      "overflow": false,
+      "images": true
+    },
+    {
+      "width": 768,
+      "route": "/",
+      "overflow": false,
+      "images": true
+    },
+    {
+      "width": 768,
+      "route": "/chapters/22",
+      "overflow": false,
+      "images": true
+    },
+    {
+      "width": 1024,
+      "route": "/",
+      "overflow": false,
+      "images": true
+    },
+    {
+      "width": 1024,
+      "route": "/chapters/22",
+      "overflow": false,
+      "images": true
+    },
+    {
+      "width": 1440,
+      "route": "/",
+      "overflow": false,
+      "images": true
+    },
+    {
+      "width": 1440,
+      "route": "/chapters/22",
+      "overflow": false,
+      "images": true
+    }
+  ],
+  "axe": [],
+  "errors": [],
+  "authorSvgUnmodified": true,
+  "title": "ULTIMATE Vibe-coder guidebook [BETA]"
+}

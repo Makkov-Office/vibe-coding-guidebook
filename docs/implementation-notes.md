@@ -35,3 +35,10 @@ README documents editing, routes, preview classification, compatibility registri
 The existing native Site is owner-controlled and **public by explicit user authorization**. Publishing uses its current project ID, native source workflow and archive-backed save/deploy. The deployment status and URL are confirmed only from native hosting output; see the final task handoff for that result.
 
 Manual NVDA/VoiceOver and Lighthouse were not run. No backend, real agent runtime, analytics, accounts or cross-device synchronization were introduced.
+
+
+## Branding update — 2026-10-09
+
+Approved name: **ULTIMATE Vibe-coder guidebook [BETA]**. FLOW is now a clean two-path, rotationally balanced violet SVG in the header and favicon. Author credit **by Makkov** uses the exact provided white vector (SHA256 `4e23aa7ae374ed45e2aae4fd7b876ac556460b3862acf3ed68f63a17cf933fde`); original Desktop file is untouched. A separate noninteractive **Open Source** badge appears on the home page and reader footer. The print page includes author credit; printed SVG becomes black through CSS.
+
+Fresh branding verification: 10 browser combinations (home and chapter22 at320/360/768/1024/1440), complete title/metadata, loaded SVGs, viewport bounds, mobile drawer and print author contrast. axe returned0 violations and browser console/page errors were0 after waiting for hydration before inspection. Evidence: `brand-qa-results.json`, `screenshots/brand-desktop.png`, `screenshots/brand-mobile.png`. Typecheck, lint and all5 content tests pass. Teaching/source/download parity is unchanged apart from the approved title; current coverage2344 occurrences,0ambiguities/0unexplained gaps (three removed old title occurrences). Existing portal behavior is preserved.

@@ -203,7 +203,7 @@ export async function compileHandbook(source) {
   const rich = (text,id,chapter) => {const node=el('p',{},[txt(text)]);annotate(node,{id,chapter});return stringify({type:'root',children:[node]});};
   const panels=createPanels({tables,rich});
   const presentation={
-    heading:rich('От vibe coding к инженерной системе.','intro-heading','ch-00'),
+    heading:rich(toString(tree.children.find(node=>node.type==='heading'&&node.depth===1)),'intro-heading','ch-00'),
     description:rich('Как работать с AI-агентами: задать границы, получить доказательства и сохранить контроль над результатом.','intro-description','ch-00'),
     subtitle:rich('Agentic Engineering / AI-Native Development','intro-subtitle','ch-00'),
     timeline:['Исправить findings и независимо проверить A','Интегрировать A только после authorization','Refresh B от нового main; сохранить оба ADR','Collision assessment + full validation B','Independent review актуального HEAD B','Интегрировать B после authorization и подтверждения checks'].map((text,i)=>rich(text,`timeline-${i}`,'ch-18'))

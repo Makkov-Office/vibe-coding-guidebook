@@ -1,4 +1,4 @@
-# Agentic Engineering Handbook
+# ULTIMATE Vibe-coder guidebook [BETA]
 
 Русскоязычный учебный портал для брата: 22 учебные главы, orientation 00 и единый глоссарий (394 определения / 11 тем), 6 Mermaid-схем. React, TypeScript, Vinext и npm lockfile; native Sites starter. Учебные данные компилируются при сборке, текст текущей страницы входит в первоначальный HTML. Backend, аккаунты, аналитика и агентный runtime не добавлены.
 
@@ -39,3 +39,8 @@ Linear: #010102, графитовые поверхности, #5e6ad2. Manrope �
 Sites project ID хранится в `.openai/hosting.json`. Используйте native Sites workflow для source push, build/archive и save/deploy. **Текущий public-доступ сохраняется по явному разрешению владельца.** Не создавайте новый Site и не меняйте хостинг.
 
 Фактические проверки: `docs/implementation-notes.md`, raw results `docs/browser-results.json`. Контекст продолжения: `docs/implementation-state.md`. Screenshots в `docs/screenshots/`: desktop, mobile-navigation, lifecycle, system-map-desktop/mobile, term-tooltip-desktop и template-mobile.
+
+
+## Брендинг
+
+FLOW — основной символ (`public/brand/flow.svg`) и favicon. Подпись **by Makkov** использует предоставленный автором `public/brand/makkov.svg` без изменения исходных байтов. Отдельная плашка **Open Source** размещена на главной и в footer. Название учебного source задаётся первой строкой `content/handbook.md`; UI/metadata brand title — `src/design/brand.ts`. Screenshots: `docs/screenshots/brand-desktop.png`, `brand-mobile.png`. Проверка адаптации/доступности — `docs/brand-qa-results.json`.

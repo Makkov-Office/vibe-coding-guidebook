@@ -1,8 +1,8 @@
 {
   "topics": 11,
   "definitions": 394,
-  "recognized": 2392,
-  "linked": 2347,
+  "recognized": 2389,
+  "linked": 2344,
   "exceptions": [
     {
       "block": "ch-00-b1006",
@@ -2857,6 +2857,6 @@
   ],
   "ambiguous": [],
   "unexplainedGaps": 0,
-  "renderedLinked": 2478,
+  "renderedLinked": 2475,
   "renderedGaps": []
 }

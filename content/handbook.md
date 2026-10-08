@@ -1,4 +1,4 @@
-# Agentic Engineering / AI-Native Development Handbook
+# ULTIMATE Vibe-coder guidebook [BETA]
 
 > Практическое руководство: как перейти от диалога с AI-кодером к управляемой системе разработки. Принципы можно перенести в собственный проект.
 
