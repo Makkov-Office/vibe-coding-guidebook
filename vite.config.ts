@@ -52,6 +52,16 @@ export default defineConfig(async ({ command }) => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
+    environments: {
+      client: {
+        build: {
+          rolldownOptions: {
+            // Vinext loads its router by module namespace; preserve that public export facade.
+            preserveEntrySignatures: "strict" as const,
+          },
+        },
+      },
+    },
     server: {
       ...(managedLinux
         ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] }

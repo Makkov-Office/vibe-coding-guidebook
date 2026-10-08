@@ -1,8 +1,8 @@
 # Agentic Engineering / AI-Native Development Handbook
 
-> Практическое руководство: как перейти от диалога с AI-кодером к управляемой системе разработки. Case study — AI Artefacts. Принципы можно перенести в собственный проект.
+> Практическое руководство: как перейти от диалога с AI-кодером к управляемой системе разработки. Принципы можно перенести в собственный проект.
 
-**Версия:** 1.1 · **Дата подготовки:** 8 октября 2026 · **Язык:** русский.
+**Версия:** 1.2 · **Дата подготовки:** 8 октября 2026 · **Язык:** русский.
 
 **Для кого:** для человека, который уже пробовал vibe coding и хочет понять, как работать с несколькими агентами без потери контроля над требованиями, кодом и релизами.
 
@@ -18,19 +18,9 @@
 | Повторить у себя | 04–12, 14–17, 20 | Среда, правила, delivery и безопасность |
 | Управлять несколькими агентами | 13, 18–19, 21 | Зависимости, восстановление, развитие orchestration |
 
-### Статус материала
+### Границы применения
 
-Это учебное руководство, а не live dashboard. Его основание — запрос пользователя, доступная история AI Artefacts, контекстные документы и предоставленный гайд Claude «Как ничего не забыть: автосинхронизация и узкие места» от 6 октября 2026. Дополнения интегрированы 8 октября; предложения настройки из гайда не считаются уже реализованными. История была прочитана при подготовке; состояния GitHub/Linear напрямую в этой работе не переаудированы.
-
-Используем три метки:
-
-- **Практика AI Artefacts** — правило или процесс, зафиксированный в доступном контексте. Это не утверждение, что он уже полностью автоматизирован.
-- **Исторический кейс** — конкретный эпизод из истории. Статус PR, SHA, checks и тикета относится к тому эпизоду.
-- **Рекомендация / следующий этап** — предлагаемая реализация для повторения или развития системы.
-
-Матрицы и шаблоны ниже передают смысл контрактов. Они не заменяют актуальную грамматику скриптов, точные шаблоны PR или права конкретного проекта. Перед реальной работой агент читает текущие источники.
-
-**Важное ограничение зрелости:** в доступной истории task-start preflight (TICKET-24) и Ready-to-Merge gate (TICKET-26) были следующими слоями автоматизации. Не считаем их внедрёнными только потому, что процесс описан. TICKET-23/25 обсуждались через PR #13/#12 и review fixes; финальный merge этих PR здесь не подтверждается.
+Это учебное руководство. Примеры и шаблоны нужно адаптировать к текущим правилам своего репозитория. Описанный процесс сам по себе не доказывает, что permissions, checks или gates уже автоматизированы: перед работой проверяй актуальные источники и реальные права.
 
 ### Навигация
 
@@ -51,13 +41,12 @@
 15. [Founder gates](#ch-15)
 16. [Post-merge sync](#ch-16)
 17. [Security и least privilege](#ch-17)
-18. [Реальные кейсы AI Artefacts](#ch-18)
+18. [Четыре типичных ошибки](#ch-18)
 19. [Failure modes](#ch-19)
 20. [Как повторить систему](#ch-20)
 21. [Maturity model и Agent Control Center](#ch-21)
 22. [Операционная памятка](#ch-22)
 23. [Полный тематический глоссарий](#ch-23)
-24. [Источники и границы достоверности](#ch-24)
 
 ---
 
@@ -102,7 +91,7 @@ flowchart LR
 
 ### 2.1. Кто за что отвечает
 
-**Практика AI Artefacts:** Linear хранит продуктовый и исполнительный контекст; GitHub — код и delivery; Figma — дизайн; Slack — обсуждения; Vercel — deployment. Репозиторий содержит исполнимые инженерные контракты и versioned knowledge.
+**Пример распределения источников истины:** Linear хранит продуктовый и исполнительный контекст; GitHub — код и delivery; Figma — дизайн; Slack — обсуждения; Vercel — deployment. Репозиторий содержит исполнимые инженерные контракты и versioned knowledge.
 
 ```mermaid
 flowchart TB
@@ -120,6 +109,23 @@ flowchart TB
     G -. evidence и ссылки .-> L
     S[Slack: координация] -. решения переносятся .-> L
 ```
+
+<!-- details: Evidence для узлов карты -->
+
+| Узел | Ответственный | Ожидаемое evidence |
+|---|---|---|
+| Founder | Человек-владелец продукта | Подтверждение разрешённых значимых действий |
+| Linear | Владелец задачи | Актуальные Scope, AC и состояние задачи |
+| Repository knowledge | Владелец документации | Текущие contracts, ADR и documented decisions |
+| Harness | Владелец инженерных правил | Preflight и validation report с границами проверки |
+| Agents | Автор задачи | PR handoff и evidence по AC |
+| Worktree | Автор выделенной рабочей папки | Проверенные owner, branch, base SHA и collisions |
+| GitHub / CI | Владелец CI и автор PR | Checks на актуальном HEAD и доступный diff |
+| Reviewer | Независимый reviewer | Findings и независимый verdict на актуальном HEAD |
+| Merge | Человек с разрешением на merge | Подтверждённый merge после authorization |
+| Deployment | Ответственный за релиз | Deployment record с развёрнутой версией |
+
+<!-- /details -->
 
 ### 2.2. Иерархия — по области ответственности
 
@@ -155,7 +161,7 @@ GitHub интегрирует код. Linear отражает выполнени
 
 Harness — совокупность правил **и механизмов**, которые делают действия агента воспроизводимыми и ограниченными. Один длинный prompt покрывает лишь часть этой задачи.
 
-| Слой | Назначение | Пример AI Artefacts |
+| Слой | Назначение | Пример реализации |
 |---|---|---|
 | Entrypoint | Куда идти за контекстом | AGENTS.md, ARCHITECTURE.md, docs/index.md |
 | Environment | Воспроизводимое исполнение | .devcontainer/, pinned toolchain |
@@ -167,7 +173,7 @@ Harness — совокупность правил **и механизмов**, �
 | Review / human gate | Проверить assumptions и принять риск | Clean reviewer session, founder decision |
 | Recovery / sync | Безопасно продолжить после merge | post-merge procedure |
 
-Названия скриптов известны из истории; фактические пути, аргументы и наличие новых механизмов нужно проверить в текущем репозитории.
+Имена скриптов — учебные примеры; фактические пути, аргументы и доступные механизмы проверь в текущем репозитории.
 
 ### 3.1. Три степени силы правила
 
@@ -191,9 +197,9 @@ Harness — совокупность правил **и механизмов**, �
 <a id="ch-04"></a>
 ## 04. WSL2 Ubuntu + Dev Container
 
-**Практика AI Artefacts:** общий путь среды — Windows → WSL2 → Ubuntu → checkout в Linux filesystem → repository-defined Dev Container. **Историческое уточнение:** ранние context docs описывали отдельный Docker Engine внутри Ubuntu; предоставленный гайд Claude от 6 октября описывает переход этой машины на один Docker Desktop с WSL integration и отключение второго Engine. Это свидетельство изменения настройки, а не live-проверка машины. Перед работой сверяй актуальный ADR, Docker context и endpoint; не включай второй daemon по старой инструкции.
+Для Windows возможен путь: WSL2 → Ubuntu → checkout в Linux filesystem → repository-defined Dev Container. Сверяй актуальную configuration, Docker context и endpoint; не запускай второй daemon по старой инструкции.
 
-Среда desktop-приложения Codex и среда исполнения команд проекта — разные уровни. Гайд Claude описывает локальный инцидент со включением запуска Codex в WSL; это не универсальный запрет WSL для Codex. Следуй принятой configuration проекта и не меняй настройки host без задачи.
+Среда desktop-приложения Codex и среда исполнения команд проекта — разные уровни. Следуй принятой configuration проекта и не меняй настройки host без задачи.
 
 ```mermaid
 flowchart TB
@@ -216,7 +222,7 @@ flowchart TB
 | Lockfile | Зафиксированный dependency graph | Отсутствие vulnerabilities |
 | Bootstrap / doctor | Проверка prerequisites и полезные ошибки | Разрешение на privileged действия |
 
-Для собственного проекта храни Linux checkout в Linux filesystem, например `~/projects/my-project`, и следуй документированному способу открытия контейнера. AI Artefacts использует pnpm через Corepack; точные версии берутся из repository metadata, а не из гайда.
+Для собственного проекта храни Linux checkout в Linux filesystem, например `~/projects/my-project`, и следуй документированному способу открытия контейнера. Package manager и точные версии берутся из repository metadata. Если проект использует pnpm через Corepack, следуй его documented bootstrap.
 
 WSL2 и Dev Containers описаны в [официальном руководстве VS Code](https://code.visualstudio.com/docs/remote/wsl). Это объяснение среды; проектный workflow по-прежнему задаёт репозиторий.
 
@@ -291,7 +297,7 @@ Reviewer — дополнительная read-only сессия, а не вто
 ### 6.1. Контракт задачи
 
 ```yaml
-# Учебный шаблон для нового проекта; не точная схема Linear AI Artefacts.
+# Учебный шаблон задачи; адаптируй к правилам своего проекта.
 id: DEMO-42
 title: Add title search to the knowledge catalogue
 outcome: User finds published entries by title
@@ -337,7 +343,9 @@ AC описывают наблюдаемое поведение. «Сделат�
 <a id="ch-07"></a>
 ## 07. Полный lifecycle одной задачи
 
-**Канонический lifecycle AI Artefacts:** Backlog → Todo → In Progress → In Review → Done.
+> Брат, «почти готово» — прекрасное чувство. Но у tracker на этот счёт есть собственное мнение.
+
+**Пример lifecycle задачи:** Backlog → Todo → In Progress → In Review → Done.
 
 ```mermaid
 flowchart LR
@@ -435,7 +443,9 @@ Context engineering — выбор информации, которую аген
 | Task context | Ticket, AC, scope, dependencies | Соседние roadmap задачи «заодно» |
 | Evidence / handoff | SHA, commands/results, findings, remaining work | Самоуверенные summary без проверок |
 
-В AI Artefacts использовался компактный комплект `codex-bootstrap.md`, `project-context.md`, `engineering-rules.md`, `communication-guide.md`. Это session bootstrap; актуальные repo contracts читаются дополнительно. Исторический snapshot внутри bootstrap не заменяет проверку main.
+Компактный session bootstrap может связывать `project-context.md`, `engineering-rules.md` и `communication-guide.md`. Актуальные repo contracts читаются дополнительно; snapshot не заменяет проверку main.
+
+<!-- details: Дополнительно: launcher для автора -->
 
 ### 9.2. Пример launcher для автора
 
@@ -453,6 +463,8 @@ risk, Docs Impact, active PR/worktree collisions и merge order.
 ```
 
 Сокращение до «бери TICKET-XX» безопасно, когда entrypoint, preflight и delivery gates действительно исполнимы, а fresh-agent exit test проходит. Наличие длинного AGENTS.md этого не доказывает.
+
+<!-- /details -->
 
 ### 9.3. Handoff после прерывания
 
@@ -489,6 +501,8 @@ Actions requiring human decision:
 
 Spec не переписывают задним числом, чтобы оправдать код. ADR не нужен для каждой правки текста: он нужен, когда позднее будет важно понять выбор, альтернативы и последствия.
 
+<!-- details: Пример фиксации решения -->
+
 ### 10.2. Минимальный ADR
 
 ```markdown
@@ -503,7 +517,9 @@ Revisit trigger: Runtime adds enforced leases and audited ownership transfer.
 Links: Decision record, issue, implementing PR.
 ```
 
-Это учебный пример ADR, а не существующий ADR с таким заголовком в AI Artefacts. Принятый ADR не удаляют при конфликте index-файла. Новый ADR может supersede старый с явной ссылкой; история решения сохраняется.
+Это учебный пример ADR. Принятый ADR не удаляют при конфликте index-файла. Новый ADR может supersede старый с явной ссылкой; история решения сохраняется.
+
+<!-- /details -->
 
 ### 10.3. Docs Impact
 
@@ -515,7 +531,7 @@ Docs Impact — обязательный вопрос: **изменяет ли P
 4. Объяснить «нет Docs Impact», если это действительно так.
 5. Проверить ссылки, anchors, старые пути и согласованность examples.
 
-В истории AI Artefacts canonical PR header проверял `Implements TICKET-XX` и Docs Impact. Parser имеет конкретную грамматику; брать её нужно из текущего PR template/скрипта. Этот гайд намеренно не предлагает выдуманный machine-valid header.
+Machine-readable PR header может проверять `Implements TICKET-XX` и Docs Impact. Parser имеет конкретную грамматику; бери её из текущего PR template/скрипта, а не выдумывай machine-valid header.
 
 **Декларация не равна семантической проверке.** CI может подтвердить, что категория выбрана, но не что docs честно отражают код. Это задача автора и reviewer.
 
@@ -535,6 +551,8 @@ Independent work: Only work that does not depend on this decision
 <a id="ch-11"></a>
 ## 11. Git, GitHub и CI
 
+> Два worktree — как два рабочих стола. Один общий грязный стол от этого не становится двумя.
+
 ### 11.1. Изоляция и маленькие PR
 
 `main` — integration branch. Работа выполняется в короткоживущих task branches. Worktree предоставляет отдельные рабочие файлы и index, но общие Git refs и objects; это не отдельный независимый репозиторий. Механизм описан в [Git worktree documentation](https://git-scm.com/docs/git-worktree).
@@ -542,14 +560,14 @@ Independent work: Only work that does not depend on this decision
 Учебный пример для **нового собственного проекта**, после проверки ownership, clean state и fetch policy:
 
 ```bash
-# Выполнять в canonical Linux environment; это не bootstrap AI Artefacts.
+# Учебный пример; выполнять в canonical Linux environment проекта.
 git status --short --branch
 git worktree list --porcelain
 git fetch origin refs/heads/main:refs/remotes/origin/main
 git worktree add -b demo-42-title-search ../demo-42 origin/main
 ```
 
-В реальном AI Artefacts branch name берётся из Linear, а последовательность — из актуального harness. Не создавать ветку поверх существующего имени и не применять force-флаги при ownership conflict.
+Branch name и последовательность действий определяет актуальный harness проекта. Не создавай ветку поверх существующего имени и не применяй force-флаги при ownership conflict.
 
 Один PR должен объясняться одним outcome. Маленький PR уменьшает область независимой проверки, но число строк не определяет risk: одна строка CI permissions может быть опаснее сотен строк docs.
 
@@ -596,7 +614,7 @@ Green CI не доказывает:
 
 Required checks технически блокируют merge только при соответствующих branch rules и правах. Checks на старом commit не подтверждают новый HEAD; это описано в [GitHub required-check troubleshooting](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks).
 
-В истории AI Artefacts часть checks была advisory из-за доступных возможностей private repository. Не выдаём этот исторический plan limitation за текущую настройку. Реальные rules, required reviews и bypass privileges проверяются перед интеграцией; см. [GitHub protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
+Advisory checks не блокируют merge автоматически. Реальные rules, required reviews и bypass privileges проверяются перед интеграцией; см. [GitHub protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
 
 <a id="ch-12"></a>
 ## 12. Change risk: Low / Medium / High
@@ -605,7 +623,7 @@ Risk — возможный ущерб от изменения. Severity — в�
 
 ### 12.1. Практическая матрица
 
-Матрица ниже — переносимая рекомендация, согласованная с известным направлением AI Artefacts. Точные obligations определяет принятая risk policy проекта.
+Матрица ниже — учебная рекомендация. Точные obligations определяет принятая risk policy проекта.
 
 | Risk | Примеры | Достаточное evidence | Human gate |
 |---|---|---|---|
@@ -625,12 +643,16 @@ High **не означает безусловно обязательный от�
 
 Неясный случай классифицировать вверх с объяснением. Risk повышается по фактическому scope; пользовательский label Low не делает изменение Low. Уменьшить risk можно уменьшением scope и capabilities, а не более уверенным описанием.
 
+<!-- details: Примеры классификации риска -->
+
 ### 12.3. Примеры
 
 - Исправление опечатки — Low.
 - Изменение grammar PR checker — часто Medium: влияет на delivery и может блокировать/пропускать PR.
 - Изменение shell-скрипта с доступом к Docker socket — High, если появляется privileged path.
 - Правка security policy в Markdown — может быть High: текст определяет будущие capabilities.
+
+<!-- /details -->
 
 <a id="ch-13"></a>
 ## 13. Параллельные агенты: collisions и merge order
@@ -803,6 +825,8 @@ Decision requested: authorize this concrete action
 <a id="ch-16"></a>
 ## 16. Post-merge sync
 
+> Брат, автосинхронизация должна беречь работу, а не устраивать ей внезапный отпуск.
+
 Merge изменяет remote main. Локальные checkout, sessions и последующие PR должны узнать об этом изменении безопасно.
 
 ### 16.1. Последовательность
@@ -859,6 +883,8 @@ Merge изменяет remote main. Локальные checkout, sessions и п�
 
 Обновление working files — запись, которая может мешать редактору или running process. Начинай с sync при attach; background auto-update добавляй только с понятным ownership/lock contract. «Только fast-forward» не означает «никогда не перезаписывает файлы» — оно ограничивает историю, а сохранность local data обеспечивают дополнительные guards.
 
+<!-- details: Готовые фразы для новичка -->
+
 ### 16.5. Короткие фразы для новичка
 
 **После merge:**
@@ -878,6 +904,8 @@ tracked/untracked/ignored changes и причину пропуска.
 Объясни варианты сохранения работы. Ничего не reset/clean/откатывай
 и не переключай чужой checkout без отдельного разрешения.
 ```
+
+<!-- /details -->
 
 <a id="ch-17"></a>
 ## 17. Security и least privilege
@@ -920,57 +948,45 @@ flowchart LR
 Удаление секрета из последнего commit не означает, что он исчез из history или перестал быть действительным. Не вставлять обнаруженный secret в finding «для наглядности».
 
 <a id="ch-18"></a>
-## 18. AI Artefacts: четыре конкретных кейса
+## 18. Четыре типичных ошибки и как их предотвратить
 
-AI Artefacts — AI knowledge / learning platform с направлением «Your Personal AI Source of Truth». Harness создаётся до масштабирования продуктовых возможностей, чтобы каждый следующий тикет можно было отдавать агенту с воспроизводимым delivery process.
+Обезличенные кейсы показывают переносимые ошибки процесса. Их последовательности — учебные примеры, а не сведения о текущем состоянии конкретного проекта.
 
 ### 18.1. PR готов, тикет всё ещё In Progress
 
-**Исторический кейс:** TICKET-37 / PR #10 и TICKET-22 / PR #11 были переданы на review, но тикеты оставались In Progress. Prompt требовал открыть PR и сообщить READY FOR REVIEW, однако обязательный переход Linear был недостаточно закреплён.
+Автор открыл PR и сообщил READY FOR REVIEW, но issue остался In Progress: переход tracker не был закреплён в контракте.
 
-**Урок:** состояние внешней системы не меняется от фразы в финальном ответе. Workflow должен явно описывать event, transition, owner и подтверждение. В дальнейшие TICKET-24/26 были добавлены обязанности lifecycle.
+**Урок:** состояние внешней системы не меняется от фразы в ответе. Workflow явно описывает event, transition, owner и подтверждение.
 
-**Как проверить исправление:** агент открывает PR и handoff → issue действительно In Review; review fixes оставляют его In Review; confirmed merge → Done.
+**Проверка:** PR handoff → issue действительно In Review; review fixes оставляют его In Review; confirmed merge → Done.
 
 ### 18.2. Зелёный CI и небезопасный post-merge sync
 
-**Исторический кейс:** review [PR #3](https://github.com/Makkov-design/ai-artefacts/pull/3), TICKET-19. Green CI и `mergeable=true` не исключили ignored-file collision на switch/fast-forward и stale `origin/main` при restricted refspec.
+Green CI и `mergeable=true` не исключают ignored-file collision при switch/fast-forward и stale `origin/main` при restricted refspec.
 
-**Урок:** тесты обязаны проверять обещанный safety contract, включая отрицательные сценарии. Happy path с чистой папкой не доказывает сохранность данных.
+**Урок:** тесты проверяют обещанный safety contract и отрицательные сценарии. Happy path с чистой папкой не доказывает сохранность данных.
 
-**Как проверить:** временные real-Git repositories воспроизводят обе collision ситуации и restricted fetch policy; механизм останавливается до потери данных. Не проводить destructive эксперимент в рабочем repo пользователя.
+<!-- details: Как воспроизвести безопасно -->
 
-### 18.3. TICKET-23 + TICKET-25: review и merge order
+Временные real-Git repositories воспроизводят collision ситуации и restricted fetch policy; механизм останавливается до потери данных. Не проводи destructive эксперимент в рабочем repo пользователя.
 
-**Исторический кейс из доступной переписки:** [PR #12](https://github.com/Makkov-design/ai-artefacts/pull/12) реализовывал risk matrix (TICKET-25); [PR #13](https://github.com/Makkov-design/ai-artefacts/pull/13) — collision / merge-order assessment (TICKET-23).
+<!-- /details -->
 
-Review обнаружил:
+### 18.3. Зависимые изменения и неполный diff
 
-1. В risk matrix условное `security review when useful` превратилось в безусловное requirement — spec conflict.
-2. Collision assessment мог потерять local-only commits при dedup remote PR branch.
-3. Failure получения diff через `|| true` мог выглядеть как пустой diff и ложный `isolated`.
+Задача A меняет risk matrix, задача B — collision / merge-order assessment. Обе меняют общий docs index. Возможные findings: условная проверка стала безусловной; dedup теряет local-only commits; failure получения diff через `|| true` выглядит как пустой diff и ложный isolated.
 
-Оба PR затрагивали `docs/decisions/README.md`. Зафиксированный план интеграции:
+**Урок:** сначала исправить findings, затем выполнить независимый review A, разрешённую интеграцию A, refresh B от нового main, сохранить оба ADR и повторить validation / review B на новом HEAD.
 
-```text
-Fix findings → independent re-review PR #12
-→ founder-authorized merge #12
-→ refresh #13 from new main
-→ preserve both ADR 0005 and 0006
-→ collision assessment + full validation
-→ independent review of new #13 HEAD
-→ founder-authorized merge #13
-```
-
-Это **план из исторического состояния**, а не сообщение, что оба merge уже состоялись. Он показывает одновременно authority conflict, incomplete evidence, local/remote provenance и необходимость revalidation после refresh.
+Это учебный план интеграции. Он не утверждает, что merge уже выполнен. Unknown evidence не превращается в isolated, а новый HEAD требует revalidation.
 
 ### 18.4. Docs Impact: проверять hosted поведение
 
-**Исторический кейс:** после [PR #8](https://github.com/Makkov-design/ai-artefacts/pull/8), TICKET-21, временный PR #9 проверил malformed Docs Impact header: check падал без выбранной категории и проходил после исправления body. PR закрыли без merge.
+Unit tests parser прошли, но hosted check запускался не на том event. В throwaway PR нужно проверить malformed Docs Impact header и исправленный body на реальном event wiring.
 
-**Урок:** unit tests parser не заменяют проверку реального event wiring. Также два независимых parser для `Implements TICKET-XX` могут расходиться; TICKET-37 устранял duplication ownership grammar.
+**Урок:** unit tests не заменяют проверку wiring. Два parser для `Implements TICKET-XX` могут расходиться — грамматика должна иметь один источник.
 
-Hosted check evidence не доказывает, что check становится merge-blocking. Это отдельно зависит от repository rules и available enforcement.
+Hosted check evidence не доказывает merge-blocking: это отдельно зависит от repository rules и available enforcement.
 
 <a id="ch-19"></a>
 ## 19. Failure modes и recovery
@@ -1033,6 +1049,8 @@ Checks в PR <URL> упали. Авторская сессия: получи а�
 <a id="ch-20"></a>
 ## 20. Как повторить систему у себя
 
+> Для брата: пять упражнений — и можно заслуженно объяснять агенту, почему «у меня работает» ещё не evidence.
+
 ### 20.1. Минимальная последовательность внедрения
 
 | Шаг | Сделать | Exit check |
@@ -1052,18 +1070,18 @@ Checks в PR <URL> упали. Авторская сессия: получи а�
 
 Все эксперименты — в throwaway repo с синтетическими данными.
 
-1. **Один тикет:** написать AC для title search, реализовать через автора, проверить отдельной reviewer-сессией. Успех: reviewer способен принять/отклонить каждый AC по evidence.
-2. **File overlap:** два worktree меняют разные записи одного docs index. Успех: после интеграции обе записи и ссылки сохранены.
-3. **Contract dependency:** A меняет export, B его использует в другом файле. Успех: assessment видит dependency без textual conflict.
-4. **Fail closed:** симулировать недоступный PR diff. Успех: assessment возвращает incomplete/failure, а не isolated.
-5. **Fresh-agent exit test:** новый агент получает только entrypoint и ticket. Успех: сам находит правила, выполняет preflight, отдаёт PR с evidence и останавливается до merge.
+- [ ] **Один тикет:** написать AC для title search, реализовать через автора, проверить отдельной reviewer-сессией. Успех: reviewer способен принять/отклонить каждый AC по evidence.
+- [ ] **File overlap:** два worktree меняют разные записи одного docs index. Успех: после интеграции обе записи и ссылки сохранены.
+- [ ] **Contract dependency:** A меняет export, B его использует в другом файле. Успех: assessment видит dependency без textual conflict.
+- [ ] **Fail closed:** симулировать недоступный PR diff. Успех: assessment возвращает incomplete/failure, а не isolated.
+- [ ] **Fresh-agent exit test:** новый агент получает только entrypoint и ticket. Успех: сам находит правила, выполняет preflight, отдаёт PR с evidence и останавливается до merge.
 
 Если упражнение не проходит, добавить минимальное правило или mechanism для конкретного gap. Не начинать с большого control plane.
 
 <a id="ch-21"></a>
 ## 21. Maturity model и будущий Agent Control Center
 
-Эта шкала — диагностическая модель руководства, а не официальная оценка AI Artefacts.
+Эта шкала — диагностическая модель. Возможности подтверждаются evidence, а не названием уровня.
 
 | Уровень | Возможность | Проверяемый exit criterion |
 |---|---|---|
@@ -1074,57 +1092,17 @@ Checks в PR <URL> упали. Авторская сессия: получи а�
 | M4 · Enforced | Runtime permissions, automated gates, audit, ownership leases | Нарушение невозможно или явно блокируется |
 | M5 · Adaptive | Durable orchestration, recovery, budgets, selective execution | Система восстанавливает runs с сохранением authority и evidence |
 
-В доступном контексте AI Artefacts имел repeatable harness и развивал governed/coordinated процессы. M4/M5 нельзя приписывать проекту без проверки реального enforcement.
+M4/M5 нельзя приписывать системе без проверки реального enforcement и recovery.
+
+<!-- details: Будущая архитектура: Agent Control Center -->
 
 ### 21.1. Control Center — сначала наблюдение
 
-Первый полезный Agent Control Center показывает task, owner/session, branch/worktree, base/head, CI, review verdict, risk, collisions, merge order, blockers и human decision queue. Данные имеют source, timestamp и provenance.
+Control Center связывает task, run, branch, PR, HEAD и evidence. Сначала нужны trustworthy telemetry и audit; затем разрешённые команды и bounded orchestration. Это будущая архитектура, не реализованный runtime.
 
-```mermaid
-flowchart TB
-    L[Linear events] --> N[Adapters и normalized events]
-    G[GitHub PR, checks, merge] --> N
-    A[Agent runtime: sessions и tools] --> N
-    N --> E[Append-only event log]
-    E --> P[Projection / read model]
-    P --> U[Agent Control Center UI]
-    U --> C[Command request]
-    C --> H[Authorization и policy]
-    H --> O[Runtime executor]
-    O --> N
-```
+Управление требует idempotent ingestion, ordering/reconciliation, ownership leases, durable runs, budgets/retries и проверки command authorization. Запоздалое review старого HEAD не делает новый ready; lease expiration не разрешает overwrite. UI и analytics сами по себе не выполняют эти обязанности.
 
-Это **future architecture recommendation**, не реализованный runtime AI Artefacts.
-
-### 21.2. Контракт будущего события
-
-```json
-{
-  "eventId": "demo-unique-event",
-  "taskId": "DEMO-42",
-  "runId": "demo-run",
-  "source": "github",
-  "type": "review.completed",
-  "occurredAt": "2026-10-08T10:00:00Z",
-  "observedAt": "2026-10-08T10:00:02Z",
-  "headSha": "ACTUAL_FULL_SHA_REQUIRED",
-  "payload": { "verdict": "changes_required" }
-}
-```
-
-Пример иллюстративный. Реальный schema должен проверять SHA, IDs, event types и authorization на write paths.
-
-### 21.3. Что потребуется для control plane
-
-- Idempotent ingestion: повтор одного event не создаёт второй переход.
-- Ordering/reconciliation: запоздалое review старого HEAD не делает новый ready.
-- Ownership lease: один active author; lease expiration не выдаёт автоматическое разрешение overwrite.
-- Durable runs: восстановление после interruption с тем же task contract.
-- Budgets/retries: лимиты стоимости и ограниченная повторяемость, без бесконечного retry privileged actions.
-- Command authorization: UI отправляет запрос, backend/runtime проверяет права и актуальный state.
-- Audit: кто разрешил действие и на основании какого evidence.
-
-Game-like visualization, analytics и feature flags не выполняют эти обязанности. Сначала trustworthy telemetry, затем разрешённые команды, затем bounded orchestration. Maturity показывается возможностями, а не количеством агентов на экране.
+<!-- /details -->
 
 <a id="ch-22"></a>
 ## 22. Операционная памятка
@@ -1207,7 +1185,7 @@ Game-like visualization, analytics и feature flags не выполняют эт
 | Термин / варианты | Простое объяснение |
 |---|---|
 | <a id="term-ticket"></a>**Ticket / issue** · тикет; ticket; issue; task | Единица работы с целью, scope, критериями приёмки и состоянием. |
-| <a id="term-linear"></a>**Linear** | Система планирования, где в AI Artefacts хранятся продуктовый контекст и задачи. |
+| <a id="term-linear"></a>**Linear** | Система планирования продуктового контекста, задач и их lifecycle. |
 | <a id="term-product-hq"></a>**Product HQ** | Канонический набор продуктовых требований, решений и приоритетов проекта. |
 | <a id="term-roadmap"></a>**Roadmap** · дорожная карта | Порядок развития продукта; не автоматическое разрешение агенту брать следующие задачи. |
 | <a id="term-backlog"></a>**Backlog** · бэклог | Очередь возможных задач, ещё не обязательно готовых к реализации. |
@@ -1583,22 +1561,20 @@ Game-like visualization, analytics и feature flags не выполняют эт
 
 | Термин / варианты | Простое объяснение |
 |---|---|
-| <a id="term-ai-artefacts"></a>**AI Artefacts** | Продукт-кейс руководства: AI knowledge/learning platform с собственной foundation разработкой. |
-| <a id="term-standalone"></a>**Standalone** · самостоятельный проект | Отдельный проект с собственным source/build; не feature существующего AI Artefacts. |
+| <a id="term-standalone"></a>**Standalone** · самостоятельный проект | Отдельный проект с собственными исходниками и сборкой. |
 | <a id="term-figma"></a>**Figma** | Сервис design source и components; approved design intent сверяется с кодом. |
 | <a id="term-slack"></a>**Slack** | Сервис координации/уведомлений; durable decisions должны уйти в canonical sources. |
 | <a id="term-vercel"></a>**Vercel** | Платформа preview/production deployments; здесь роль сервиса, не команда на автоматический deploy. |
-| <a id="term-sites"></a>**Sites** | Plugin/workflow создания и hosting отдельного сайта; использовать актуальные доступные tools. |
 | <a id="term-plugin"></a>**Plugin / connector** · plugin; connector; native tools | Подключаемый пакет capabilities; connector даёт доступ к сервису, native tool — его конкретное действие. |
 | <a id="term-api"></a>**API** · интерфейс программирования | Contract обращения программы к сервису/компоненту; bounded API change может влиять на consumers. |
 | <a id="term-webmcp"></a>**MCP** · Model Context Protocol | Protocol предоставления агентам tools/resources; доступ через MCP не отменяет permissions. |
 | <a id="term-frontend"></a>**Frontend** · frontend-only | Часть приложения, отображаемая пользователю; frontend-only не требует backend API. |
-| <a id="term-backend"></a>**Backend** · серверная часть | Слой server logic/data; для статического handbook не нужен без отдельного требования. |
+| <a id="term-backend"></a>**Backend** · серверная часть | Слой серверной логики, обработки данных и проверки прав. |
 | <a id="term-framework"></a>**Framework** · фреймворк; starter; scaffolding | Framework задаёт структуру приложения; starter/scaffolding — начальный project skeleton, не законченный результат. |
 | <a id="term-stack"></a>**Stack** · service stack; stack | Набор выбранных технологий/services; копирование всей связки не обязательно для небольшого проекта. |
 | <a id="term-react"></a>**React** · JSX | UI library; JSX — syntax записи UI elements в code. |
 | <a id="term-typescript"></a>**TypeScript** · TS; типизированный | JavaScript с проверкой типов; типы не заменяют runtime validation. |
-| <a id="term-markdown"></a>**Markdown** · .md | Текстовый формат headings, links, tables и code blocks, используемый как source handbook. |
+| <a id="term-markdown"></a>**Markdown** · .md | Текстовый формат headings, links, tables и code blocks. |
 | <a id="term-html"></a>**HTML** | Разметка структуры web page; semantic HTML использует элементы по назначению. |
 | <a id="term-css"></a>**CSS** | Правила оформления, layout и motion элементов web page. |
 | <a id="term-json"></a>**JSON** | Структурированный текстовый формат полей, массивов и значений. |
@@ -1607,100 +1583,14 @@ Game-like visualization, analytics и feature flags не выполняют эт
 | <a id="term-svg"></a>**SVG** | Векторная web graphics; удобна для схем, но interactive elements требуют keyboard/semantic поддержки. |
 | <a id="term-ast"></a>**AST** · Abstract Syntax Tree | Структура parsed document/code; позволяет менять text nodes без поломки links, fences и syntax. |
 | <a id="term-static-render"></a>**Static rendering** · static build; initial rendered HTML | Подготовка reader content при build, чтобы текст доступен без runtime fetch. |
-| <a id="term-build-time"></a>**Build-time** · build этап | Действие при сборке сайта, например extraction glossary и создание search index. |
+| <a id="term-build-time"></a>**Build-time** · build этап | Действие на этапе сборки проекта, до его запуска или публикации. |
 | <a id="term-bundle"></a>**Bundle** · bundles | Сборочный файл/набор code modules, загружаемый браузером. |
 | <a id="term-cdn"></a>**CDN** | Сеть доставки web assets; external CDN не должна быть единственным способом получить основной текст. |
-| <a id="term-cms"></a>**CMS** | Система управления контентом; простой handbook может редактироваться напрямую в Markdown. |
+| <a id="term-cms"></a>**CMS** | Система создания, редактирования и публикации контента. |
 | <a id="term-readme"></a>**README** | Входная инструкция запуска, сборки и редактирования проекта. |
 | <a id="term-preview"></a>**Preview** · local preview; production preview | Версия/окно для проверки результата до окончательной передачи или release. |
 | <a id="term-storybook"></a>**Storybook** | Среда показа/проверки отдельных UI components; полезна, когда у проекта есть component library. |
 | <a id="term-hosting"></a>**Hosting** · хостинг; private publish; public sharing | Размещение сайта; private/public определяет аудиторию доступа, а не качество build. |
-| <a id="term-manifest"></a>**Manifest** · hosting.json; project_id | Configuration связи проекта с platform; IDs берутся из actual tools, не выдумываются. |
 | <a id="term-browser-automation"></a>**Browser automation** · браузерная автоматизация | Инструментальное управление браузером для проверки UI scenarios. |
 | <a id="term-fallback"></a>**Fallback** · graceful degradation | Запасной способ, сохраняющий чтение при отказе дополнительной capability. |
-
-### 23.12. Интерфейс, чтение и доступность сайта
-
-| Термин / варианты | Простое объяснение |
-|---|---|
 | <a id="term-ui-ux"></a>**UI / UX** · UI; UX; interface | Интерфейс и пользовательский опыт: что видно и насколько понятно им пользоваться. |
-| <a id="term-ia"></a>**Information architecture** · IA | Организация содержания, navigation и поиска для понятного доступа к знаниям. |
-| <a id="term-editorial"></a>**Editorial / premium** · editorial; premium; dark-first | Направление presentation: качественное чтение и спокойный тёмный дизайн, без декоративного перегруза. |
-| <a id="term-responsive"></a>**Responsive** · адаптивный; desktop; tablet; mobile | Layout под разные widths/devices; одна схема не просто уменьшается до нечитаемого размера. |
-| <a id="term-layout"></a>**Layout** · reading column; viewport | Расположение областей; reading column — колонка чтения, viewport — видимая область окна. |
-| <a id="term-hero"></a>**Hero** · first viewport; первый экран | Вводная область страницы; в handbook остаётся компактной, чтобы быстро начать чтение. |
-| <a id="term-sticky"></a>**Sticky navigation** · sticky; sticky nav; sticky overlays | Navigation/элемент, сохраняющий видимость при прокрутке без перекрытия важного текста. |
-| <a id="term-outline"></a>**Outline** · local outline | Оглавление страницы/главы, помогающее перейти к подразделам. |
-| <a id="term-progress"></a>**Reading progress** · progress | Позиция чтения, а не подтверждение понимания или выполнения настоящего тикета. |
-| <a id="term-deep-dive"></a>**Deep dive** · expandable; disclosure; expandables | Подробный раскрываемый блок; основное объяснение и gates не скрываются внутри. |
-| <a id="term-callout"></a>**Callout** · case-study callout | Выделенный блок кейса/предупреждения, отличимый не только цветом. |
-| <a id="term-glossary"></a>**Glossary** · глоссарий | Тематический справочник определений, куда ведут термины по всей странице. |
-| <a id="term-alias"></a>**Alias** · aliases; словоформа | Дополнительное написание того же термина; инфлексия — его грамматическое изменение. |
-| <a id="term-normalization"></a>**Normalization** · нормализация; case-insensitive; Unicode | Приведение текста к сопоставимому виду; case-insensitive игнорирует регистр, Unicode кодирует символы разных языков. |
-| <a id="term-anchor"></a>**Anchor** · anchor; anchors; hash link; permalink | Стабильная точка перехода по `#id`; permalink — прямая ссылка на конкретное место. |
-| <a id="term-slug"></a>**Slug** · heading ID; stable ID | Читаемый идентификатор section/term; deterministic правило даёт одинаковый ID при одинаковом source. |
-| <a id="term-route"></a>**Route** · route; URL; URL fragment | Адрес страницы; fragment после `#` указывает место внутри неё. |
-| <a id="term-search-index"></a>**Search index** · index поиска | Подготовленные тексты/aliases/anchors для быстрого локального поиска. |
-| <a id="term-excerpt"></a>**Excerpt** · snippet | Короткий meaningful фрагмент вокруг поискового совпадения. |
-| <a id="term-empty-state"></a>**Empty state / no-results** · empty state; no-results | Сообщения об отсутствии данных/совпадений с понятным next action. |
-| <a id="term-design-token"></a>**Design token** · tokens; palette; semantic tokens | Именованные значения дизайна: цвет, spacing, размер; token здесь не credential. |
-| <a id="term-typography"></a>**Typography** · типографика; line-height; reading width | Настройка шрифта, размеров, длины строк и межстрочного интервала для чтения. |
-| <a id="term-font"></a>**Sans / monospace** · sans; monospace; Manrope; JetBrains Mono | Sans — шрифт без засечек; monospace — с одинаковой шириной знаков, обычно для code. |
-| <a id="term-font-loading"></a>**Self-host / subset / font swap** · self-host; subset; font swap | Хранение fonts у сайта, ограниченный набор glyphs и показ fallback до font download. |
-| <a id="term-contrast"></a>**Contrast** · контраст; contrast ratio | Различимость текста/controls на фоне; измеряется для actual colour pairs. |
-| <a id="term-a11y"></a>**Accessibility** · a11y; доступность | Возможность пользоваться сайтом с разными devices, способами ввода и assistive tools. |
-| <a id="term-focus"></a>**Focus** · keyboard focus; focus state; focus return | Элемент, принимающий keyboard input; focus state видим, а после dialog focus возвращается в trigger. |
-| <a id="term-focus-trap"></a>**Focus trap** · modal focus | Удержание keyboard navigation внутри открытого modal, без доступа к закрытому background. |
-| <a id="term-screenreader"></a>**Screen reader** · screen-reader | Программа озвучивания структуры/controls для пользователей, не читающих экран визуально. |
-| <a id="term-semantic-html"></a>**Semantic HTML** · landmarks; heading hierarchy | Элементы по назначению: headings, nav, main, buttons; landmarks и hierarchy помогают навигации. |
-| <a id="term-aria"></a>**ARIA** · aria-current; aria-label; aria-live | Атрибуты semantics/accessibility: current отмечает выбранное, label подписывает, live сообщает обновление. |
-| <a id="term-skip-link"></a>**Skip link** | Keyboard link для перехода сразу к main content, минуя повторную navigation. |
-| <a id="term-hit-target"></a>**Hit target** · touch target | Область нажатия control; должна быть удобной и для touch, и для keyboard. |
-| <a id="term-hover"></a>**Hover** · hover-only | Наведение курсора; важные definitions/actions нельзя делать доступными только при hover. |
-| <a id="term-dialog"></a>**Dialog / drawer** · dialog; drawer; modal | Всплывающая панель или выдвижное меню; modal блокирует background и требует управления focus. |
-| <a id="term-trigger"></a>**Trigger control** · trigger control; UI trigger | Кнопка/ссылка открытия панели; после закрытия focus возвращается к ней. |
-| <a id="term-details"></a>**details / summary** · details; summary | Native HTML disclosure и его заголовок; в обычном тексте summary также означает краткое изложение. |
-| <a id="term-motion"></a>**Motion** · animation; tasteful motion | Движение/переходы UI, помогающие ориентации без отвлечения от контента. |
-| <a id="term-reduced-motion"></a>**prefers-reduced-motion** · reduced motion | Системное предпочтение уменьшить движение; сайт уважает его, сохраняя visible feedback. |
-| <a id="term-smooth-scroll"></a>**Smooth scroll** · scroll hijack | Smooth — плавный переход; hijack — навязанный перехват scrolling, которого в гайде быть не должно. |
-| <a id="term-term-highlight"></a>**Term highlight** · подсветка термина | Неподвижное выделение определения около секунды после перехода по term link. |
-| <a id="term-css-decoration"></a>**Dotted underline** · text-decoration; пунктирное подчёркивание | Спокойный dotted стиль links терминов; focus/hover остаются заметными и доступными. |
-| <a id="term-storage"></a>**localStorage** · browser storage; локальное состояние | Хранилище preferences/checklists в браузере; не синхронизирует реальную работу агентов. |
-| <a id="term-clipboard"></a>**Clipboard API** · clipboard; copy button | Browser interface копирования; при failure текст остаётся выделяемым, success не выдумывается. |
-| <a id="term-highlighting"></a>**Syntax highlighting** · syntax highlighting; подсветка кода | Оформление code tokens; exact copied source не должен меняться из-за styles/term links. |
-| <a id="term-overflow"></a>**Overflow** · horizontal overflow | Выход content за область; wide tables/code прокручиваются локально, не растягивают весь document. |
-| <a id="term-no-js"></a>**No-JS** · no JavaScript | Чтение при выключенном/неработающем JavaScript; основной текст и anchor links остаются доступны. |
-| <a id="term-performance"></a>**Performance** · lazy-load; throttling; observers | Быстрота работы; lazy load откладывает bundles, throttling/observers уменьшают лишние scroll calculations. |
-| <a id="term-lighthouse"></a>**Lighthouse** | Инструмент оценки web quality; score можно сообщать только после реального измерения с context. |
-| <a id="term-sanitization"></a>**Sanitization / allowlist** · sanitization; allowlist; strict mode | Очистка/разрешённый перечень markup и URL; strict mode уменьшает unsafe diagram capabilities. |
-| <a id="term-dom"></a>**DOM** · text node; DOM node | Структура HTML document в браузере; text node хранит текст, который можно безопасно аннотировать. |
-| <a id="term-longest-match"></a>**Longest match** · longest-match; word boundary | Выбор самого длинного совпавшего термина и границ слова; `GitHub` не дробится на `Git`. |
-| <a id="term-favicon"></a>**Favicon / monogram** · favicon; monogram | Маленькая иконка сайта/знаковое сокращение для tabs и bookmarks. |
-| <a id="term-placeholder"></a>**Placeholder** · skeleton; loading state | Временный заменитель content; starter skeleton не является meaningful готовым preview. |
-| <a id="term-design-effects"></a>**Gradient / glow / glassmorphism** · gradient; gradients; glow; glassmorphism | Декоративные эффекты; не должны ухудшать contrast и отвлекать от handbook. |
-
-**Покрытие при обновлении:** новые terms/aliases сначала добавляются в эту таблицу, затем проходят coverage audit учебного текста. Не вводить объяснение только в tooltip или во внешнюю документацию.
-
-<a id="ch-24"></a>
-## 24. Источники и границы достоверности
-
-### Основание AI Artefacts
-
-- Предоставленный запрос и [Branch · ai-artefacts (part 2)](chatgpt-conversation://6ac6b74a-1dcc-83eb-a049-0f3aa580d807): lifecycle, TICKET-22/23/25/37, PR #10–13, review protocol, spec conflict и merge order. Прочитанная переписка является историческим свидетельством, а не независимым live audit.
-- Локальные `project-context.md` и `engineering-rules.md` от 6 октября 2026: product, authority map, environment, permissions и review boundaries. Pins и roadmap snapshots в них не публикуются как текущие факты.
-- Предоставленный пользователем гайд Claude «Как ничего не забыть: автосинхронизация и узкие места», 6 октября 2026: использован для главы 04 (storage/rebuild/один daemon), главы 16 (safe automation) и главы 19 (beginner recovery). Вложенные tasks рассматриваются как предложения; никаких настроек машины в этой работе не выполнено. Упрощённые советы о merge, rollback и «невозможности потери работы» скорректированы по delivery/security contracts.
-- Сохранённые результаты предыдущих reviews PR #3 и #7: источники для safety lessons и проверки docs. Они относятся к проверенным тогда HEAD, не к текущему main.
-
-### Первичные технические источники
-
-- [Git: worktree](https://git-scm.com/docs/git-worktree) — механизм рабочих папок и shared repository metadata.
-- [VS Code: Developing in WSL](https://code.visualstudio.com/docs/remote/wsl) — работа с WSL и Dev Containers.
-- [Docker: WSL backend](https://docs.docker.com/desktop/features/wsl/) — выбранная Docker Desktop integration и конфликтующие установки.
-- [Docker: Persisting container data](https://docs.docker.com/get-started/docker-concepts/running-containers/persisting-container-data/) — lifetime volumes и container data.
-- [Dev Container specification](https://github.com/devcontainers/spec/blob/main/docs/specs/devcontainerjson-reference.md) — lifecycle command triggers.
-- [GitHub: Protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) — rules, required checks и reviews.
-- [GitHub: Troubleshooting required checks](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks) — актуальность checks относительно commits.
-
-Это источники точечных технических объяснений. Переносимые recommendations, учебные templates и maturity model разработаны для этого руководства и явно отделены от текущего implementation status AI Artefacts.
-
----

@@ -21,7 +21,7 @@ export function createPanels({tables,rich}) {
     panel('collisions','ch-13','Четыре вида пересечений','Учебное сравнение',tables['ch-13'][0].slice(1)),
     panel('maturity','ch-21','Ступени зрелости','Диагностическая модель, без live score',tables['ch-21'][0].slice(1))];
   const targets=['ch-15','ch-06','ch-09','ch-03','ch-05','ch-11','ch-11','ch-14','ch-15','ch-16'];
-  panels[0].choices.forEach((c,i)=>{c.chapter=targets[i];});
+  panels[0].choices.forEach((c,i)=>{c.chapter=targets[i];const row=tables['ch-02'].find(rows=>rows[0][2]==='Ожидаемое evidence')[i+1];c.ownerHtml=rich(row[1],`architecture-owner-${i}`,'ch-02');c.evidenceHtml=rich(row[2],`architecture-evidence-${i}`,'ch-02');});
   panels[1].scenarios=[
     {id:'happy',label:'Happy path',html:rich('DoR → Preflight PASS → author PR → independent review → founder authorization → confirmed merge → Done. Post-merge sync и deployment проверяются отдельно.','scenario-happy','ch-07')},
     {id:'findings',label:'Review findings',html:rich('CHANGES REQUIRED: тикет остаётся In Review. Fix findings → новый HEAD → revalidation → independent re-review. READY TO MERGE — technical verdict, не Linear state и не permission.','scenario-findings','ch-07')},

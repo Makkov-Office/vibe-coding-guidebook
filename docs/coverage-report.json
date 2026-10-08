@@ -1,172 +1,162 @@
 {
-  "topics": 12,
-  "definitions": 451,
-  "recognized": 2537,
-  "linked": 2470,
+  "topics": 11,
+  "definitions": 394,
+  "recognized": 2392,
+  "linked": 2347,
   "exceptions": [
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-vibe-coding",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-architecture",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-source-truth",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-harness",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-wsl",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-ubuntu",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-devcontainer",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-codex",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-claude",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-ticket",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-dor",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-lifecycle",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-preflight",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-context-engineering",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-spec",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-adr",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-docs-impact",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-git",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-github",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-ci",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-risk",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-risk",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-risk",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-agent",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-merge-order",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-review",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-post-merge",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-least-privilege",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
-      "term": "term-ai-artefacts",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-failure-mode",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-maturity",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-00-b016",
+      "block": "ch-00-b1006",
       "term": "term-acc",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-00-b016",
-      "term": "term-glossary",
       "reason": "existing link or semantic control"
     },
     {
@@ -485,147 +475,127 @@
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-template",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
-      "term": "term-linear",
-      "reason": "executable source retained; adjacent term link"
-    },
-    {
-      "block": "ch-06-b004",
-      "term": "term-ai-artefacts",
-      "reason": "executable source retained; adjacent term link"
-    },
-    {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-outcome",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-scope",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
-      "term": "term-empty-state",
-      "reason": "executable source retained; adjacent term link"
-    },
-    {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-ai",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-authentication",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
-      "term": "term-normalization",
-      "reason": "executable source retained; adjacent term link"
-    },
-    {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-dependency",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-spec",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-repository",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-ui-ux",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-contract",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-risk",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-severity",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-owner",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-primary-author",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-session",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-branch",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-ticket",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-task-tracker",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-delivery",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-pr",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-merge",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-validation",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-contract-test",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-interface",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-06-b004",
+      "block": "ch-06-b1001",
       "term": "term-check",
       "reason": "executable source retained; adjacent term link"
     },
@@ -725,57 +695,47 @@
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-11-b005",
+      "block": "ch-11-b1002",
       "term": "term-canonical",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-11-b005",
-      "term": "term-bootstrap",
-      "reason": "executable source retained; adjacent term link"
-    },
-    {
-      "block": "ch-11-b005",
-      "term": "term-ai-artefacts",
-      "reason": "executable source retained; adjacent term link"
-    },
-    {
-      "block": "ch-11-b005",
+      "block": "ch-11-b1002",
       "term": "term-git",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-11-b005",
+      "block": "ch-11-b1002",
       "term": "term-branch",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-11-b005",
+      "block": "ch-11-b1002",
       "term": "term-worktree",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-11-b005",
+      "block": "ch-11-b1002",
       "term": "term-fetch",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-11-b005",
+      "block": "ch-11-b1002",
       "term": "term-remote",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-11-b005",
+      "block": "ch-11-b1002",
       "term": "term-ref",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-11-b005",
+      "block": "ch-11-b1002",
       "term": "term-main",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-11-b005",
+      "block": "ch-11-b1002",
       "term": "term-origin-main",
       "reason": "executable source retained; adjacent term link"
     },
@@ -790,12 +750,12 @@
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-11-b019",
+      "block": "ch-11-b1004",
       "term": "term-github",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-11-b019",
+      "block": "ch-11-b1004",
       "term": "term-branch",
       "reason": "existing link or semantic control"
     },
@@ -925,228 +885,1978 @@
       "reason": "Mermaid source; equivalent definition links"
     },
     {
-      "block": "ch-18-b008",
-      "term": "term-pr",
-      "reason": "existing link or semantic control"
+      "block": "preview-term-ai",
+      "term": "term-ai",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-18-b012",
-      "term": "term-pr",
-      "reason": "existing link or semantic control"
+      "block": "preview-term-vibe-coding",
+      "term": "term-vibe-coding",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-18-b012",
-      "term": "term-pr",
-      "reason": "existing link or semantic control"
+      "block": "preview-term-agentic-engineering",
+      "term": "term-agentic-engineering",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-18-b019",
-      "term": "term-pr",
-      "reason": "existing link or semantic control"
+      "block": "preview-term-ai-native",
+      "term": "term-ai-native",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-linear",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-model",
+      "term": "term-model",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-event",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-agent",
+      "term": "term-agent",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-adapter",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-codex",
+      "term": "term-codex",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-normalized-events",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-claude",
+      "term": "term-claude",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-github",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-multi-agent",
+      "term": "term-multi-agent",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-pr",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-orchestration",
+      "term": "term-orchestration",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-check",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-harness",
+      "term": "term-harness",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-merge",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-autonomy",
+      "term": "term-autonomy",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
+      "block": "preview-term-bounded-execution",
+      "term": "term-bounded-execution",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-implementation",
+      "term": "term-implementation",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-read-only",
+      "term": "term-read-only",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-cloud-agent",
+      "term": "term-cloud-agent",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-primary-author",
+      "term": "term-primary-author",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-reviewer",
+      "term": "term-reviewer",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-founder",
+      "term": "term-founder",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-owner",
+      "term": "term-owner",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-session",
+      "term": "term-session",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-clean-session",
+      "term": "term-clean-session",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-issue-scoped",
+      "term": "term-issue-scoped",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-helper",
+      "term": "term-helper",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-capability",
+      "term": "term-capability",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-runtime",
       "term": "term-runtime",
-      "reason": "Mermaid source; equivalent definition links"
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
+      "block": "preview-term-tool",
       "term": "term-tool",
-      "reason": "Mermaid source; equivalent definition links"
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-event-log",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-tool-policy",
+      "term": "term-tool-policy",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-read-model",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-human-in-loop",
+      "term": "term-human-in-loop",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-acc",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-ticket",
+      "term": "term-ticket",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-ui-ux",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-linear",
+      "term": "term-linear",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-command-request",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-product-hq",
+      "term": "term-product-hq",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-authorization",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-roadmap",
+      "term": "term-roadmap",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b007",
-      "term": "term-policy",
-      "reason": "Mermaid source; equivalent definition links"
+      "block": "preview-term-backlog",
+      "term": "term-backlog",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b010",
-      "term": "term-event",
-      "reason": "executable source retained; adjacent term link"
+      "block": "preview-term-todo",
+      "term": "term-todo",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b010",
-      "term": "term-run",
-      "reason": "executable source retained; adjacent term link"
+      "block": "preview-term-in-progress",
+      "term": "term-in-progress",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b010",
-      "term": "term-github",
-      "reason": "executable source retained; adjacent term link"
+      "block": "preview-term-in-review",
+      "term": "term-in-review",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b010",
-      "term": "term-review",
-      "reason": "executable source retained; adjacent term link"
+      "block": "preview-term-done",
+      "term": "term-done",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b010",
-      "term": "term-timestamp",
-      "reason": "executable source retained; adjacent term link"
+      "block": "preview-term-lifecycle",
+      "term": "term-lifecycle",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b010",
-      "term": "term-payload",
-      "reason": "executable source retained; adjacent term link"
+      "block": "preview-term-workflow",
+      "term": "term-workflow",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-21-b010",
-      "term": "term-verdict",
-      "reason": "executable source retained; adjacent term link"
+      "block": "preview-term-pipeline",
+      "term": "term-pipeline",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-24-b003",
-      "term": "term-branch",
-      "reason": "existing link or semantic control"
+      "block": "preview-term-delivery",
+      "term": "term-delivery",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-24-b005",
+      "block": "preview-term-release",
+      "term": "term-release",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-deployment",
+      "term": "term-deployment",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-scope",
+      "term": "term-scope",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-out-of-scope",
+      "term": "term-out-of-scope",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-scope-creep",
+      "term": "term-scope-creep",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-outcome",
+      "term": "term-outcome",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-requirement",
+      "term": "term-requirement",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-expectation",
+      "term": "term-expectation",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-constraint",
+      "term": "term-constraint",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-intent",
+      "term": "term-intent",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-ac",
+      "term": "term-ac",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-dor",
+      "term": "term-dor",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-dod",
+      "term": "term-dod",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-dependency",
+      "term": "term-dependency",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-blocker",
+      "term": "term-blocker",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-relations",
+      "term": "term-relations",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-priority",
+      "term": "term-priority",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-ready-review",
+      "term": "term-ready-review",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-changes-required",
+      "term": "term-changes-required",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-ready-founder",
+      "term": "term-ready-founder",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-ready-merge",
+      "term": "term-ready-merge",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-transition",
+      "term": "term-transition",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-gate",
+      "term": "term-gate",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-consequential",
+      "term": "term-consequential",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-follow-up",
+      "term": "term-follow-up",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-template",
+      "term": "term-template",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-task-tracker",
+      "term": "term-task-tracker",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-mvp",
+      "term": "term-mvp",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-milestone",
+      "term": "term-milestone",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-wave",
+      "term": "term-wave",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-exit-criterion",
+      "term": "term-exit-criterion",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-git",
       "term": "term-git",
-      "reason": "existing link or semantic control"
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-24-b005",
+      "block": "preview-term-repository",
+      "term": "term-repository",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-checkout",
+      "term": "term-checkout",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-clone",
+      "term": "term-clone",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-worktree",
       "term": "term-worktree",
-      "reason": "existing link or semantic control"
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-24-b005",
-      "term": "term-vscode",
-      "reason": "existing link or semantic control"
+      "block": "preview-term-index",
+      "term": "term-index",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-24-b005",
-      "term": "term-wsl",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-24-b005",
-      "term": "term-docker",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-24-b005",
-      "term": "term-wsl",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-24-b005",
-      "term": "term-backend",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-24-b005",
-      "term": "term-docker",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-24-b005",
-      "term": "term-container",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-24-b005",
-      "term": "term-devcontainer",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-24-b005",
-      "term": "term-spec",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-24-b005",
-      "term": "term-github",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-24-b005",
+      "block": "preview-term-branch",
       "term": "term-branch",
-      "reason": "existing link or semantic control"
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-24-b005",
+      "block": "preview-term-main",
+      "term": "term-main",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-trunk",
+      "term": "term-trunk",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-commit",
+      "term": "term-commit",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-conventional-commit",
+      "term": "term-conventional-commit",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-library",
+      "term": "term-library",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-git-object",
+      "term": "term-git-object",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-uncommitted",
+      "term": "term-uncommitted",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-head",
+      "term": "term-head",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-sha",
+      "term": "term-sha",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-base",
+      "term": "term-base",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-tip",
+      "term": "term-tip",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-remote",
+      "term": "term-remote",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-origin-main",
+      "term": "term-origin-main",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-ref",
+      "term": "term-ref",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-refspec",
+      "term": "term-refspec",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-fetch",
+      "term": "term-fetch",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-autofetch",
+      "term": "term-autofetch",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-pull",
+      "term": "term-pull",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-push",
+      "term": "term-push",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-merge",
+      "term": "term-merge",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-fast-forward",
+      "term": "term-fast-forward",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-squash",
+      "term": "term-squash",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-rebase",
+      "term": "term-rebase",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-refresh",
+      "term": "term-refresh",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-switch",
+      "term": "term-switch",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-diff",
+      "term": "term-diff",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-changed-files",
+      "term": "term-changed-files",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-tracked",
+      "term": "term-tracked",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-untracked",
+      "term": "term-untracked",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-ignored",
+      "term": "term-ignored",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-staged",
+      "term": "term-staged",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-dirty",
+      "term": "term-dirty",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-local-only",
+      "term": "term-local-only",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-divergence",
+      "term": "term-divergence",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-conflict",
+      "term": "term-conflict",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-force-push",
+      "term": "term-force-push",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-reset",
+      "term": "term-reset",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-prune",
+      "term": "term-prune",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-merge-driver",
+      "term": "term-merge-driver",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-tag",
+      "term": "term-tag",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-github",
       "term": "term-github",
-      "reason": "existing link or semantic control"
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     },
     {
-      "block": "ch-24-b005",
+      "block": "preview-term-pr",
+      "term": "term-pr",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-pr-body",
+      "term": "term-pr-body",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-open-closed",
+      "term": "term-open-closed",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-header",
+      "term": "term-header",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-issue-reference",
+      "term": "term-issue-reference",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-draft-pr",
+      "term": "term-draft-pr",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-check",
+      "term": "term-check",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-required-check",
       "term": "term-required-check",
-      "reason": "existing link or semantic control"
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-advisory",
+      "term": "term-advisory",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-branch-protection",
+      "term": "term-branch-protection",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-required-review",
+      "term": "term-required-review",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-bypass",
+      "term": "term-bypass",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-github-actions",
+      "term": "term-github-actions",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-job-step",
+      "term": "term-job-step",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-run",
+      "term": "term-run",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-runner",
+      "term": "term-runner",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-event",
+      "term": "term-event",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-event-path",
+      "term": "term-event-path",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-pull-request-target",
+      "term": "term-pull-request-target",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-review-thread",
+      "term": "term-review-thread",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-inline-comment",
+      "term": "term-inline-comment",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-finding",
+      "term": "term-finding",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-review",
+      "term": "term-review",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-fix",
+      "term": "term-fix",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-verdict",
+      "term": "term-verdict",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-approval",
+      "term": "term-approval",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-mergeable",
+      "term": "term-mergeable",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-stale",
+      "term": "term-stale",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-github-cli",
+      "term": "term-github-cli",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-auth-login",
+      "term": "term-auth-login",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-auth-setup-git",
+      "term": "term-auth-setup-git",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-github-identity",
+      "term": "term-github-identity",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-404",
+      "term": "term-404",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-source-truth",
+      "term": "term-source-truth",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-canonical",
+      "term": "term-canonical",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-spec",
+      "term": "term-spec",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-contract",
+      "term": "term-contract",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-interface",
+      "term": "term-interface",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-enum",
+      "term": "term-enum",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-export",
+      "term": "term-export",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-architecture",
+      "term": "term-architecture",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-infrastructure",
+      "term": "term-infrastructure",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-adr",
+      "term": "term-adr",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-supersede",
+      "term": "term-supersede",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-revisit",
+      "term": "term-revisit",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-docs-impact",
+      "term": "term-docs-impact",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-declaration",
+      "term": "term-declaration",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-spec-conflict",
+      "term": "term-spec-conflict",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-entrypoint",
+      "term": "term-entrypoint",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-agents-md",
+      "term": "term-agents-md",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-architecture-md",
+      "term": "term-architecture-md",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-docs-index",
+      "term": "term-docs-index",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-context-engineering",
+      "term": "term-context-engineering",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-context",
+      "term": "term-context",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-prompt",
+      "term": "term-prompt",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-launcher",
+      "term": "term-launcher",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-handoff",
+      "term": "term-handoff",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-compaction",
+      "term": "term-compaction",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-durable-decision",
+      "term": "term-durable-decision",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-drift",
+      "term": "term-drift",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-snapshot",
+      "term": "term-snapshot",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-live-state",
+      "term": "term-live-state",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-case-study",
+      "term": "term-case-study",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-provenance",
+      "term": "term-provenance",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-authority",
+      "term": "term-authority",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-boundary",
+      "term": "term-boundary",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-coupling",
+      "term": "term-coupling",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-abstraction",
+      "term": "term-abstraction",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-refactor",
+      "term": "term-refactor",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-parser",
+      "term": "term-parser",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-metadata",
+      "term": "term-metadata",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-machine-readable",
+      "term": "term-machine-readable",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-build-ledger",
+      "term": "term-build-ledger",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-fresh-agent",
+      "term": "term-fresh-agent",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-wsl",
+      "term": "term-wsl",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-ubuntu",
+      "term": "term-ubuntu",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-filesystem",
+      "term": "term-filesystem",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-host",
+      "term": "term-host",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-vscode",
+      "term": "term-vscode",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-workspace",
+      "term": "term-workspace",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-devcontainer",
+      "term": "term-devcontainer",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-devcontainer-json",
+      "term": "term-devcontainer-json",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-docker",
+      "term": "term-docker",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-docker-engine",
+      "term": "term-docker-engine",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-endpoint",
+      "term": "term-endpoint",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-docker-desktop",
+      "term": "term-docker-desktop",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-wsl-integration",
+      "term": "term-wsl-integration",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-container",
+      "term": "term-container",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-image",
+      "term": "term-image",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-layer",
+      "term": "term-layer",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-dockerfile",
+      "term": "term-dockerfile",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-socket",
+      "term": "term-socket",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-dood",
+      "term": "term-dood",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-mount",
+      "term": "term-mount",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-bind-mount",
+      "term": "term-bind-mount",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-volume",
+      "term": "term-volume",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-persistence",
+      "term": "term-persistence",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-auth-store",
+      "term": "term-auth-store",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-writable-layer",
+      "term": "term-writable-layer",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-rebuild",
+      "term": "term-rebuild",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-restart",
+      "term": "term-restart",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-cache",
+      "term": "term-cache",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-post-create",
+      "term": "term-post-create",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-post-start",
+      "term": "term-post-start",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-post-attach",
+      "term": "term-post-attach",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-bootstrap",
+      "term": "term-bootstrap",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-doctor",
+      "term": "term-doctor",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-toolchain",
+      "term": "term-toolchain",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-pin",
+      "term": "term-pin",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-deterministic",
+      "term": "term-deterministic",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-node",
+      "term": "term-node",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-package-manager",
+      "term": "term-package-manager",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-corepack",
+      "term": "term-corepack",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-lockfile",
+      "term": "term-lockfile",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-registry",
+      "term": "term-registry",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-shell",
+      "term": "term-shell",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-env",
+      "term": "term-env",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-env-stage",
+      "term": "term-env-stage",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-script",
+      "term": "term-script",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-credentials",
+      "term": "term-credentials",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-configuration",
+      "term": "term-configuration",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-extension",
+      "term": "term-extension",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-exit-code",
+      "term": "term-exit-code",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-disk-space",
+      "term": "term-disk-space",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-preflight",
+      "term": "term-preflight",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-validation",
+      "term": "term-validation",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-verification",
+      "term": "term-verification",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-ci",
+      "term": "term-ci",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-cicd",
+      "term": "term-cicd",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-test",
+      "term": "term-test",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-unit",
+      "term": "term-unit",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-integration-test",
+      "term": "term-integration-test",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-e2e",
+      "term": "term-e2e",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-regression",
+      "term": "term-regression",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-contract-test",
+      "term": "term-contract-test",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-negative-case",
+      "term": "term-negative-case",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-happy-path",
+      "term": "term-happy-path",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-edge-case",
+      "term": "term-edge-case",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-race-condition",
+      "term": "term-race-condition",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-evidence",
+      "term": "term-evidence",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-pass-fail",
+      "term": "term-pass-fail",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-self-review",
+      "term": "term-self-review",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-independent-review",
+      "term": "term-independent-review",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-revalidation",
+      "term": "term-revalidation",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-reproducer",
+      "term": "term-reproducer",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-throwaway",
+      "term": "term-throwaway",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-build",
+      "term": "term-build",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-lint",
+      "term": "term-lint",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-correctness",
+      "term": "term-correctness",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-defect",
+      "term": "term-defect",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-report",
+      "term": "term-report",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-artifact",
+      "term": "term-artifact",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-log",
+      "term": "term-log",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-status-sync",
+      "term": "term-status-sync",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-qa",
+      "term": "term-qa",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-wiring",
+      "term": "term-wiring",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-selective-ci",
+      "term": "term-selective-ci",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-assumption",
+      "term": "term-assumption",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-semantic-gap",
+      "term": "term-semantic-gap",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-risk",
+      "term": "term-risk",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-risk-matrix",
+      "term": "term-risk-matrix",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-severity",
+      "term": "term-severity",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-impact",
+      "term": "term-impact",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-blast-radius",
+      "term": "term-blast-radius",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-least-privilege",
+      "term": "term-least-privilege",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-permission",
+      "term": "term-permission",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-policy",
+      "term": "term-policy",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-privilege",
+      "term": "term-privilege",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-enforcement",
+      "term": "term-enforcement",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-authorization",
+      "term": "term-authorization",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-authentication",
+      "term": "term-authentication",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-logout",
+      "term": "term-logout",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-retention",
+      "term": "term-retention",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-secret",
+      "term": "term-secret",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-token",
+      "term": "term-token",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-sandbox",
+      "term": "term-sandbox",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-untrusted",
+      "term": "term-untrusted",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-trust-boundary",
+      "term": "term-trust-boundary",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-prompt-injection",
+      "term": "term-prompt-injection",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-shell-injection",
+      "term": "term-shell-injection",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-fail-closed",
+      "term": "term-fail-closed",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-failure-mode",
+      "term": "term-failure-mode",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-security-review",
+      "term": "term-security-review",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-rls",
+      "term": "term-rls",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-migration",
+      "term": "term-migration",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-rollback",
+      "term": "term-rollback",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-recovery",
+      "term": "term-recovery",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-backup",
+      "term": "term-backup",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-containment",
+      "term": "term-containment",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-rotation",
+      "term": "term-rotation",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-residual-risk",
+      "term": "term-residual-risk",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-destructive",
+      "term": "term-destructive",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-cleanup",
+      "term": "term-cleanup",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-immutable",
+      "term": "term-immutable",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-tls",
+      "term": "term-tls",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-supply-chain",
+      "term": "term-supply-chain",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-collision",
+      "term": "term-collision",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-isolated",
+      "term": "term-isolated",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-overlap",
+      "term": "term-overlap",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-contract-dependency",
+      "term": "term-contract-dependency",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-direct-conflict",
+      "term": "term-direct-conflict",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-semantic-conflict",
+      "term": "term-semantic-conflict",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-merge-order",
+      "term": "term-merge-order",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-dag",
+      "term": "term-dag",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-provider-consumer",
+      "term": "term-provider-consumer",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-dedup",
+      "term": "term-dedup",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-reconciliation",
+      "term": "term-reconciliation",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-sync",
+      "term": "term-sync",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-post-merge",
+      "term": "term-post-merge",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-auto-sync",
+      "term": "term-auto-sync",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-non-blocking-hook",
+      "term": "term-non-blocking-hook",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-lock",
+      "term": "term-lock",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-wrapper",
+      "term": "term-wrapper",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-hook",
+      "term": "term-hook",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-scheduler",
+      "term": "term-scheduler",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-freshness",
+      "term": "term-freshness",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-acc",
+      "term": "term-acc",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-maturity",
+      "term": "term-maturity",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-control-plane",
+      "term": "term-control-plane",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-telemetry",
+      "term": "term-telemetry",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-adapter",
+      "term": "term-adapter",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-ingestion",
+      "term": "term-ingestion",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-normalized-events",
+      "term": "term-normalized-events",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-event-log",
+      "term": "term-event-log",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-read-model",
+      "term": "term-read-model",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-schema",
+      "term": "term-schema",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-payload",
+      "term": "term-payload",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-idempotency",
+      "term": "term-idempotency",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-ordering",
+      "term": "term-ordering",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-timestamp",
+      "term": "term-timestamp",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-lease",
+      "term": "term-lease",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-durable-run",
+      "term": "term-durable-run",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-interruption",
+      "term": "term-interruption",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-retry",
+      "term": "term-retry",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-budget",
+      "term": "term-budget",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-audit",
+      "term": "term-audit",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-dashboard",
+      "term": "term-dashboard",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-feature-flag",
+      "term": "term-feature-flag",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-analytics",
+      "term": "term-analytics",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-command-request",
+      "term": "term-command-request",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-standalone",
+      "term": "term-standalone",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-figma",
+      "term": "term-figma",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-slack",
+      "term": "term-slack",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-vercel",
+      "term": "term-vercel",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-plugin",
+      "term": "term-plugin",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-api",
+      "term": "term-api",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-webmcp",
+      "term": "term-webmcp",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-frontend",
+      "term": "term-frontend",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-backend",
+      "term": "term-backend",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-framework",
+      "term": "term-framework",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-stack",
+      "term": "term-stack",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-react",
+      "term": "term-react",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-typescript",
+      "term": "term-typescript",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-markdown",
+      "term": "term-markdown",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-html",
+      "term": "term-html",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-css",
+      "term": "term-css",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-json",
+      "term": "term-json",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-yaml",
+      "term": "term-yaml",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-mermaid",
+      "term": "term-mermaid",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-svg",
+      "term": "term-svg",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-ast",
+      "term": "term-ast",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-static-render",
+      "term": "term-static-render",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-build-time",
+      "term": "term-build-time",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-bundle",
+      "term": "term-bundle",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-cdn",
+      "term": "term-cdn",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-cms",
+      "term": "term-cms",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-readme",
+      "term": "term-readme",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-preview",
+      "term": "term-preview",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-storybook",
+      "term": "term-storybook",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-hosting",
+      "term": "term-hosting",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-browser-automation",
+      "term": "term-browser-automation",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-fallback",
+      "term": "term-fallback",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
+    },
+    {
+      "block": "preview-term-ui-ux",
+      "term": "term-ui-ux",
+      "reason": "glossary definition reused in tooltip/panel; recursive annotation excluded"
     }
   ],
   "ambiguous": [],
   "unexplainedGaps": 0,
-  "renderedLinked": 2631,
+  "renderedLinked": 2478,
   "renderedGaps": []
 }

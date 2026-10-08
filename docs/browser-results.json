@@ -22,7 +22,7 @@
     "preserveOutput": "always",
     "projects": [
       {
-        "outputDir": "D:/Perosnal projects/Vibe-coding guidebook/agentic-engineering-handbook/output/playwright",
+        "outputDir": "D:/Perosnal projects/Vibe-coding guidebook/agentic-engineering-handbook/.sites-runtime/playwright",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -42,7 +42,7 @@
       {
         "grep": {},
         "grepInvert": null,
-        "outputDir": "D:\\Perosnal projects\\Vibe-coding guidebook\\agentic-engineering-handbook\\output\\playwright",
+        "outputDir": "D:\\Perosnal projects\\Vibe-coding guidebook\\agentic-engineering-handbook\\.sites-runtime\\playwright",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
@@ -55,7 +55,7 @@
         "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
         "timeout": 60000,
         "use": {
-          "baseURL": "http://localhost:3000",
+          "baseURL": "http://127.0.0.1:8787",
           "browserName": "chromium",
           "channel": "msedge",
           "headless": true,
@@ -97,13 +97,55 @@
   },
   "suites": [
     {
+      "title": "local-state.spec.ts",
+      "file": "local-state.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "storage refusal retains learning and practice marks across SPA routes, then resets them",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5616,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T16:48:30.083Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ba635fad2581ca3b8997-5637b88456a4b4f39e1c",
+          "file": "local-state.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
       "title": "reader.spec.ts",
       "file": "reader.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [
         {
-          "title": "operational checklists have compact aligned controls, individual names and persistent keyboard toggles",
+          "title": "chapter routes have initial HTML, canonical anchors, native history and legacy bookmarks",
           "ok": true,
           "tags": [],
           "tests": [
@@ -118,12 +160,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9464,
+                  "duration": 8081,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T11:19:54.157Z",
+                  "startTime": "2026-10-08T16:48:36.283Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -131,13 +173,13 @@
               "status": "expected"
             }
           ],
-          "id": "74de4b60cc20d5f05aaf-6955a7c35adb1b09078f",
+          "id": "74de4b60cc20d5f05aaf-4c8e95a40fa88680b2a9",
           "file": "reader.spec.ts",
-          "line": 4,
+          "line": 5,
           "column": 1
         },
         {
-          "title": "form controls remain usable at narrow widths and dropdown/disclosures support keyboard",
+          "title": "inline term preview does not move reading or history; repeat, keyboard and dismissal",
           "ok": true,
           "tags": [],
           "tests": [
@@ -152,12 +194,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7608,
+                  "duration": 4154,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T11:20:04.066Z",
+                  "startTime": "2026-10-08T16:48:44.382Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -165,13 +207,13 @@
               "status": "expected"
             }
           ],
-          "id": "74de4b60cc20d5f05aaf-51496c30aa275048b14a",
+          "id": "74de4b60cc20d5f05aaf-dc624f281cb86fe06bb6",
           "file": "reader.spec.ts",
-          "line": 14,
+          "line": 9,
           "column": 1
         },
         {
-          "title": "initial HTML contains every chapter; all internal anchors and definitions resolve",
+          "title": "two template panels preserve exact copy, remain nonmodal desktop and modal mobile",
           "ok": true,
           "tags": [],
           "tests": [
@@ -186,12 +228,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2721,
+                  "duration": 5013,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T11:20:11.694Z",
+                  "startTime": "2026-10-08T16:48:48.567Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -199,13 +241,13 @@
               "status": "expected"
             }
           ],
-          "id": "74de4b60cc20d5f05aaf-3ed921d4fc50848eafa4",
+          "id": "74de4b60cc20d5f05aaf-7377c2e40badb23ead5c",
           "file": "reader.spec.ts",
-          "line": 21,
+          "line": 13,
           "column": 1
         },
         {
-          "title": "search includes glossary, prose and hidden prompts; keyboard/Esc restore focus",
+          "title": "long term branch uses real overlay component with hydrated fixture and returns to template",
           "ok": true,
           "tags": [],
           "tests": [
@@ -220,12 +262,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6225,
+                  "duration": 5388,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T11:20:14.434Z",
+                  "startTime": "2026-10-08T16:48:53.616Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -233,13 +275,13 @@
               "status": "expected"
             }
           ],
-          "id": "74de4b60cc20d5f05aaf-75cff30d76011e7fd717",
+          "id": "74de4b60cc20d5f05aaf-0faee51f93c4e44a8110",
           "file": "reader.spec.ts",
-          "line": 26,
+          "line": 17,
           "column": 1
         },
         {
-          "title": "glossary links reveal filtered definitions, highlight, repeat, reload and back",
+          "title": "global search, hidden results, glossary filters and repeated arrival focus",
           "ok": true,
           "tags": [],
           "tests": [
@@ -254,12 +296,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7389,
+                  "duration": 5666,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T11:20:20.697Z",
+                  "startTime": "2026-10-08T16:48:59.018Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -267,13 +309,13 @@
               "status": "expected"
             }
           ],
-          "id": "74de4b60cc20d5f05aaf-3bc04421d71371ead4c8",
+          "id": "74de4b60cc20d5f05aaf-a0d5faa5a28a95a0a696",
           "file": "reader.spec.ts",
-          "line": 33,
+          "line": 24,
           "column": 1
         },
         {
-          "title": "all learning controls expose correct scenario evidence",
+          "title": "local chapter completion, four badges, exercises, resume and reset",
           "ok": true,
           "tags": [],
           "tests": [
@@ -288,12 +330,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 14867,
+                  "duration": 9771,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T11:20:28.107Z",
+                  "startTime": "2026-10-08T16:49:04.697Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -301,13 +343,13 @@
               "status": "expected"
             }
           ],
-          "id": "74de4b60cc20d5f05aaf-015d50fca9144f197547",
+          "id": "74de4b60cc20d5f05aaf-7586da732d3d2df73deb",
           "file": "reader.spec.ts",
-          "line": 38,
+          "line": 28,
           "column": 1
         },
         {
-          "title": "copy preserves Unicode/newlines byte-for-byte and reports failure",
+          "title": "system overview and task path, all map controls and lifecycle scenarios",
           "ok": true,
           "tags": [],
           "tests": [
@@ -322,12 +364,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5425,
+                  "duration": 11038,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T11:20:42.999Z",
+                  "startTime": "2026-10-08T16:49:14.485Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -335,13 +377,13 @@
               "status": "expected"
             }
           ],
-          "id": "74de4b60cc20d5f05aaf-54a808a95d0ab2fef526",
+          "id": "74de4b60cc20d5f05aaf-a95b98c3d6c268873600",
           "file": "reader.spec.ts",
-          "line": 43,
+          "line": 31,
           "column": 1
         },
         {
-          "title": "responsive widths, mobile drawer, no overflow and screenshots",
+          "title": "controls, checklist keys, drawer and all viewports including 200 percent zoom",
           "ok": true,
           "tags": [],
           "tests": [
@@ -356,12 +398,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7785,
+                  "duration": 18376,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T11:20:48.450Z",
+                  "startTime": "2026-10-08T16:49:25.537Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -369,13 +411,115 @@
               "status": "expected"
             }
           ],
-          "id": "74de4b60cc20d5f05aaf-a5766bfc4bfa534187ac",
+          "id": "74de4b60cc20d5f05aaf-fb0428f3c162d148ae20",
+          "file": "reader.spec.ts",
+          "line": 36,
+          "column": 1
+        },
+        {
+          "title": "storage and clipboard refusal, no-JS, print and reduced motion",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3583,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T16:49:43.927Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "74de4b60cc20d5f05aaf-f549131b63d885c4da0e",
+          "file": "reader.spec.ts",
+          "line": 41,
+          "column": 1
+        },
+        {
+          "title": "accessibility and console errors on reader, map, tooltip and modal",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5900,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T16:49:47.525Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "74de4b60cc20d5f05aaf-372b587ab5f5a6eef9f6",
+          "file": "reader.spec.ts",
+          "line": 45,
+          "column": 1
+        },
+        {
+          "title": "strict Mermaid diagrams and desktop/mobile delivery screenshots",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 11035,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T16:49:53.437Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "74de4b60cc20d5f05aaf-5096daa9d009858ab799",
           "file": "reader.spec.ts",
           "line": 48,
           "column": 1
         },
         {
-          "title": "storage denied, reduced motion, print, no-JS all preserve reading",
+          "title": "context overlays remain accessible, reflow at zoom, and mobile light-dismiss works",
           "ok": true,
           "tags": [],
           "tests": [
@@ -390,12 +534,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6730,
+                  "duration": 4035,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T11:20:56.264Z",
+                  "startTime": "2026-10-08T16:50:04.491Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -403,13 +547,13 @@
               "status": "expected"
             }
           ],
-          "id": "74de4b60cc20d5f05aaf-c010f86c4cade61f50df",
+          "id": "74de4b60cc20d5f05aaf-c883ee287ffce8945807",
           "file": "reader.spec.ts",
-          "line": 53,
+          "line": 52,
           "column": 1
         },
         {
-          "title": "accessibility scan of reader, dialog and interactive panels",
+          "title": "tooltip inside mobile sheet stays in its top layer and remains readable",
           "ok": true,
           "tags": [],
           "tests": [
@@ -424,12 +568,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 14445,
+                  "duration": 1240,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T11:21:03.016Z",
+                  "startTime": "2026-10-08T16:50:08.543Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -437,13 +581,55 @@
               "status": "expected"
             }
           ],
-          "id": "74de4b60cc20d5f05aaf-a495dc9d0c5f115ab948",
+          "id": "74de4b60cc20d5f05aaf-1191dbbe4f40ed4db90a",
           "file": "reader.spec.ts",
-          "line": 57,
+          "line": 56,
           "column": 1
+        }
+      ]
+    },
+    {
+      "title": "return-reading.spec.ts",
+      "file": "return-reading.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "return from a long definition restores saved scroll and focus at 1440px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3472,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T16:50:09.813Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9c00dd291d38dbe0b148-5dd02d6657026de278b3",
+          "file": "return-reading.spec.ts",
+          "line": 3,
+          "column": 31
         },
         {
-          "title": "all seven diagrams render safely without runtime errors",
+          "title": "return from a long definition restores saved scroll and focus at 360px",
           "ok": true,
           "tags": [],
           "tests": [
@@ -458,12 +644,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8596,
+                  "duration": 2868,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-08T11:21:17.485Z",
+                  "startTime": "2026-10-08T16:50:13.300Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -471,19 +657,19 @@
               "status": "expected"
             }
           ],
-          "id": "74de4b60cc20d5f05aaf-482c881b332e538b981c",
-          "file": "reader.spec.ts",
-          "line": 62,
-          "column": 1
+          "id": "9c00dd291d38dbe0b148-50757a3a36466e08e2d4",
+          "file": "return-reading.spec.ts",
+          "line": 3,
+          "column": 31
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-08T11:19:53.419Z",
-    "duration": 93446.70700000001,
-    "expected": 11,
+    "startTime": "2026-10-08T16:48:29.191Z",
+    "duration": 107426.148,
+    "expected": 16,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

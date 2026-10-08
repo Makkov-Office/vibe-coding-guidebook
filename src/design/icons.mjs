@@ -6,7 +6,7 @@ import {
   IconBrain, IconFileText, IconGitBranch, IconAlertTriangle, IconGitMerge,
   IconEyeCheck, IconUserCheck, IconRefresh, IconShieldLock, IconFlask,
   IconFirstAidKit, IconSettings, IconChartBar, IconNotes, IconVocabulary,
-  IconBooks, IconTimeline, IconTags,
+  IconBooks, IconTimeline, IconTags, IconCheck, IconCopy,
 } from '@tabler/icons-react';
 
 // All interface icons share one optical size and stroke; no per-instance overrides.
@@ -22,6 +22,7 @@ export const icons={
   gates:IconUserCheck,sync:IconRefresh,security:IconShieldLock,cases:IconFlask,
   recovery:IconFirstAidKit,setup:IconSettings,maturity:IconChartBar,notes:IconNotes,
   glossary:IconVocabulary,sources:IconBooks,timeline:IconTimeline,tags:IconTags,
+  check:IconCheck,copy:IconCopy,
 };
 export const chapterIcons={
   'ch-00':'compass','ch-01':'compass','ch-02':'architecture','ch-03':'robot',

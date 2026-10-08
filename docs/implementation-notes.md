@@ -1,38 +1,37 @@
-# Фактическая проверка — 2026-10-08
+# Implementation notes — learning portal 1.2
 
-## Исправление чеклистов и control audit
+## Delivered behavior
 
-Глава 22: input sizing bug воспроизведён (774px checkbox width), исправлен (20 × 20px, 44px hit target). Отдельные правила boolean controls, читаемый grid checklist и уникальные accessible names. Скорректированы radio states, dropdown темы, mobile filter layout, placeholders, hover/focus/disabled states. Storage keys и учебный Markdown сохранены. Подробности: `controls-audit.md`. Новые regression tests проверяют checkbox geometry/names/persistence/reset и keyboard/width behavior controls; итоговый browser suite — 11 tests.
+Separate chapter URLs /chapters/01–22, orientation /, glossary /glossary and expanded /print. Source data is compiled during build; the page's teaching HTML is present on first response. Fixed left rail 264px >=1024px; local outline >=1360px; accessible drawer below desktop. Linear tokens/fonts retained; Tabler 20px / stroke 1.75.
 
-## Обновление иконок
+Editorial audit 1–5 and 7–9 applied. Private repo/conversation links, real internal ticket/PR identifiers, product provenance and chapter 24 removed. Chapter 18 is four anonymized transferable cases; integration sequence is an illustrative plan, not a completed merge. Future Control Center shortened to an optional disclosure. Brother exercises retained, five optional checkboxes added, four small humorous inserts. Additional examples/explanations folded with authored disclosure boundaries; mandatory rules and operational checklist remain visible.
 
-Tabler Outline применяется ко всем 24 canonical chapter headings и orientation 00, группам sidebar/drawer, темам глоссария и ключевым UI-заголовкам. Прежние UI glyphs заменены единым набором, включая навигационные стрелки, раскрытие и закрытие. Стандарт: 20px / stroke 1.75 / currentColor; исходный Markdown и raw copied examples не изменены. Public-доступ, установленный владельцем после первоначальной публикации, сохраняется по прямому подтверждению пользователя.
+Current inventory: **22 teaching chapters + glossary, orientation 00, 394 definitions, 11 topics, 6 Mermaid diagrams**. The prior inventory was deliberately reduced by approved editorial cleanup. Parent prompt and handbook remain unchanged (SHA256 verification). Source/download byte parity is retained.
 
-После обновления: 4 content tests и 9 browser tests прошли; typecheck и ESLint прошли. Дополнительная DOM-проверка: 25 основных заголовков с иконками, единственная пара computed size/stroke — `20px/1.75`, все icons декоративные, 0 текстовых arrow glyphs в UI controls. Desktop, mobile drawer и lifecycle screenshots обновлены; отдельный capture `screenshots/chapter-icons.png` показывает заголовок главы и навигацию. Лицензия Tabler: `public/licenses/tabler-icons-MIT.txt`.
+All appropriate term occurrences remain annotated. <=160 visible characters in a single plain paragraph -> anchored tooltip; long or structured -> nonmodal side panel >=768 / modal bottom sheet below 768. Actual definitions remain short; the long branch is browser-tested with isolated hydration fixtures, not artificial production text. Tooltip preserves URL/history/scroll and supports keyboard, repeated activation, Escape, outside/focus dismissal and viewport clamping. Context panels use native dialog, focus return, safe-area/scroll handling, breakpoint modality adaptation and mobile backdrop dismissal.
 
-## Реализация
+Template drawers apply only to the chapter 06 ticket and chapter 14 review prompt, alongside the original disclosures. Exact source copy and term references are available in both. A long definition temporarily replaces an example panel with a return action. Explicit glossary links clear filters, focus/highlight the exact record, and preserve a stable originating occurrence for return. Preview itself adds no history entries.
 
-Учебная часть оригинального руководства выделена до маркера «Конец учебного руководства». Исходные документы не редактировались. Single source `content/handbook.md` генерирует initial HTML, index и downloadable Markdown. Inventory: orientation 00, 24 главы, 451 определение, 12 тем, 7 Mermaid-схем.
+Learning is explicit and local: 22 completion marks with undo, four group achievements, five optional exercises, resume and reset. Existing practice keys survive; old longread position migrates to the corresponding chapter's beginning rather than misusing an absolute scroll coordinate. When browser storage is refused, a shared tab-memory fallback retains completion, exercises, practice and reading state across SPA routes until reload; the message names this limit. Clipboard refusal retains manually selectable source.
 
-Compiler использует AST, GFM и HTML allowlist. Canonical chapter/term anchors и детерминированные subsection IDs проверяются на уникальность и targets. Longest-match применяется к reader HTML и всем динамическим состояниям. Неоднозначности заданы explicit map. Executable fences сохраняют source; glossary не размечает сам себя. Final rendered audit: 2470 linked occurrences, 0 ambiguous, 0 rendered gaps, **0 unexplained gaps**. Structural exceptions перечислены в `coverage-report.json`.
+System map supports overview and ten guided stages, highlighted connections, role authority, named responsible owner, expected evidence and chapter links. Mobile guided mode shows one stage with previous/next; overview nodes scroll to their detail. Lifecycle preserves happy/review-findings/unavailable-evidence and separate post-merge sync. All diagrams and simulations are educational only.
 
-## Проверки и результаты
+## Evidence
 
-- Content tests: 4/4 passed; source/download parity, appendix rejection, inventory, targets, unsafe HTML, exact code source, longest-match.
-- TypeScript: `tsc --noEmit`, exit 0.
-- ESLint: source, application, scripts and tests, exit 0; derived glossary count avoids redundant effect state, hydration readiness is deferred until handlers attach.
-- Browser suite: 9/9 passed, Microsoft Edge / Playwright. Initial HTML, navigation/history/reload, required search queries, hidden prompt results, glossary reveal/focus/repeated 1000 ms highlight, every panel node and lifecycle scenario, exact copy/failure, storage denial, reduced motion, print and no-JS.
-- Widths 320, 360, 768, 1024, 1440: no document horizontal overflow. 200% zoom stress tested at 640px (effective 320px). Mobile drawer and search dialog: keyboard/Escape/focus verified.
-- axe-core: no WCAG 2 A/AA and 2.1 AA violations in tested reader/dialog states. Measured token contrast: primary text 19.61:1, muted 13.04:1, subtle 6.98:1, primary button 4.70:1, focus/selected 8.19:1. All seven Mermaid diagrams rendered in strict mode without runtime errors.
-- Production build verified locally with native Sites helper. Vite emits large-chunk warnings for lazy Mermaid dependencies; Vinext warns about route classification static analysis. Build succeeds. No performance score is claimed.
-- Screenshots: desktop, mobile drawer, lifecycle including unavailable-evidence scenario and separate post-merge sync.
+- Content suite: **5 passed**; hashes/parity, inventory/targets/safe HTML, appendix rejection, matcher and 160/161/structured preview cases.
+- Coverage: **2347 annotated occurrences, 0 ambiguous, 0 unexplained gaps**. Final fragments include owner/evidence states and glossary preview HTML with declared recursive-annotation exceptions. Unique IDs and route targets validated; old block/checklist IDs retained where source meaning is unchanged.
+- Browser: **16 passed** against the local production Worker; results are recorded in `browser-results.json`. It includes mobile tooltip top-layer hit testing, full-width sheet geometry, exact scroll/focus restoration at 1440/360px, and storage-denied marks/reset across SPA routes.
+- Widths **320, 360, 768, 1024, 1440** and 200% CSS zoom stress (640px viewport / effective 320px layout): reader/filter/checklist/map/drawer overflow and geometry checked. Tooltip zoom/clamping tested separately. Canonical paths, reload, native history, old bookmarks, global search and hidden results verified.
+- Tooltip does not change URL/history/scroll; template copy equals registry raw source including Unicode/newlines; mobile sheet is modal, desktop drawer nonmodal; long-definition fixture/return-to-example/explicit glossary return tested.
+- Storage and clipboard denial, reduced motion, no-JS chapter/glossary navigation, full-source print and all six strict Mermaid renderings verified.
+- axe-core: **0 WCAG 2 A/AA and 2.1 AA violations** in tested chapter, map, glossary, open tooltip and mobile template modal states. No page errors observed in audited reader/map/glossary routes. This is automated/keyboard evidence, not manual screen-reader certification.
+- Typecheck and lint passed. Production build passed. The client build preserves entry signatures (`strict`) because Vinext dynamically consumes router namespace exports; production sidebar/search/history smoke verifies the fix without changing dependencies. Vite reports existing large lazy Mermaid chunks and Vinext route-classification limitations. No performance score is claimed.
+- Postbuild publication scanner checks public/dist text assets for excluded provenance/appendix and exact downloadable source. Current scan passed on 298 assets; native packaging reruns the build/audit.
 
-## Review fixes
+## Artifacts and release
 
-Controls remain disabled until event handlers hydrate, preventing lost pre-hydration actions. Term scrolling is immediate so highlight lasts after arrival. Print explicitly exposes closed Chromium details content. Glossary filter heading does not break heading order. Mobile icon-only search has an accessible name. Ambiguous `tokens` in credential context resolves to credential-token; Done requires confirmed merge and shows post-merge sync separately.
+README documents editing, routes, preview classification, compatibility registries, storage and coverage. Screenshots: desktop, mobile-navigation, lifecycle, system-map-desktop/mobile, term-tooltip-desktop, template-mobile. Implementation checkpoint is in `implementation-state.md`.
 
-## Границы проверки
+The existing native Site is owner-controlled and **public by explicit user authorization**. Publishing uses its current project ID, native source workflow and archive-backed save/deploy. The deployment status and URL are confirmed only from native hosting output; see the final task handoff for that result.
 
-Ручной прогон NVDA/VoiceOver и Lighthouse не выполнялся. Автоматический accessibility scan и keyboard checks не являются полной сертификацией доступности. Browser regression выполнялся на локальном dev server; production bundle проверен сборкой. Исторический PR #12 → refresh #13 показан как план, без утверждения о merge. Control Center — будущая архитектура. Демонстрации не запускают агентов и не меняют Git/Linear.
-
-Private publication выполняется отдельно через native Sites workflow. Итоговый deployment status и URL сообщаются после подтверждения хостинга; локальные проверки сами по себе не подтверждают публикацию.
+Manual NVDA/VoiceOver and Lighthouse were not run. No backend, real agent runtime, analytics, accounts or cross-device synchronization were introduced.

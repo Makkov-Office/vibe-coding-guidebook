@@ -1,0 +1,39 @@
+"use client";
+import {useCallback,useEffect,useLayoutEffect,useRef,useState} from 'react';
+import {createPortal} from 'react-dom';
+import type {CodeBlock,GlossaryTerm} from '../content/types';
+import {ProjectIcon} from './ProjectIcon';
+type Content={kind:'term';term:GlossaryTerm}|{kind:'example';block:CodeBlock};
+export function ContextPreview({terms,blocks}:{terms:GlossaryTerm[];blocks:CodeBlock[]}){
+ const [tooltip,setTooltip]=useState<GlossaryTerm|null>(null),[position,setPosition]=useState({left:12,top:12,maxWidth:320}),[content,setContent]=useState<Content|null>(null),[status,setStatus]=useState(''),[previous,setPrevious]=useState<CodeBlock|null>(null);
+ const [tipHost,setTipHost]=useState<Element|null>(null);
+ const trigger=useRef<HTMLElement|null>(null),origin=useRef<HTMLElement|null>(null),dialog=useRef<HTMLDialogElement>(null),tip=useRef<HTMLDivElement>(null),current=useRef<Content|null>(null),mobile=useRef(false);
+
+ const clearTooltip=useCallback(()=>{trigger.current?.removeAttribute('aria-describedby');setTooltip(null);},[]);
+ const close=useCallback(()=>{clearTooltip();dialog.current?.close();document.body.classList.remove('sheet-open');setContent(null);setPrevious(null);origin.current?.focus({preventScroll:true});},[clearTooltip]);
+ useEffect(()=>{
+  const click=(event:MouseEvent)=>{
+   const element=event.target as HTMLElement;const link=element.closest<HTMLAnchorElement>('.term-link');const example=element.closest<HTMLButtonElement>('[data-example]');
+   if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+   if(link){const term=terms.find(t=>t.id===new URL(link.href).hash.slice(1));if(!term)return;event.preventDefault();if(trigger.current===link&&tip.current){clearTooltip();return;}clearTooltip();trigger.current=link;
+    if(term.previewKind==='tooltip'){link.setAttribute('aria-describedby','term-tooltip');setTipHost(link.closest('dialog')??document.body);setTooltip(term);return;}
+    if(current.current?.kind==='example')setPrevious(current.current.block);else if(!current.current)origin.current=link;setContent({kind:'term',term});
+   }else if(example){clearTooltip();origin.current=example;setPrevious(null);const block=blocks.find(b=>b.id===example.dataset.example);if(block)setContent({kind:'example',block});}
+   else if(!tip.current?.contains(element))clearTooltip();
+  };
+  const key=(event:KeyboardEvent)=>{if(event.key==='Escape'){if(tip.current){event.preventDefault();event.stopImmediatePropagation();clearTooltip();}else if(dialog.current?.open){event.preventDefault();close();}}if(event.key===' '&&(event.target as HTMLElement).matches('.term-link')){event.preventDefault();(event.target as HTMLElement).click();}};
+  const focus=(event:FocusEvent)=>{if(event.target!==trigger.current&&!tip.current?.contains(event.target as Node))clearTooltip();};
+  const prepare=()=>document.querySelectorAll<HTMLAnchorElement>('.term-link').forEach(link=>{link.setAttribute('role','button');link.setAttribute('aria-label',`Объяснить термин: ${link.textContent}`);});prepare();const observer=new MutationObserver(prepare);observer.observe(document.getElementById('reader')!,{childList:true,subtree:true});
+  document.addEventListener('click',click);document.addEventListener('keydown',key);document.addEventListener('focusin',focus);window.addEventListener('scroll',clearTooltip,{passive:true});window.addEventListener('context-close',close);
+  return()=>{observer.disconnect();trigger.current?.removeAttribute('aria-describedby');document.removeEventListener('click',click);document.removeEventListener('keydown',key);document.removeEventListener('focusin',focus);window.removeEventListener('scroll',clearTooltip);window.removeEventListener('context-close',close);document.body.classList.remove('sheet-open');};
+ },[terms,blocks,close,clearTooltip]);
+ useLayoutEffect(()=>{if(!tooltip||!tip.current||!trigger.current)return;const zoom=Number.parseFloat(getComputedStyle(document.documentElement).zoom)||1;tip.current.style.maxWidth=`${Math.min(320,(innerWidth-24)/zoom)}px`;const a=trigger.current.getBoundingClientRect(),b=tip.current.getBoundingClientRect();const frame=requestAnimationFrame(()=>setPosition({left:Math.max(12,Math.min(a.left,innerWidth-b.width-12))/zoom,top:(a.bottom+b.height+12<=innerHeight?a.bottom+8:Math.max(12,a.top-b.height-8))/zoom,maxWidth:Math.min(320,(innerWidth-24)/zoom)}));return()=>cancelAnimationFrame(frame);},[tooltip]);
+ useEffect(()=>{current.current=content;const d=dialog.current;if(!d)return;const adapt=()=>{if(!content)return;const next=matchMedia('(max-width:767px)').matches;if(d.open&&mobile.current!==next)d.close();mobile.current=next;if(!d.open){if(next)d.showModal();else d.show();}document.body.classList.toggle('sheet-open',next);d.querySelector<HTMLElement>('[data-panel-title]')?.focus({preventScroll:true});};if(content)adapt();else{d.close();document.body.classList.remove('sheet-open');}window.addEventListener('resize',adapt);window.addEventListener('resize',clearTooltip);return()=>{window.removeEventListener('resize',adapt);window.removeEventListener('resize',clearTooltip);};},[content,clearTooltip]);
+ async function copy(raw:string){try{await navigator.clipboard.writeText(raw);setStatus('Исходник скопирован без изменений.');}catch{setStatus('Копирование недоступно. Выделите и скопируйте исходник вручную.');}}
+ function glossaryOrigin(){const anchor=origin.current;if(!anchor)return;try{if(!anchor.id)anchor.id='context-origin';sessionStorage.setItem('handbook-return',JSON.stringify({path:location.pathname,y:scrollY,id:anchor.id}));}catch{}}
+ return <>{tooltip&&tipHost&&createPortal(<div ref={tip} id="term-tooltip" role="tooltip" className="term-tooltip" style={position}><strong>{tooltip.label}</strong><div dangerouslySetInnerHTML={{__html:tooltip.definitionHtml}}/></div>,tipHost)}
+ <dialog ref={dialog} className={`context-panel ${content?.kind==='example'?'example-panel':''}`} aria-labelledby="context-title" onCancel={event=>{event.preventDefault();close();}} onClick={event=>{if(mobile.current&&event.target===dialog.current){const r=dialog.current.getBoundingClientRect();if(event.clientY<r.top||event.clientX<r.left||event.clientX>r.right)close();}}}>
+  <div className="dialog-header"><h2 id="context-title" tabIndex={-1} data-panel-title>{content?.kind==='term'?content.term.label:'Учебный шаблон'}</h2><button type="button" aria-label="Закрыть пояснение" onClick={close}><ProjectIcon name="close"/></button></div>
+  <div className="context-body">{content?.kind==='term'?<><p className="context-topic">{content.term.topic}</p>{content.term.aliases.length>0&&<p className="context-aliases">Также: {content.term.aliases.join(', ')}</p>}<div className="reader-prose" data-term-definition dangerouslySetInnerHTML={{__html:content.term.definitionHtml}}/>{previous&&<button type="button" onClick={()=>{const block=previous!;setPrevious(null);setContent({kind:'example',block});}}>Назад к примеру <ProjectIcon name="arrowLeft"/></button>}<a href={`/glossary#${content.term.id}`} onClick={glossaryOrigin}>Открыть в глоссарии <ProjectIcon name="arrowRight"/></a></>:content?.kind==='example'?<><button type="button" onClick={()=>copy(content.block.raw)}><ProjectIcon name="copy"/> Копировать исходник</button><pre tabIndex={0}><code>{content.block.raw}</code></pre><p className="code-terms">Термины в примере: {content.block.terms.map(id=><a className="term-link" href={`/glossary#${id}`} key={id}>{terms.find(t=>t.id===id)?.label}</a>)}</p></>:null}<p role="status">{status}</p></div>
+ </dialog></>;
+}
