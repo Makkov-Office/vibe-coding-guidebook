@@ -24,29 +24,44 @@
 
 ### Навигация
 
-1. [От vibe coding к инженерной системе](#ch-01)
-2. [Архитектура и источники истины](#ch-02)
-3. [Agent harness](#ch-03)
-4. [WSL2, Ubuntu и Dev Container](#ch-04)
-5. [Роли Codex, Claude и человека](#ch-05)
-6. [Тикет и Definition of Ready](#ch-06)
-7. [Полный lifecycle](#ch-07)
-8. [Preflight](#ch-08)
-9. [Context engineering](#ch-09)
-10. [Spec, ADR и Docs Impact](#ch-10)
-11. [Git, GitHub и CI](#ch-11)
-12. [Low / Medium / High](#ch-12)
-13. [Параллельные агенты и merge order](#ch-13)
-14. [Независимое review](#ch-14)
-15. [Founder gates](#ch-15)
-16. [Post-merge sync](#ch-16)
-17. [Security и least privilege](#ch-17)
-18. [Четыре типичных ошибки](#ch-18)
-19. [Failure modes](#ch-19)
-20. [Как повторить систему](#ch-20)
-21. [Maturity model и Agent Control Center](#ch-21)
-22. [Операционная памятка](#ch-22)
-23. [Полный тематический глоссарий](#ch-23)
+- **Понять систему**
+
+  - [От vibe coding к инженерной системе](#ch-01)
+  - [Архитектура и источники истины](#ch-02)
+  - [Agent harness](#ch-03)
+  - [WSL2, Ubuntu и Dev Container](#ch-04)
+  - [Роли Codex, Claude и человека](#ch-05)
+
+- **Провести задачу**
+
+  - [Тикет и Definition of Ready](#ch-06)
+  - [Полный lifecycle](#ch-07)
+  - [Preflight](#ch-08)
+  - [Context engineering](#ch-09)
+  - [Spec, ADR и Docs Impact](#ch-10)
+  - [Git, GitHub и CI](#ch-11)
+
+- **Риск и интеграция**
+
+  - [Low / Medium / High](#ch-12)
+  - [Параллельные агенты и merge order](#ch-13)
+  - [Независимое review](#ch-14)
+  - [Founder gates](#ch-15)
+  - [Post-merge sync](#ch-16)
+  - [Security и least privilege](#ch-17)
+
+- **Практика и развитие**
+
+  - [Четыре типичных ошибки](#ch-18)
+  - [Failure modes](#ch-19)
+  - [Как повторить систему](#ch-20)
+  - [Maturity model и Agent Control Center](#ch-21)
+  - [Операционная памятка](#ch-22)
+
+- **Справочник**
+
+  - [Полезные материалы](#ch-resources)
+  - [Полный тематический глоссарий](#ch-23)
 
 ---
 

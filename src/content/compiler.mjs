@@ -187,6 +187,17 @@ export async function compileHandbook(source) {
           }
         }else{const text=toText(node);if(text.trim()) search.push({id,chapter,title:title||'Ориентация',type:/^h/.test(node.tagName)?'заголовок':'текст',text});}
       }
+      if(chapter==='ch-00'&&node.tagName==='ul'&&node.children.filter(n=>n.tagName==='li').every(item=>item.children.some(n=>n.tagName==='ul')&&item.children.some(n=>n.tagName==='p'&&n.children.some(c=>c.tagName==='strong')))){
+        node.tagName='nav';node.properties.className=['home-route'];node.properties['aria-label']='Маршрут по главам';
+        node.children=node.children.filter(n=>n.tagName==='li');
+        for(const item of node.children){
+          item.tagName='section';item.properties.className=['route-group'];
+          const label=item.children.find(n=>n.tagName==='p'),list=item.children.find(n=>n.tagName==='ul');
+          item.properties['aria-label']=toText(label);label.tagName='h4';label.properties.className=['route-group-title'];
+          list.properties.className=['route-chapters'];list.children=list.children.filter(n=>n.tagName==='li');
+          visit(list,'element',link=>{if(link.tagName!=='a'||!/^#ch-(\d{2}|resources)$/.test(link.properties.href??''))return;const chapter=link.properties.href.slice(1);link.properties.className=['route-chapter'];link.children=[el('span',{className:['route-icon'],'data-chapter':chapter}),el('span',{className:['route-title']},link.children),el('span',{className:['route-arrow']})];});
+        }
+      }
       if(node.tagName==='table') {const inner={...node,properties:{...node.properties,id:undefined}};node.tagName='div';node.properties.className=['table-scroll'];node.properties.tabIndex=0;node.properties.role='region';node.properties['aria-label']='Таблица; прокрутите по горизонтали при необходимости';node.children=[inner];}
       if(/^h[23]$/.test(node.tagName)) node.children.push(el('a',{href:`#${id}`,className:['permalink'],'aria-label':`Ссылка на ${toText(node)}`},[txt('#')]));
     }
@@ -202,7 +213,9 @@ export async function compileHandbook(source) {
     const html=stringify(hast)
       .replace(/(<h2\b[^>]*>)/,`$1${iconMarkup(chapterIcons[chapter]??'book')}`)
       .replace(/(<h3\b[^>]*>)/g,chapter==='ch-23'?`$1${iconMarkup('tags')}`:'$1')
-      .replace(/<summary>/g,`<summary>${iconMarkup('chevronRight')}`);
+      .replace(/<summary>/g,`<summary>${iconMarkup('chevronRight')}`)
+      .replace(/<span class="route-icon" data-chapter="([^"]+)"><\/span>/g,(_,id)=>`<span class="route-icon">${iconMarkup(chapterIcons[id]??'book')}</span>`)
+      .replace(/<span class="route-arrow"><\/span>/g,`<span class="route-arrow">${iconMarkup('arrowRight')}</span>`);
     if(chapter==='ch-00') intro+=html;
     else chapters.push({id:chapter,number:chapter.slice(3),title,html,outline,path:chapterPath(chapter)});
   }
