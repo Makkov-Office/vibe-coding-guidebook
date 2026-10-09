@@ -1,0 +1,1 @@
+export default function Loading(){return <main id="reader" className="reader-skeleton" aria-busy="true" aria-label="Загрузка главы"><span className="skeleton-title"/>{Array.from({length:8},(_,i)=><span className="skeleton-line" key={i}/>)}</main>;}

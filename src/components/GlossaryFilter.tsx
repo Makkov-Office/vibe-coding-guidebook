@@ -3,7 +3,7 @@ import {useEffect,useState} from 'react';
 import type {GlossaryTerm} from '../content/types';
 import {ProjectIcon} from './ProjectIcon';
 const norm=(s:string)=>s.toLocaleLowerCase('ru').replaceAll('ё','е');
-export function GlossaryFilter({terms,topics}:{terms:GlossaryTerm[];topics:string[]}){
+export function GlossaryFilter({terms,topics}:{terms:Pick<GlossaryTerm,'id'|'label'|'aliases'|'topic'|'definition'>[];topics:string[]}){
   const [query,setQuery]=useState(''),[topic,setTopic]=useState('');
   const visibleTerms=terms.filter(term=>(!topic||term.topic===topic)&&norm(`${term.label} ${term.aliases.join(' ')} ${term.definition}`).includes(norm(query)));
   const count=visibleTerms.length;

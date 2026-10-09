@@ -71,7 +71,7 @@ export default defineConfig(async ({ command }) => {
         : {}),
     },
     plugins: [
-      vinext(),
+      vinext({ prerender: true }),
       sites({ mockAuth: !managedLinux }),
       connectorPreview(),
       cloudflare({
