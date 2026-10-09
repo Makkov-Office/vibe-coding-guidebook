@@ -36,12 +36,17 @@ test('source boundary, full inventory and safe rendering', async () => {
   for (const [, path,target] of data.html.matchAll(/href="([^"#]*)#([^"]+)"/g)) assert.equal(data.anchors[target].path,path,target);
   assert.ok(!/AI Artefacts|ai-artefacts|chatgpt-conversation:|PR #\d|TICKET-\d/.test(JSON.stringify(data)));
   assert.equal(data.blocks.filter(b=>b.adjacent).length,2);
-  assert.ok(data.terms.every(t=>t.definitionHtml&&t.previewKind==='tooltip'));
+  assert.ok(data.terms.every(t=>t.definitionHtml&&['tooltip','popover'].includes(t.previewKind)));
+  const products=data.terms.filter(t=>t.previewKind==='popover');
+  assert.equal(products.length,23);
+  for(const term of products){assert.match(term.definitionHtml,/href="https:\/\//);assert.match(term.definitionHtml,/target="_blank"/);assert.match(term.definitionHtml,/rel="noopener noreferrer"/);assert.ok(!term.definitionHtml.includes('class="term-link"'));assert.ok(data.chapters.find(c=>c.id==='ch-23').html.includes(term.definitionHtml));}
+  assert.equal(data.terms.find(t=>t.id==='term-founder').previewKind,'tooltip');
+  assert.equal(data.terms.find(t=>t.id==='term-repository').previewKind,'tooltip');
   assert.ok(!data.html.includes('<script'));
   assert.ok(!data.html.includes('javascript:'));
   assert.ok(data.blocks.every(b => source.includes(b.raw)));
 });
-test('preview threshold and structural classification',async()=>{const {previewKind}=await import(modulePath.href);assert.equal(previewKind('я'.repeat(160)),'tooltip');assert.equal(previewKind('я'.repeat(161)),'panel');assert.equal(previewKind('short',true),'panel');assert.equal(previewKind('  one   paragraph  '),'tooltip');});
+test('preview threshold and structural classification',async()=>{const {previewKind}=await import(modulePath.href);assert.equal(previewKind('я'.repeat(160)),'tooltip');assert.equal(previewKind('я'.repeat(161)),'panel');assert.equal(previewKind('short',true),'panel');assert.equal(previewKind('  one   paragraph  '),'tooltip');assert.equal(previewKind('я'.repeat(160),false,true),'popover');assert.equal(previewKind('я'.repeat(161),false,true),'panel');assert.equal(previewKind('short',true,true),'panel');});
 test('appendix is rejected rather than published', async () => {
   const { compileHandbook } = await import(modulePath.href);
   await assert.rejects(() => compileHandbook('**Конец учебного руководства.**\nimplementation brief'), /appendix/i);

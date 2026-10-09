@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-09",
+  "officialProducts": 23,
+  "definitions": 394,
+  "linkedOccurrences": 2382,
+  "ambiguities": 0,
+  "unexplainedGaps": 0,
+  "contentTestsPassed": 5,
+  "typecheck": "passed",
+  "build": {
+    "routes": 27,
+    "skipped": 0,
+    "publicationAssets": 149
+  },
+  "browser": {
+    "viewports": [
+      320,
+      360,
+      1440
+    ],
+    "unifiedMapNodes": 10,
+    "modes": 0,
+    "keyboard": "Tab, Escape",
+    "officialTab": "https://linear.app/",
+    "glossary": "https://storybook.js.org/",
+    "dynamicPreviews": [
+      "Linear",
+      "GitHub"
+    ],
+    "spaPreview": "WSL2",
+    "exampleSheet": "plain tooltip top-layer preserved",
+    "consoleErrors": [],
+    "documentOverflow": false
+  },
+  "notRerun": [
+    "full historical no-JS/print/zoom/storage matrix",
+    "axe"
+  ]
+}

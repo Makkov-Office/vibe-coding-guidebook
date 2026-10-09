@@ -21,7 +21,7 @@ const el = (tagName, properties={}, children=[]) => ({type:'element',tagName,pro
 const txt = value => ({type:'text',value});
 export const normalize = s => s.normalize('NFKC').toLocaleLowerCase('ru').replaceAll('ё','е');
 export const chapterPath = id => id==='ch-00'?'/':id==='ch-23'?'/glossary':id==='ch-resources'?'/resources':`/chapters/${id.slice(3)}`;
-export function previewKind(definition, structured=false){return !structured && [...definition.trim().replace(/\s+/g,' ')].length<=160?'tooltip':'panel';}
+export function previewKind(definition, structured=false, linked=false){return !structured && [...definition.trim().replace(/\s+/g,' ')].length<=160?(linked?'popover':'tooltip'):'panel';}
 const slug = s => normalize(s).replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'');
 const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 const word = c => c && /[\p{L}\p{N}_]/u.test(c);
@@ -61,7 +61,8 @@ export async function compileHandbook(source) {
       const label=toString(first.children.find(n=>n.type==='strong'));
       const variants=toString(first).split('·')[1]?.split(';').map(s=>s.trim()).filter(Boolean)??[];
       const definition=toString(row.children[1]);
-      terms.push({id,label,aliases:variants,topic,definition,definitionHtml:'',previewKind:previewKind(definition,row.children[1].children.some(n=>!['text','strong','emphasis','inlineCode','link','break'].includes(n.type)))});
+      let linked=false;visit(row.children[1],'link',()=>{linked=true;});
+      terms.push({id,label,aliases:variants,topic,definition,definitionHtml:'',previewKind:previewKind(definition,row.children[1].children.some(n=>!['text','strong','emphasis','inlineCode','link','break'].includes(n.type)),linked)});
     }
   }
   const matcher=makeMatcher(terms);
@@ -161,6 +162,7 @@ export async function compileHandbook(source) {
           const cells=row.children.filter(n=>n.tagName==='td');const anchor=cells[0]?.children.find(n=>n.tagName==='a');const term=terms.find(t=>t.id===anchor?.properties.id);if(!term) continue;
           cells[0].children=cells[0].children.filter(n=>n!==anchor);
           const card=el('article',{id:term.id,tabIndex:-1,className:['term-definition'],'data-topic':term.topic,'data-term':term.id},[el('h4',{},cells[0].children),el('p',{},cells[1].children)]);
+          visit(card,'element',n=>{if(n.tagName==='a'&&/^https?:/.test(n.properties.href??'')){n.properties.target='_blank';n.properties.rel=['noopener','noreferrer'];n.properties['aria-label']=`${toText(n)} — открывается в новой вкладке`;}});
           term.definitionHtml=stringify(el('p',{},cells[1].children));
           node.children.push(card);usedIds.add(term.id);
           search.push({id:term.id,chapter,title:term.label,type:'термин',text:`${term.label} ${term.aliases.join(' ')} ${term.definition}`});

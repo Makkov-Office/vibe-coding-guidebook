@@ -1171,8 +1171,8 @@ Control Center связывает task, run, branch, PR, HEAD и evidence. Сн�
 | <a id="term-ai-native"></a>**AI-native development** · AI-Native Development | Разработка, в которой участие AI учитывается в проектировании рабочего процесса с самого начала. |
 | <a id="term-model"></a>**Модель** · model; LLM | Обученная система, генерирующая ответы; LLM означает большую языковую модель. |
 | <a id="term-agent"></a>**Agent** · агент; agents; агента; агентом; агентов; агентами | Исполнитель, объединяющий модель, контекст и инструменты; может читать файлы, менять код и запускать проверки. |
-| <a id="term-codex"></a>**Codex** | Инструмент/агент OpenAI для работы с кодом; его права зависят от текущего интерфейса и политики. |
-| <a id="term-claude"></a>**Claude** · Claude Code | Семейство моделей и инструмент разработки Anthropic; роль автора или reviewer задаётся задачей. |
+| <a id="term-codex"></a>**Codex** | Инструмент OpenAI для работы с кодом. Права зависят от интерфейса и политики. [Официальный сайт](https://openai.com/codex/) |
+| <a id="term-claude"></a>**Claude** · Claude Code | Claude — модели Anthropic; Claude Code — агент для разработки. Роль задаётся задачей. [Официальный сайт](https://claude.com/product/claude-code) |
 | <a id="term-multi-agent"></a>**Multi-agent** · multi-agent system; мультиагентный | Процесс с несколькими агентами; требует разделения задач, ownership и порядка интеграции. |
 | <a id="term-orchestration"></a>**Orchestration** · оркестрация; orchestrator | Управление запуском задач, зависимостями, исполнителями, проверками и очередью интеграции. |
 | <a id="term-harness"></a>**Agent harness** · harness; харнесс | Правила, среда и механизмы, которые ограничивают агента и делают выполнение воспроизводимым. |
@@ -1183,7 +1183,7 @@ Control Center связывает task, run, branch, PR, HEAD и evidence. Сн�
 | <a id="term-cloud-agent"></a>**Cloud agent** · cloud-agent | Агент в удалённой среде; доступные tools/credentials могут отличаться от local setup. |
 | <a id="term-primary-author"></a>**Primary author** · агент-автор; author; implementation owner | Единственный ответственный за реализацию конкретного тикета и его PR. |
 | <a id="term-reviewer"></a>**Reviewer** · reviewer agent; ревьювер | Проверяющий результат; independent reviewer работает отдельно от автора и проверяет evidence сам. |
-| <a id="term-founder"></a>**Founder** · основатель; human; человек | В данном процессе — человек, определяющий цель и разрешающий значимые действия. |
+| <a id="term-founder"></a>**Founder** · основатель; human; человек | Роль человека: владелец продуктовой цели, который принимает решения и разрешает значимые действия. |
 | <a id="term-owner"></a>**Owner / ownership** · владелец; владельца; ownership; owner; owners | Ответственный за задачу, branch, worktree или contract; владение не означает неограниченные права. |
 | <a id="term-session"></a>**Agent session** · сессия; session; primary session | Один рабочий контекст агента с задачей, историей и инструментами. |
 | <a id="term-clean-session"></a>**Clean session** · clean reviewer session; чистая сессия | Новый контекст проверки без принятия авторских выводов как установленных фактов. |
@@ -1200,7 +1200,7 @@ Control Center связывает task, run, branch, PR, HEAD и evidence. Сн�
 | Термин / варианты | Простое объяснение |
 |---|---|
 | <a id="term-ticket"></a>**Ticket / issue** · тикет; ticket; issue; task | Единица работы с целью, scope, критериями приёмки и состоянием. |
-| <a id="term-linear"></a>**Linear** | Система планирования продуктового контекста, задач и их lifecycle. |
+| <a id="term-linear"></a>**Linear** | Онлайн-сервис для планирования продукта, ведения задач и их статусов. Нужен аккаунт; интеграция с агентом настраивается отдельно. [Официальный сайт](https://linear.app/) |
 | <a id="term-product-hq"></a>**Product HQ** | Канонический набор продуктовых требований, решений и приоритетов проекта. |
 | <a id="term-roadmap"></a>**Roadmap** · дорожная карта | Порядок развития продукта; не автоматическое разрешение агенту брать следующие задачи. |
 | <a id="term-backlog"></a>**Backlog** · бэклог | Очередь возможных задач, ещё не обязательно готовых к реализации. |
@@ -1248,8 +1248,8 @@ Control Center связывает task, run, branch, PR, HEAD и evidence. Сн�
 
 | Термин / варианты | Простое объяснение |
 |---|---|
-| <a id="term-git"></a>**Git** | Система хранения истории изменений; GitHub — отдельный сервис поверх Git. |
-| <a id="term-repository"></a>**Repository** · repo; репозиторий; репозитория; репозитории; репозиторием; repositories | Код, история Git и связанные документы проекта. |
+| <a id="term-git"></a>**Git** | Локальная система контроля версий. GitHub — отдельный онлайн-сервис для размещения репозиториев Git. [Официальный сайт](https://git-scm.com/) |
+| <a id="term-repository"></a>**Repository** · repo; репозиторий; репозитория; репозитории; репозиторием; repositories | Хранилище кода, истории Git и документов проекта. Может быть локальным или размещаться на сервисе вроде GitHub. |
 | <a id="term-checkout"></a>**Checkout** · рабочая копия; checkout folder | Локальная папка с выбранной версией файлов; слово также используют для операции выбора версии. |
 | <a id="term-clone"></a>**Clone** · клон; independent clone | Отдельная локальная копия Git repository с собственной служебной областью. |
 | <a id="term-worktree"></a>**Worktree** · working tree; рабочее дерево; worktrees; linked worktree | Рабочие файлы Git; linked worktree даёт отдельную папку/index при общей истории и refs. |
@@ -1300,7 +1300,7 @@ Control Center связывает task, run, branch, PR, HEAD и evidence. Сн�
 
 | Термин / варианты | Простое объяснение |
 |---|---|
-| <a id="term-github"></a>**GitHub** | Сервис размещения Git repositories, PR, обсуждений и hosted automation. |
+| <a id="term-github"></a>**GitHub** | Онлайн-сервис для размещения репозиториев Git, обсуждения изменений и совместной разработки через PR. [Официальный сайт](https://github.com/) |
 | <a id="term-pr"></a>**Pull Request** · PR; PRs; pull request; пул-реквест | Предложение интегрировать branch changes с diff, checks и review. |
 | <a id="term-pr-body"></a>**PR body** · body; PR description | Описание PR; его metadata checks могут измениться без нового code commit. |
 | <a id="term-open-closed"></a>**Open / closed PR** · open PR; open PRs; closed PR | Открытое или закрытое предложение; closed не обязательно merged, факт merge проверяют отдельно. |
@@ -1313,7 +1313,7 @@ Control Center связывает task, run, branch, PR, HEAD и evidence. Сн�
 | <a id="term-branch-protection"></a>**Branch protection / ruleset** · branch rules; repository rules | Серверные правила доступа и интеграции, например required reviews и запрет force push. |
 | <a id="term-required-review"></a>**Required review** · required reviews | Review, которое repository policy технически требует для интеграции. |
 | <a id="term-bypass"></a>**Bypass** · bypass privileges | Право обойти часть repository rules; его наличие влияет на реальную силу gate. |
-| <a id="term-github-actions"></a>**GitHub Actions** · Actions; GitHub workflow | Hosted automation для исполнения объявленных jobs/checks. |
+| <a id="term-github-actions"></a>**GitHub Actions** · Actions; GitHub workflow | Сервис автоматизации внутри GitHub: запускает jobs и проверки по правилам проекта. [Официальный сайт](https://github.com/features/actions) |
 | <a id="term-job-step"></a>**Job / step** · job; step; jobs; steps | Job — группа шагов workflow; step — отдельное действие или команда внутри неё. |
 | <a id="term-run"></a>**Run** · workflow run; hosted run; runs | Конкретный запуск workflow с входами, временем, результатами и логами. |
 | <a id="term-runner"></a>**Runner** | Машина/среда, которая выполняет GitHub Actions job. |
@@ -1329,7 +1329,7 @@ Control Center связывает task, run, branch, PR, HEAD и evidence. Сн�
 | <a id="term-approval"></a>**Approval** · approve; одобрение | Положительное review/решение; нужно уточнять, кто одобрил и разрешает ли это конкретное действие. |
 | <a id="term-mergeable"></a>**mergeable=true** · mergeable | GitHub считает историю технически совместимой; не доказывает выполнение requirements или safety. |
 | <a id="term-stale"></a>**Stale** · устаревшее evidence; stale HEAD | Данные/проверки относятся к прежнему состоянию и не подтверждают актуальную версию. |
-| <a id="term-github-cli"></a>**GitHub CLI** · gh | Терминальный инструмент GitHub для PR, checks и authentication. |
+| <a id="term-github-cli"></a>**GitHub CLI** · gh | Локальный CLI GitHub (gh) для PR, проверок и авторизации; нужен аккаунт с доступом к репозиторию. [Официальный сайт](https://cli.github.com/) |
 | <a id="term-auth-login"></a>**gh auth login** · auth login | Команда входа GitHub CLI; account и права проверяются отдельно. |
 | <a id="term-auth-setup-git"></a>**gh auth setup-git** · setup-git | Настройка Git credential helper для использования GitHub CLI authentication. |
 | <a id="term-github-identity"></a>**GitHub identity** · account; identity; active identity | Аккаунт, от которого работает CLI/connector; active account должен иметь доступ к нужному repo. |
@@ -1385,18 +1385,18 @@ Control Center связывает task, run, branch, PR, HEAD и evidence. Сн�
 
 | Термин / варианты | Простое объяснение |
 |---|---|
-| <a id="term-wsl"></a>**WSL2** · WSL; Windows Subsystem for Linux | Среда Linux в Windows; выбранный distro и способ запуска инструментов нужно проверять. |
-| <a id="term-ubuntu"></a>**Ubuntu** · Ubuntu 24.04; distro; дистрибутив | Дистрибутив Linux внутри WSL; версия и configuration задаются проектом/машиной. |
+| <a id="term-wsl"></a>**WSL2** · WSL; Windows Subsystem for Linux | Компонент Windows для запуска Linux. WSL2 использует виртуализацию; дистрибутив и способ запуска нужно проверять. [Официальный сайт](https://learn.microsoft.com/en-us/windows/wsl/) |
+| <a id="term-ubuntu"></a>**Ubuntu** · Ubuntu 24.04; distro; дистрибутив | Дистрибутив Linux, который можно установить в WSL. Версия и настройки задаются проектом и машиной. [Официальный сайт](https://ubuntu.com/) |
 | <a id="term-filesystem"></a>**Filesystem** · Linux filesystem; файловая система | Система хранения файлов; Linux checkout и Windows paths имеют разные особенности. |
 | <a id="term-host"></a>**Host** · хост | Машина/среда, на которой работают Docker daemon и контейнеры. |
-| <a id="term-vscode"></a>**VS Code** · Visual Studio Code; редактор | Редактор, который может открыть local, WSL или container workspace. |
+| <a id="term-vscode"></a>**VS Code** · Visual Studio Code; редактор | Редактор кода Microsoft. Может открывать локальный проект, WSL или контейнер разработки. [Официальный сайт](https://code.visualstudio.com/) |
 | <a id="term-workspace"></a>**Workspace** · workspace folder; рабочая область | Папка/набор папок проекта, открытые в редакторе или среде агента. |
-| <a id="term-devcontainer"></a>**Dev Container** · дев-контейнер; Dev Containers | Контейнер разработки, настроенный repository config для общего tooling. |
+| <a id="term-devcontainer"></a>**Dev Container** · дев-контейнер; Dev Containers | Открытая спецификация контейнеров разработки; конфигурация проекта задаёт общую среду и инструменты. [Официальный сайт](https://containers.dev/) |
 | <a id="term-devcontainer-json"></a>**devcontainer.json** · .devcontainer | Конфигурация и папка Dev Container: mounts, environment, lifecycle commands и tools. |
-| <a id="term-docker"></a>**Docker** | Инструменты для сборки и запуска контейнеров. |
-| <a id="term-docker-engine"></a>**Docker Engine** · Docker daemon; daemon; Docker context | Engine/daemon исполняет Docker operations; context выбирает endpoint, куда обращается CLI. |
+| <a id="term-docker"></a>**Docker** | Платформа и инструменты для сборки и запуска контейнеров; не отдельный обязательный облачный сервис. [Официальный сайт](https://www.docker.com/) |
+| <a id="term-docker-engine"></a>**Docker Engine** · Docker daemon; daemon; Docker context | Движок Docker (daemon) запускает контейнеры. Docker context выбирает endpoint, к которому обращается CLI. [Официальный сайт](https://docs.docker.com/engine/) |
 | <a id="term-endpoint"></a>**Endpoint** · endpoint | Адрес конкретного service/daemon; одинаковый CLI может обращаться к разным engines. |
-| <a id="term-docker-desktop"></a>**Docker Desktop** | Приложение управления Docker с WSL backend/integration; не то же самое, что отдельный Engine в Ubuntu. |
+| <a id="term-docker-desktop"></a>**Docker Desktop** | Приложение Docker с интеграцией WSL. Его движок и отдельный Docker Engine в Ubuntu — разные варианты среды. [Официальный сайт](https://www.docker.com/products/docker-desktop/) |
 | <a id="term-wsl-integration"></a>**WSL integration** · интеграция WSL | Предоставление выбранному WSL distro доступа к Docker Desktop engine. |
 | <a id="term-container"></a>**Container** · контейнер | Запущенная/остановленная среда из image с writable layer и подключёнными mounts. |
 | <a id="term-image"></a>**Image** · Docker image; образ; images | Основа контейнера с filesystem layers и configuration; credentials в layers могут утечь. |
@@ -1421,9 +1421,9 @@ Control Center связывает task, run, branch, PR, HEAD и evidence. Сн�
 | <a id="term-toolchain"></a>**Toolchain** · tooling | Набор runtime, package manager, compiler и других средств разработки. |
 | <a id="term-pin"></a>**Pin** · pins; pinned; exact version | Закрепление точной версии tools/dependencies для воспроизводимости. |
 | <a id="term-deterministic"></a>**Deterministic / reproducible** · deterministic; reproducible | Deterministic даёт одинаковый результат для одинаковых inputs; reproducible позволяет повторить проверку в описанной среде. |
-| <a id="term-node"></a>**Node.js** · Node | Runtime JavaScript вне браузера, используемый для tooling, tests и сборки. |
+| <a id="term-node"></a>**Node.js** · Node | Среда выполнения JavaScript вне браузера; используется для инструментов, тестов и сборки. [Официальный сайт](https://nodejs.org/) |
 | <a id="term-package-manager"></a>**Package manager** · pnpm; npm; Yarn | Инструмент установки dependencies и запуска project scripts; проект выбирает один основной workflow. |
-| <a id="term-corepack"></a>**Corepack** | Инструмент выбора package manager version по project metadata, если предусмотрен toolchain. |
+| <a id="term-corepack"></a>**Corepack** | Инструмент выбора версии пакетного менеджера по настройкам проекта, если он предусмотрен toolchain. [Официальный сайт](https://github.com/nodejs/corepack) |
 | <a id="term-lockfile"></a>**Lockfile** · lock file | Файл зафиксированного dependency graph; соблюдение его правил уменьшает drift установки. |
 | <a id="term-registry"></a>**Registry** · package registry; term registry | Каталог: package registry хранит пакеты; term registry хранит IDs, aliases и определения глоссария. |
 | <a id="term-shell"></a>**Shell / CLI** · shell; CLI; терминал; terminal | Shell интерпретирует commands, CLI предоставляет текстовый интерфейс; чувствительные аргументы могут попадать в logs. |
@@ -1577,9 +1577,9 @@ Control Center связывает task, run, branch, PR, HEAD и evidence. Сн�
 | Термин / варианты | Простое объяснение |
 |---|---|
 | <a id="term-standalone"></a>**Standalone** · самостоятельный проект | Отдельный проект с собственными исходниками и сборкой. |
-| <a id="term-figma"></a>**Figma** | Сервис design source и components; approved design intent сверяется с кодом. |
-| <a id="term-slack"></a>**Slack** | Сервис координации/уведомлений; durable decisions должны уйти в canonical sources. |
-| <a id="term-vercel"></a>**Vercel** | Платформа preview/production deployments; здесь роль сервиса, не команда на автоматический deploy. |
+| <a id="term-figma"></a>**Figma** | Онлайн-сервис проектирования интерфейсов и компонентов; утверждённый дизайн сверяется с кодом. [Официальный сайт](https://www.figma.com/) |
+| <a id="term-slack"></a>**Slack** | Онлайн-сервис командной переписки и уведомлений. Принятые решения нужно сохранять в источниках истины проекта. [Официальный сайт](https://slack.com/) |
+| <a id="term-vercel"></a>**Vercel** | Облачная платформа для публикации сайтов и приложений. Упоминание сервиса не разрешает автоматический deploy. [Официальный сайт](https://vercel.com/) |
 | <a id="term-plugin"></a>**Plugin / connector** · plugin; connector; native tools | Подключаемый пакет capabilities; connector даёт доступ к сервису, native tool — его конкретное действие. |
 | <a id="term-api"></a>**API** · интерфейс программирования | Contract обращения программы к сервису/компоненту; bounded API change может влиять на consumers. |
 | <a id="term-webmcp"></a>**MCP** · Model Context Protocol | Protocol предоставления агентам tools/resources; доступ через MCP не отменяет permissions. |
@@ -1587,14 +1587,14 @@ Control Center связывает task, run, branch, PR, HEAD и evidence. Сн�
 | <a id="term-backend"></a>**Backend** · серверная часть | Слой серверной логики, обработки данных и проверки прав. |
 | <a id="term-framework"></a>**Framework** · фреймворк; starter; scaffolding | Framework задаёт структуру приложения; starter/scaffolding — начальный project skeleton, не законченный результат. |
 | <a id="term-stack"></a>**Stack** · service stack; stack | Набор выбранных технологий/services; копирование всей связки не обязательно для небольшого проекта. |
-| <a id="term-react"></a>**React** · JSX | UI library; JSX — syntax записи UI elements в code. |
-| <a id="term-typescript"></a>**TypeScript** · TS; типизированный | JavaScript с проверкой типов; типы не заменяют runtime validation. |
+| <a id="term-react"></a>**React** · JSX | Библиотека JavaScript для интерфейсов. JSX — синтаксис описания UI в коде; аккаунт сервиса не нужен. [Официальный сайт](https://react.dev/) |
+| <a id="term-typescript"></a>**TypeScript** · TS; типизированный | Язык на основе JavaScript с проверкой типов. Типы не заменяют проверки во время выполнения. [Официальный сайт](https://www.typescriptlang.org/) |
 | <a id="term-markdown"></a>**Markdown** · .md | Текстовый формат headings, links, tables и code blocks. |
 | <a id="term-html"></a>**HTML** | Разметка структуры web page; semantic HTML использует элементы по назначению. |
 | <a id="term-css"></a>**CSS** | Правила оформления, layout и motion элементов web page. |
 | <a id="term-json"></a>**JSON** | Структурированный текстовый формат полей, массивов и значений. |
 | <a id="term-yaml"></a>**YAML** | Читаемый формат configuration с ключами/списками; indentation имеет значение. |
-| <a id="term-mermaid"></a>**Mermaid** | Язык текстового описания diagrams, которые renderer превращает в схемы. |
+| <a id="term-mermaid"></a>**Mermaid** | Библиотека и язык для схем из текста; renderer превращает описание в диаграмму. [Официальный сайт](https://mermaid.js.org/) |
 | <a id="term-svg"></a>**SVG** | Векторная web graphics; удобна для схем, но interactive elements требуют keyboard/semantic поддержки. |
 | <a id="term-ast"></a>**AST** · Abstract Syntax Tree | Структура parsed document/code; позволяет менять text nodes без поломки links, fences и syntax. |
 | <a id="term-static-render"></a>**Static rendering** · static build; initial rendered HTML | Подготовка reader content при build, чтобы текст доступен без runtime fetch. |
@@ -1604,7 +1604,7 @@ Control Center связывает task, run, branch, PR, HEAD и evidence. Сн�
 | <a id="term-cms"></a>**CMS** | Система создания, редактирования и публикации контента. |
 | <a id="term-readme"></a>**README** | Входная инструкция запуска, сборки и редактирования проекта. |
 | <a id="term-preview"></a>**Preview** · local preview; production preview | Версия/окно для проверки результата до окончательной передачи или release. |
-| <a id="term-storybook"></a>**Storybook** | Среда показа/проверки отдельных UI components; полезна, когда у проекта есть component library. |
+| <a id="term-storybook"></a>**Storybook** | Инструмент разработки и проверки UI-компонентов отдельно от приложения. Может работать локально. [Официальный сайт](https://storybook.js.org/) |
 | <a id="term-hosting"></a>**Hosting** · хостинг; private publish; public sharing | Размещение сайта; private/public определяет аудиторию доступа, а не качество build. |
 | <a id="term-browser-automation"></a>**Browser automation** · браузерная автоматизация | Инструментальное управление браузером для проверки UI scenarios. |
 | <a id="term-fallback"></a>**Fallback** · graceful degradation | Запасной способ, сохраняющий чтение при отказе дополнительной capability. |
