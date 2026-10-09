@@ -20,7 +20,7 @@ const iconMarkup=name=>renderToStaticMarkup(createElement(icons[name],iconProps)
 const el = (tagName, properties={}, children=[]) => ({type:'element',tagName,properties,children});
 const txt = value => ({type:'text',value});
 export const normalize = s => s.normalize('NFKC').toLocaleLowerCase('ru').replaceAll('ё','е');
-export const chapterPath = id => id==='ch-00'?'/':id==='ch-23'?'/glossary':`/chapters/${id.slice(3)}`;
+export const chapterPath = id => id==='ch-00'?'/':id==='ch-23'?'/glossary':id==='ch-resources'?'/resources':`/chapters/${id.slice(3)}`;
 export function previewKind(definition, structured=false){return !structured && [...definition.trim().replace(/\s+/g,' ')].length<=160?'tooltip':'panel';}
 const slug = s => normalize(s).replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'');
 const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
@@ -101,9 +101,9 @@ export async function compileHandbook(source) {
   const groups=[];let nodes=[];
   for(const node of tree.children) {
     if(node.type==='html' && /^<a id="ch-\d{2}"><\/a>$/.test(node.value.trim())) continue;
-    if(node.type==='heading' && node.depth===2 && /^\d{2}\./.test(toString(node))) {
+    if(node.type==='heading' && node.depth===2 && (/^\d{2}\./.test(toString(node)) || toString(node)==='Полезные материалы')) {
       if(nodes.length) groups.push({chapter:current,nodes});
-      current=`ch-${toString(node).slice(0,2)}`; nodes=[];
+      current=toString(node)==='Полезные материалы'?'ch-resources':`ch-${toString(node).slice(0,2)}`; nodes=[];
     }
     nodes.push(node);
   }
@@ -178,7 +178,14 @@ export async function compileHandbook(source) {
           if(!checkbox)return;
           item.children=[el('label',{className:['practice-toggle']},[checkbox]),el('div',{className:['practice-text']},item.children.filter(child=>child!==checkbox))];
         });
-        const text=toText(node);if(text.trim()) search.push({id,chapter,title:title||'Ориентация',type:/^h/.test(node.tagName)?'заголовок':'текст',text});
+        if(chapter==='ch-resources'&&node.tagName==='ul'){
+          for(const item of node.children.filter(n=>n.tagName==='li')){
+            const itemTitle=toText(item.children.find(n=>n.tagName==='p')??item);
+            const itemId=`ch-resources-item-${slug(itemTitle)}`;
+            item.properties.id=itemId;
+            search.push({id:itemId,chapter,title:itemTitle,type:'материал',text:toText(item)});
+          }
+        }else{const text=toText(node);if(text.trim()) search.push({id,chapter,title:title||'Ориентация',type:/^h/.test(node.tagName)?'заголовок':'текст',text});}
       }
       if(node.tagName==='table') {const inner={...node,properties:{...node.properties,id:undefined}};node.tagName='div';node.properties.className=['table-scroll'];node.properties.tabIndex=0;node.properties.role='region';node.properties['aria-label']='Таблица; прокрутите по горизонтали при необходимости';node.children=[inner];}
       if(/^h[23]$/.test(node.tagName)) node.children.push(el('a',{href:`#${id}`,className:['permalink'],'aria-label':`Ссылка на ${toText(node)}`},[txt('#')]));
@@ -229,7 +236,7 @@ export async function compileHandbook(source) {
   if(ids.length!==new Set(ids).size) throw Error(`Duplicate rendered IDs: ${[...new Set(ids.filter((id,i)=>ids.indexOf(id)!==i))].join(', ')}`);
   for(const [,target] of html.matchAll(/href="#([^"]+)"/g)) if(!ids.includes(target)) throw Error(`Missing anchor ${target}`);
   audit.unexplainedGaps=audit.ambiguous.length+renderedGaps.length;
-  const anchors=Object.fromEntries(ids.map(id=>[id,{id,path:id.startsWith('term-')?'/glossary':chapterPath(id.match(/ch-\d{2}/)?.[0]??'ch-00')}]));
+  const anchors=Object.fromEntries(ids.map(id=>[id,{id,path:id.startsWith('term-')?'/glossary':chapterPath(id.match(/ch-(?:\d{2}|resources)/)?.[0]??'ch-00')}]));
   for(const panel of panels)anchors[`${panel.id}-panel`]={id:`${panel.id}-panel`,path:chapterPath(panel.chapter)};
   const routeLinks=fragment=>fragment.replace(/href="#([^"]+)"/g,(_,id)=>`href="${anchors[id]?.path??'/'}#${id}"`);
   intro=routeLinks(intro);for(const chapter of chapters)chapter.html=routeLinks(chapter.html);

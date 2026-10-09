@@ -1,8 +1,8 @@
 {
   "topics": 11,
   "definitions": 394,
-  "recognized": 2389,
-  "linked": 2344,
+  "recognized": 2456,
+  "linked": 2382,
   "exceptions": [
     {
       "block": "ch-00-b1006",
@@ -883,6 +883,151 @@
       "block": "ch-17-b004",
       "term": "term-release",
       "reason": "Mermaid source; equivalent definition links"
+    },
+    {
+      "block": "ch-resources-b1009",
+      "term": "term-agent",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1009",
+      "term": "term-harness",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1009",
+      "term": "term-context-engineering",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1009",
+      "term": "term-ai",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1009",
+      "term": "term-agent",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1009",
+      "term": "term-agent",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1009",
+      "term": "term-webmcp",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1009",
+      "term": "term-agent",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-git",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-worktree",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-vscode",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-wsl",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-docker-desktop",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-wsl",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-backend",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-docker",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-container",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-devcontainer",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-spec",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-github",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-branch",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-github",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1011",
+      "term": "term-required-check",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1013",
+      "term": "term-codex",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1013",
+      "term": "term-claude",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1015",
+      "term": "term-github-actions",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1015",
+      "term": "term-linear",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1015",
+      "term": "term-mermaid",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-resources-b1015",
+      "term": "term-live-state",
+      "reason": "existing link or semantic control"
     },
     {
       "block": "preview-term-ai",
@@ -2857,6 +3002,6 @@
   ],
   "ambiguous": [],
   "unexplainedGaps": 0,
-  "renderedLinked": 2475,
+  "renderedLinked": 2513,
   "renderedGaps": []
 }

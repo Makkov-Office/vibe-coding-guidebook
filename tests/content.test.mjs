@@ -16,7 +16,14 @@ test('source boundary, full inventory and safe rendering', async () => {
   }
   assert.equal(source, fs.readFileSync(new URL('../public/handbook.md', import.meta.url), 'utf8'));
   const data = await compileHandbook(source);
-  assert.equal(data.chapters.length, 23);
+  assert.equal(data.chapters.length, 24);
+  assert.equal(data.chapters.filter(c=>/^ch-(0[1-9]|1\d|2[0-2])$/.test(c.id)).length,22);
+  const resources=data.chapters.find(c=>c.id==='ch-resources');
+  assert.equal(resources.path,'/resources');
+  assert.equal(resources.outline.length,6);
+  assert.ok(data.search.some(e=>e.path==='/resources'&&e.text.includes('How I use LLMs')));
+  assert.equal((resources.html.match(/href="https:\/\//g)??[]).length,29);
+  assert.ok(!resources.html.includes('<iframe'));
   assert.equal(data.terms.length, 394);
   assert.equal(data.topics.length, 11);
   assert.equal(data.diagrams.length, 6);

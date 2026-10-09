@@ -21,3 +21,5 @@ Production compatibility fix: client Rolldown preserveEntrySignatures=strict ret
 
 
 Branding approved 2026-10-09: FLOW symbol, ULTIMATE Vibe-coder guidebook [BETA], exact byMakkov SVG and standalone Open Source badge. Ten fresh responsive/asset/metadata/control checks and axe/console pass;5content tests/typecheck/lint pass. New screenshots and brand-qa-results.json record this update. Original user asset byte parity verified; final deployment receipt follows native publication.
+
+Resources and UX audit update 2026-10-09 (verified local/build): added /resources from canonical handbook.md,29 links6categories, exact item search targets, no iframe/runtime/dependencies, excluded from completion22. New independent agent ux_ui_audit_new audits local UI. Fixes: keyboard search scroll+combobox semantics, full checklist text activation excluding links/controls, conditional checklist reset (server bool), route titles, preview copy-status cleanup, preview term accessibility roles, consecutive reader/panel headings, modal navigation/search backdrop dismissal. Verification results follow in implementation-notes.
