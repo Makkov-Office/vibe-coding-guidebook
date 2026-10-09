@@ -98,6 +98,7 @@ export async function compileHandbook(source) {
     return unified().use(remarkRehype,{allowDangerousHtml:true}).use(rehypeRaw).use(rehypeSanitize,schema).run(md);
   };
   const stringify = node => unified().use(rehypeStringify).stringify(node);
+  const externalIcon=(await unified().use(rehypeRaw).run({type:'root',children:[{type:'raw',value:iconMarkup('arrowUpRight')}]})).children[0];
   const chapters=[];const search=[];const diagrams=[];const blocks=[];const tables={};let intro='';let current='ch-00';let offset=0;let exercise=0;
   const groups=[];let nodes=[];
   for(const node of tree.children) {
@@ -162,7 +163,7 @@ export async function compileHandbook(source) {
           const cells=row.children.filter(n=>n.tagName==='td');const anchor=cells[0]?.children.find(n=>n.tagName==='a');const term=terms.find(t=>t.id===anchor?.properties.id);if(!term) continue;
           cells[0].children=cells[0].children.filter(n=>n!==anchor);
           const card=el('article',{id:term.id,tabIndex:-1,className:['term-definition'],'data-topic':term.topic,'data-term':term.id},[el('h4',{},cells[0].children),el('p',{},cells[1].children)]);
-          visit(card,'element',n=>{if(n.tagName==='a'&&/^https?:/.test(n.properties.href??'')){n.properties.target='_blank';n.properties.rel=['noopener','noreferrer'];n.properties['aria-label']=`${toText(n)} — открывается в новой вкладке`;}});
+          visit(card,'element',n=>{if(n.tagName==='a'&&/^https?:/.test(n.properties.href??'')){n.properties.target='_blank';n.properties.rel=['noopener','noreferrer'];n.properties['aria-label']=`${toText(n)} — открывается в новой вкладке`;n.children.push(structuredClone(externalIcon));}});
           term.definitionHtml=stringify(el('p',{},cells[1].children));
           node.children.push(card);usedIds.add(term.id);
           search.push({id:term.id,chapter,title:term.label,type:'термин',text:`${term.label} ${term.aliases.join(' ')} ${term.definition}`});

@@ -30,3 +30,5 @@ Home navigation2026-10-09:5nestedMarkdown groups compiledinto semanticcards,24wh
 
 
 Current2026-10-09: unified architecture map (no modes/stepper),23 official product links in canonical glossary; short linked definitions=popover, short plain=tooltip, long/structured=panel. 394definitions/2382links/0gaps,5contenttests/typecheck/nativebuild27routes passed. Browser1440/320/360, dynamicpanels/SPA/keyboard/mobileexample verified; no consoleerrors. Screenshots service-popover-desktop/mobile.jpg; exact notes implementation-notes.md. Public native release pending; receipt stores final IDs.
+
+Compact service preview update2026-10-09: no close button; plain official-site text link + sharedTabler arrowUpRight20/1.75, no fill/border. Interaction preserved; keyboard/repeat/outside/mobile320/360 verified.5tests/typecheck/build27/audit149 passed,0gaps. Screenshots service-tooltip-compact-desktop/mobile.jpg; native PUBLIC release receipt follows.
