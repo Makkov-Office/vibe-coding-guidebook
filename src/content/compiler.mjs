@@ -15,10 +15,27 @@ import {renderToStaticMarkup} from 'react-dom/server';
 import {icons,iconProps,chapterIcons} from '../design/icons.mjs';
 import identities from './block-identities.json' with {type:'json'};
 import practiceIdentities from './practice-identities.json' with {type:'json'};
+import toolMedia from './tool-media.json' with {type:'json'};
+import {termProduct,chapterProduct,linkedProduct} from '../design/product-logos.mjs';
 const iconMarkup=name=>renderToStaticMarkup(createElement(icons[name],iconProps));
 
 const el = (tagName, properties={}, children=[]) => ({type:'element',tagName,properties,children});
 const txt = value => ({type:'text',value});
+const productImage=logo=>el('img',{src:logo.src,alt:'',width:logo.width??20,height:20,className:['product-mark',...(logo.kind==='wordmark'?['product-wordmark']:[]),...(logo.tone?[logo.tone]:[])],'aria-hidden':'true'});
+const decorateProductLinks=node=>visit(node,'element',(link,index,parent)=>{
+  if(link.tagName!=='a'||link.children.some(child=>child.properties?.className?.includes('product-mark')))return;
+  const href=String(link.properties.href??''),termId=href.split('#')[1],logo=termProduct(termId)??linkedProduct(href);
+  if(!logo)return;
+  if(termId==='term-vscode'&&!/VS\s?Code|Visual Studio Code/i.test(toText(link)))return;
+  if(termId==='term-docker-engine'&&!/Docker/i.test(toText(link)))return;
+  if(parent?.tagName==='h2'&&chapterProduct(parent.properties.id)?.src===logo.src)return;
+  link.properties.className=[...(link.properties.className??[]),'product-link'];
+  if(logo.kind==='wordmark'&&toText(link)==='Context7')link.children=[productImage(logo),el('span',{className:['sr-only']},link.children)];
+  else link.children.unshift(productImage(logo));
+});
+const productMarkup=logo=>unified().use(rehypeStringify).stringify({type:'root',children:[productImage(logo)]});
+const chapterMarkup=id=>chapterProduct(id)?productMarkup(chapterProduct(id)):iconMarkup(chapterIcons[id]??'book');
+const featureIcon=title=>title.includes('Dots')?'dots':title.includes('Artifacts')?'docs':title.includes('Design')?'design':title.includes('Security')?'security':title.includes('Appshots')?'photo':title.includes('Подписки')?'tags':title.includes('Cloud')?'cloud':title.includes('Расписание')?'schedule':title.includes('От прототипа')?'world':title.includes('Браузер')||title.includes('Визуальный')?'world':title.includes('Review')||title.includes('review')?'review':title.includes('агент')||title.includes('Агенты')?'users':title.includes('План')||title.includes('/goal')?'lifecycle':title.includes('Контекст')?'context':title.includes('Модел')||title.includes('Mods')||title.includes('навыки')||title.includes('plugins')?'setup':'terminal';
 export const normalize = s => s.normalize('NFKC').toLocaleLowerCase('ru').replaceAll('ё','е');
 const toolPages={'Обзоры инструментов':{id:'ch-tools',path:'/tools'},'Codex: от идеи до проверенного результата':{id:'ch-codex',path:'/tools/codex'},'Claude Code: рабочий процесс внутри проекта':{id:'ch-claude-code',path:'/tools/claude-code'}};
 export const chapterPath = id => Object.values(toolPages).find(page=>page.id===id)?.path??(id==='ch-00'?'/':id==='ch-23'?'/glossary':id==='ch-resources'?'/resources':`/chapters/${id.slice(3)}`);
@@ -164,6 +181,8 @@ export async function compileHandbook(source) {
           const cells=row.children.filter(n=>n.tagName==='td');const anchor=cells[0]?.children.find(n=>n.tagName==='a');const term=terms.find(t=>t.id===anchor?.properties.id);if(!term) continue;
           cells[0].children=cells[0].children.filter(n=>n!==anchor);
           const card=el('article',{id:term.id,tabIndex:-1,className:['term-definition'],'data-topic':term.topic,'data-term':term.id},[el('h4',{},cells[0].children),el('p',{},cells[1].children)]);
+          if(termProduct(term.id))card.children[0].children.unshift(productImage(termProduct(term.id)));
+          decorateProductLinks(card);
           visit(card,'element',n=>{if(n.tagName==='a'&&/^https?:/.test(n.properties.href??'')){n.properties.target='_blank';n.properties.rel=['noopener','noreferrer'];n.properties['aria-label']=`${toText(n)} — открывается в новой вкладке`;n.children.push(structuredClone(externalIcon));}});
           term.definitionHtml=stringify(el('p',{},cells[1].children));
           node.children.push(card);usedIds.add(term.id);
@@ -206,6 +225,7 @@ export async function compileHandbook(source) {
         node.properties.className=['tool-cards'];
         visit(node,'element',link=>{if(link.tagName!=='a'||!['#ch-codex','#ch-claude-code'].includes(link.properties.href))return;const [name,...description]=toText(link).split(' — ');link.properties.className=['route-chapter','tool-card'];link.children=[el('span',{className:['route-icon'],'data-chapter':link.properties.href.slice(1)}),el('strong',{},[txt(name)]),el('span',{className:['tool-card-description']},[txt(description.join(' — '))]),el('span',{className:['route-arrow']})];});
       }
+      if(['ch-codex','ch-claude-code'].includes(chapter)&&node.tagName==='blockquote'&&toText(node).trim().startsWith('Где найти:'))node.properties.className=['feature-facts'];
       if(node.tagName==='table') {const inner={...node,properties:{...node.properties,id:undefined}};node.tagName='div';node.properties.className=['table-scroll'];node.properties.tabIndex=0;node.properties.role='region';node.properties['aria-label']='Таблица; прокрутите по горизонтали при необходимости';node.children=[inner];}
       if(/^h[23]$/.test(node.tagName)) node.children.push(el('a',{href:`#${id}`,className:['permalink'],'aria-label':`Ссылка на ${toText(node)}`},[txt('#')]));
     }
@@ -217,18 +237,30 @@ export async function compileHandbook(source) {
       else if(node.type!=='comment')containers.at(-1).children.push(node);
     }
     if(containers.length!==1)throw Error('Unclosed disclosure');hast.children=root.children;
+    decorateProductLinks(hast);
+    if(['ch-codex','ch-claude-code'].includes(chapter))visit(hast,'element',(node,index,parent)=>{
+      if(node.tagName!=='p'||node.children.length!==1||node.children[0].tagName!=='img')return;
+      const image=node.children[0],src=String(image.properties.src??'');if(!src.startsWith('/tools/'))return;
+      const media=toolMedia[src];if(!media?.width||!media?.height)throw Error(`Screenshot metadata missing: ${src}`);
+      Object.assign(image.properties,{loading:'lazy',decoding:'async',width:media.width,height:media.height,style:`max-width:${media.width}px;margin-inline:auto`});
+      node.tagName='figure';node.properties.className=['feature-shot'];
+      node.children=[el('a',{href:src,target:'_blank',rel:['noopener','noreferrer'],'aria-label':`Открыть скрин: ${image.properties.alt} — в новой вкладке`},[image])];
+      const caption=parent.children.slice(index+1).find(n=>n.type==='element');
+      if(caption?.tagName!=='p'||!toText(caption).trim().startsWith('Скрин:'))throw Error(`Screenshot caption missing: ${src}`);
+      caption.tagName='figcaption';node.children.push(caption);parent.children.splice(parent.children.indexOf(caption),1);
+    });
     // Trusted library SVG is added after source sanitization; source HTML cannot supply SVG.
     const html=stringify(hast)
-      .replace(/(<h2\b[^>]*>)/,`$1${iconMarkup(chapterIcons[chapter]??'book')}`)
-      .replace(/(<h3\b[^>]*>)/g,chapter==='ch-23'?`$1${iconMarkup('tags')}`:'$1')
+      .replace(/(<h2\b[^>]*>)/,`$1${chapterMarkup(chapter)}`)
+      .replace(/(<h3\b[^>]*>)([\s\S]*?)(<\/h3>)/g,(_,open,body,close)=>`${open}${chapter==='ch-23'?iconMarkup('tags'):['ch-codex','ch-claude-code'].includes(chapter)?iconMarkup(featureIcon(body.replace(/<[^>]*>/g,''))):''}${body}${close}`)
       .replace(/<summary>/g,`<summary>${iconMarkup('chevronRight')}`)
-      .replace(/<span class="route-icon" data-chapter="([^"]+)"><\/span>/g,(_,id)=>`<span class="route-icon">${iconMarkup(chapterIcons[id]??'book')}</span>`)
+      .replace(/<span class="route-icon" data-chapter="([^"]+)"><\/span>/g,(_,id)=>`<span class="route-icon">${chapterMarkup(id)}</span>`)
       .replace(/<span class="route-arrow"><\/span>/g,`<span class="route-arrow">${iconMarkup('arrowRight')}</span>`);
     if(chapter==='ch-00') intro+=html;
     else chapters.push({id:chapter,number:chapter.slice(3),title,html,outline,path:chapterPath(chapter)});
   }
   // Compact intro and orientation are separate source groups, both kept intact.
-  const rich = (text,id,chapter) => {const node=el('p',{},[txt(text)]);annotate(node,{id,chapter});return stringify({type:'root',children:[node]});};
+  const rich = (text,id,chapter) => {const node=el('p',{},[txt(text)]);annotate(node,{id,chapter});decorateProductLinks(node);return stringify({type:'root',children:[node]});};
   const panels=createPanels({tables,rich});
   const presentation={
     heading:rich(toString(tree.children.find(node=>node.type==='heading'&&node.depth===1)),'intro-heading','ch-00'),

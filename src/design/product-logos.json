@@ -1,0 +1,179 @@
+{
+  "codex": {
+    "src": "/brands/products/codex.webp",
+    "domains": []
+  },
+  "claude": {
+    "src": "/brands/products/claude.png",
+    "domains": [
+      "claude.com",
+      "claude.ai",
+      "code.claude.com",
+      "support.claude.com"
+    ]
+  },
+  "github": {
+    "src": "/brands/products/github.svg",
+    "domains": [
+      "github.com",
+      "docs.github.com",
+      "cli.github.com"
+    ],
+    "tone": "light-tile"
+  },
+  "linear": {
+    "src": "/brands/products/linear.svg",
+    "domains": [
+      "linear.app",
+      "developers.linear.app"
+    ]
+  },
+  "figma": {
+    "src": "/brands/products/figma.svg",
+    "domains": [
+      "figma.com",
+      "www.figma.com",
+      "help.figma.com"
+    ]
+  },
+  "storybook": {
+    "src": "/brands/products/storybook.svg",
+    "domains": [
+      "storybook.js.org"
+    ]
+  },
+  "notion": {
+    "src": "/brands/products/notion.png",
+    "domains": [
+      "notion.com",
+      "www.notion.com"
+    ]
+  },
+  "mermaid": {
+    "src": "/brands/products/mermaid.svg",
+    "domains": [
+      "mermaid.js.org",
+      "mermaid.live"
+    ]
+  },
+  "react": {
+    "src": "/brands/products/react.png",
+    "domains": [
+      "react.dev"
+    ]
+  },
+  "typescript": {
+    "src": "/brands/products/typescript.png",
+    "domains": [
+      "typescriptlang.org",
+      "www.typescriptlang.org"
+    ]
+  },
+  "ubuntu": {
+    "src": "/brands/products/ubuntu.png",
+    "domains": [
+      "ubuntu.com"
+    ]
+  },
+  "docker": {
+    "src": "/brands/products/docker.png",
+    "domains": [
+      "docker.com",
+      "www.docker.com",
+      "docs.docker.com"
+    ]
+  },
+  "vscode": {
+    "src": "/brands/products/vscode.png",
+    "domains": [
+      "code.visualstudio.com"
+    ]
+  },
+  "nodejs": {
+    "src": "/brands/products/nodejs.png",
+    "domains": [
+      "nodejs.org"
+    ]
+  },
+  "slack": {
+    "src": "/brands/products/slack.png",
+    "domains": [
+      "slack.com",
+      "api.slack.com"
+    ]
+  },
+  "vercel": {
+    "src": "/brands/products/vercel.png",
+    "domains": [
+      "vercel.com",
+      "www.vercel.com"
+    ]
+  },
+  "wsl": {
+    "src": "/brands/products/wsl.png",
+    "domains": []
+  },
+  "chatgpt": {
+    "src": "/brands/products/chatgpt.webp",
+    "domains": [
+      "chatgpt.com",
+      "learn.chatgpt.com"
+    ]
+  },
+  "git": {
+    "src": "/brands/products/git.svg",
+    "domains": [
+      "git-scm.com"
+    ]
+  },
+  "anthropic": {
+    "src": "/brands/products/anthropic.png",
+    "domains": [
+      "anthropic.com",
+      "www.anthropic.com"
+    ]
+  },
+  "youtube": {
+    "src": "/brands/products/youtube.png",
+    "domains": [
+      "youtube.com",
+      "www.youtube.com",
+      "youtu.be"
+    ]
+  },
+  "gemini": {
+    "src": "/brands/products/gemini.png",
+    "domains": [
+      "gemini.google",
+      "ai.google.dev"
+    ]
+  },
+  "context7": {
+    "src": "/brands/products/context7.svg",
+    "domains": [
+      "context7.com"
+    ],
+    "kind": "wordmark",
+    "width": 83
+  },
+  "modelcontextprotocol": {
+    "src": "/brands/products/modelcontextprotocol.png",
+    "domains": [
+      "modelcontextprotocol.io"
+    ]
+  },
+  "agentskills": {
+    "src": "/brands/products/agentskills.png",
+    "domains": [
+      "agentskills.io"
+    ],
+    "tone": "light-tile"
+  },
+  "openai": {
+    "src": "/brands/products/openai.svg",
+    "domains": [
+      "openai.com",
+      "platform.openai.com"
+    ]
+  }
+}

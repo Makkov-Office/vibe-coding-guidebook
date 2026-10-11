@@ -1,8 +1,8 @@
 {
   "topics": 11,
   "definitions": 394,
-  "recognized": 2822,
-  "linked": 2706,
+  "recognized": 2956,
+  "linked": 2841,
   "exceptions": [
     {
       "block": "ch-00-b1006",
@@ -910,217 +910,202 @@
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-codex-b1008",
-      "term": "term-package-manager",
-      "reason": "executable source retained; adjacent term link"
-    },
-    {
-      "block": "ch-codex-b1008",
-      "term": "term-codex",
-      "reason": "executable source retained; adjacent term link"
-    },
-    {
       "block": "ch-codex-b1009",
       "term": "term-shell",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-codex-b1023",
+      "block": "ch-codex-b1021",
+      "term": "term-migration",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-codex-b1029",
       "term": "term-agents-md",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-codex-b1028",
+      "block": "ch-codex-b1031",
+      "term": "term-git-object",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-codex-b1037",
       "term": "term-worktree",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-codex-b1032",
-      "term": "term-preview",
+      "block": "ch-codex-b1037",
+      "term": "term-handoff",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-codex-b1035",
+      "block": "ch-codex-b1049",
       "term": "term-image",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-codex-b1038",
+      "block": "ch-codex-b1055",
+      "term": "term-image",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-codex-b1057",
       "term": "term-review",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-codex-b1039",
+      "block": "ch-codex-b1057",
+      "term": "term-review",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-codex-b1061",
+      "term": "term-permission",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-codex-b1061",
       "term": "term-github",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-codex-b1040",
-      "term": "term-permission",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-codex-b1040",
-      "term": "term-review",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-codex-b1043",
+      "block": "ch-codex-b1063",
       "term": "term-webmcp",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-codex-b1044",
+      "block": "ch-codex-b1063",
       "term": "term-hook",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-codex-b1047",
+      "block": "ch-codex-b1070",
       "term": "term-remote",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-codex-b1050",
+      "block": "ch-codex-b1080",
       "term": "term-codex",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-codex-b1050",
+      "block": "ch-codex-b1080",
       "term": "term-diff",
       "reason": "executable source retained; adjacent term link"
     },
     {
-      "block": "ch-codex-b1053",
-      "term": "term-ticket",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-codex-b1053",
-      "term": "term-preflight",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-codex-b1053",
-      "term": "term-review",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-codex-b1054",
-      "term": "term-codex",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1014",
-      "term": "term-api",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1018",
+      "block": "ch-codex-b1087",
       "term": "term-release",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-claude-code-b1025",
-      "term": "term-context",
+      "block": "ch-codex-b1095",
+      "term": "term-finding",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-claude-code-b1036",
-      "term": "term-shell",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1040",
-      "term": "term-helper",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1041",
-      "term": "term-worktree",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1043",
-      "term": "term-agent",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1043",
-      "term": "term-agent",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1047",
-      "term": "term-webmcp",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1048",
-      "term": "term-hook",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1051",
-      "term": "term-claude",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1052",
-      "term": "term-remote",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1057",
-      "term": "term-shell",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1057",
-      "term": "term-scheduler",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1057",
-      "term": "term-github-actions",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1058",
-      "term": "term-review",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1061",
-      "term": "term-claude",
-      "reason": "executable source retained; adjacent term link"
-    },
-    {
-      "block": "ch-claude-code-b1061",
-      "term": "term-branch",
-      "reason": "executable source retained; adjacent term link"
-    },
-    {
-      "block": "ch-claude-code-b1063",
-      "term": "term-permission",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1064",
-      "term": "term-sandbox",
-      "reason": "existing link or semantic control"
-    },
-    {
-      "block": "ch-claude-code-b1067",
+      "block": "ch-codex-b1101",
       "term": "term-ticket",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-claude-code-b1067",
+      "block": "ch-codex-b1101",
+      "term": "term-preflight",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-codex-b1101",
       "term": "term-review",
       "reason": "existing link or semantic control"
     },
     {
-      "block": "ch-claude-code-b1068",
+      "block": "ch-claude-code-b1015",
+      "term": "term-authentication",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1027",
+      "term": "term-sandbox",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1036",
+      "term": "term-context",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1042",
+      "term": "term-webmcp",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1042",
+      "term": "term-hook",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1064",
+      "term": "term-artifact",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1067",
+      "term": "term-artifact",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1078",
+      "term": "term-helper",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1078",
+      "term": "term-worktree",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1078",
+      "term": "term-agent",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1082",
+      "term": "term-agent",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1082",
+      "term": "term-agent",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1092",
+      "term": "term-remote",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1092",
+      "term": "term-scheduler",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1098",
+      "term": "term-review",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-claude-code-b1101",
+      "term": "term-claude",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-claude-code-b1101",
+      "term": "term-branch",
+      "reason": "executable source retained; adjacent term link"
+    },
+    {
+      "block": "ch-claude-code-b1102",
       "term": "term-claude",
       "reason": "existing link or semantic control"
     },
@@ -3242,6 +3227,6 @@
   ],
   "ambiguous": [],
   "unexplainedGaps": 0,
-  "renderedLinked": 2843,
+  "renderedLinked": 2976,
   "renderedGaps": []
 }

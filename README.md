@@ -45,6 +45,10 @@ Sites project ID хранится в `.openai/hosting.json`. Используй�
 
 ## Брендинг
 
+Официальные логотипы сервисов: `src/design/product-logos.json`, единый `ProductMark` и AST-разметка ссылок. Знак — 20 × 20 px, `object-fit: contain`; широкий Context7 — 83 × 20 px. Источники, условия использования и SHA-256 оригинальных файлов записаны в `docs/product-logo-sources.json`. Семантические Tabler Icons сохраняются для понятий и функций без подтверждённого фирменного значка.
+
+Обзоры инструментов содержат 29 иллюстраций из официальных источников. Метаданные и проверки: `docs/codex-screenshot-sources.json`, `docs/claude-screenshot-sources.json`, `src/content/tool-media.json`. Каждый кадр имеет подпись, дату, ссылку на источник и полноразмерное изображение. Исторический интерфейс и снимок документации отмечены явно. Изображения загружаются лениво, с заранее заданными размерами. Все описания и подписи редактируются в `content/handbook.md`.
+
 FLOW — основной символ (`public/brand/flow.svg`) и favicon. Подпись **by Makkov** использует предоставленный автором `public/brand/makkov.svg` без изменения исходных байтов. Отдельная плашка **Open Source** размещена на главной и в footer. Название учебного source задаётся первой строкой `content/handbook.md`; UI/metadata brand title — `src/design/brand.ts`. Screenshots: `docs/screenshots/brand-desktop.png`, `brand-mobile.png`. Проверка адаптации/доступности — `docs/brand-qa-results.json`.
 
 ## Полезные материалы

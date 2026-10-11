@@ -1,0 +1,6 @@
+.product-mark{display:inline-block;width:20px;height:20px;max-width:20px;max-height:20px;object-fit:contain;flex:0 0 20px;vertical-align:-3px}
+.product-mark.light-tile{background:#f4f4f5;border-radius:4px;padding:1px}
+.product-mark.product-wordmark{width:83px;max-width:83px;flex-basis:83px}
+.term-link.product-link{white-space:nowrap}
+.product-link>.product-mark{margin-right:5px}.reader-prose h1>.product-mark,.reader-prose h2>.product-mark{margin-right:10px;vertical-align:baseline}.term-definition h4>.product-mark{margin-right:8px}.term-preview-heading>.product-mark{margin-right:8px}.dialog-header h2>.product-mark{margin-right:8px}
+.route-icon .product-mark{margin:0}.nav-group a>.product-mark{margin-top:0}.feature-facts .product-mark,.feature-shot figcaption .product-mark{vertical-align:-4px}

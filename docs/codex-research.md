@@ -2,6 +2,10 @@
 
 Official documentation and changelog checked before writing the public review. Page Markdown snapshots are ignored local research files under `.sites-runtime/research-codex/`; the editable published text lives only in `content/handbook.md`.
 
+Screenshot update, checked again October11: fresh snapshots in `.sites-runtime/review-v2-codex/`. Dots overview/getting-started/tasks-and-memory/computers-and-apps/controls and October9 release distinguish mobile creation, rollout, delegation usage and local-host availability. Computer History docs confirm macOS-only, voluntary opt-in, Memories requirement, workspace admin access and text/event history rather than screenshot/audio recording. Security Cloud setup/review/FAQ confirm research preview and separate scan billing. Appshots docs distinguish context attachment from Computer Use. These are now visible feature blocks with location, benefit and use cases, not a generic release appendix.
+
+`codex-screenshot-sources.json` records15 individually viewed official images/captures, source URLs, dates, intrinsic dimensions, SHA-256 and source kind. Two historical original screenshots identify their old model labels; current HTML/CSS UI illustrations are explicitly examples from official docs rather than live account captures. No generated product UI. Total Codex assets approximately805KB, lazy loaded; replaced a2.6MB historical browser raster with a28KB verified official UI example. Independent final factual/caption review corrected workspace caption from open diff to changed-file list.
+
 | Claim area | Official source | Publication treatment |
 |---|---|---|
 | Surfaces / current desktop naming | https://learn.chatgpt.com/docs and https://learn.chatgpt.com/docs/windows/windows-app | Desktop naming follows current docs; Windows PowerShell/WSL2 distinguished |

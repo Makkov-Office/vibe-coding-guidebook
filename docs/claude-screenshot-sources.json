@@ -1,0 +1,270 @@
+{
+  "verifiedOn": "2026-10-11",
+  "assets": [
+    {
+      "features": [
+        "models",
+        "effort"
+      ],
+      "sourceUrl": "https://code.claude.com/docs/en/model-config",
+      "assetUrl": null,
+      "localPath": "public/tools/claude-models-reference.png",
+      "kind": "documentation-reference",
+      "observed": "Official documentation alias table, not application model picker",
+      "historical": false,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": null,
+      "width": 810,
+      "height": 384,
+      "bytes": 38858,
+      "sha256": "2de4ad85f19c6cf918c428341fbe439f3623b75bffdd4f7f8936879b86dae51f"
+    },
+    {
+      "features": [
+        "plan",
+        "permissions"
+      ],
+      "sourceUrl": "https://code.claude.com/docs/en/permission-modes",
+      "assetUrl": "https://mintcdn.com/claude-code/oa7CKjMeIChox26S/images/permission-modes-cycle-dark.mp4",
+      "localPath": "public/tools/claude-permission-modes.png",
+      "kind": "official-video-frame",
+      "observed": "CLI footer accept edits on (shift+tab to cycle); plan itself is not visible",
+      "historical": false,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": 4.5,
+      "width": 1440,
+      "height": 264,
+      "bytes": 42230,
+      "sha256": "bea6c8a01eaebd6d8d4abe8c1f490a5439c25c05d2c85356a1ea64e49893869c"
+    },
+    {
+      "features": [
+        "goal"
+      ],
+      "sourceUrl": "https://code.claude.com/docs/en/goal",
+      "assetUrl": null,
+      "localPath": "public/tools/claude-goal-reference.png",
+      "kind": "documentation-reference",
+      "observed": "Official documentation completion condition and migration examples",
+      "historical": false,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": null,
+      "width": 800,
+      "height": 570,
+      "bytes": 65238,
+      "sha256": "3b3892367cfbb330547811142b22e245d80716a0a3fa1eba3e296fe4bf972673"
+    },
+    {
+      "features": [
+        "memory",
+        "context",
+        "sessions"
+      ],
+      "sourceUrl": "https://code.claude.com/docs/en/memory",
+      "assetUrl": null,
+      "localPath": "public/tools/claude-memory-reference.png",
+      "kind": "documentation-reference",
+      "observed": "Official documentation CLAUDE.md, AGENTS.md and auto memory; sessions commands not depicted",
+      "historical": false,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": null,
+      "width": 800,
+      "height": 600,
+      "bytes": 53964,
+      "sha256": "9b3def20881ffd3ef04ffbbedceebb5c1dd9cf70506fa3f9ebfd38dff64c4600"
+    },
+    {
+      "features": [
+        "skills",
+        "plugins",
+        "MCP",
+        "hooks"
+      ],
+      "sourceUrl": "https://claude.com/blog/claude-code-plugins",
+      "assetUrl": "https://assets.claude.com/81805a2d45f087f2cc153168759f8bf015706b04.png",
+      "localPath": "public/tools/claude-plugins.png",
+      "kind": "official-product-ui",
+      "observed": "Manage plugins menu: code-review, typescript-lsp, security-guidance; CLI2.0.12/Sonnet4.5 historical, individual hook/MCP setup not shown",
+      "historical": true,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": null,
+      "width": 1920,
+      "height": 1035,
+      "bytes": 95955,
+      "sha256": "79b5baafacf7a058ddc99ff0ac7485c628cbe666acb66ae6a86f2b4d904995b3"
+    },
+    {
+      "features": [
+        "Mods"
+      ],
+      "sourceUrl": "https://code.claude.com/docs/en/plugins/mods/overview",
+      "assetUrl": "https://mintcdn.com/claude-code/dgiVO_Od1X1faduV/images/mods-overview-dark.mp4",
+      "localPath": "public/tools/claude-mods-tool-counter.png",
+      "kind": "official-video-frame",
+      "observed": "Official Mod demonstration changed spinner row: Thinking, tool calls counter; no token chart visible",
+      "historical": false,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": 9,
+      "width": 1440,
+      "height": 466,
+      "bytes": 102372,
+      "sha256": "1dd6d67507915f69b67af3d3f3fe709aaea5e26bfca2a2b2aa434074b4ab543e"
+    },
+    {
+      "features": [
+        "desktop",
+        "preview",
+        "verify"
+      ],
+      "sourceUrl": "https://code.claude.com/docs/en/desktop",
+      "assetUrl": null,
+      "localPath": "public/tools/claude-preview-reference.png",
+      "kind": "documentation-reference",
+      "observed": "Official documentation Desktop Code feature list and supported platforms; not actual Browser pane or verify run",
+      "historical": false,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": null,
+      "width": 800,
+      "height": 590,
+      "bytes": 60021,
+      "sha256": "d2ab49be24e01550ee6b61de8f4f5721e4a14c6ca88bff00ec0128781e3f95e3"
+    },
+    {
+      "features": [
+        "Artifacts in Claude apps"
+      ],
+      "sourceUrl": "https://claude.com/features/artifacts",
+      "assetUrl": "https://assets.claude.com/5417c7f247242efc74cab6cab3a72de5e1a8ea7c.png",
+      "localPath": "public/tools/claude-artifacts-apps.png",
+      "kind": "official-product-ui",
+      "observed": "Official demo poster showing launch deck prompt and Building launch deck progress, not completed editor",
+      "historical": false,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": null,
+      "width": 1280,
+      "height": 720,
+      "bytes": 90896,
+      "sha256": "fb13bf7e708e28f66b60005e9e91ccd6799a2179f350f0cd0d61d42abe49aa5a"
+    },
+    {
+      "features": [
+        "Artifacts in Claude Code"
+      ],
+      "sourceUrl": "https://code.claude.com/docs/en/artifacts",
+      "assetUrl": "https://mintcdn.com/claude-code/kaHIYYMIYMYPxQg9/images/artifacts-viewer.png",
+      "localPath": "public/tools/claude-artifacts-code.png",
+      "kind": "official-product-ui",
+      "observed": "Actual browser artifact viewer, interface variants/metrics and version/share menu",
+      "historical": false,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": null,
+      "width": 2511,
+      "height": 1890,
+      "bytes": 621142,
+      "sha256": "b509e26b8e4ecd8466775cbf17cca18713be3a5795b3312b2f2e614f298fed26"
+    },
+    {
+      "features": [
+        "Design",
+        "design-sync"
+      ],
+      "sourceUrl": "https://claude.com/blog/claude-design-stays-on-brand-for-daily-work",
+      "assetUrl": "https://assets.claude.com/26fe4b872e9039c8736c215fcc8d33a8c933961f.webp",
+      "localPath": "public/tools/claude-design.webp",
+      "kind": "official-product-ui",
+      "observed": "Canvas editing typography and inset terminal design-sync; June17 historical CLI2.1.176 and Opus4.8",
+      "historical": true,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": null,
+      "width": 3840,
+      "height": 2160,
+      "bytes": 153776,
+      "sha256": "4710fd5aaf13a40ca89a097ef08d365a4d2b0e22c7824530195e6eb29bbde9f2"
+    },
+    {
+      "features": [
+        "agents",
+        "worktrees"
+      ],
+      "sourceUrl": "https://code.claude.com/docs/en/agent-view",
+      "assetUrl": "https://mintcdn.com/claude-code/HDAmBwgbrZVk0pOt/images/agent-view-dark.png",
+      "localPath": "public/tools/claude-agent-view.png",
+      "kind": "official-product-ui",
+      "observed": "Actual terminal Agent view: Needs input, Working, Completed lists; not worktree file tree",
+      "historical": false,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": null,
+      "width": 1872,
+      "height": 680,
+      "bytes": 79982,
+      "sha256": "95bde8f231ac343dc723e4226df0e810317ca7c404595fde46cc2cc036f81550"
+    },
+    {
+      "features": [
+        "Cloud Projects"
+      ],
+      "sourceUrl": "https://claude.com/blog/projects-redesigned",
+      "assetUrl": "https://assets.claude.com/e51d818a287f89b01a7a308b5f01c3779ef7791c.png",
+      "localPath": "public/tools/claude-projects.png",
+      "kind": "official-product-ui",
+      "observed": "Actual UI suggested new threads with Start and Start3threads buttons",
+      "historical": false,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": null,
+      "width": 2524,
+      "height": 1400,
+      "bytes": 141430,
+      "sha256": "c730cd046d01c05f61d68dfcd0fd3d0ef3fa90024cb3a9151b9db08211975951"
+    },
+    {
+      "features": [
+        "Routines",
+        "cloud automation"
+      ],
+      "sourceUrl": "https://code.claude.com/docs/en/routines",
+      "assetUrl": null,
+      "localPath": "public/tools/claude-routines-reference.png",
+      "kind": "documentation-reference",
+      "observed": "Official documentation research preview, schedule/API/GitHub triggers; not routine configuration UI",
+      "historical": false,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": null,
+      "width": 800,
+      "height": 590,
+      "bytes": 65708,
+      "sha256": "517e5a60b02e3bd04b70d953225b06f59fbd2ed06ea5ce7565ca07deed58f9bb"
+    },
+    {
+      "features": [
+        "review",
+        "Ultrareview"
+      ],
+      "sourceUrl": "https://code.claude.com/docs/en/ultrareview",
+      "assetUrl": null,
+      "localPath": "public/tools/claude-review-reference.png",
+      "kind": "documentation-reference",
+      "observed": "Official documentation /code-review ultra and cloud/research preview constraints; not review result report",
+      "historical": false,
+      "verifiedOn": "2026-10-11",
+      "verification": "Downloaded from official page or captured official page with CUA, visually inspected using view_image; no synthetic reconstruction",
+      "frameSeconds": null,
+      "width": 800,
+      "height": 590,
+      "bytes": 65018,
+      "sha256": "3121d304c78afdb44545b8107990bcff5a405672fe8e7e9488f2d8ff09da522f"
+    }
+  ]
+}
