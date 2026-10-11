@@ -30,5 +30,5 @@ export const chapterIcons={
   'ch-08':'preflight','ch-09':'context','ch-10':'docs','ch-11':'git','ch-12':'risk',
   'ch-13':'collisions','ch-14':'review','ch-15':'gates','ch-16':'sync',
   'ch-17':'security','ch-18':'cases','ch-19':'recovery','ch-20':'setup',
-  'ch-21':'maturity','ch-22':'notes','ch-23':'glossary','ch-24':'sources','ch-resources':'sources',
+  'ch-21':'maturity','ch-22':'notes','ch-23':'glossary','ch-24':'sources','ch-resources':'sources','ch-tools':'setup','ch-codex':'terminal','ch-claude-code':'context',
 };

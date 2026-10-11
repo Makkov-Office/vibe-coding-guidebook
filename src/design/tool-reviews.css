@@ -1,0 +1,16 @@
+.tool-directory .tool-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;list-style:none;padding:0;margin:32px 0}
+.tool-cards>li{margin:0;min-width:0}.tool-cards li>p{margin:0}
+.tool-cards a.tool-card{position:relative;display:grid;grid-template-columns:1fr 20px;align-content:start;gap:16px;height:100%;padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);text-decoration:none;transition:border-color 160ms ease,background-color 160ms ease,transform 160ms ease}
+.tool-card .route-icon{grid-column:1/-1;display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--strong-line);border-radius:10px;color:var(--link);background:var(--elevated)}
+.tool-card strong{font-size:1.25rem;line-height:1.4;letter-spacing:-.025em}.tool-card .tool-card-description{grid-column:1/-1;color:var(--muted);font-size:.9375rem;line-height:1.7;text-wrap:pretty}
+.tool-review th:first-child,.tool-review td:first-child{min-width:110px;overflow-wrap:normal;word-break:normal}
+.tool-card .route-arrow{position:absolute;right:24px;top:36px;color:var(--subtle);transition:transform 160ms ease,color 160ms ease}
+.tool-cards a.tool-card:hover,.tool-cards a.tool-card:focus-visible{border-color:var(--accent);background:var(--elevated)}
+.tool-card:hover .route-arrow{color:var(--link)}
+.tool-review .reader-prose>blockquote:first-of-type,.tool-directory .reader-prose>blockquote:first-of-type{padding:12px 16px;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;background:var(--surface);font-size:.8125rem;color:var(--muted)}
+.tool-review .reader-prose>blockquote:first-of-type p,.tool-directory .reader-prose>blockquote:first-of-type p{margin:0}
+.tool-review .content-detail{margin:20px 0}.tool-review .content-detail>summary{font-size:.9375rem}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.tool-cards a.tool-card:hover{transform:translateY(-2px)}.tool-card:hover .route-arrow{transform:translateX(3px)}}
+@media(max-width:767px){.tool-directory .tool-cards{grid-template-columns:1fr;gap:12px;margin:24px 0}.tool-cards a.tool-card{padding:20px}.tool-card .route-arrow{right:20px;top:32px}}
+@media(prefers-reduced-motion:reduce){.tool-cards a.tool-card,.tool-card .route-arrow{transition:none}}
+@media print{.tool-directory .tool-cards{display:block}.tool-cards>li{break-inside:avoid;margin:12px 0}.tool-card .route-arrow{display:none}.tool-review details{break-inside:auto}}

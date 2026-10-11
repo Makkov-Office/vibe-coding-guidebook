@@ -20,7 +20,8 @@ const iconMarkup=name=>renderToStaticMarkup(createElement(icons[name],iconProps)
 const el = (tagName, properties={}, children=[]) => ({type:'element',tagName,properties,children});
 const txt = value => ({type:'text',value});
 export const normalize = s => s.normalize('NFKC').toLocaleLowerCase('ru').replaceAll('ё','е');
-export const chapterPath = id => id==='ch-00'?'/':id==='ch-23'?'/glossary':id==='ch-resources'?'/resources':`/chapters/${id.slice(3)}`;
+const toolPages={'Обзоры инструментов':{id:'ch-tools',path:'/tools'},'Codex: от идеи до проверенного результата':{id:'ch-codex',path:'/tools/codex'},'Claude Code: рабочий процесс внутри проекта':{id:'ch-claude-code',path:'/tools/claude-code'}};
+export const chapterPath = id => Object.values(toolPages).find(page=>page.id===id)?.path??(id==='ch-00'?'/':id==='ch-23'?'/glossary':id==='ch-resources'?'/resources':`/chapters/${id.slice(3)}`);
 export function previewKind(definition, structured=false, linked=false){return !structured && [...definition.trim().replace(/\s+/g,' ')].length<=160?(linked?'popover':'tooltip'):'panel';}
 const slug = s => normalize(s).replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'');
 const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
@@ -94,7 +95,7 @@ export async function compileHandbook(source) {
     node.children=result;
   }
   const renderTree=async md => {
-    const schema={...defaultSchema,clobberPrefix:'',attributes:{...defaultSchema.attributes,'*':[...(defaultSchema.attributes['*']??[]),'id']},protocols:{...defaultSchema.protocols,href:[...(defaultSchema.protocols.href??[]),'chatgpt-conversation']}};
+    const schema={...defaultSchema,allowComments:true,clobberPrefix:'',attributes:{...defaultSchema.attributes,'*':[...(defaultSchema.attributes['*']??[]),'id']},protocols:{...defaultSchema.protocols,href:[...(defaultSchema.protocols.href??[]),'chatgpt-conversation']}};
     return unified().use(remarkRehype,{allowDangerousHtml:true}).use(rehypeRaw).use(rehypeSanitize,schema).run(md);
   };
   const stringify = node => unified().use(rehypeStringify).stringify(node);
@@ -103,9 +104,9 @@ export async function compileHandbook(source) {
   const groups=[];let nodes=[];
   for(const node of tree.children) {
     if(node.type==='html' && /^<a id="ch-\d{2}"><\/a>$/.test(node.value.trim())) continue;
-    if(node.type==='heading' && node.depth===2 && (/^\d{2}\./.test(toString(node)) || toString(node)==='Полезные материалы')) {
+    if(node.type==='heading' && node.depth===2 && (/^\d{2}\./.test(toString(node)) || toString(node)==='Полезные материалы' || toolPages[toString(node)])) {
       if(nodes.length) groups.push({chapter:current,nodes});
-      current=toString(node)==='Полезные материалы'?'ch-resources':`ch-${toString(node).slice(0,2)}`; nodes=[];
+      current=toolPages[toString(node)]?.id??(toString(node)==='Полезные материалы'?'ch-resources':`ch-${toString(node).slice(0,2)}`); nodes=[];
     }
     nodes.push(node);
   }
@@ -198,8 +199,12 @@ export async function compileHandbook(source) {
           const label=item.children.find(n=>n.tagName==='p'),list=item.children.find(n=>n.tagName==='ul');
           item.properties['aria-label']=toText(label);label.tagName='h4';label.properties.className=['route-group-title'];
           list.properties.className=['route-chapters'];list.children=list.children.filter(n=>n.tagName==='li');
-          visit(list,'element',link=>{if(link.tagName!=='a'||!/^#ch-(\d{2}|resources)$/.test(link.properties.href??''))return;const chapter=link.properties.href.slice(1);link.properties.className=['route-chapter'];link.children=[el('span',{className:['route-icon'],'data-chapter':chapter}),el('span',{className:['route-title']},link.children),el('span',{className:['route-arrow']})];});
+          visit(list,'element',link=>{if(link.tagName!=='a'||!/^#ch-(\d{2}|resources|tools|codex|claude-code)$/.test(link.properties.href??''))return;const chapter=link.properties.href.slice(1);link.properties.className=['route-chapter'];link.children=[el('span',{className:['route-icon'],'data-chapter':chapter}),el('span',{className:['route-title']},link.children),el('span',{className:['route-arrow']})];});
         }
+      }
+      if(chapter==='ch-tools'&&node.tagName==='ul'&&toText(node).includes('Codex —')){
+        node.properties.className=['tool-cards'];
+        visit(node,'element',link=>{if(link.tagName!=='a'||!['#ch-codex','#ch-claude-code'].includes(link.properties.href))return;const [name,...description]=toText(link).split(' — ');link.properties.className=['route-chapter','tool-card'];link.children=[el('span',{className:['route-icon'],'data-chapter':link.properties.href.slice(1)}),el('strong',{},[txt(name)]),el('span',{className:['tool-card-description']},[txt(description.join(' — '))]),el('span',{className:['route-arrow']})];});
       }
       if(node.tagName==='table') {const inner={...node,properties:{...node.properties,id:undefined}};node.tagName='div';node.properties.className=['table-scroll'];node.properties.tabIndex=0;node.properties.role='region';node.properties['aria-label']='Таблица; прокрутите по горизонтали при необходимости';node.children=[inner];}
       if(/^h[23]$/.test(node.tagName)) node.children.push(el('a',{href:`#${id}`,className:['permalink'],'aria-label':`Ссылка на ${toText(node)}`},[txt('#')]));
@@ -209,7 +214,7 @@ export async function compileHandbook(source) {
     for(const node of hast.children){
       if(node.type==='comment'&&node.value.trim().startsWith('details:')){const detail=el('details',{className:['deep-dive','content-detail']},[el('summary',{},[txt(node.value.trim().slice(8).trim())])]);containers.at(-1).children.push(detail);containers.push(detail);}
       else if(node.type==='comment'&&node.value.trim()==='/details'){if(containers.length===1)throw Error('Unmatched disclosure');containers.pop();}
-      else containers.at(-1).children.push(node);
+      else if(node.type!=='comment')containers.at(-1).children.push(node);
     }
     if(containers.length!==1)throw Error('Unclosed disclosure');hast.children=root.children;
     // Trusted library SVG is added after source sanitization; source HTML cannot supply SVG.
@@ -252,7 +257,7 @@ export async function compileHandbook(source) {
   if(ids.length!==new Set(ids).size) throw Error(`Duplicate rendered IDs: ${[...new Set(ids.filter((id,i)=>ids.indexOf(id)!==i))].join(', ')}`);
   for(const [,target] of html.matchAll(/href="#([^"]+)"/g)) if(!ids.includes(target)) throw Error(`Missing anchor ${target}`);
   audit.unexplainedGaps=audit.ambiguous.length+renderedGaps.length;
-  const anchors=Object.fromEntries(ids.map(id=>[id,{id,path:id.startsWith('term-')?'/glossary':chapterPath(id.match(/ch-(?:\d{2}|resources)/)?.[0]??'ch-00')}]));
+  const anchors=Object.fromEntries(ids.map(id=>[id,{id,path:id.startsWith('term-')?'/glossary':chapterPath(id.match(/ch-(?:\d{2}|resources|tools|codex|claude-code)/)?.[0]??'ch-00')}]));
   for(const panel of panels)anchors[`${panel.id}-panel`]={id:`${panel.id}-panel`,path:chapterPath(panel.chapter)};
   const routeLinks=fragment=>fragment.replace(/href="#([^"]+)"/g,(_,id)=>`href="${anchors[id]?.path??'/'}#${id}"`);
   intro=routeLinks(intro);for(const chapter of chapters)chapter.html=routeLinks(chapter.html);

@@ -16,7 +16,7 @@ test('source boundary, full inventory and safe rendering', async () => {
   }
   assert.equal(source, fs.readFileSync(new URL('../public/handbook.md', import.meta.url), 'utf8'));
   const data = await compileHandbook(source);
-  assert.equal(data.chapters.length, 24);
+  assert.equal(data.chapters.length, 27);
   assert.equal(data.chapters.filter(c=>/^ch-(0[1-9]|1\d|2[0-2])$/.test(c.id)).length,22);
   const resources=data.chapters.find(c=>c.id==='ch-resources');
   assert.equal(resources.path,'/resources');
@@ -24,6 +24,17 @@ test('source boundary, full inventory and safe rendering', async () => {
   assert.ok(data.search.some(e=>e.path==='/resources'&&e.text.includes('How I use LLMs')));
   assert.equal((resources.html.match(/href="https:\/\//g)??[]).length,29);
   assert.ok(!resources.html.includes('<iframe'));
+  for(const [id,path]of [['ch-tools','/tools'],['ch-codex','/tools/codex'],['ch-claude-code','/tools/claude-code']]){
+    const page=data.chapters.find(c=>c.id===id);assert.ok(page,id);assert.equal(page.path,path);assert.equal(data.anchors[id].path,path);
+    assert.ok(data.search.some(entry=>entry.chapter===id&&entry.path===path));
+    assert.ok(page.html.includes('11 октября 2026'));
+  }
+  assert.equal((data.chapters.find(c=>c.id==='ch-tools').html.match(/class="route-chapter tool-card"/g)??[]).length,2);
+  assert.ok(data.search.some(entry=>entry.path==='/tools/codex'&&entry.text.includes('Ultrafast')));
+  assert.ok(data.search.some(entry=>entry.path==='/tools/claude-code'&&entry.text.includes('/verify')));
+  for(const id of ['ch-codex','ch-claude-code'])assert.ok(data.chapters.find(c=>c.id===id).html.includes('content-detail'));
+  assert.ok(data.chapters.find(c=>c.id==='ch-02').html.includes('Evidence для узлов карты'));
+  assert.ok(!data.html.includes('<!--'));
   assert.equal(data.terms.length, 394);
   assert.equal(data.topics.length, 11);
   assert.equal(data.diagrams.length, 6);
