@@ -68,3 +68,54 @@ Evidence — раздел ниже и PR. Команды в свежем `git cl
 - Код Vinext 1.0.0-beta.5 (`node_modules/vinext/dist`, lockfile) и Vercel CLI 62.7.0 (npm, опубликован 07.10.2026; запуск через `npx`, не в `package.json`).
 
 ## Evidence
+
+Код и конфигурация — SHA `6568fe3d1c1d74979f1040a198e994debdd858cf` (base `origin/main` `80b066e5c44a611df305db517f514bf56a8d6ed9`), свежий `git clone` ветки `p1-06-vercel-spike` во временном каталоге, 22.10.2026. Node 22.22.0, npm 10.9.4, Chromium 1194 (`/opt/pw-browsers`, `CHROMIUM_PATH`), Vercel CLI 62.7.0 через `npx` (в `package.json`/lockfile не записан). Аккаунт Vercel, логин, токены, `vercel link/deploy` не использовались; `.vercel/project.json` — локальная заглушка (`framework: null`, `createdAt` 2026), egress к vercel.com из среды закрыт.
+
+| Шаг | Команда | Результат |
+|---|---|---|
+| Установка | `NODE_ENV=production npm ci --include=dev` | PASS: 958 пакетов, `@img/sharp-linux-x64` и `vite` на месте |
+| Проект | `npm run validate` | PASS: content, test, typecheck, lint, build, tree |
+| Vercel build | `VERCEL_TELEMETRY_DISABLED=1 npx --yes vercel@62.7.0 build` | PASS: install `npm ci --include=dev`, build command, `vercel-output: PASS 29 pages (+404), 127 client files (3 Cloudflare-only skipped)`, `Build completed successfully`; итоговый `config.json` — 65 routes (`error`, `filesystem`), 58 overrides |
+| A2, эмуляция | `node scripts/check-vercel-output.mjs` (итог `vercel build`) | PASS 155/155 |
+| A1 без id | `--variant no-compat` | FAIL 58/155 (ожидаемо): SPA 0/29 — «full page load», HTTP RSC без id 0/29 |
+| A1 без rewrite | `--variant no-rsc` | FAIL 58/155 (ожидаемо): SPA 0/29, на `?_rsc` отдаётся HTML |
+| Baseline Worker | `npm start` + `--url http://127.0.0.1:8787` | PASS 155/155; Worker отдаёт тот же compatibility id `0bad9fe4-…`, что извлёк скрипт |
+
+Маршруты (вариант A2, итог `vercel build`, локальная эмуляция). HTTP — статус и тип, байты равны файлам prerender (`.html`, `.rsc`) и `content/handbook.md`; Direct/Refresh — Chromium 1440×1000, статус 200, `title` и `h1` страницы; SPA — клик по видимой ссылке rail с `/` (для `/` — с `/glossary`, для `/chapters/01` — с `/chapters/02`), без новой загрузки документа и с сохранённым `window`-маркером.
+
+| # | Route | HTTP HTML/file | HTTP RSC | Direct | Refresh | SPA |
+|---|---|---|---|---|---|---|
+| 1 | `/` | PASS | PASS | PASS | PASS | PASS |
+| 2 | `/glossary` | PASS | PASS | PASS | PASS | PASS |
+| 3 | `/print` | PASS | PASS | PASS | PASS | PASS |
+| 4 | `/resources` | PASS | PASS | PASS | PASS | PASS |
+| 5 | `/tools` | PASS | PASS | PASS | PASS | PASS |
+| 6 | `/tools/claude-code` | PASS | PASS | PASS | PASS | PASS |
+| 7 | `/tools/codex` | PASS | PASS | PASS | PASS | PASS |
+| 8 | `/chapters/01` | PASS | PASS | PASS | PASS | PASS |
+| 9 | `/chapters/02` | PASS | PASS | PASS | PASS | PASS |
+| 10 | `/chapters/03` | PASS | PASS | PASS | PASS | PASS |
+| 11 | `/chapters/04` | PASS | PASS | PASS | PASS | PASS |
+| 12 | `/chapters/05` | PASS | PASS | PASS | PASS | PASS |
+| 13 | `/chapters/06` | PASS | PASS | PASS | PASS | PASS |
+| 14 | `/chapters/07` | PASS | PASS | PASS | PASS | PASS |
+| 15 | `/chapters/08` | PASS | PASS | PASS | PASS | PASS |
+| 16 | `/chapters/09` | PASS | PASS | PASS | PASS | PASS |
+| 17 | `/chapters/10` | PASS | PASS | PASS | PASS | PASS |
+| 18 | `/chapters/11` | PASS | PASS | PASS | PASS | PASS |
+| 19 | `/chapters/12` | PASS | PASS | PASS | PASS | PASS |
+| 20 | `/chapters/13` | PASS | PASS | PASS | PASS | PASS |
+| 21 | `/chapters/14` | PASS | PASS | PASS | PASS | PASS |
+| 22 | `/chapters/15` | PASS | PASS | PASS | PASS | PASS |
+| 23 | `/chapters/16` | PASS | PASS | PASS | PASS | PASS |
+| 24 | `/chapters/17` | PASS | PASS | PASS | PASS | PASS |
+| 25 | `/chapters/18` | PASS | PASS | PASS | PASS | PASS |
+| 26 | `/chapters/19` | PASS | PASS | PASS | PASS | PASS |
+| 27 | `/chapters/20` | PASS | PASS | PASS | PASS | PASS |
+| 28 | `/chapters/21` | PASS | PASS | PASS | PASS | PASS |
+| 29 | `/chapters/22` | PASS | PASS | PASS | PASS | PASS |
+| 30 | `/handbook.md` | PASS | n/a | n/a | n/a | n/a |
+
+Прочие проверки того же прогона: 404 и тело `404.html` — `/nope`, `/chapters/99`, `/chapters`, `/_headers`, `/.vite/manifest.json`, `/wrangler.json` (6/6 PASS, как на Worker); `/chapters/01/` → 308 `/chapters/01` (PASS); `/_next/static/*.js` — `public, max-age=31536000, immutable` (PASS); ошибок страниц в браузере нет (PASS). В A2 переход делает 1 RSC-запрос; в негативных вариантах — полная загрузка документа.
+
+Логи и JSON прогона не коммитятся (временный каталог удалён); воспроизведение — команды выше. HEAD PR и run CI — в PR.
