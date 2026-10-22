@@ -60,6 +60,11 @@ git(R.task, 'config', 'alias.pf', 'push -f');
 git(R.task, 'config', 'alias.wipe', '!git reset --hard');
 git(R.task, 'config', 'alias.st', 'status');
 fs.mkdirSync(R.plain);
+// a fake git that records being started: the hook must never run it (finding 3 of review 4347f95)
+const fakebin = path.join(tmp, 'fakebin');
+const fakeMarker = path.join(tmp, 'fake-git-ran');
+fs.mkdirSync(fakebin);
+fs.writeFileSync(path.join(fakebin, 'git'), `#!/bin/sh\necho ran >> '${fakeMarker}'\necho p1-01-task\n`, { mode: 0o755 });
 assert.equal(git(R.main, 'symbolic-ref', '--short', 'HEAD'), 'main');
 assert.equal(git(R.task, 'symbolic-ref', '--short', 'HEAD'), 'p1-01-task');
 
@@ -210,6 +215,68 @@ const extra = [
   ['E70', `GIT_WORK_TREE=${M}; git push`, T, 'block'],
   ['E71', `GIT_DIR=${M}/.git git commit -m x`, T, 'block'],
   ['E72', 'export FOO=1 && git commit -m x', T, 'allow'],
+  // review 4347f95, finding 1: brace expansion and globs produce other words
+  ['B01', 'git reset --hard{,}', T, 'block'],
+  ['B02', 'git push {--force,} origin p1-01-task', T, 'block'],
+  ['B03', 'git push origin main{,}', T, 'block'],
+  ['B04', 'git push origin HEAD:main{,}', T, 'block'],
+  ['B05', 'git push origin :main{,}', T, 'block'],
+  ['B06', 'git push origin {HEAD:main,x}', T, 'block'],
+  ['B07', 'git worktree remove --force{,} ../task', T, 'block'],
+  ['B08', 'git reset --hard*', T, 'block'],
+  ['B09', 'git push origin {main,}', T, 'block'],
+  ['B10', 'git push origin ma{i,}n', T, 'block'],
+  ['B11', 'git {push,} origin main', T, 'block'],
+  ['B12', 'git push --mirror{,}', T, 'block'],
+  ['B13', 'git branch --delete --force{,} x', T, 'block'],
+  ['B14', 'touch ./--hard && git reset --har[d]', T, 'block'],
+  ['B15', 'git push origin {m..m}ain', T, 'block'],
+  ['B16', 'git push origin @(main)', T, 'block'],        // extglob
+  ['B17', '{git,x} push origin main', T, 'block'],
+  ['B18', 'git -{C,x} . push origin main', T, 'block'],
+  ['B19', 'git branch $OPT x', T, 'block'],
+  ['B20', 'git worktree $SUB --force x', T, 'block'],
+  ['B21', 'git push $R', T, 'block'],
+  ['B30', 'git reset --soft HEAD@{1}', T, 'allow'],      // no comma: not a brace expansion
+  ['B31', 'git log --oneline @{u}..HEAD', T, 'allow'],
+  ['B32', 'git add docs/*.md && git commit -m x', T, 'allow'],
+  ['B33', '[ -f x ] && git push origin p1-01-task', T, 'allow'],
+  ['B34', 'git commit -m "fix: {a,b} and *"', T, 'allow'],  // quoted: no expansion
+  ['B35', 'for f in *.md; do echo $f; done', T, 'allow'],
+  // finding 2: state changed earlier in the same call
+  ['S01', 'git checkout main && git push origin HEAD', T, 'block'],
+  ['S02', 'git switch main; git push', T, 'block'],
+  ['S03', 'git checkout -B main && git push origin HEAD', T, 'block'],
+  ['S04', 'git config alias.p push && git p origin main', T, 'block'],
+  ['S05', 'git config push.default matching && git push', T, 'block'],
+  ['S06', "git config remote.origin.push 'refs/heads/*:refs/heads/*' && git push", T, 'block'],
+  ['S07', 'git branch -m main && git push origin HEAD', T, 'block'],
+  ['S08', 'git symbolic-ref HEAD refs/heads/main && git commit -m x', T, 'block'],
+  ['S09', "bash -c 'git checkout main' && git commit -m x", T, 'block'],
+  ['S10', 'git checkout -b x --track origin/main && git push', T, 'block'],
+  ['S11', 'git branch -u origin/main && git push', T, 'block'],
+  ['S12', 'git remote set-url origin /tmp/x && git push', T, 'block'],
+  ['S20', 'git switch -c p1-new && git push -u origin HEAD', T, 'allow'],
+  ['S21', 'git checkout p1-01-task && git push origin HEAD', T, 'allow'],
+  ['S22', 'git push -u', T, 'allow'],
+  ['S23', 'git config user.name && git push', T, 'allow'],
+  ['S24', 'git config --get push.default; git push', T, 'allow'],
+  ['S25', 'git branch --show-current && git push', T, 'allow'],
+  ['S26', 'git remote -v && git push', T, 'allow'],
+  // finding 3: the command's PATH / LD_* / DYLD_* never select the git the hook runs
+  ['P01', `PATH=${fakebin} git push origin HEAD`, T, 'block'],
+  ['P02', `PATH+=:${fakebin} git push origin HEAD`, T, 'block'],
+  ['P03', `export PATH=${fakebin} && git status`, T, 'block'],
+  ['P04', 'LD_PRELOAD=/x.so git status', T, 'block'],
+  ['P05', 'env DYLD_INSERT_LIBRARIES=/x git push origin p1-01-task', T, 'block'],
+  ['P06', `GIT_DIR="${M}/.git" git commit -m x`, T, 'block'],  // quoted value is still an assignment
+  ['P10', 'FOO="a b" git status', T, 'allow'],
+  ['P11', 'export PATH="$HOME/bin:$PATH" && npm test', T, 'allow'],
+  // finding 5: computed program name
+  ['C01', '$(printf git) push origin main', T, 'block'],
+  ['C02', '${GIT:-git} reset --hard', T, 'block'],
+  ['C03', '$X push origin main', T, 'block'],
+  ['C10', '"$PY" script.py --verbose', T, 'allow'],
 ];
 
 for (const [id, command, cwd, expected, projectDir] of [...matrix, ...extra]) {
@@ -247,6 +314,14 @@ for (const shell of ['sh', 'bash']) {
       assert.match(r.stderr, /fail closed/);
     }
   });
+  test(`settings command line (${shell}): a normal block prints only the hook's reason`, () => {
+    const e = { ...env, CLAUDE_PROJECT_DIR: root };
+    const r = spawnSync(shell, ['-c', entry.command], { input: payload('git push origin main', T), env: e, cwd: tmp, encoding: 'utf8' });
+    assert.equal(r.status, 2);
+    assert.match(r.stderr, /^guard-git: заблокировано — push в main/);
+    assert.doesNotMatch(r.stderr, /не запустился/);
+    assert.equal(r.stderr.trim().split('\n').length, 1, r.stderr);
+  });
   test(`settings command line (${shell}) with CLAUDE_PROJECT_DIR = repository root`, () => {
     const e = { ...env, CLAUDE_PROJECT_DIR: root };
     const run = (command, cwd) => spawnSync(shell, ['-c', entry.command], { input: payload(command, cwd), env: e, cwd: tmp, encoding: 'utf8' }).status;
@@ -264,6 +339,22 @@ test('fail closed: python3 unavailable', () => {
   assert.equal(r.status, 2, r.stderr);
   const ok = spawnSync('/bin/bash', [hook], { input: payload('ls', T), env: noPython, encoding: 'utf8' });
   assert.equal(ok.status, 0, ok.stderr);
+});
+
+test("the hook never runs a git chosen by the command's PATH", () => {
+  fs.rmSync(fakeMarker, { force: true });
+  for (const command of [`PATH=${fakebin} git push origin HEAD`, `PATH=${fakebin}:$PATH git commit -m x`,
+    `env PATH=${fakebin} git push`, `export PATH=${fakebin}; git push`]) {
+    assert.equal(verdict(runHook(payload(command, T)).code), 'block', command);
+  }
+  assert.ok(!fs.existsSync(fakeMarker), 'fake git from the command PATH was started');
+  // the hook's own PATH decides: a fake git first in it is used, so the check is meaningful
+  const r = runHook(payload('git push origin HEAD', T), { extraEnv: { PATH: `${fakebin}:${env.PATH}` } });
+  assert.equal(verdict(r.code), 'allow', r.stderr);
+  assert.ok(fs.existsSync(fakeMarker), 'control: fake git from the hook PATH was not started');
+  fs.rmSync(fakeMarker, { force: true });
+  assert.equal(verdict(runHook(payload(`PATH=${fakebin} git push origin HEAD`, T)).code), 'block');
+  assert.ok(!fs.existsSync(fakeMarker), 'fake git from the command PATH was started');
 });
 
 test('fail closed: analyzer script missing or crashing', () => {
