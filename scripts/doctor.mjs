@@ -2,7 +2,7 @@
 // PASS/WARN/FAIL per check; any FAIL exits 1. Fail closed: data that cannot be
 // read is reported, never treated as "fine". No dependencies beyond Node.
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync, statSync } from "node:fs";
+import { accessSync, constants, existsSync, readFileSync, statSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -206,15 +206,43 @@ if (svg) {
       chrome = undefined;
     }
   }
-  const found = Boolean(chrome) && existsSync(chrome) && statSync(chrome).isFile();
+  const problem = probeChrome(chrome);
+  const why = chrome
+    ? `${source}: ${chrome}: ${problem.error}`
+    : modulesReady ? "путь не определён" : "puppeteer не проверен: node_modules не готов";
   const reuse = `${svg.total - svg.absent.length}/${svg.total} SVG на месте`;
-  if (found) {
-    report("PASS", "mermaid", `Chrome: ${chrome} (${source}); ${reuse}`);
+  if (!problem.error) {
+    report("PASS", "mermaid", `Chrome: ${chrome} (${source}${problem.version ? `, ${problem.version}` : ""}); ${reuse}`);
   } else if (svg.absent.length) {
-    report("FAIL", "mermaid", `Chrome не найден (${chrome ?? "путь не определён"}), а у схем нет SVG: ${svg.absent.join(", ")}; задайте MERMAID_CHROME_PATH`);
+    report("FAIL", "mermaid", `Chrome не годится (${why}), а у схем нет SVG: ${svg.absent.join(", ")}; задайте MERMAID_CHROME_PATH`);
   } else {
-    report("WARN", "mermaid", `Chrome не найден (${chrome ? `${source}: ${chrome}` : modulesReady ? "путь не определён" : "puppeteer не проверен: node_modules не готов"}); ${reuse} — переиспользуются, пока схемы в content/handbook.md не меняются. Для новых схем: MERMAID_CHROME_PATH`);
+    report("WARN", "mermaid", `Chrome не годится (${why}); ${reuse} — переиспользуются, пока схемы в content/handbook.md не меняются. Для новых схем: MERMAID_CHROME_PATH`);
   }
+}
+
+// Usable means what puppeteer.launch needs: an executable file that runs.
+// Windows: chrome.exe --version opens the browser instead of printing, so
+// there only the file itself is checked.
+function probeChrome(file) {
+  if (!file) return { error: "путь не определён" };
+  try {
+    if (!statSync(file).isFile()) return { error: "это не файл" };
+  } catch {
+    return { error: "файла нет" };
+  }
+  if (process.platform === "win32") return {};
+  try {
+    accessSync(file, constants.X_OK);
+  } catch {
+    return { error: "нет права на исполнение" };
+  }
+  const result = spawnSync(file, ["--version"], { encoding: "utf8", timeout: 10_000 });
+  if (result.error || result.status !== 0) {
+    return { error: `--version не выполнился (${result.error?.code ?? `exit ${result.status}`})` };
+  }
+  const version = result.stdout.trim().split("\n")[0];
+  if (!/chrom/i.test(version)) return { error: `--version вернул не Chrome/Chromium: "${version.slice(0, 60)}"` };
+  return { version };
 }
 
 const width = Math.max(...results.map((r) => r.name.length));
