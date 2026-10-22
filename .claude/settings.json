@@ -29,7 +29,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-git.sh\""
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-git.sh\" || { echo 'guard-git: hook не запустился или упал, действие заблокировано (fail closed). См. AGENTS.md.' >&2; exit 2; }",
+            "timeout": 30,
+            "onFailure": "block"
           }
         ]
       }
