@@ -320,6 +320,8 @@ const extra = [
   ['F08', "[ -v 'a[0]' ] && git commit -m x", T, 'block', M],
   ['F09', '$RUNNER sh -c "git commit -m x"', T, 'block', M],
   ['F10', '$RUNNER git push origin main', T, 'block'],
+  ['F11', `git -C /tmp python3 -c "import os; os.chdir('${M}'); os.system('true; git commit -m x')"`, T, 'block', M],  // external git-<sub>
+  ['F12', 'timeout 9 env FOO=1 git commit -m x', T, 'allow', M],
   ['F20', 'git commit -m x', T, 'allow', M],
   ['F21', `cd ${T} && git add -A && git commit -m x`, T, 'allow', M],
   ['F22', 'git status && git commit -m x && git push origin p1-01-task', T, 'allow', M],
@@ -459,7 +461,14 @@ function transparentOnly(command) {
   const text = command.replace(/\$\(cat <<'EOF'\n[\s\S]*?\nEOF\n\)/g, 'MSG').replace(/\$'(?:\\.|[^'\\])*'/g, 'S');
   if (/[$`]/.test(text) || /(^|\s)-v(\s|$)/.test(text)) return false;
   return text.split(/[;&|()\n]+/).every((seg) => {
-    const words = seg.trim().split(/\s+/).filter((w) => w && !/^[A-Za-z_][A-Za-z0-9_]*=/.test(w));
+    let words = seg.trim().split(/\s+/).filter((w) => w && !/^[A-Za-z_][A-Za-z0-9_]*=/.test(w));
+    // wrappers that keep the directory: timeout N, env without -C/-S, nice, nohup, time, command
+    for (;;) {
+      if (words[0] === 'timeout' && words.length > 1) words = words.slice(2);
+      else if (words[0] === 'env' && !words.some((w) => /^(-C|--chdir|-S|--split-string)/.test(w))) words = words.slice(1);
+      else if (['nice', 'nohup', 'time', 'command'].includes(words[0])) words = words.slice(1);
+      else break;
+    }
     return words.length === 0 || TRANSPARENT.has(words[0]) || words[0] === '[' || words[0] === 'test' || words[0].startsWith('#');
   });
 }

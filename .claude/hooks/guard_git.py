@@ -826,6 +826,21 @@ def _opaque(cmd):
     words = cmd["words"]
     if prog is None:
         return True
+    if prog == "git":
+        # a subcommand that is not built in runs an external `git-<sub>` program
+        # (or an alias, analyzed separately): opaque
+        i = 1
+        while i < len(words):
+            t = words[i].text
+            if t in ("-C", "-c", "--git-dir", "--work-tree", "--namespace", "--exec-path",
+                     "--config-env", "--super-prefix", "--attr-source"):
+                i += 2
+                continue
+            if t.startswith("-") or t == "git":   # `git git ...` is analyzed as git ...
+                i += 1
+                continue
+            return words[i].dyn or t not in GIT_SUBCOMMANDS
+        return False
     if prog in TRANSPARENT or prog in FOLLOWED:
         return False
     if prog in ("test", "[", "[["):
