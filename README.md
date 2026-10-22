@@ -4,7 +4,7 @@
 
 ## Запуск и проверка
 
-Node.js >=22.13 и npm: `npm ci`, затем `npm run dev`. Адрес выводится в терминале. Production: `npm run build`, затем `npm start`.
+Node.js >=22.13 и npm (эталонная версия — `.nvmrc`, например `nvm use`): `npm ci`, затем `npm run dev`. Адрес выводится в терминале. Production: `npm run build`, затем `npm start`.
 
 - `npm run content` — AST/GFM, allowlist HTML, glossary/search/anchors, independent coverage audit.
 - `npm test` — content/download parity, оригинальные SHA256, inventory, targets, sanitization, appendix rejection, longest-match и preview threshold.
