@@ -11,10 +11,8 @@ import { fileURLToPath } from "node:url";
 const STEPS = ["content", "test", "typecheck", "lint", "build"];
 // Tracked files that a passing step rewrites by design. Reported, not failed.
 // A Map, not an object literal: paths like "constructor" must not match.
-// tsconfig.tsbuildinfo: remove once it is untracked (P1-09, #16).
-const KNOWN_CHANGES = new Map([
-  ["tsconfig.tsbuildinfo", "его переписывает npm run typecheck, incremental: true"],
-]);
+// Empty: tsconfig.tsbuildinfo is untracked and ignored since P1-09 (#16).
+const KNOWN_CHANGES = new Map();
 
 if (!process.env.npm_execpath) {
   throw new Error("Run validate with npm run validate.");
