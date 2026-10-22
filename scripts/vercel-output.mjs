@@ -50,8 +50,16 @@ if (inside(root, out)) fail(`--out ${outValue}: contains the project`);
 for (const protectedDir of ["dist", "node_modules", ".git"]) {
   if (inside(out, path.join(root, protectedDir))) fail(`--out ${outValue}: inside ${protectedDir}`);
 }
-for (const existing of [path.dirname(out), out]) {
-  if (fs.existsSync(existing) && fs.lstatSync(existing).isSymbolicLink()) fail(`--out ${outValue}: ${existing} is a symlink`);
+for (const candidate of [path.dirname(out), out]) {
+  let stat = null;
+  try {
+    stat = fs.lstatSync(candidate);
+  } catch {
+    // Missing is fine: it is created below.
+  }
+  // lstat, not exists: a dangling symlink must fail too.
+  if (stat?.isSymbolicLink()) fail(`--out ${outValue}: ${candidate} is a symlink`);
+  if (stat && !stat.isDirectory()) fail(`--out ${outValue}: ${candidate} is not a directory`);
 }
 const clientDir = path.join(root, "dist/client");
 const serverDir = path.join(root, "dist/server");
