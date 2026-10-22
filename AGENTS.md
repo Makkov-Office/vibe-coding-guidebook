@@ -3,7 +3,7 @@
 Entrypoint для любого агента в этом репозитории. Коротко; подробности — по ссылкам.
 
 ## Что это
-Русскоязычный учебный портал об инженерной работе с AI-агентами (ULTIMATE Vibe-coder guidebook, рабочее имя нового продукта — Agent Dojo). Собран в Codex, опубликован на ChatGPT Sites; разработка продолжается в Claude Code.
+Русскоязычный учебный портал об инженерной работе с AI-агентами (сейчас — ULTIMATE Vibe-coder guidebook; новое название — Mastering Agentic Engineering, ребрендинг в фазе 5). Собран в Codex, опубликован на ChatGPT Sites; разработка продолжается в Claude Code.
 
 ## Порядок чтения
 1. `docs/PLATFORM_BRIEF.md` — Product HQ: цели, фазы, тикеты, acceptance.

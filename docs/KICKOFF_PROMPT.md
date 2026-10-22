@@ -5,8 +5,8 @@
 ---
 
 ```text
-Продолжаем существующий проект ULTIMATE Vibe-coder guidebook (рабочее имя нового
-продукта — Agent Dojo) в репозитории Makkov-Office/vibe-coding-guidebook.
+Продолжаем существующий проект ULTIMATE Vibe-coder guidebook (новое название
+продукта — Mastering Agentic Engineering) в репозитории Makkov-Office/vibe-coding-guidebook.
 Проект собран в Codex и опубликован на ChatGPT Sites:
 https://agentic-engineering-handbook-makkov.makkov.chatgpt.site/
 Теперь разработка идёт в Claude Code. Ничего не создавай заново: код и контент
