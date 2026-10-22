@@ -41,7 +41,9 @@ Node.js ≥ 22.13 (`engines`); эталон — `.nvmrc` (22.22.0, npm 10.9.4 в
 - Контент: `npm run content` — компиляция, поиск, anchors, Mermaid SVG (новые схемы требуют Chrome, `MERMAID_CHROME_PATH`), coverage audit.
 - Проверки: `npm test`, `npm run typecheck`, `npm run lint`, `npm run build` (с publication audit).
 - E2E: `npm start` + `npm run test:e2e` (`HANDBOOK_URL` для другого адреса).
-- Появятся в P1-03: `npm run doctor`, `npm run validate`.
+- Среда: `npm run doctor` — Node против `engines`/`.nvmrc`, npm, lockfile и `node_modules`, ветка и состояние git, Chrome для Mermaid. Любой FAIL → exit 1; WARN не блокирует.
+- Весь проект: `npm run validate` — `content` → `test` → `typecheck` → `lint` → `build` по порядку, стоп на первом FAIL, затем проверка, что validate не оставил изменений в дереве. Exit 0 только при PASS. Сводка — строки `PASS/FAIL/SKIP/WARN <шаг>`, итог `validate: PASS|FAIL (<шаги>)` и JSON-строка. Это evidence для PR.
+- CI: `.github/workflows/ci.yml`, job `validate` — на каждом PR (любая base) и push в `main`: `npm ci` → `npm run validate` → `node .github/scripts/check-diagram-assets.mjs` (у каждой Mermaid-схемы есть закоммиченный SVG; в CI нет Chrome) → artifact `dist-<SHA>`. Evidence CI — run на HEAD PR. e2e в CI нет (P1-05).
 
 ## Формат PR
 `.github/pull_request_template.md`. Первая строка тела: `Implements #<issue>`.
