@@ -117,7 +117,7 @@ const matrix = [
   ['D27', 'git clean --force -d', T, 'block'],
   ['D28', 'git commit -m x', M, 'block'],
   ['D29a', `cd ${M} && git commit -m x`, T, 'block'],
-  ['D29b', `cd ${T} && git commit -m x`, M, 'allow'],
+  ['D29b', `cd ${T} && git commit -m x`, M, 'block'],  // base rule on the payload cwd (main); known false positive
   ['D30', `git -C ${M} commit -m x`, T, 'block'],
   ['D31', 'git -c user.name=x commit -m x', M, 'block'],
   ['D32', 'git commit -m x', T, 'allow', T],
@@ -130,9 +130,9 @@ const matrix = [
   ['D39', 'git worktree remove -f /tmp/x', T, 'block'],
   ['D40', 'git push origin p1-01-task', T, 'allow'],
   ['D41', 'git push -u origin p1-01-task', T, 'allow'],
-  ['D42', 'git push origin maintenance', T, 'allow'],
-  ['D43', 'echo "git reset --hard"', T, 'allow'],
-  ['D44', "git log --grep='git push origin main'", T, 'allow'],
+  ['D42', 'git push origin maintenance', T, 'block'],  // F5 false positives stay as in base (follow-up)
+  ['D43', 'echo "git reset --hard"', T, 'block'],
+  ['D44', "git log --grep='git push origin main'", T, 'block'],
   ['D45', 'git status', T, 'allow'],
   ['D49', 'git commit -m x', T, 'allow', R.up],  // CLAUDE_PROJECT_DIR on a branch other than the target
   ['D50', 'git commit -m x', T, 'allow', M],     // CLAUDE_PROJECT_DIR = main checkout on main
@@ -168,7 +168,7 @@ const extra = [
   ['E23', "git push origin 'refs/heads/*:refs/heads/*'", T, 'block'],
   ['E24', 'git push origin -uf p1-x', T, 'block'],
   ['E25', 'git push -d origin main', T, 'block'],
-  ['E26', 'git push origin HEAD:mainline', T, 'allow'],
+  ['E26', 'git push origin HEAD:mainline', T, 'block'],
   ['E27', 'git push origin feature main', T, 'block'],
   ['E28', 'git clean -n', T, 'allow'],
   ['E29', 'git clean -nd', T, 'allow'],
@@ -176,7 +176,7 @@ const extra = [
   ['E31', 'git clean -d', T, 'block'],
   ['E32', 'git reset --ha', T, 'block'],
   ['E33', 'git reset --soft HEAD~1', T, 'allow'],
-  ['E34', 'git commit -am "docs: git push origin main is forbidden"', T, 'allow'],
+  ['E34', 'git commit -am "docs: git push origin main is forbidden"', T, 'block'],
   ['E35', 'git commit -am "docs: git push origin main is forbidden"', M, 'block'],
   ['E36', "git commit -m \"$(cat <<'EOF'\nfix: guard\n\nbody line\nEOF\n)\"", T, 'allow'],
   ['E37', "git commit -m \"$(cat <<'EOF'\nfix: guard\nEOF\n)\"", M, 'block'],
@@ -277,6 +277,37 @@ const extra = [
   ['C02', '${GIT:-git} reset --hard', T, 'block'],
   ['C03', '$X push origin main', T, 'block'],
   ['C10', '"$PY" script.py --verbose', T, 'allow'],
+  // review 2b2e740: H1 tokenizer ($'\'', ${...} with quotes), H2 waivers, M1 abbreviations, M2 push mapping
+  ['R01', "echo $'\\'' ; git push origin main # '", T, 'block'],
+  ['R02', "echo $'\\'' ; git reset --hard # '", T, 'block'],
+  ['R03', "echo $'\\'' ; git branch -D x # '", T, 'block'],
+  ['R04', "echo ${x-'}'} ; git worktree remove --force w # '", T, 'block'],
+  ['R05', "cat $'\\'' ; git clean -fdx # '", T, 'block'],
+  ['R06', "echo $'\\'' ; git commit -m x # '", M, 'block'],
+  ['R07', 'echo ${x:-$(git push origin HEAD:refs/heads/main)}', T, 'block'],
+  ['R10', "printf -v 'a[$(git push origin main)]' 1", T, 'block'],
+  ['R11', "test -v 'a[$(git push origin main)]'", T, 'block'],
+  ['R12', "[ -v 'a[$(git reset --hard)]' ]", T, 'block'],
+  ['R13', "echo 'git push origin main' | sort -o p.sh; rg --pre sh . p.sh", T, 'block'],
+  ['R14', "echo 'git push origin main' | sort -S 1K --compress-program=sh", T, 'block'],
+  ['R15', "GIT_EDITOR=sh git commit --allow-empty --edit -m 'git push origin main'", T, 'block'],
+  ['R16', "git -c core.editor=sh commit -m 'git push origin main' --edit", T, 'block'],
+  ['R17', "GIT_EDITOR=sh git merge --edit -m 'git reset --hard' x", T, 'block'],
+  ['R18', "git commit -m 'x; git push origin main' && GIT_SEQUENCE_EDITOR=sh git rebase -i HEAD~1", T, 'block'],
+  ['R19', "GIT_EDITOR=sh git commit --edit -m 'git push origin HEAD:refs/heads/main'", T, 'block'],
+  ['R20', 'git reset --h', T, 'block'],
+  ['R21', 'git branch --de --forc tmp', T, 'block'],
+  ['R22', 'git worktree remove --f ../w', T, 'block'],
+  ['R23', 'git push --m --dry-run origin', T, 'block'],
+  ['R24', 'git clean --f -d', T, 'block'],
+  ['R25', 'git push --fo origin p1-01-task', T, 'block'],
+  ['R30', 'git -c remote.origin.push=refs/heads/p1-01-task:refs/heads/main push origin p1-01-task', T, 'block'],
+  ['R31', 'git -c remote.origin.mirror=true push origin', T, 'block'],
+  ['R32', 'git -c remote.origin.mirror=true push origin p1-01-task:p1-01-task', T, 'block'],
+  ['R33', "git config remote.origin.push 'refs/heads/*:refs/heads/main' && git push origin p1-01-task", T, 'block'],
+  ['R34', 'git -c remote.origin.push=refs/heads/x:refs/heads/x push origin p1-01-task:p1-01-task', T, 'allow'],
+  ['R35', 'git config user.name probe && git push origin p1-01-task', T, 'allow'],
+  ['L1', 'git switch -c p1-y && git push -u origin HEAD', M, 'block'],  // known false positive: HEAD may still be main
 ];
 
 for (const [id, command, cwd, expected, projectDir] of [...matrix, ...extra]) {
@@ -368,9 +399,9 @@ test('fail closed: analyzer script missing or crashing', () => {
 });
 
 // Differential test: nothing the previous hook (base 1aa11d9) blocked is allowed
-// now, except the false positives F5 named and the F4 fix (target repository
-// comes from cwd, not CLAUDE_PROJECT_DIR; here both point to the same repository).
-const INTENDED = new Set(['D29b', 'D42', 'D43', 'D44', 'E26', 'E34', 'X-commit-msg', 'X-grep', 'X-mainfeature']);
+// now. The only intended difference, F4 (target repository from the payload cwd,
+// not CLAUDE_PROJECT_DIR), does not show here: both point to the same repository.
+// Base rules apply unconditionally, so there are no intended exceptions (F5 is a follow-up).
 test('fixture is the hook from base 1aa11d9', () => {
   const sha = crypto.createHash('sha256').update(fs.readFileSync(baseHook)).digest('hex');
   assert.equal(sha, 'b1d3439eddfd1637bf9e75ef8796cba6945c6174ae47ed294f208ec852a3e6bc');
@@ -384,6 +415,8 @@ test('differential: no weakening against the base hook', () => {
     ['X-sub', 'npm run x -- "git push origin main"', T],
     ['X-py', "python3 -c 'print(\"git worktree remove --force\")'", T],
     ['X-cat', 'cat <<EOF | sh\ngit reset --hard\nEOF', T],
+    ['X-mainfeature2', 'git push origin main:feature', T],
+    ['X-grepf', 'git push origin x; grep -f pat file', T],
   ];
   const differences = [];
   for (const [id, command, cwd] of corpus) {
@@ -391,7 +424,7 @@ test('differential: no weakening against the base hook', () => {
     for (const dir of [cwd, M]) {
       const before = verdict(runHook(payload(command, dir), { script: baseHook, projectDir: dir, cwd: fs.existsSync(dir) ? dir : tmp }).code);
       const after = verdict(runHook(payload(command, dir), { projectDir: dir }).code);
-      if (before === 'block' && after !== 'block' && !INTENDED.has(id)) differences.push(`${id} @${dir}: ${command}`);
+      if (before === 'block' && after !== 'block') differences.push(`${id} @${dir}: ${command}`);
     }
   }
   assert.deepEqual(differences, []);

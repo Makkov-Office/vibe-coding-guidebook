@@ -20,12 +20,18 @@ brace expansion `{a,b}` / `{1..3}`, globs `*` `?` `[...]`, extglob `@(...)`)
 are "dynamic": a dynamic git subcommand, global option, push argument or
 reset / clean / branch / worktree option is blocked. Branch switches,
 `git config` / upstream / remote writes and `PATH` / `LD_*` / `DYLD_*`
-changes earlier in the same tool call are taken into account. In addition
-the substring rules of the previous version of the hook are applied to the
-raw command text unless the line consists only of git and known inert
-programs (echo, grep, cat, ...) without file output and without dynamic
-words, so no command blocked by the previous version is allowed when its
-dangerous text can reach an interpreter.
+changes earlier in the same tool call are taken into account; push
+destinations from `remote.<name>.push` / `remote.<name>.mirror` (`-c` and
+repository config) are checked; abbreviated long options (`--h`, `--forc`)
+count as the full option.
+
+The substring rules of the previous version of the hook (base 1aa11d9) are
+applied to the raw text of every line unconditionally, so the analyzer only
+adds blocks: nothing the previous version blocked is allowed (the one
+intended difference: a history change is checked against the repository of
+the payload `cwd`, not CLAUDE_PROJECT_DIR). Its false positives (text in
+echo / grep / -m, branch names starting with `main`) are kept on purpose
+and are a follow-up.
 
 The hook runs read-only git itself (`symbolic-ref`, `config --get`) with the
 git found in its own PATH; of the variables the command sets only GIT_DIR,
@@ -116,17 +122,59 @@ def _extract_paren(s, i):
     return None, n
 
 
-def _extract_braces(s, i):
-    """s[i] == '{' (after '$'). Return index after the matching '}'."""
+def _extract_braces(s, i, subs):
+    """s[i] == '{' (after '$'). Return index after the matching '}' or None when it
+    is not closed. Quotes and escapes inside are skipped; `$(...)` and backticks
+    inside are appended to subs (they are executed)."""
     depth = 0
-    for j in range(i, len(s)):
-        if s[j] == "{":
+    j = i
+    n = len(s)
+    quote = None
+    while j < n:
+        c = s[j]
+        if c == "\\" and quote != "'" and j + 1 < n:
+            j += 2
+            continue
+        if quote == "'":
+            if c == "'":
+                quote = None
+        elif c == "$" and j + 1 < n and s[j + 1] == "(":
+            inner, k = _extract_paren(s, j + 1)
+            subs.append(inner or "")
+            j = k
+            continue
+        elif c == "`":
+            k = s.find("`", j + 1)
+            subs.append(s[j + 1:] if k < 0 else s[j + 1:k])
+            j = n if k < 0 else k + 1
+            continue
+        elif quote == '"':
+            if c == '"':
+                quote = None
+        elif c in "'\"":
+            quote = c
+        elif c == "{":
             depth += 1
-        elif s[j] == "}":
+        elif c == "}":
             depth -= 1
             if depth == 0:
                 return j + 1
-    return len(s)
+        j += 1
+    return None
+
+
+def _ansi_c_end(s, i):
+    """s[i:i+2] == "$'". Return index after the closing quote (backslash escapes,
+    including \\', do not close it) or None when it is not closed."""
+    j = i + 2
+    while j < len(s):
+        if s[j] == "\\":
+            j += 2
+            continue
+        if s[j] == "'":
+            return j + 1
+        j += 1
+    return None
 
 
 def _expands(unq):
@@ -299,14 +347,19 @@ def tokenize(s):
                 add(s[i:j])
                 i = j
             elif i + 1 < n and s[i + 1] == "{":
-                j = _extract_braces(s, i + 1)
+                j = _extract_braces(s, i + 1, p.subs)
+                p.clean = False
+                if j is None:
+                    j = n
                 state["dyn"] = True
                 add(s[i:j])
                 i = j
             elif i + 1 < n and s[i + 1] == "'":
                 # ANSI-C quoting $'...': keep the text, value treated as unknown
-                j = s.find("'", i + 2)
-                j = n if j < 0 else j + 1
+                j = _ansi_c_end(s, i)
+                p.clean = False
+                if j is None:
+                    j = n
                 state["dyn"] = True
                 add(s[i:j])
                 i = j
@@ -426,13 +479,6 @@ def legacy_reason(t):
 # ------------------------------------------------------------------ helpers
 
 SHELLS = {"bash", "sh", "zsh", "dash", "ksh", "mksh", "ash", "fish", "busybox"}
-# programs whose arguments and stdin are never executed
-INERT = {
-    "echo", "printf", "grep", "egrep", "fgrep", "rg", "cat", "head", "tail", "wc", "ls", "pwd",
-    "true", "false", ":", "test", "[", "sleep", "which", "type", "basename", "dirname",
-    "realpath", "readlink", "sort", "uniq", "cut", "tr", "diff", "cmp", "stat", "file", "date",
-    "cd", "pushd", "popd", "mkdir", "touch", "jq",
-}
 KEYWORDS = {"if", "then", "else", "elif", "fi", "do", "done", "while", "until", "!", "{", "}"}
 
 GIT_SUBCOMMANDS = set("""
@@ -452,11 +498,6 @@ unpack-objects update-index update-ref update-server-info upload-archive upload-
 verify-commit verify-pack verify-tag version whatchanged worktree write-tree lfs
 """.split())
 HISTORY_OPS = {"commit", "merge", "rebase", "cherry-pick", "revert", "am"}
-# option values that are messages/patterns, not commands (for the inert waiver)
-INERT_VALUE_SUBS = {"commit", "tag", "log", "show", "shortlog", "whatchanged", "reflog", "stash",
-                    "notes", "merge", "grep", "rev-list", "status", "diff", "blame"}
-INERT_VALUE_OPTS = {"-m", "--message", "--grep", "--author", "--committer", "-S", "-G",
-                    "--format", "--pretty", "--since", "--until", "-e", "--trailer"}
 
 
 def _base(prog):
@@ -489,6 +530,7 @@ class Ctx:
         self.line = line if line is not None else {
             "pending": {},        # realpath(dir) -> branches HEAD may point to (None = detached, UNKNOWN)
             "config": False,      # git config / branch upstream / remote written earlier in the call
+            "remote_cfg": False,  # remote.<name>.* may have been written earlier in the call
         }
 
     @property
@@ -587,7 +629,18 @@ def analyze_line(text, ctx):
     for sub in parsed.subs:
         analyze_line(sub, sub_ctx)
 
-    waiver = parsed.clean and not parsed.file_output
+    # The substring rules of the base hook apply to every line unconditionally:
+    # the analyzer below only adds blocks (nothing the base hook blocked passes).
+    reason = legacy_reason(text)
+    if reason:
+        block(reason)
+    if _COMMIT_RE.search(text):
+        # base: history change blocked when the repository is on main; the
+        # repository is taken from cwd (payload) instead of CLAUDE_PROJECT_DIR (F4)
+        br = UNKNOWN if STATE["git_env_dirty"] else current_branch(ctx.cwd, [], {})
+        if br is UNKNOWN or br == PROTECTED:
+            block("изменение истории на main или в репозитории с неизвестной веткой")
+
     simple = []
     for words in parsed.commands:
         effects = _env_effects(words)
@@ -599,20 +652,6 @@ def analyze_line(text, ctx):
         if cmd is None:
             continue
         simple.append(cmd)
-        prog = cmd["prog"]
-        if prog is None or (prog not in INERT and prog != "git"):
-            waiver = False
-
-    if not waiver:
-        reason = legacy_reason(text)
-        if reason:
-            block(reason)
-        if _COMMIT_RE.search(text):
-            # previous version: history change blocked when the repository is on main;
-            # the repository is now taken from cwd (payload) instead of CLAUDE_PROJECT_DIR
-            br = UNKNOWN if STATE["git_env_dirty"] else current_branch(ctx.cwd, [], {})
-            if br is UNKNOWN or br == PROTECTED:
-                block("изменение истории на main или в репозитории с неизвестной веткой")
 
     for cmd in simple:
         run_simple(cmd, ctx)
@@ -962,24 +1001,8 @@ def check_git(args, ctx, env, tail_unknown):
         return
 
     # embedded commands in arguments (rebase --exec, bisect run, submodule foreach, ...)
-    skip_next = False
-    for k, x in enumerate(rest):
-        if skip_next:
-            skip_next = False
-            continue
-        if sub in INERT_VALUE_SUBS:
-            name = x.text.split("=", 1)[0]
-            if name in INERT_VALUE_OPTS:
-                skip_next = "=" not in x.text
-                continue
-            sc = _short_cluster(x.text)
-            if sc and len(sc) > 1 and sc[-1] in "mSGe" and sc[:-1].isalpha():
-                skip_next = True  # e.g. -am "message"
-                continue
-            if any(x.text.startswith(o) and len(x.text) > len(o) for o in ("-m", "-S", "-G", "-e")):
-                continue
-            if sub == "grep" and not x.text.startswith("-"):
-                continue
+    # (messages included: an editor such as GIT_EDITOR=sh may execute them)
+    for x in rest:
         if re.search(r"\s", x.text):
             reason = legacy_reason(x.text)
             if reason:
@@ -995,7 +1018,7 @@ def check_git(args, ctx, env, tail_unknown):
         check_push(rest, dirpath, globals_, env_extra, tail_unknown, ctx)
     elif sub == "reset":
         for x in rest:
-            if x.dyn or _long_matches(x.text, "hard", minlen=2):
+            if x.dyn or _long_matches(x.text, "hard", minlen=1):
                 block("git reset --hard")
         if tail_unknown:
             block("git reset с аргументами из stdin — проверить нельзя")
@@ -1005,7 +1028,7 @@ def check_git(args, ctx, env, tail_unknown):
             sc = _short_cluster(x.text)
             if x.dyn:
                 force = True
-            if "f" in sc or _long_matches(x.text, "force", minlen=2):
+            if "f" in sc or _long_matches(x.text, "force", minlen=1):
                 force = True
             if "n" in sc or _long_matches(x.text, "dry-run", minlen=2):
                 dry = True
@@ -1019,9 +1042,9 @@ def check_git(args, ctx, env, tail_unknown):
             sc = _short_cluster(x.text)
             if "D" in sc:
                 big_d = True
-            if "d" in sc or _long_matches(x.text, "delete", minlen=3):
+            if "d" in sc or _long_matches(x.text, "delete", minlen=1):
                 delete = True
-            if "f" in sc or _long_matches(x.text, "force", minlen=2):
+            if "f" in sc or _long_matches(x.text, "force", minlen=1):
                 force = True
             if x.dyn:
                 big_d = True  # may expand to -D or --delete --force
@@ -1032,7 +1055,7 @@ def check_git(args, ctx, env, tail_unknown):
             block("подкоманда git worktree вычисляется при выполнении — проверить нельзя")
         if rest and rest[0].text in ("remove", "rm"):
             for x in rest[1:]:
-                if "f" in _short_cluster(x.text) or _long_matches(x.text, "force", minlen=2) or x.dyn:
+                if "f" in _short_cluster(x.text) or _long_matches(x.text, "force", minlen=1) or x.dyn:
                     block("принудительное удаление worktree")
             if tail_unknown:
                 block("git worktree remove с аргументами из stdin — проверить нельзя")
@@ -1092,6 +1115,13 @@ def note_state_changes(sub, rest, dirpath, ctx):
     texts = [x.text for x in rest]
     if sub == "config" and not _config_is_read(rest):
         ctx.line["config"] = True
+        keys = [t for t in texts if not t.startswith("-")]
+        # remote.<name>.push / .mirror may have been written (or a whole file / editor)
+        if any(x.dyn for x in rest) or not keys or keys[0].lower().startswith("remote.") or any(
+                t.split("=", 1)[0] in ("-e", "--edit", "-f", "--file", "--blob", "--rename-section",
+                                       "--remove-section", "rename-section", "remove-section", "edit")
+                for t in texts):
+            ctx.line["remote_cfg"] = True
     elif sub == "branch":
         listing = all(t.split("=", 1)[0] in _BRANCH_READ for t in texts if t.startswith("-"))
         positional = [t for t in texts if not t.startswith("-")]
@@ -1105,6 +1135,7 @@ def note_state_changes(sub, rest, dirpath, ctx):
     elif sub == "remote":
         if rest and (rest[0].dyn or rest[0].text not in ("-v", "--verbose", "show", "get-url")):
             ctx.line["config"] = True
+            ctx.line["remote_cfg"] = True
     elif sub == "symbolic-ref":
         pos = [x for x in rest if not x.text.startswith("-")]
         if len(pos) >= 2 or any(x.dyn for x in rest):
@@ -1192,15 +1223,15 @@ def check_push(rest, dirpath, globals_, env_extra, tail_unknown, ctx):
             break
         if t.startswith("--"):
             name = t[2:].split("=", 1)[0]
-            if "force" in name or _long_matches(t, "force", 3):
+            if "force" in name or _long_matches(t, "force", 1):
                 block("force push")
-            if _long_matches(t, "mirror", 2):
+            if _long_matches(t, "mirror", 1):
                 block("push --mirror перезаписывает все refs на remote, включая main")
-            if _long_matches(t, "all", 2) or _long_matches(t, "branches", 2):
+            if _long_matches(t, "all", 1) or _long_matches(t, "branches", 1):
                 block("push всех веток, включая main")
-            if _long_matches(t, "prune", 2):
+            if _long_matches(t, "prune", 1):
                 block("push --prune удаляет ветки на remote")
-            if _long_matches(t, "delete", 3):
+            if _long_matches(t, "delete", 1):
                 delete = True
             if name == "repo":
                 repo_opt = True
@@ -1226,6 +1257,19 @@ def check_push(rest, dirpath, globals_, env_extra, tail_unknown, ctx):
         positional.append(x)
         i += 1
     refspecs = positional if repo_opt else positional[1:]
+    # remote.<name>.mirror makes every push a mirror push; remote.<name>.push maps a
+    # refspec without `:` (and an implicit push) to its configured destination.
+    # Both are read with the command's own `-c` values (globals_) and repo config.
+    cfg = git_config(dirpath, globals_, r"^remote\..*\.(push|mirror)$", env_extra, regexp=True)
+    if cfg is UNKNOWN:
+        block("git push: не удалось прочитать remote.*.push / remote.*.mirror (fail closed)")
+    mapped = False
+    for line in cfg.splitlines():
+        key, _, val = line.partition(" ")
+        if key.lower().endswith(".mirror") and val.strip().lower() not in ("false", "no", "off", "0"):
+            block("git push при remote.*.mirror — перезаписываются все refs, включая main")
+        if key.lower().endswith(".push"):
+            mapped = True
     if positional and not repo_opt and positional[0].dyn:
         pass  # remote name does not decide the destination branch
     if not refspecs:
@@ -1241,6 +1285,8 @@ def check_push(rest, dirpath, globals_, env_extra, tail_unknown, ctx):
             if _is_protected(t):
                 block("удаление main на remote")
             continue
+        if ":" not in t and (mapped or ctx.line["remote_cfg"]):
+            block("git push без `:` при заданном remote.*.push (или после записи remote.* в той же команде) — назначение не проверить")
         if ":" in t:
             src, dst = t.split(":", 1)
             if not src and not dst:
