@@ -115,7 +115,8 @@ if (pkg && lock) {
 }
 
 // node_modules ↔ lockfile: every locked package is installed at its locked
-// version. Optional packages may be absent (other platforms), never different.
+// version. Optional packages may be absent (other platforms), never different;
+// devOptional (e.g. @types/react, sharp) must be present.
 let modulesReady = false;
 if (!existsSync(path.join(root, "node_modules"))) {
   report("FAIL", "node_modules", "node_modules нет; выполните npm ci");
@@ -131,7 +132,9 @@ if (!existsSync(path.join(root, "node_modules"))) {
       installed = JSON.parse(readFileSync(path.join(root, key, "package.json"), "utf8")).version;
     } catch (error) {
       if (error.code !== "ENOENT") mismatched.push(`${short(key)} не прочитан (${error.code ?? error.message})`);
-      else if (!entry.optional && !entry.devOptional) missing.push(short(key));
+      // Only "optional" may be skipped by npm ci. "devOptional" is optional on
+      // one path but a required dev dependency on another, so it must exist.
+      else if (!entry.optional) missing.push(short(key));
       continue;
     }
     checked++;
