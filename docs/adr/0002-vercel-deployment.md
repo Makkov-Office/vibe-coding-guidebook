@@ -72,7 +72,7 @@ Evidence — раздел ниже и PR. Команды в свежем `git cl
 
 ## Evidence
 
-Код и конфигурация — SHA `6568fe3d1c1d74979f1040a198e994debdd858cf` (base `origin/main` `80b066e5c44a611df305db517f514bf56a8d6ed9`), свежий `git clone` ветки `p1-06-vercel-spike` во временном каталоге, 22.10.2026. Node 22.22.0, npm 10.9.4, Chromium 1194 (`/opt/pw-browsers`, `CHROMIUM_PATH`), Vercel CLI 62.7.0 через `npx` (в `package.json`/lockfile не записан). Аккаунт Vercel, логин, токены, `vercel link/deploy` не использовались; `.vercel/project.json` — локальная заглушка (`framework: null`, `createdAt` 2026), egress к vercel.com из среды закрыт.
+Код и конфигурация — SHA `3ff1245fe2d54e368f1b3310f0b1cd8c604ff260` (после review-исправлений; base `origin/main` `80b066e5c44a611df305db517f514bf56a8d6ed9`), свежий `git clone` ветки `p1-06-vercel-spike` во временном каталоге, 22.10.2026. Прогон на `6568fe3` до review дал те же результаты маршрутов и больше не считается evidence. Node 22.22.0, npm 10.9.4, Chromium 1194 (`/opt/pw-browsers`, `CHROMIUM_PATH`), Vercel CLI 62.7.0 через `npx` (в `package.json`/lockfile не записан). Аккаунт Vercel, логин, токены, `vercel link/deploy` не использовались; `.vercel/project.json` — локальная заглушка (`framework: null`, `createdAt` 2026), egress к vercel.com из среды закрыт.
 
 | Шаг | Команда | Результат |
 |---|---|---|
@@ -82,7 +82,11 @@ Evidence — раздел ниже и PR. Команды в свежем `git cl
 | A2, эмуляция | `node scripts/check-vercel-output.mjs` (итог `vercel build`) | PASS 155/155 |
 | A1 без id | `--variant no-compat` | FAIL 58/155 (ожидаемо): SPA 0/29 — «full page load», HTTP RSC без id 0/29 |
 | A1 без rewrite | `--variant no-rsc` | FAIL 58/155 (ожидаемо): SPA 0/29, на `?_rsc` отдаётся HTML |
-| Baseline Worker | `npm start` + `--url http://127.0.0.1:8787` | PASS 155/155; Worker отдаёт тот же compatibility id `0bad9fe4-…`, что извлёк скрипт |
+| Baseline Worker | `npm start -- --port 35675` (свободный порт, проверен до старта) + `--url http://127.0.0.1:35675` | PASS 155/155; Worker отдаёт тот же compatibility id `11832da2-…`, что извлёк скрипт из этой сборки |
+| `--out` (finding 1) | 18 негативных проб: без значения, `--out=`, пробел, `.`, `dist`, `..`, `/`, `node_modules/…`, `dist/…`, `.git/…`, `foo/output`, `.vercel`, `--out --foo`, `--foo`, позиционный аргумент, `.vercel` — symlink, dangling symlink, файл | Все exit 1 до изменений; файлов вне `.vercel` до/после: 98568/98568, `.git`, `node_modules`, `dist` на месте. Позитивный контроль `<tmp>/.vercel/output` — exit 0 |
+| Входы (finding 2) | `.assetsignore` + `*.map`, `/wrangler.json`, `!wrangler.json`, `a/b`, `dir/`, `wrangler.[jt]son`, `file?`; заголовок prerender `x-robots-tag`; `_headers` `/:splat`, строка `! Cache-Control` | Все exit 1 с причиной; контроль без изменений — exit 0 |
+| `NEXT_DEPLOYMENT_ID` | `NEXT_DEPLOYMENT_ID=p106probe npm run build`, затем `node scripts/vercel-output.mjs` | exit 1 `expected one RSC compatibility id, found 0` (fail closed) |
+| `framework` в итоге | `config.json` после `vercel build` | `{"slug":"nextjs","version":"16.3.4"}`; в логе нет `@vercel/next`/`Detected Next.js` |
 
 Маршруты (вариант A2, итог `vercel build`, локальная эмуляция). HTTP — статус и тип, байты равны файлам prerender (`.html`, `.rsc`) и `content/handbook.md`; Direct/Refresh — Chromium 1440×1000, статус 200, `title` и `h1` страницы; SPA — клик по видимой ссылке rail с `/` (для `/` — с `/glossary`, для `/chapters/01` — с `/chapters/02`), без новой загрузки документа и с сохранённым `window`-маркером.
 
@@ -119,6 +123,6 @@ Evidence — раздел ниже и PR. Команды в свежем `git cl
 | 29 | `/chapters/22` | PASS | PASS | PASS | PASS | PASS |
 | 30 | `/handbook.md` | PASS | n/a | n/a | n/a | n/a |
 
-Прочие проверки того же прогона: 404 и тело `404.html` — `/nope`, `/chapters/99`, `/chapters`, `/_headers`, `/.vite/manifest.json`, `/wrangler.json` (6/6 PASS, как на Worker); `/chapters/01/` → 308 `/chapters/01` (PASS); `/_next/static/*.js` — `public, max-age=31536000, immutable` (PASS); ошибок страниц в браузере нет (PASS). В A2 переход делает 1 RSC-запрос; в негативных вариантах — полная загрузка документа.
+Прочие проверки того же прогона: 404 и тело `404.html` — `/nope`, `/chapters/99`, `/chapters`, `/_headers`, `/.vite/manifest.json`, `/wrangler.json` (6/6 PASS, как на Worker); `/chapters/01/` → 308 `/chapters/01` (PASS); `/_next/static/*.js` — `public, max-age=31536000, immutable` (PASS); ошибок страниц в браузере нет (PASS). В A2 все 29 переходов — без загрузки нового документа; RSC-запросов за переход 1–17 (с prefetch ссылок rail; ровно 1 — в 9 из 29), у Worker 1–23. В негативных вариантах — полная загрузка документа на 29/29.
 
-Логи и JSON прогона не коммитятся (временный каталог удалён); воспроизведение — команды выше. HEAD PR и run CI — в PR.
+Логи, JSON и скрипты проб не коммитятся (временный каталог удалён); воспроизведение — команды выше. HEAD PR и run CI — в PR.
