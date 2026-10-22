@@ -16,7 +16,7 @@
     "predev": "npm run content",
     "prebuild": "npm run content",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/content.test.mjs",
+    "test": "node --test tests/content.test.mjs tests/guard-git.test.mjs",
     "test:e2e": "playwright test",
     "doctor": "node scripts/doctor.mjs",
     "validate": "node scripts/validate.mjs",
