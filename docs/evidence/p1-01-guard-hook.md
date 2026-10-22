@@ -3,6 +3,7 @@
 Тикет: [#3](https://github.com/Makkov-Office/vibe-coding-guidebook/issues/3) (P1-01, довести). Risk: Medium.
 Base: `origin/main` = `25829c1c03d0a36a0c4ab47ebb031d4178bec963` (проверено `git fetch origin` + `git rev-parse origin/main`).
 Пробы выполнены 2026-10-22, 02:31–02:39 UTC, в task worktree с HEAD = base SHA, рабочее дерево чистое (`git status --porcelain --ignored` пусто).
+Ревизия 2 (после независимого review HEAD `d2c6da0`, ~02:50 UTC): добавлены прямые вызовы D49–D53, пересмотрены F2, F3, F4 и подсчёт части B. Скрипт hook и `settings.json` между ревизиями не менялись (хэши ниже действительны и для HEAD этой ревизии).
 
 Проверяемые файлы на base SHA:
 
@@ -13,7 +14,7 @@ Base: `origin/main` = `25829c1c03d0a36a0c4ab47ebb031d4178bec963` (провере
 
 ## Итог: FAIL
 
-В живой сессии агента **ни одно deny-правило и ни один вызов guard-hook не сработали**: опасные команды из матрицы прошли до исполнения (их остановил только сам Git на несуществующем ref, `--dry-run` или локальный scratch-remote). При прямом вызове скрипт блокирует только буквальные формы команд; найдено 20 обходов, 3 ложных срабатывания и fail open при ошибке запуска hook. Требование ADR-0001 (Validation) и пункт acceptance 4.5 «Guard-hook и deny-правила подтверждены evidence» **не выполнены**.
+В живой сессии агента **ни одно deny-правило и ни один вызов guard-hook не сработали**: опасные команды из матрицы прошли до исполнения (их остановил только сам Git на несуществующем ref, `--dry-run` или локальный scratch-remote). При прямом вызове скрипт блокирует только буквальные формы команд: 19 безусловных и 2 условных обхода, 3 ложных срабатывания на тексте команды, блокировка штатного `git commit` в task worktree при документированном значении `CLAUDE_PROJECT_DIR` (D50) и fail open при ошибке запуска hook. Требование ADR-0001 (Validation) и пункт acceptance 4.5 «Guard-hook и deny-правила подтверждены evidence» **не выполнены**.
 
 ## Среда
 
@@ -64,13 +65,17 @@ Base: `origin/main` = `25829c1c03d0a36a0c4ab47ebb031d4178bec963` (провере
 | L19 | `cd $S/work && git commit --allow-empty -m on-main-plain` (scratch на `main`) | hook, если `CLAUDE_PROJECT_DIR` на `main` | `[main 8dd55d2] on-main-plain` | NOT BLOCKED |
 | L20 | `cd $S/work && git branch p1probe-tmp && git branch -D p1probe-tmp` | hook | `Deleted branch p1probe-tmp (was 779dde1).` | NOT BLOCKED |
 | L21 | Edit-инструмент: `public/handbook.md`, `old_string` = несуществующая строка `P1PROBE-THIS-STRING-DOES-NOT-EXIST-7f3a` | deny `Edit(public/handbook.md)` | `String to replace not found in file.` — вызов дошёл до проверки содержимого, файл не изменён | NOT BLOCKED (см. ограничение 3) |
-| L22 | `git commit` в task worktree (коммит этого файла) | не должен блокироваться | результат и SHA — в теле PR (файл не может содержать SHA собственного коммита) | см. PR |
+| L22 | `git commit -F <msg>` в task worktree на `p1-01-guard-hook-evidence` (первый коммит этого файла) | по правилу — не блокироваться; по факту работающий hook заблокировал бы его (D50) | создан `d2c6da0`, exit 0 | NOT BLOCKED |
 
 Ни в одной пробе не появилось ни сообщения системы разрешений о deny, ни текста `guard-git:`.
 
 ## Часть B. Прямой вызов скрипта (для сравнения, не замена)
 
-Драйвер `$S/../driver/run_hook_matrix.py` (вне репозитория) передаёт скрипту `bash .claude/hooks/guard-git.sh` JSON вида `{"tool_name":"Bash","tool_input":{"command":"…"}}` на stdin; команды — только строки, не исполняются. Запуск: `python3 -I run_hook_matrix.py <hook> <$S/work> <task worktree>`, cwd = task worktree. Столбец «dir»: `task` — `CLAUDE_PROJECT_DIR` = task worktree (ветка `p1-01-guard-hook-evidence`), `main` — `CLAUDE_PROJECT_DIR=$S/work` (ветка `main`), `unset` — переменная удалена. BLOCK = exit 2, ALLOW = exit 0.
+Драйвер `$S/../driver/run_hook_matrix.py` (вне репозитория) передаёт скрипту `bash .claude/hooks/guard-git.sh` JSON вида `{"tool_name":"Bash","tool_input":{"command":"…"}}` на stdin; команды — только строки, не исполняются. Запуск: `python3 -I run_hook_matrix.py <hook> <$S/work> <task worktree>`, cwd = task worktree. Столбец «dir»: `task` — `CLAUDE_PROJECT_DIR` = task worktree (ветка `p1-01-guard-hook-evidence`), `main` — `CLAUDE_PROJECT_DIR=$S/work` (ветка `main`), `checkout` — `CLAUDE_PROJECT_DIR=/home/claude/vibe-coding-guidebook` (основной checkout на `main`; hook только читает его ветку через `symbolic-ref`), `unset` — переменная удалена. BLOCK = exit 2, ALLOW = exit 0.
+
+D49–D53 добавлены после review (драйвер `run_hook_matrix2.py`, тот же способ запуска); их payload содержит поле `cwd` = cwd процесса, cwd = task worktree.
+
+Важно для D32/D33: значение `task` — искусственная конфигурация. По документации Claude Code (Hooks reference, раздел «Reference scripts by path», https://code.claude.com/docs/en/hooks, проверено 2026-10-22): «`${CLAUDE_PROJECT_DIR}`: the project root where the session started», а при работе в worktree «`${CLAUDE_PROJECT_DIR}` stays put: it still points at the project root where the session started… `cwd` follows Claude: the `cwd` field in the hook's input JSON is the worktree root after Claude enters a worktree, and the new directory after Claude runs `cd`». Сессия этого проекта стартует в основном checkout на `main`, поэтому штатный случай — D50, а не D32.
 
 | # | Команда | dir | exit | Результат | Ожидание правила |
 |---|---|---|---|---|---|
@@ -84,8 +89,8 @@ Base: `origin/main` = `25829c1c03d0a36a0c4ab47ebb031d4178bec963` (провере
 | D08 | `git<TAB>push origin main` | task | 0 | **ALLOW** | block — обход |
 | D09 | `git -C /tmp/x push origin main` | task | 0 | **ALLOW** | block — обход |
 | D10 | `git push -u origin main` | task | 2 | BLOCK (push в main) | block |
-| D11 | `git push` | task | 0 | ALLOW | зависит от upstream — обход при upstream `main` |
-| D12 | `git push origin HEAD` | task | 0 | ALLOW | зависит от текущей ветки — обход на `main` |
+| D11 | `git push` | task | 0 | ALLOW | условный обход: push в `main`, если upstream текущей ветки — `main` |
+| D12 | `git push origin HEAD` | task | 0 | ALLOW | условный обход: push в `main`, если текущая ветка — `main` |
 | D13 | `git push --force origin p1-x` | task | 2 | BLOCK (force push) | block |
 | D14 | `git push -f origin p1-x` | task | 2 | BLOCK (force push) | block |
 | D15 | `git push origin p1-x -f` | task | 0 | **ALLOW** | block — обход |
@@ -105,8 +110,8 @@ Base: `origin/main` = `25829c1c03d0a36a0c4ab47ebb031d4178bec963` (провере
 | D29 | `cd /tmp/x && git commit -m x` | main | 2 | BLOCK — решение по ветке `CLAUDE_PROJECT_DIR`, а не `/tmp/x` | зависит от `/tmp/x` — см. F4 |
 | D30 | `git -C /tmp/x commit -m x` | main | 0 | **ALLOW** | block — обход |
 | D31 | `git -c user.name=x commit -m x` | main | 0 | **ALLOW** | block — обход |
-| D32 | `git commit -m x` | task | 0 | ALLOW | allow (task-ветка) |
-| D33 | `git commit -m x` | unset | 0 | ALLOW (ветка cwd = task worktree) | allow |
+| D32 | `git commit -m x` | task | 0 | ALLOW | allow (task-ветка); конфигурация искусственная — по документации `CLAUDE_PROJECT_DIR` в worktree не указывает на worktree (см. D50) |
+| D33 | `git commit -m x` | unset | 0 | ALLOW (ветка cwd = task worktree) | allow; при незаданной переменной сам hook не запустится (D48) |
 | D34 | `git merge origin/main` | main | 2 | BLOCK | block |
 | D35 | `git rebase origin/main` | main | 2 | BLOCK | block |
 | D36 | `git branch -D p1-x` | task | 2 | BLOCK (удаление ветки) | block |
@@ -122,8 +127,17 @@ Base: `origin/main` = `25829c1c03d0a36a0c4ab47ebb031d4178bec963` (провере
 | D46 | обрезанный JSON, содержащий `git ` | task | 2 | BLOCK (fail closed) | block |
 | D47 | обрезанный JSON без `git ` | task | 0 | ALLOW | allow |
 | D48 | командная строка hook из settings `bash "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-git.sh"` при незаданном `CLAUDE_PROJECT_DIR`, payload `git push origin main` | unset | **127** | `bash: /.claude/hooks/guard-git.sh: No such file or directory` | block — fail open (F2) |
+| D49 | `git commit -m x`, cwd = task worktree | main (`$S/work`) | 2 | **BLOCK** (изменение истории на main) | allow — ложное срабатывание (stand-in для D50) |
+| D50 | `git commit -m x`, cwd = task worktree, payload `cwd` = task worktree | checkout | 2 | **BLOCK** (изменение истории на main) | allow — ложное срабатывание в штатном сценарии CLAUDE.md (F4) |
+| D51 | `git push --mirror origin` | task | 0 | **ALLOW** | block — обход (перезаписывает и удаляет все refs на remote, включая `main`) |
+| D52 | `git push origin :main` | task | 2 | BLOCK (push в main) | block |
+| D53 | `git push origin --delete main` | task | 2 | BLOCK (push в main) | block |
 
-Сводка части B (48 случаев): 21 BLOCK, 26 ALLOW, 1 ERROR (127). Из ALLOW 20 — обходы правила (жирным), 3 BLOCK — ложные срабатывания.
+Сводка части B (53 случая): 25 BLOCK, 27 ALLOW, 1 ERROR (127).
+- Безусловные обходы — 19 (жирное **ALLOW**): D03, D04, D05, D07, D08, D09, D15, D17, D18, D20, D21, D25, D26, D27, D30, D31, D37, D39, D51.
+- Условные обходы — 2 (обычный ALLOW): D11, D12 — зависят от текущей ветки или upstream.
+- Ложные срабатывания — 5 (жирное **BLOCK**): 3 на тексте команды (D42, D43, D44) и 2 на штатном `git commit` в task worktree (D49, D50).
+- Fail open — 1: D48.
 
 ## Сравнение механизмов
 
@@ -131,7 +145,7 @@ Base: `origin/main` = `25829c1c03d0a36a0c4ab47ebb031d4178bec963` (провере
 |---|---|---|
 | deny `Bash(...)` в `.claude/settings.json` | не сработал ни разу (L05, L06, L07, L08, L10) | не исполним вне Claude Code; по тексту правил префикс `git push origin main` не покрывает `git push -u origin main`, `HEAD:main`, `+main`, `git -C …` — статический анализ, не evidence |
 | deny `Edit(...)` | не сработал (L21, с оговоркой 3) | — |
-| PreToolUse guard-hook | не сработал ни разу (L01, L04, L09–L13, L15, L19, L20) | блокирует буквальные формы; 20 обходов, 3 ложных срабатывания, fail open при ошибке запуска |
+| PreToolUse guard-hook | не сработал ни разу (L01, L04, L09–L13, L15, L19, L20, L22) | блокирует буквальные формы; 19 безусловных + 2 условных обхода, 5 ложных срабатываний (в том числе штатный commit в worktree), fail open при ошибке запуска |
 | GitHub branch protection `main` | вне scope тикета | GitHub API: `main` `"protected": false` |
 
 ## Findings (finding contract, глава 14.3)
@@ -142,7 +156,7 @@ Location: `.claude/settings.json` (`permissions.deny`, `hooks.PreToolUse`) на 
 Defect: в живой сессии не применяется ни deny-список, ни PreToolUse guard-hook
 Scenario: агент выполняет `sudo -n true`, `git push origin main --dry-run`, `echo "git reset --hard"`, `git push -f origin main` (scratch)
 Impact: единственный технический барьер проекта против push в `main`, force push и `reset --hard` в агентной сессии отсутствует; остаются только текстовые правила и недетерминированный классификатор auto mode; ADR-0001 Validation и acceptance 4.5 не выполнены
-Evidence: L01–L21, все NOT BLOCKED, без сообщений deny или `guard-git:`
+Evidence: L01–L22, все NOT BLOCKED, без сообщений deny или `guard-git:`. Косвенно: при документированном `CLAUDE_PROJECT_DIR` (основной checkout на `main`) работающий hook заблокировал бы L22 так же, как D50, — этого не произошло
 Fix: follow-up тикет (High, founder): установить, загружаются ли project settings и hooks в облачной сессии и у субагентов (гипотезы: settings не подхватываются в этом типе сессии; hook запускается, но падает с exit ≠ 2, см. F2 — причина не установлена); повторить часть A после исправления
 
 **F2**
@@ -152,25 +166,25 @@ Defect: hook fails open — при любой ошибке запуска (не�
 Scenario: `CLAUDE_PROJECT_DIR` не задан или указывает не туда → `bash: /.claude/hooks/guard-git.sh: No such file or directory`, exit 127
 Impact: блокировка молча исчезает; совпадает с наблюдаемым поведением F1, хотя причинность не доказана
 Evidence: D48. Документация Claude Code (Hooks guide, https://code.claude.com/docs/en/hooks-guide, проверено 2026-10-22): «With an exit code besides 0 and 2 and no valid JSON output, the action proceeds on most events, unless the hook is one whose failure blocks the action. A hook with `onFailure` set to `"block"` is one example.»
-Fix: `onFailure: "block"` для этого hook (по той же документации) и регрессионная проба «hook недоступен → блок»
+Fix: `onFailure: "block"` для этого hook и регрессионная проба «hook недоступен → блок». Предусловие: по Hooks reference (https://code.claude.com/docs/en/hooks, проверено 2026-10-22) поле «Requires Claude Code v2.1.295 or later». В этой сессии `claude --version` → `2.1.307`, но `CLAUDE_CODE_VERSION=2.1.42`; какая из версий обрабатывает hooks в облачной сессии, не установлено — до опоры на `onFailure` проверить его живой пробой (например, заведомо отсутствующий скрипт → вызов должен быть заблокирован с текстом `blocking because onFailure is "block"`)
 
 **F3**
 Severity: HIGH
 Location: `.claude/hooks/guard-git.sh`, блок `case "$cmd"` и regex для commit/merge/rebase/cherry-pick
 Defect: сопоставление по буквальной подстроке без разбора аргументов Git
-Scenario: обходы — push в main: `HEAD:refs/heads/main`, `refs/heads/main`, `+main`, двойные пробелы, TAB, `git -C`, `git push`/`git push origin HEAD` с текущей веткой или upstream `main`; force: `-f` в конце, `+ref`, `git -C`; reset: двойной пробел, `git -C`; clean: `-df`, `-x -f -d`, `--force`; `git branch --delete --force`; `git worktree remove -f`; commit на main: `git -C`, `git -c` (D03–D05, D07–D09, D11, D12, D15, D17, D18, D20, D21, D25–D27, D30, D31, D37, D39)
+Scenario: безусловные обходы — push в main: `HEAD:refs/heads/main`, `refs/heads/main`, `+main`, двойные пробелы, TAB, `git -C`; `git push --mirror` (перезаписывает все refs на remote, включая `main`); force: `-f` в конце, `+ref`, `git -C`; reset: двойной пробел, `git -C`; clean: `-df`, `-x -f -d`, `--force`; `git branch --delete --force`; `git worktree remove -f`; commit на main: `git -C`, `git -c` (D03–D05, D07–D09, D15, D17, D18, D20, D21, D25–D27, D30, D31, D37, D39, D51). Условные обходы — `git push` и `git push origin HEAD`, когда upstream или текущая ветка — `main` (D11, D12)
 Impact: даже работающий hook не остановит типичные варианты записи тех же опасных действий
-Evidence: часть B, 20 случаев ALLOW там, где правило требует block
+Evidence: часть B: 19 безусловных и 2 условных случая ALLOW там, где правило требует block
 Fix: разбирать команду (токенизация, снятие глобальных опций `-C/-c`, нормализация пробелов, refspec `+`/`refs/heads/main`, разрешение неявного назначения push) или опираться на серверную защиту (ruleset `main`); регрессионные кейсы — эта матрица
 
 **F4**
-Severity: MEDIUM
+Severity: HIGH (было MEDIUM; повышено после review)
 Location: `.claude/hooks/guard-git.sh`, проверка `git -C "${CLAUDE_PROJECT_DIR:-.}" symbolic-ref --short HEAD`
 Defect: «commit на main» определяется по ветке `CLAUDE_PROJECT_DIR`, а не по репозиторию, в котором выполняется команда
-Scenario: (а) `CLAUDE_PROJECT_DIR` = основной checkout на `main`, агент коммитит в своём worktree → ложная блокировка; (б) `CLAUDE_PROJECT_DIR` = task worktree, агент делает `cd <checkout на main> && git commit` → пропуск
-Impact: для worktree-модели из CLAUDE.md правило либо мешает легитимной работе, либо не защищает `main`
-Evidence: D29 (решение по ветке `CLAUDE_PROJECT_DIR`, не по `cd`-цели), D32, D33
-Fix: определять репозиторий из `cd`/`-C` команды или cwd инструмента (поле `cwd` hook-payload, если доступно — проверить в документации) и проверять его ветку
+Scenario: штатный сценарий CLAUDE.md — сессия стартует в основном checkout на `main`, автор работает в task worktree. По документации `CLAUDE_PROJECT_DIR` остаётся корнем, где стартовала сессия, и в worktree не меняется (Hooks reference, «Reference scripts by path», https://code.claude.com/docs/en/hooks, проверено 2026-10-22). Значит, работающий hook блокирует каждый `git commit`, `merge`, `rebase`, `cherry-pick` автора в его worktree. Обратная сторона: если сессия стартовала в task worktree, `cd <checkout на main> && git commit` проходит
+Impact: при исправлении F1 обязательный процесс «1 тикет = 1 ветка/worktree» перестанет работать: автор не сможет закоммитить ни один тикет; одновременно правило не защищает `main` при старте сессии не в основном checkout
+Evidence: D50 (`CLAUDE_PROJECT_DIR` = основной checkout на `main`, cwd и payload `cwd` = task worktree → BLOCK), D49 (то же со scratch-репозиторием на `main`), D29 (решение по `CLAUDE_PROJECT_DIR`, а не по цели `cd`); D32 — искусственная конфигурация
+Fix: определять репозиторий по полю `cwd` из payload hook — по документации это «Current working directory when the hook is invoked», и оно следует за входом в worktree и за `cd` (Hooks reference, «Common input fields» и «Reference scripts by path»), — с учётом `cd`/`-C` внутри самой команды, и проверять ветку этого репозитория; регрессионные кейсы D29, D49, D50
 
 **F5**
 Severity: LOW
@@ -202,7 +216,7 @@ Fix: не требуется в рамках проекта; учитывать 
 ## Ограничения и что не проверено
 
 1. Причина F1 не установлена: из сессии нельзя увидеть, загружены ли project settings и запускался ли hook (не отображается уведомление `hook error`). Проверка выполнена только в одном типе сессии — облачный субагент в worktree; поведение в основной (родительской) сессии, в локальном CLI и в Claude Code в браузере не проверено.
-2. Значение `CLAUDE_PROJECT_DIR` в окружении hook-процесса неизвестно (в окружении Bash-инструмента переменная не задана).
+2. Значение `CLAUDE_PROJECT_DIR` в окружении hook-процесса в этой сессии не наблюдалось (в окружении Bash-инструмента переменная не задана). По документации это корень, где стартовала сессия; вывод F4 опирается на документацию и D50, а не на живое наблюдение.
 3. L21: правило `Edit(public/handbook.md)` задаётся относительным путём; в worktree неизвестно, к какому корню оно привязывается. Не-путевое правило `Bash(sudo:*)` (L05) тоже не сработало, поэтому вывод F1 от этой оговорки не зависит.
 4. `Read(.env*)` и `Write(...)`-правила не проверялись: Read `.env` запрещён правилами автора, Write в защищённые пути изменил бы файлы при отсутствии блокировки.
 5. Пробы против GitHub ограничены одной dry-run командой (L10); push в GitHub `main` без dry-run не выполнялся намеренно.
