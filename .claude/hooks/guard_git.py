@@ -634,12 +634,7 @@ def analyze_line(text, ctx):
     reason = legacy_reason(text)
     if reason:
         block(reason)
-    if _COMMIT_RE.search(text):
-        # base: history change blocked when the repository is on main; the
-        # repository is taken from cwd (payload) instead of CLAUDE_PROJECT_DIR (F4)
-        br = UNKNOWN if STATE["git_env_dirty"] else current_branch(ctx.cwd, [], {})
-        if br is UNKNOWN or br == PROTECTED:
-            block("изменение истории на main или в репозитории с неизвестной веткой")
+    commit_text = bool(_COMMIT_RE.search(text))
 
     simple = []
     for words in parsed.commands:
@@ -652,6 +647,20 @@ def analyze_line(text, ctx):
         if cmd is None:
             continue
         simple.append(cmd)
+
+    if commit_text:
+        # base: a history change is blocked when the repository is on main. The
+        # repository is the payload cwd (F4); when the line also runs a program
+        # the analyzer does not follow (interpreter, script, computed name, ...),
+        # that program may change directory, so CLAUDE_PROJECT_DIR is checked
+        # as well, as the base hook did.
+        dirs = [ctx.cwd]
+        if any(_opaque(c) for c in simple):
+            dirs.append(_project_dir())
+        for d in dirs:
+            br = UNKNOWN if STATE["git_env_dirty"] else current_branch(d, [], {})
+            if br is UNKNOWN or br == PROTECTED:
+                block("изменение истории на main или в репозитории с неизвестной веткой")
 
     for cmd in simple:
         run_simple(cmd, ctx)
@@ -798,12 +807,42 @@ def unwrap(words, ctx):
     return {"prog": _base(w[0].text), "words": w, "env": env, "tail_unknown": tail_unknown, "chdir": chdir}
 
 
+# programs that neither change directory nor run other programs, whatever their arguments
+TRANSPARENT = {"echo", "true", "false", ":", "ls", "pwd", "cat", "head", "tail", "wc", "mkdir", "touch",
+               "sleep", "date", "basename", "dirname", "realpath", "readlink", "which", "type",
+               "stat", "diff", "cmp", "cut", "tr", "uniq", "jq", "export", "unset", "set", "local"}
+# programs the analyzer follows itself (their nested commands are analyzed with their own cwd)
+FOLLOWED = {"git", "cd", "pushd", "popd", "eval", "watch", "xargs"}
+
+
+def _project_dir():
+    d = os.environ.get("CLAUDE_PROJECT_DIR")
+    return d if d and os.path.isabs(d) else None
+
+
+def _opaque(cmd):
+    """True when the command may run git somewhere the analyzer cannot see."""
+    prog = cmd["prog"]
+    words = cmd["words"]
+    if prog is None:
+        return True
+    if prog in TRANSPARENT or prog in FOLLOWED:
+        return False
+    if prog in ("test", "[", "[["):
+        return any(x.text == "-v" for x in words[1:])  # -v evaluates array subscripts
+    if prog in SHELLS:
+        # `sh -c '...'` is analyzed; `sh script.sh` or `sh` reading stdin is not
+        return not any(x.text.startswith("-") and not x.text.startswith("--") and "c" in x.text[1:]
+                       for x in words[1:])
+    return True
+
+
 # subcommands whose computed-program form is blocked: `$(printf git) push ...`
 RISKY_SUBS = {"push", "reset", "clean", "branch", "worktree", "checkout", "switch", "config",
               "symbolic-ref", "update-ref", "pull", "filter-branch", "remote"} | HISTORY_OPS
 
 
-def check_dynamic_program(words):
+def check_dynamic_program(words, ctx):
     """The program name is computed at run time (`$(printf git)`, `$GIT`, `{git,x}`).
     Blocked when it can be git: its text mentions git, or its first argument is
     a risky git subcommand."""
@@ -821,13 +860,20 @@ def check_dynamic_program(words):
         if t in RISKY_SUBS:
             block(f"имя программы вычисляется при выполнении, аргумент `{t}` — как у git (fail closed)")
         break
+    # the computed program may be a wrapper (`$RUNNER sh -c '...'`, `$SUDO git ...`):
+    # its arguments are analyzed as a command as well, in an unknown directory
+    # (the wrapper may change it: `$RUNNER` = `env -C <dir>`)
+    sub = ctx.child(None)
+    inner = unwrap(words[1:], sub)
+    if inner:
+        run_simple(inner, sub)
 
 
 def run_simple(cmd, ctx):
     prog = cmd["prog"]
     words = cmd["words"]
     if prog is None:
-        check_dynamic_program(words)
+        check_dynamic_program(words, ctx)
         return
     saved_cwd = ctx.cwd
     for v in cmd.get("chdir", []):

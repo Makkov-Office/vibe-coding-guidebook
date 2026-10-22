@@ -308,6 +308,24 @@ const extra = [
   ['R34', 'git -c remote.origin.push=refs/heads/x:refs/heads/x push origin p1-01-task:p1-01-task', T, 'allow'],
   ['R35', 'git config user.name probe && git push origin p1-01-task', T, 'allow'],
   ['L1', 'git switch -c p1-y && git push -u origin HEAD', M, 'block'],  // known false positive: HEAD may still be main
+  // review a3cbe31, M-F4: cwd = task worktree, CLAUDE_PROJECT_DIR = main checkout on main.
+  // A program the analyzer does not follow may change directory: CLAUDE_PROJECT_DIR is checked too.
+  ['F01', `python3 -c "import os; os.chdir('${M}'); os.system('true; git commit --allow-empty -m x')"`, T, 'block', M],
+  ['F02', `node -e "process.chdir('${M}'); require('child_process').execSync('true; git commit -m x')"`, T, 'block', M],
+  ['F03', `$RUNNER sh -c 'cd ${M} && git commit -m x'`, T, 'block', M],
+  ['F04', `perl -e 'chdir "${M}"; system "true; git merge x"'`, T, 'block', M],
+  ['F05', 'bash run.sh; git commit -m x', T, 'block', M],
+  ['F06', `find ${M} -maxdepth 0 -execdir git commit -m x \\;`, T, 'block', M],
+  ['F07', 'npm test && git commit -m x', T, 'block', M],                // known false positive, as in base
+  ['F08', "[ -v 'a[0]' ] && git commit -m x", T, 'block', M],
+  ['F09', '$RUNNER sh -c "git commit -m x"', T, 'block', M],
+  ['F10', '$RUNNER git push origin main', T, 'block'],
+  ['F20', 'git commit -m x', T, 'allow', M],
+  ['F21', `cd ${T} && git add -A && git commit -m x`, T, 'allow', M],
+  ['F22', 'git status && git commit -m x && git push origin p1-01-task', T, 'allow', M],
+  ['F23', 'echo done; ls; git commit -m x', T, 'allow', M],
+  ['F24', "python3 -c 'print(1)' && git commit -m x", T, 'allow', T],   // CLAUDE_PROJECT_DIR not on main
+  ['F25', "[ -f x ] && git commit -m x", T, 'allow', M],
 ];
 
 for (const [id, command, cwd, expected, projectDir] of [...matrix, ...extra]) {
@@ -428,4 +446,36 @@ test('differential: no weakening against the base hook', () => {
     }
   }
   assert.deepEqual(differences, []);
+});
+
+// F4 is the one intended difference: with cwd = task worktree and CLAUDE_PROJECT_DIR =
+// main checkout on main the base hook blocks every history change, the new one only when
+// the line runs nothing but programs that cannot change directory or run other programs.
+// Oracle written independently of the analyzer: segment heads from a fixed list, no `$`/backticks.
+const TRANSPARENT = new Set(['git', 'cd', 'pushd', 'popd', 'echo', 'true', 'false', 'ls', 'pwd', 'cat',
+  'head', 'tail', 'wc', 'mkdir', 'touch', 'sleep', 'date', 'export']);
+function transparentOnly(command) {
+  // a quoted heredoc message `$(cat <<'EOF' ... EOF)` and ANSI-C strings `$'...'` run nothing
+  const text = command.replace(/\$\(cat <<'EOF'\n[\s\S]*?\nEOF\n\)/g, 'MSG').replace(/\$'(?:\\.|[^'\\])*'/g, 'S');
+  if (/[$`]/.test(text) || /(^|\s)-v(\s|$)/.test(text)) return false;
+  return text.split(/[;&|()\n]+/).every((seg) => {
+    const words = seg.trim().split(/\s+/).filter((w) => w && !/^[A-Za-z_][A-Za-z0-9_]*=/.test(w));
+    return words.length === 0 || TRANSPARENT.has(words[0]) || words[0] === '[' || words[0] === 'test' || words[0].startsWith('#');
+  });
+}
+test('differential: cwd = task worktree, CLAUDE_PROJECT_DIR = main checkout (F4 only)', () => {
+  const corpus = [...matrix, ...extra];
+  const differences = [];
+  let intended = 0;
+  for (const [id, command] of corpus) {
+    const input = payload(command, T);
+    const before = verdict(runHook(input, { script: baseHook, projectDir: M, cwd: T }).code);
+    const after = verdict(runHook(input, { projectDir: M, cwd: T }).code);
+    if (before === 'block' && after !== 'block') {
+      if (transparentOnly(command)) intended += 1;
+      else differences.push(`${id}: ${command}`);
+    }
+  }
+  assert.deepEqual(differences, []);
+  assert.ok(intended > 0, 'control: F4 differences expected');
 });
