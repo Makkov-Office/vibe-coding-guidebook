@@ -10,9 +10,11 @@ import { fileURLToPath } from "node:url";
 
 const STEPS = ["content", "test", "typecheck", "lint", "build"];
 // Tracked files that a passing step rewrites by design. Reported, not failed.
-const KNOWN_CHANGES = {
-  "tsconfig.tsbuildinfo": "его переписывает npm run typecheck, incremental: true",
-};
+// A Map, not an object literal: paths like "constructor" must not match.
+// tsconfig.tsbuildinfo: remove once it is untracked (P1-09, #16).
+const KNOWN_CHANGES = new Map([
+  ["tsconfig.tsbuildinfo", "его переписывает npm run typecheck, incremental: true"],
+]);
 
 if (!process.env.npm_execpath) {
   throw new Error("Run validate with npm run validate.");
@@ -75,9 +77,9 @@ if (!before || !after) {
   const changed = [...new Set([...before.keys(), ...after.keys()])]
     .filter((file) => before.get(file) !== after.get(file))
     .sort();
-  const unexpected = changed.filter((file) => !(file in KNOWN_CHANGES));
-  const known = changed.filter((file) => file in KNOWN_CHANGES);
-  const note = known.map((file) => `${file} (${KNOWN_CHANGES[file]})`).join("; ");
+  const unexpected = changed.filter((file) => !KNOWN_CHANGES.has(file));
+  const known = changed.filter((file) => KNOWN_CHANGES.has(file));
+  const note = known.map((file) => `${file} (${KNOWN_CHANGES.get(file)})`).join("; ");
   if (unexpected.length) {
     results.push({ name: "tree", status: "FAIL", detail: `validate изменил файлы: ${unexpected.join(", ")}`, changed: unexpected, known });
   } else if (known.length) {
