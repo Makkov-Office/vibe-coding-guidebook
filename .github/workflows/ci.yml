@@ -114,7 +114,7 @@ jobs:
           npm start > e2e-server.log 2>&1 &
           server=$!
           for second in $(seq 1 90); do
-            if curl -fsS -o /dev/null "$HANDBOOK_URL/"; then
+            if curl -fs -o /dev/null "$HANDBOOK_URL/"; then
               echo "server ready after ${second} s"
               exit 0
             fi
