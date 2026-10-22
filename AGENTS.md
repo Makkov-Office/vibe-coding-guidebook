@@ -36,8 +36,8 @@ Entrypoint для любого агента в этом репозитории. 
 - UI-изменения проверять на 320/360/768/1024/1440 px, с клавиатуры и в reduced motion.
 
 ## Команды
-Node.js ≥ 22.13, npm.
-- Установка: `npm ci` (до закрытия P1-02 падает из-за lockfile — временно `npm install --no-save`, отметь это в evidence).
+Node.js ≥ 22.13 (`engines`); эталон — `.nvmrc` (22.22.0, npm 10.9.4 в комплекте).
+- Установка: `npm ci` (lockfile синхронизирован). `package-lock.json` меняется только через `npm install` той же версии npm и только в тикете, где это в scope.
 - Контент: `npm run content` — компиляция, поиск, anchors, Mermaid SVG (новые схемы требуют Chrome, `MERMAID_CHROME_PATH`), coverage audit.
 - Проверки: `npm test`, `npm run typecheck`, `npm run lint`, `npm run build` (с publication audit).
 - E2E: `npm start` + `npm run test:e2e` (`HANDBOOK_URL` для другого адреса).
