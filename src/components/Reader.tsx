@@ -48,7 +48,8 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
  // Global handlers survive chapter transitions and read current page metadata through a ref.
  // eslint-disable-next-line react-hooks/exhaustive-deps
  },[assets.search]);
- useEffect(()=>{setStatus('');setReturnTo(null);window.dispatchEvent(new Event('context-close'));searchNavigating.current=true;searchRef.current?.close();drawerRef.current?.close();},[pathname]);
+ // close() on an already closed dialog fires no close event, so the flag is set only when it will be reset by onClose.
+ useEffect(()=>{setStatus('');setReturnTo(null);window.dispatchEvent(new Event('context-close'));if(searchRef.current?.open){searchNavigating.current=true;searchRef.current.close();}drawerRef.current?.close();},[pathname]);
  useEffect(()=>{
   if(pageData.chapterId!==chapterId)return;setPending(false);let disposed=false,frame=0;
   document.querySelectorAll<HTMLButtonElement>('[data-copy],[data-example]').forEach(button=>button.disabled=false);
