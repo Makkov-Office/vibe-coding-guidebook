@@ -38,7 +38,7 @@ https://agentic-engineering-handbook-makkov.makkov.chatgpt.site/
 1. Прочитай PLATFORM_BRIEF.md (особенно раздел 4), AGENTS.md, cloud-handoff.md.
    Вопросы задавай, только если без ответа нельзя начать; по открытым решениям
    раздела 13 бери дефолты из брифа.
-2. Создай GitHub Issues для P1-01 … P1-10 (раздел 4.4) с зависимостями и risk.
+2. Создай GitHub Issues для P1-01 … P1-08 (раздел 4.4) с зависимостями и risk.
    Не получилось — заведи docs/backlog.md в том же формате и скажи об этом.
 3. P1-01 (harness): проверь, что guard-hook и deny-правила реально блокируют
    push в main, reset --hard, force push и clean; приложи evidence.
@@ -46,7 +46,7 @@ https://agentic-engineering-handbook-makkov.makkov.chatgpt.site/
    (сейчас падает: Missing playwright-core@1.57.0). Затем npm test, typecheck,
    lint, build — evidence с SHA.
 5. P1-03 и P1-04: npm run doctor / npm run validate и GitHub Actions CI.
-6. Предложи план волны 2 (P1-05 … P1-09: что параллельно, collision class,
+6. Предложи план волны 2 (P1-05 … P1-08: что параллельно, collision class,
    merge order по главе 13) и остановись.
 
 ## Как отчитываться
@@ -65,4 +65,4 @@ https://agentic-engineering-handbook-makkov.makkov.chatgpt.site/
 | Один тикет | `Бери P1-06.` |
 | Review | `Независимое review PR #NN по главе 14.4. Код не меняй.` |
 | После merge | `PR #NN смержен. Post-merge sync по главе 16: main SHA, результат, зависимые PR для refresh.` |
-| Публикация артефакта | `Собери static export из main и опубликуй артефактом. Покажи parity-аудит.` |
+| Деплой | `Проверь preview-деплой Vercel для PR #NN: все маршруты, поиск, тултипы, XP. Отчёт со ссылкой.` |
