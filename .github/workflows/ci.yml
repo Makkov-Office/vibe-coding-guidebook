@@ -132,10 +132,8 @@ jobs:
       # --forbid-only: a stray test.only must not turn a partial run green.
       # --add-reporter keeps the configured list and json reporters.
       - name: npm run test:e2e
-        # PROBE (to be reverted): skip the 6 stale scenarios to see the green path.
-        run: npm run test:e2e -- --forbid-only --add-reporter=html --grep-invert "$PROBE_EXCLUDE"
+        run: npm run test:e2e -- --forbid-only --add-reporter=html
         env:
-          PROBE_EXCLUDE: "storage refusal retains|inline term preview|global search, hidden|controls, checklist keys|storage and clipboard refusal|strict Mermaid"
           PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report
           PLAYWRIGHT_HTML_OPEN: never
 
