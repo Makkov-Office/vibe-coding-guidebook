@@ -43,12 +43,18 @@ try {
 }
 
 // Node: engines.node is the hard contract, .nvmrc is the reference version.
+// "^X.Y.Z" (X >= 1) = at least X.Y.Z within major X: Vercel picks its Node
+// major from engines, and ">=" would give the newest major (P1-07, ADR-0002).
 const current = parseVersion(process.versions.node);
 const engines = pkg?.engines?.node;
-const minimum = /^>=\s*(\d+\.\d+\.\d+)$/.exec(engines ?? "")?.[1];
+const enginesMatch = /^(>=|\^)\s*(\d+\.\d+\.\d+)$/.exec(engines ?? "");
+const minimum = enginesMatch && !(enginesMatch[1] === "^" && enginesMatch[2].startsWith("0.")) ? enginesMatch[2] : undefined;
+const fixedMajor = minimum && enginesMatch[1] === "^" ? parseVersion(minimum)[0] : null;
+const satisfiesEngines = (version) =>
+  compareVersions(version, parseVersion(minimum)) >= 0 && (fixedMajor === null || version[0] === fixedMajor);
 if (!minimum) {
-  report("FAIL", "node", `engines.node "${engines}" не в формате ">=X.Y.Z"; doctor не может его проверить`);
-} else if (compareVersions(current, parseVersion(minimum)) < 0) {
+  report("FAIL", "node", `engines.node "${engines}" не в формате ">=X.Y.Z" или "^X.Y.Z"; doctor не может его проверить`);
+} else if (!satisfiesEngines(current)) {
   report("FAIL", "node", `Node v${process.versions.node} не удовлетворяет engines.node ${engines}; выполните nvm use (эталон .nvmrc)`);
 } else {
   report("PASS", "node", `v${process.versions.node} удовлетворяет engines.node ${engines}`);
@@ -64,7 +70,7 @@ if (nvmrc !== undefined) {
   const reference = parseVersion(nvmrc);
   if (!reference) {
     report("FAIL", "nvmrc", `.nvmrc "${nvmrc}" не в формате X.Y.Z`);
-  } else if (minimum && compareVersions(reference, parseVersion(minimum)) < 0) {
+  } else if (minimum && !satisfiesEngines(reference)) {
     report("FAIL", "nvmrc", `.nvmrc ${nvmrc} не удовлетворяет engines.node ${engines}`);
   } else if (compareVersions(current, reference) !== 0) {
     report("WARN", "nvmrc", `Node v${process.versions.node} отличается от эталона .nvmrc ${nvmrc}; для воспроизводимости: nvm use`);
