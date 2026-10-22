@@ -1,6 +1,6 @@
 # ADR 0001: Один primary author на тикет, работа только в task-ветках
 
-Status: Proposed — ждёт решения founder (вместе с PR P1-01)
+Status: Accepted — 22.10.2026, решение founder, вместе с merge PR #1 (https://github.com/Makkov-Office/vibe-coding-guidebook/pull/1)
 
 Context: Проект разрабатывается агентами в облачных сессиях, часть работы идёт параллельно. Параллельные правки в одном checkout скрывают владение и портят evidence.
 
