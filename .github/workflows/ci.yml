@@ -1,4 +1,5 @@
 # CI (P1-04): the same `npm run validate` as locally, on every PR and on main.
+# e2e (P1-05): the existing Playwright tests against the built server.
 # Actions are pinned to full commit SHAs (immutable; the tag is in the comment).
 # Versions checked 22.10.2026 with `git ls-remote --tags` of the official repos.
 name: CI
@@ -61,5 +62,95 @@ jobs:
           # dist/client/.assetsignore and dist/*/.vite/manifest.json are part of
           # the build. Hidden dist/.openai/hosting.json holds only the Sites
           # project id that is already in git; no .env*/.dev.vars in dist.
+          include-hidden-files: true
+          retention-days: 14
+
+  # Playwright e2e against `npm start` serving the dist that validate built
+  # and uploaded (the same bytes, no second build). Needs validate: when it
+  # fails, e2e is skipped and the failed `validate` check blocks the PR.
+  e2e:
+    name: e2e
+    needs: validate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      # `npm start` (wrangler dev) listens on 127.0.0.1:8787; the test default
+      # is localhost:3000, so the address is set here, as README describes.
+      HANDBOOK_URL: http://127.0.0.1:8787
+      # Locally the tests use installed Microsoft Edge (channel msedge). In CI:
+      # Playwright's own Chromium, revision pinned by @playwright/test in the
+      # lockfile, in new headless mode (the real browser, like headless Edge).
+      HANDBOOK_BROWSER_CHANNEL: chromium
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node from .nvmrc
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: npm ci
+        run: npm ci
+
+      - name: Download dist
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist-${{ github.event.pull_request.head.sha || github.sha }}
+          path: dist
+
+      # Not cached on purpose: Playwright docs say restoring the cache takes
+      # about as long as the download, and the Linux system dependencies
+      # (--with-deps) cannot be cached anyway. --no-shell: channel chromium
+      # does not use the headless shell.
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps --no-shell chromium
+
+      - name: npm start, wait until ready
+        run: |
+          npm start > e2e-server.log 2>&1 &
+          server=$!
+          for second in $(seq 1 90); do
+            if curl -fsS -o /dev/null "$HANDBOOK_URL/"; then
+              echo "server ready after ${second} s"
+              exit 0
+            fi
+            if ! kill -0 "$server" 2>/dev/null; then
+              echo "::error::npm start exited before the server was ready"
+              cat e2e-server.log
+              exit 1
+            fi
+            sleep 1
+          done
+          echo "::error::server not ready after 90 s"
+          cat e2e-server.log
+          exit 1
+
+      # --forbid-only: a stray test.only must not turn a partial run green.
+      # --add-reporter keeps the configured list and json reporters.
+      - name: npm run test:e2e
+        run: npm run test:e2e -- --forbid-only --add-reporter=html
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report
+          PLAYWRIGHT_HTML_OPEN: never
+
+      # Always, also on failure: the HTML report (it embeds the traces of
+      # failed tests), the json report, raw traces (trace: retain-on-failure,
+      # so only failed tests leave one) and the server log.
+      - name: Upload e2e report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: e2e-report-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            playwright-report
+            docs/browser-results.json
+            .sites-runtime/playwright
+            e2e-server.log
+          if-no-files-found: error
+          # .sites-runtime/playwright is Playwright's outputDir: test traces only.
           include-hidden-files: true
           retention-days: 14
