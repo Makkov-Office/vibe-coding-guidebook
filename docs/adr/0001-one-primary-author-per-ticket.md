@@ -11,5 +11,6 @@ Alternatives: общий checkout; работа последовательно �
 Consequences: дополнительный lifecycle веток/worktree; ясная ответственность, воспроизводимое evidence.
 
 Validation: попытка `git push origin main` и `git reset --hard` из сессии агента блокируется (evidence в PR P1-01). На GitHub — branch ruleset для `main` (required PR, required checks, без force push).
+Статус проверки: P1-01 (`docs/evidence/p1-01-guard-hook.md`) — FAIL в живой сессии. P1-01b (`docs/evidence/p1-01b-harness-enforcement.md`) — hook переписан, регрессия в `npm test`; в облачных thread'ах Claude Code Projects settings репозитория по документации не применяются, поэтому в них блокировку обеспечивает только ruleset `main`; живая проверка в сессии, которая читает settings, — после merge.
 
 Revisit trigger: founder утверждает ADR о low-risk auto-merge (бриф, раздел 5.5).
