@@ -6,6 +6,9 @@
 
 Node.js >=22.13 и npm (эталонная версия — `.nvmrc`, например `nvm use`): `npm ci`, затем `npm run dev`. Адрес выводится в терминале. Production: `npm run build`, затем `npm start`.
 
+- `npm run doctor` — проверка среды: Node против `engines` и `.nvmrc`, npm, согласованность `package.json` / `package-lock.json` / `node_modules`, ветка и чистота git, Chrome для Mermaid. FAIL (exit 1) — неподходящий Node или `node_modules` не совпадает с lockfile; WARN — работа в `main`, грязное дерево, Node не равен `.nvmrc`, нет Chrome при переиспользуемых SVG.
+- `npm run validate` — одна точка входа для проверки проекта: `content`, `test`, `typecheck`, `lint`, `build` последовательно; первый FAIL останавливает остальные (SKIP). Затем validate сравнивает `git status` до и после: любое новое изменение (устаревшие сгенерированные файлы, новые неотслеживаемые) — FAIL. Исключение — `tsconfig.tsbuildinfo`, который переписывает `typecheck` (WARN). Exit 0 только при общем PASS.
+
 - `npm run content` — AST/GFM, allowlist HTML, glossary/search/anchors, independent coverage audit.
 - `npm test` — content/download parity, оригинальные SHA256, inventory, targets, sanitization, appendix rejection, longest-match и preview threshold.
 - `npm run typecheck` и `npm run lint`.
