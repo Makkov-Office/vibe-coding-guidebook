@@ -1,6 +1,6 @@
 # ADR 0002: Деплой на Vercel — статический экспорт через Build Output API
 
-Status: Proposed — 22.10.2026, spike P1-06 (https://github.com/Makkov-Office/vibe-coding-guidebook/issues/8). Accepted — только решением founder при merge PR. Подключение проекта, preview и production — P1-07 (founder gate).
+Status: Proposed — 22.10.2026, spike P1-06 (https://github.com/Makkov-Office/vibe-coding-guidebook/issues/8). Accepted — только решением founder при merge PR. Подключение проекта и preview — P1-07 (https://github.com/Makkov-Office/vibe-coding-guidebook/issues/9, раздел «P1-07» ниже); production выключен до отдельного решения founder после P1-08.
 
 ## Context
 
@@ -39,7 +39,7 @@ Status: Proposed — 22.10.2026, spike P1-06 (https://github.com/Makkov-Office/v
 - RSC payload в prerender отличается от ответа Worker (`wrangler dev`): Worker рендерит на запрос и добавляет streaming metadata, в prerender её нет. Браузерная проверка переходов на prerender-файлах — PASS; расхождение для P1-08 (parity) записано здесь.
 - `vercel build` (CLI 62.7.0) переносит наш `config.json` как есть, но ставит 308-маршрут после маршрутов с `continue` и добавляет свою секцию `handle: error` → `404.html`. Проверка выполнялась по итоговому `config.json` после `vercel build`.
 - CLI выбирает builder `@vercel/next` при зависимости `next`, если проект создан до 01.03.2020 или framework не задан; для нового проекта с `framework: null` — static build и passthrough `.vercel/output` (наблюдение в коде CLI `detectFrontBuilder` и в локальном прогоне). В P1-07 проверить, что preview собран без `@vercel/next`.
-- Node.js: Vercel берёт major из `engines`; `>=22.13.0` даёт последнюю 24.x, не 22.x из `.nvmrc` (документация «Supported Node.js versions»). Сборка на Node 24 не проверялась — решение founder в P1-07: `engines` `22.x` или проверка на 24.
+- Node.js: Vercel берёт major из `engines`; `>=22.13.0` даёт последнюю 24.x, не 22.x из `.nvmrc` (документация «Supported Node.js versions»). Сборка на Node 24 не проверялась. P1-07: `engines` → `^22.13.0` (тот же минимум, major 22 — последняя 22.x на Vercel), раздел «P1-07».
 - Установка: `npm ci --include=dev` ставит devDependencies (vite, vinext, wrangler нужны сборке) и 29 записей `@img/sharp-*` с `"dev": true` даже при `NODE_ENV=production` (входное условие из комментария к #8).
 - Вход для P1-07 (Skew Protection): если при сборке задан `NEXT_DEPLOYMENT_ID` (env проекта или платформы), compatibility id равен ему, UUID в bundle нет, и `vercel-output.mjs` падает с `expected one RSC compatibility id, found 0` (проверено сборкой с `NEXT_DEPLOYMENT_ID=p106probe`). Сборка падает закрыто, деплоя нет. В P1-07 проверить env preview/production; Skew Protection — отдельное решение (тогда скрипт берёт id из `NEXT_DEPLOYMENT_ID`, отдельный тикет). Документация Vercel описывает системную `VERCEL_DEPLOYMENT_ID` для Skew Protection; ставит ли платформа `NEXT_DEPLOYMENT_ID` для static build — не проверено.
 - Итоговый `config.json` после `vercel build` содержит `framework` (`{"slug": "nextjs", …}` — CLI определил Next.js по зависимости). По документации Build Output Configuration это поле «used for display purposes only»; builder и маршрутизацию оно не меняет (в логе `vercel build` нет `@vercel/next` и `Detected Next.js`).
@@ -126,3 +126,16 @@ Evidence — раздел ниже и PR. Команды в свежем `git cl
 Прочие проверки того же прогона: 404 и тело `404.html` — `/nope`, `/chapters/99`, `/chapters`, `/_headers`, `/.vite/manifest.json`, `/wrangler.json` (6/6 PASS, как на Worker); `/chapters/01/` → 308 `/chapters/01` (PASS); `/_next/static/*.js` — `public, max-age=31536000, immutable` (PASS); ошибок страниц в браузере нет (PASS). В A2 все 29 переходов — без загрузки нового документа; RSC-запросов за переход 1–17 (с prefetch ссылок rail; ровно 1 — в 9 из 29), у Worker 1–23. В негативных вариантах — полная загрузка документа на 29/29.
 
 Логи, JSON и скрипты проб не коммитятся (временный каталог удалён); воспроизведение — команды выше. HEAD PR и run CI — в PR.
+
+## P1-07: подключение проекта (только preview)
+
+Решение founder 22.10.2026 09:21 UTC (founder gate #9): проект в команде `makkov-design`, только preview на каждый PR; production из `main` выключен — ни сейчас, ни при merge P1-07; включается отдельным решением founder после parity-аудита P1-08. Имя `vibe-coding-guidebook`, адрес `*.vercel.app`, Framework Preset Other, Deployment Protection по умолчанию; свой домен и ChatGPT Sites не трогаются.
+
+- Запрет production — в коде и в проекте, три независимых слоя:
+  1. `vercel.json` `git.deploymentEnabled: {"main": false}` — push в `main` не создаёт деплой («Specify branches that should not trigger a deployment upon commits», Git Configuration). Действует с коммитов `main`, где этот `vercel.json` уже есть, то есть после merge.
+  2. `vercel.json` `ignoreCommand` — сборка продолжается (exit 1) только при `VERCEL_ENV=preview`; production, development и пустое значение — exit 0, сборка отменяется (fail closed).
+  3. Тот же Ignored Build Step в настройках проекта (`commandForIgnoringBuildStep`, задан при создании проекта в одном запросе с подключением репозитория): закрывает коммиты `main` до merge, где `vercel.json` из P1-06 без правил 1–2 (`ignoreCommand` в `vercel.json` переопределяет настройку проекта, команда та же).
+  Deployment Policies (блокировка production по источникам) доступны только на Pro/Enterprise, команда — Hobby. `github.autoAlias: false` не выбран: он делает деплои после merge preview, но деплой всё равно создаётся.
+- Node.js 22.x: `engines` `^22.13.0` (документация: `^22.0.0` → «latest 22.x»; `engines` переопределяет Project Settings, `.nvmrc` не упоминается). Тот же минимум 22.13, что и раньше; `npm run doctor` понимает `^X.Y.Z` (major фиксирован). Lockfile не меняется: у корневого пакета в `package-lock.json` нет `engines`.
+- Включение production позже: отдельный PR (убрать правила 1–2) и смена настройки проекта (правило 3) — решение founder; до этого 0 production-деплоев.
+- Источники, проверено 22.10.2026: Git Configuration — https://vercel.com/docs/project-configuration/git-configuration (25.08.2026); vercel.json `ignoreCommand` — https://vercel.com/docs/project-configuration/vercel-json (exit 1 — сборка, exit 0 — пропуск); Ignored Build Step — https://vercel.com/kb/guide/how-do-i-use-the-ignored-build-step-field-on-vercel (16.10.2026); Supported Node.js versions — https://vercel.com/docs/functions/runtimes/node-js/node-js-versions (27.02.2026); Deployment Policies — https://vercel.com/docs/deployments/deployment-policy (14.07.2026); Vercel for GitHub — https://vercel.com/docs/git/vercel-for-github (17.09.2026); commit author на Hobby — https://vercel.com/kb/guide/why-aren-t-commits-triggering-deployments-on-vercel (16.10.2026).
