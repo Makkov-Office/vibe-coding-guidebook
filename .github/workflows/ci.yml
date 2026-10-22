@@ -1,0 +1,65 @@
+# CI (P1-04): the same `npm run validate` as locally, on every PR and on main.
+# Actions are pinned to full commit SHAs (immutable; the tag is in the comment).
+# Versions checked 22.10.2026 with `git ls-remote --tags` of the official repos.
+name: CI
+
+on:
+  # No branch filter: stacked PRs (base other than main) are checked too.
+  # Default types (opened, synchronize, reopened). `edited` is left out on
+  # purpose: a job skipped by `if` reports a `validate` check as success and
+  # every title/body edit would create one; see PR #15 for the base-change case.
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  # PR: one group per PR, a new push cancels the outdated run.
+  # Push to main: one group per commit SHA, so a newer main commit never
+  # cancels a running or pending run of an older one; each keeps its result.
+  group: ci-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('push-{0}', github.sha) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node from .nvmrc
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: npm ci
+        run: npm ci
+
+      - name: npm run validate
+        run: npm run validate
+
+      # render-diagrams.mjs writes `error` to the manifest instead of failing
+      # when a changed diagram cannot be rendered (no Chrome in CI). This gate
+      # makes CI fail closed: every diagram needs its committed SVG.
+      - name: Mermaid SVG committed
+        run: node .github/scripts/check-diagram-assets.mjs
+
+      - name: Upload dist
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          # PR runs build the merge commit; name the artifact by the PR head.
+          name: dist-${{ github.event.pull_request.head.sha || github.sha }}
+          path: dist
+          if-no-files-found: error
+          # dist/client/.assetsignore and dist/*/.vite/manifest.json are part of
+          # the build. Hidden dist/.openai/hosting.json holds only the Sites
+          # project id that is already in git; no .env*/.dev.vars in dist.
+          include-hidden-files: true
+          retention-days: 14
