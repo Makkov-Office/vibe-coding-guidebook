@@ -2,15 +2,15 @@
 
 Тикет: [#17](https://github.com/Makkov-Office/vibe-coding-guidebook/issues/17) (P1-01b). Risk: High. Founder gate: комментарий в issue от 22.10.2026 04:28 UTC (изменение `.claude/` разрешено в рамках тикета; merge — отдельным решением founder).
 Base ветки: `1aa11d9d7a08b2b768b1dcff724724ee014d5f66`; после review в ветку влит `origin/main`: `a4d1215` (P1-03 #14, P1-04 #15) merge-коммитом `66cc48c`, затем `80b066e` (P1-09 #19) merge-коммитом `8d99ac1`.
-Код, к которому относятся проверки ниже: коммит `fdbe7fe800da1553e8fa66b35240eec4f238de6d` (ветка `p1-01b-harness-enforcement`). Эта редакция документа добавлена следующим коммитом и меняет только документацию. История: код `47c0282`, review на `4347f95` — NOT READY (исправления `050ebe2`); review на `2b2e740` — NOT READY (исправления `fdbe7fe`); разделы «Review 4347f95» и «Review 2b2e740». `origin/main` после `8d99ac1` не менялся (`80b066e`).
-Дата проверок: 2026-10-22, 04:30–10:30 UTC. Входные данные: `docs/evidence/p1-01-guard-hook.md` (findings F1–F7, матрица D01–D53, пробы L01–L22) и находки review — перепроверены, а не приняты как решение.
+Код, к которому относятся проверки ниже: коммит `08ce6f69a351048d9596a9108a180eeb6bf3f9e9` (ветка `p1-01b-harness-enforcement`; исправление M-F4 — `b3e758b` и `08ce6f6`, между ними merge `origin/main` `5d0b6df`, P1-06 #23, коммитом `0a16ee2`). Эта редакция документа добавлена следующим коммитом и меняет только документацию. История: код `47c0282`, review на `4347f95` — NOT READY (исправления `050ebe2`); review на `2b2e740` — NOT READY (`fdbe7fe`); review на `a3cbe31` — NOT READY, одна MEDIUM (`b3e758b`, `08ce6f6`); разделы «Review …» ниже.
+Дата проверок: 2026-10-22, 04:30–13:00 UTC. Входные данные: `docs/evidence/p1-01-guard-hook.md` (findings F1–F7, матрица D01–D53, пробы L01–L22) и находки review — перепроверены, а не приняты как решение.
 
-| Файл на `fdbe7fe` | sha256 |
+| Файл на `08ce6f6` | sha256 |
 |---|---|
 | `.claude/settings.json` | `9cb0b80f40f1e092ecd7a549e113aced1d52dd80d09ce4aaa84b13344b85ac37` |
 | `.claude/hooks/guard-git.sh` | `62d79cf12d71fc65f3b1f85034727b0ff913edb4960d7df5f63e667933d80b7e` |
-| `.claude/hooks/guard_git.py` | `a7f7781abe55723bbf9c44a0837f348af349f24bb1e806608d5488fffa49ee32` |
-| `tests/guard-git.test.mjs` | `5e3b9e0b2a7bb111154b34175e94d7b68687877c8903604ab30d92dd97e6d85f` |
+| `.claude/hooks/guard_git.py` | `5b2b0190efa3b4c3970a8cd7cc76a62dc5127f8c0000b59a22754dc73acb7538` |
+| `tests/guard-git.test.mjs` | `ef35bfdff323d9a26f1b94d56646552c2e6a09ff1acf14de400490746c2b7f11` |
 | `tests/fixtures/guard-git.base-1aa11d9.sh` (копия hook с base) | `b1d3439eddfd1637bf9e75ef8796cba6945c6174ae47ed294f208ec852a3e6bc` (совпадает с P1-01) |
 
 ## Итог
@@ -18,7 +18,7 @@ Base ветки: `1aa11d9d7a08b2b768b1dcff724724ee014d5f66`; после review �
 | Acceptance criterion (#17) | Результат | Основание |
 |---|---|---|
 | Пробы L01–L22 в живой облачной сессии: BLOCKED там, где ожидается; commit в task worktree проходит | **BLOCKED → вынесено в #21** | Решение founder: AC1 (живые пробы) вынесен в отдельный тикет #21, в этом PR живые пробы не требуются. Причина BLOCKED: в облачном thread'е Claude Code Projects permission rules и hooks из `.claude/settings.json` репозитория не применяются (документация, раздел F1). Это свойство среды, из репозитория не включается. Повторные пробы в этой сессии после изменения — по-прежнему NOT BLOCKED (часть C). Проба во вложенной локальной сессии `claude -p` отклонена классификатором auto mode (`[Create Unsafe Agents]`). Commit в task worktree проходит (`47c0282`) |
-| Регрессионный тест матрицы в CI зелёный | **PASS** | CI (P1-04, #15 в `main`): run `39749060140`, head `fdbe7fe` — success (`npm ci`, `npm run validate`, включая `npm test`); CI на HEAD с этой редакцией документа — в теле PR. Свежий clone `fdbe7fe`: `npm test` 234/234, `npm run validate` PASS |
+| Регрессионный тест матрицы в CI зелёный | **PASS** | CI (P1-04, #15 в `main`): run `39760750479`, head `08ce6f6` — success (`npm ci`, `npm run validate`, включая `npm test`); CI на HEAD с этой редакцией документа — в теле PR. Свежий clone `08ce6f6`: `npm test` 253/253, `npm run validate` PASS |
 | Hook с отсутствующим скриптом/ошибкой блокирует (fail closed) | **PASS** (тест), live — не проверено | `tests/guard-git.test.mjs`: D48 через командную строку из `settings.json` под `sh` и `bash`, отсутствие python3, отсутствие/падение анализатора — exit 2. `onFailure: "block"` поддерживается установленным CLI 2.1.307 (раздел F2) |
 
 ## F1: почему deny и hook не применяются в этой сессии
@@ -76,13 +76,13 @@ Base ветки: `1aa11d9d7a08b2b768b1dcff724724ee014d5f66`; после review �
 
 ## F3–F5: новый guard
 
-Конструкция (решение оркестратора после review `2b2e740`): **подстрочные правила base-hook (`1aa11d9`) применяются к сырому тексту каждой строки всегда** — без исключений для «чистых» строк, инертных программ и текста в `-m`. Анализатор `guard_git.py` только добавляет блоки поверх (union). Поэтому «ничего из того, что блокировал base, не проходит» верно по построению; единственное намеренное отличие — F4: ветка для правила commit/merge/rebase/cherry-pick берётся по `cwd` payload, а не по `CLAUDE_PROJECT_DIR`. Ложные срабатывания base (F5: текст в `echo`/`grep`/`-m`, ветки `main<суффикс>`, `HEAD:mainline`) сохранены намеренно; их исправление — follow-up (тикет заведёт оркестратор).
+Конструкция (решение оркестратора после review `2b2e740`): **подстрочные правила base-hook (`1aa11d9`) применяются к сырому тексту каждой строки всегда** — без исключений для «чистых» строк, инертных программ и текста в `-m`. Анализатор `guard_git.py` только добавляет блоки поверх (union). Поэтому «ничего из того, что блокировал base, не проходит» верно по построению; единственное намеренное отличие — F4: правило commit/merge/rebase/cherry-pick проверяет ветку репозитория из `cwd` payload; `CLAUDE_PROJECT_DIR` проверяется **дополнительно**, если в строке есть программа, которую анализатор не разбирает (интерпретатор `python3`/`node`/`perl`…, `npm`, скрипт `bash run.sh`, `sh` без `-c`, `find`, `test -v`, вычисляемое имя программы, git с подкомандой, которой нет среди встроенных, — она запускает внешнюю `git-<sub>`): такая программа может сменить каталог. Блок — если любой из каталогов на `main` или ветку не определить. Если в строке только git и «прозрачные» программы (`cd`, `echo`, `ls`, `cat`, `[ … ]` без `-v` и т. п.), `CLAUDE_PROJECT_DIR` не проверяется — так commit в task worktree проходит, когда сессия стартовала в основном checkout на `main`. Ложные срабатывания base (F5: текст в `echo`/`grep`/`-m`, ветки `main<суффикс>`, `HEAD:mainline`) сохранены намеренно; их исправление — follow-up (тикет заведёт оркестратор).
 
 Анализатор разбирает команду, а не ищет подстроки:
 - токенизация: кавычки, экранирование, `;` `&&` `||` `|` `&` перевод строки, скобки, комментарии, перенаправления, heredoc, `$(...)` и обратные кавычки (анализируются рекурсивно);
 - снятие обёрток (`env`, `sudo`, `timeout`, `nice`, `nohup`, `time`, `command`, `exec`, `xargs`, `find -exec`, `watch`), рекурсивный разбор `bash -c`/`sh -c`, `eval`, `env -S`, git alias (`-c alias.*` и из config репозитория), `rebase --exec`, `bisect run`, `submodule foreach`;
 - git: глобальные опции `-C`, `-c`, `--git-dir`, `--work-tree`; push — refspec с `+`, `refs/heads/`, `HEAD`/`@`, удаление, шаблоны, `--all`/`--branches`/`--mirror`/`--prune`, сокращения длинных опций — любой префикс опасной опции считается ею (`--h`, `--de`, `--forc`, `--f`, `--m`; неоднозначное сокращение git отвергнет сам), неявное назначение (`push.default`, upstream, `remote.*.push`), `remote.<name>.mirror` (из `-c` и config — блок любого push), `remote.<name>.push` при refspec без `:` — блок; `reset --hard`; `clean` — разрешён только dry-run без force; `branch -D`/`--delete --force`; `worktree remove -f/--force`;
-- ветка для commit/merge/rebase/cherry-pick/revert/am — по полю `cwd` payload, затем `cd`/`pushd`/`env -C`/`sudo -D`/`git -C` внутри команды и `checkout`/`switch` раньше в той же команде; `CLAUDE_PROJECT_DIR` не используется (F4). Неизвестный каталог, не-репозиторий, вычисляемый путь, изменение `GIT_*` в команде → блок (fail closed);
+- ветка для commit/merge/rebase/cherry-pick/revert/am — по полю `cwd` payload, затем `cd`/`pushd`/`env -C`/`sudo -D`/`git -C` внутри команды и `checkout`/`switch` раньше в той же команде; `CLAUDE_PROJECT_DIR` — только для правила base при непрозрачной программе в строке (F4, выше). Неизвестный каталог, не-репозиторий, вычисляемый путь, изменение `GIT_*` в команде → блок (fail closed);
 - динамические слова: `$var`, `$(...)`, brace expansion (`{a,b}`, `{1..3}`), glob (`*`, `?`, `[...]`), extglob (`@(...)`) — значение известно только при выполнении. Динамические подкоманда git, глобальная опция, любой аргумент push, опции `reset`/`clean`/`branch`/`worktree` → блок;
 - состояние внутри одного вызова Bash (общее и для `bash -c`, alias, `$(...)`): `checkout`/`switch`, `branch -m/-M/-c/-C`, `symbolic-ref HEAD …` раньше в команде добавляют ветки-кандидаты для commit/merge/… и для `push HEAD`/`@`; запись `git config`, upstream (`branch -u`, `--track`, `push -u`, создание ветки), `git remote` раньше в команде → push без refspec и неизвестный alias блокируются;
 - git, который запускает сам hook (`symbolic-ref`, `config --get`), — абсолютный путь из PATH самого hook. Из переменных команды проходят только `GIT_DIR`, `GIT_WORK_TREE`, `GIT_COMMON_DIR`, `GIT_CONFIG*`, `HOME`, `XDG_CONFIG_HOME`. Если команда меняет `PATH`, `LD_*`, `DYLD_*` (префикс, `env`, `export`, `+=`) — блок без запуска git;
@@ -118,29 +118,58 @@ Base ветки: `1aa11d9d7a08b2b768b1dcff724724ee014d5f66`; после review �
 | L1 LOW | `git switch -c y && git push -u origin HEAD` блокируется с checkout на `main` | не исправлено: известное ложное срабатывание (кандидаты HEAD — текущая ветка плюс переключения) | L1 (ожидание block) |
 | L2 LOW | в evidence fuzz-расхождения — «только mainx», а их больше | правила base безусловны: расхождений нет (fuzz ниже); формы ревьюера в дифференциальном корпусе | X-mainfeature2, X-grepf |
 
+### Review a3cbe31: находка и исправление
+
+M-F4 (MEDIUM): правило base для commit проверяло только репозиторий из `cwd`. При `cwd` = task worktree и `CLAUDE_PROJECT_DIR` = основной checkout на `main` строка с интерпретатором, который сам меняет каталог, проходила; base её блокировал (по `CLAUDE_PROJECT_DIR`), и коммит попал бы в `main`. Fuzz в прошлой редакции шёл с `cwd` = `CLAUDE_PROJECT_DIR` и этот случай не видел.
+
+Воспроизведено до исправления (пробы, base и `a3cbe31`, `cwd` = task, `CLAUDE_PROJECT_DIR` = main): `python3 -c "…os.chdir('<main>'); os.system('true; git commit …')"`, тот же сценарий через `node -e` и `perl -e`, `$RUNNER sh -c 'cd <main> && git commit -m x'`, `bash run.sh; git commit -m x`, `find <main> -maxdepth 0 -execdir git commit -m x \;` — base block, new allow.
+
+Исправление (`b3e758b`; `08ce6f6` — по результату fuzz ниже: внешняя git-подкоманда `git -C /tmp python3 -c …` тоже непрозрачна): если правило совпало и в строке есть непрозрачная программа, проверяется и `CLAUDE_PROJECT_DIR`; `CLAUDE_PROJECT_DIR` не задан или не абсолютный → блок. Вычисляемая программа-обёртка (`$RUNNER …`) — её аргументы анализируются как команда в неизвестном каталоге: `$RUNNER sh -c "git commit -m x"` блокируется и при `cwd` = `CLAUDE_PROJECT_DIR` = task (base его пропускал).
+
+Тесты: F01–F11 block, F12 и F20–F25 allow; новый дифференциальный тест «cwd = task worktree, CLAUDE_PROJECT_DIR = основной checkout»: по всему корпусу base block → new allow допускается только для строк, которые независимый оракул в тесте признаёт прозрачными (головы сегментов из фиксированного списка, без `$`/обратных кавычек и `-v`); контроль — такие расхождения есть. Оракул знает обёртки, которые не меняют каталог (`timeout N`, `env` без `-C`/`-S`, `nice`, `nohup`, `time`, `command`).
+
 ### Регрессионный тест (`tests/guard-git.test.mjs`, в `npm test`)
 
 Временная структура как в CLAUDE.md: основной checkout на `main`, worktree на task-ветке, worktree с upstream `main`, detached worktree, каталог без git; изолированный git config. Команды передаются hook в payload и не исполняются.
 
-| Группа | Случаи | Результат на `fdbe7fe` |
+| Группа | Случаи | Результат на `08ce6f6` |
 |---|---|---|
 | Матрица P1-01 | D01–D53: D11 и D12 — в обоих условиях (a/b/c), D29 — в обе стороны, D32/D33/D49/D50 — с разными `CLAUDE_PROJECT_DIR` | PASS |
 | Обходы и fail closed | E01–E72 | PASS |
 | Review 4347f95 | B01–B35 (brace/glob), S01–S26 (состояние в команде), P01–P11 (PATH/LD_*), C01–C10 (вычисляемое имя) | PASS |
 | Review 2b2e740 | R01–R35 (H1, H2, M1, M2), L1 | PASS |
+| Review a3cbe31 | F01–F25 (M-F4, `cwd` ≠ `CLAUDE_PROJECT_DIR`) | PASS |
 | D46/D47, D48 и одно сообщение при блоке (`sh` и `bash`), settings, нет python3, нет/падает анализатор, fake git в PATH | 11 тестов | PASS |
-| Дифференциальный тест против base-hook (fixture) | весь корпус выше (включая B/S/P/C/R и формы L2) в двух каталогах: всё, что блокировал base, блокируется и сейчас — **без исключений** | PASS |
-| Всего `npm test` (content 7 + guard 227) | 234 | PASS (свежий clone, `npm ci`; CI run `39749060140`) |
+| Дифференциальный тест против base-hook (fixture) | весь корпус выше (включая B/S/P/C/R и формы L2) в двух каталогах (`cwd` = `CLAUDE_PROJECT_DIR`): всё, что блокировал base, блокируется и сейчас — **без исключений**; третья конфигурация `cwd` = task, `CLAUDE_PROJECT_DIR` = main: исключения только F4 для прозрачных строк (оракул) | PASS |
+| Всего `npm test` (content 7 + guard 246) | 253 | PASS (свежий clone `08ce6f6`, `npm ci`; CI run `39760750479`) |
 
 Изменения ожидания по сравнению с P1-01 (все — по тексту findings):
 - было ALLOW, теперь BLOCK — 19 безусловных обходов F3 (D03–D05, D07–D09, D15, D17, D18, D20, D21, D25–D27, D30, D31, D37, D39, D51) и условные D11b/c, D12b;
-- было BLOCK, теперь ALLOW — только F4: D49, D50 (commit в task worktree, когда `CLAUDE_PROJECT_DIR` — основной checkout на `main`);
+- было BLOCK, теперь ALLOW — только F4: D49, D50, F12, F20–F23, F25 (commit в task worktree, когда `CLAUDE_PROJECT_DIR` — основной checkout на `main`, а в строке нет непрозрачных программ);
+- известное ложное срабатывание, как в base: F07 `npm test && git commit -m x` при `CLAUDE_PROJECT_DIR` на `main` — разбить на два вызова;
 - ложные срабатывания F5 — D42 (`maintenance`), D43 (`echo`), D44 (`git log --grep`), E26 (`HEAD:mainline`), E34 (текст в `-m`) — остаются BLOCK, как в base (follow-up). D29b (`cd <task> && git commit` из checkout на `main`) — BLOCK: правило base проверяет ветку по `cwd` payload; известное ложное срабатывание;
 - D48: было exit 127 (fail open), теперь exit 2.
 
 ### Проверка «не ослабляет» сверх теста
 
-Дифференциальный fuzz (скрипт в scratchpad, вне репозитория) на коде `fdbe7fe`: 29 опасных команд (добавлены `git push origin main:feature`, `git push origin x` и форма H1 `echo $'\'' ; git push origin main # '`) и для каждой 6 форм с brace/glob/extglob (`x{,}`, `{x,}`, `x*`, `x[y]`, `@(x)`, `{подкоманда,}`) — 203 ядра × 12 префиксов (в том числе `ls *.md; ` и `X={a,b} `) × до 9 суффиксов (добавлен `; grep -f pat file`) = 19 691 команда, каждая в двух каталогах: worktree на task-ветке и checkout на `main` (scratch-репозиторий, `cwd` = `CLAUDE_PROJECT_DIR`). Итого **39 382 случая: base блокирует, а новый пропускает — 0**. Кодов выхода, кроме 0 и 2, у нового hook нет.
+Дифференциальный fuzz (скрипт в scratchpad, вне репозитория) на коде `08ce6f6`.
+
+Корпус:
+- 30 опасных команд: команды прошлой редакции, плюс `git push origin main:feature`, `git push origin x`, форма H1 `echo $'\'' ; git push origin main # '` и `python3 -c "import os; os.chdir('<main>'); os.system('true; git commit -m x')"`;
+- для каждой — 6 форм с brace/glob/extglob, всего 210 ядер;
+- 16 префиксов, в том числе `npm test && `, `python3 x.py; `, `$RUNNER `, `bash run.sh; `;
+- до 6 суффиксов;
+- три конфигурации каталогов: (а) `cwd` = `CLAUDE_PROJECT_DIR` = task worktree, (б) `cwd` = `CLAUDE_PROJECT_DIR` = checkout на `main`, (в) `cwd` = task worktree, `CLAUDE_PROJECT_DIR` = checkout на `main`.
+
+Итого **51 030 случаев**:
+- в (а) и (б) base блокирует, а новый пропускает — **0**;
+- в (в) — 900 случаев, и все признаны намеренным F4 тем же оракулом, что и в тесте (строки только из git и прозрачных программ, например `timeout 9 git commit -m x`, `git commit -m x ; ls`); неожиданных расхождений — **0**.
+
+Коды выхода нового hook — только 0 и 2.
+
+Первый прогон этой конфигурации на `0a16ee2` дал 228 неожиданных случаев. 200 из них — `timeout 9 git …` и `env git …`: обёртки, которые не меняют каталог; это ошибка оракула, он исправлен. 28 — `git -C /tmp python3 -c "…chdir(<main>)…git commit…"`: внешняя git-подкоманда; это настоящий пропуск, исправлен в `08ce6f6` (тест F11).
+
+Предыдущая редакция (`fdbe7fe`, только `cwd` = `CLAUDE_PROJECT_DIR`): 39 382 случая, 0 расхождений.
 
 L2, точный список расхождений на прошлых итерациях (теперь закрыты безусловными правилами base):
 - `2b2e740`, fuzz 30 940 случаев: 126 расхождений, все `git push origin mainx …` (63 в task worktree + 63 на `main`; префиксы и суффиксы корпуса); fuzz не содержал форм ревьюера, поэтому вывод «только mainx» был неполным;
@@ -204,3 +233,4 @@ git commit --allow-empty -m x  (task worktree)   → проходит
 5. Новые блоки ради fail closed (могут мешать штатной работе, все — при неизвестном итоге): git после `export PATH=…`/`alias`/`hash` в той же команде; `git push` без refspec после переключения ветки или записи config в той же команде; `git --git-dir=$X …`; вычисляемое имя программы с первым аргументом `push`/`config`/`commit` и т. п.
 6. Deny-список (F6) и matcher для GitHub MCP (F8) — вне scope, follow-up.
 7. Ложные срабатывания F5 сохранены намеренно (правила base безусловны) — follow-up; L1 и D29b — известные ложные срабатывания.
+8. F4: строка с commit/merge/rebase/cherry-pick и непрозрачной программой (например `npm test && git commit`) при `CLAUDE_PROJECT_DIR` на `main` блокируется, как в base (F07). Вычисляемая программа-обёртка (`$RUNNER git …`) анализируется в неизвестном каталоге, поэтому push и commit через неё блокируются.
