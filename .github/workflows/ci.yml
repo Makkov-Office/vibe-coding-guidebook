@@ -5,6 +5,9 @@ name: CI
 
 on:
   # No branch filter: stacked PRs (base other than main) are checked too.
+  # Default types (opened, synchronize, reopened). `edited` is left out on
+  # purpose: a job skipped by `if` reports a `validate` check as success and
+  # every title/body edit would create one; see PR #15 for the base-change case.
   pull_request:
   push:
     branches: [main]
@@ -13,10 +16,10 @@ permissions:
   contents: read
 
 concurrency:
-  # One run per PR (or per ref for push). A new push to a PR cancels the
-  # outdated run; runs on main are never cancelled, every main commit keeps
-  # its own result.
-  group: ci-${{ github.event.pull_request.number || github.ref }}
+  # PR: one group per PR, a new push cancels the outdated run.
+  # Push to main: one group per commit SHA, so a newer main commit never
+  # cancels a running or pending run of an older one; each keeps its result.
+  group: ci-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('push-{0}', github.sha) }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
