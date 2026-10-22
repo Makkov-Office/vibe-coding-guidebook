@@ -39,13 +39,6 @@ jobs:
       - name: npm ci
         run: npm ci
 
-      - name: TEMP probe — changed Mermaid diagram without SVG (reverted next commit)
-        run: |
-          sed -i 's/P\[Parse и inspect как данные\]/P[Parse и inspect как данные, probe]/' content/handbook.md
-          grep -q 'как данные, probe' content/handbook.md
-          npm run content
-          git status --short
-
       - name: npm run validate
         run: npm run validate
 
