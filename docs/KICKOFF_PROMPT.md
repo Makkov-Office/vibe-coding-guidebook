@@ -1,3 +1,5 @@
+> **Заменён (22.10.2026).** Этот промпт больше не используется. Актуальный стартовый промпт — [`docs/ORCHESTRATOR_PROMPT.md`](ORCHESTRATOR_PROMPT.md). Файл сохранён для истории.
+
 # Стартовый промпт для Claude Code
 
 Вставь блок ниже первым сообщением в новую сессию Claude Code (claude.ai/code → репозиторий `Makkov-Office/vibe-coding-guidebook`). Бриф лежит в `docs/PLATFORM_BRIEF.md`, правила — в `AGENTS.md` и `CLAUDE.md`.
