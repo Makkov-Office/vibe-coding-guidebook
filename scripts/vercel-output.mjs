@@ -1,6 +1,8 @@
 // Vercel static export (P1-06, ADR-0002): turns the existing build into a
 // Build Output API v3 directory. Run after `npm run build`:
-//   node scripts/vercel-output.mjs [--out <dir>]   (default .vercel/output)
+//   node scripts/vercel-output.mjs [--out <dir>/.vercel/output]
+//   (default .vercel/output; any other shape of --out is refused, since the
+//   directory is deleted and rewritten)
 //
 // Input, all produced by `npm run build` and not changed here:
 //   dist/client                      public assets (/_next/static, fonts, ...)
@@ -19,10 +21,38 @@
 // Fails closed (exit 1) on anything it does not recognise.
 import fs from "node:fs";
 import path from "node:path";
+import { parseArgs } from "node:util";
+
+function fail(message) {
+  console.error(`vercel-output: FAIL ${message}`);
+  process.exit(1);
+}
 
 const root = process.cwd();
-const outArg = process.argv.indexOf("--out");
-const out = path.resolve(root, outArg === -1 ? ".vercel/output" : process.argv[outArg + 1] ?? "");
+let parsed;
+try {
+  parsed = parseArgs({ options: { out: { type: "string" } }, strict: true, allowPositionals: false });
+} catch (error) {
+  fail(`arguments: ${error.message}`);
+}
+// <out> is deleted and rewritten, so it must be a directory named `output`
+// inside a directory named `.vercel` (the Build Output API location), must
+// not contain the project, and must not lie inside dist, node_modules or .git.
+const outValue = parsed.values.out ?? ".vercel/output";
+if (outValue.trim() === "") fail("--out is empty");
+const out = path.resolve(root, outValue);
+const inside = (child, parent) => {
+  const relative = path.relative(parent, child);
+  return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
+};
+if (path.basename(out) !== "output" || path.basename(path.dirname(out)) !== ".vercel") fail(`--out ${outValue}: must be <dir>/.vercel/output`);
+if (inside(root, out)) fail(`--out ${outValue}: contains the project`);
+for (const protectedDir of ["dist", "node_modules", ".git"]) {
+  if (inside(out, path.join(root, protectedDir))) fail(`--out ${outValue}: inside ${protectedDir}`);
+}
+for (const existing of [path.dirname(out), out]) {
+  if (fs.existsSync(existing) && fs.lstatSync(existing).isSymbolicLink()) fail(`--out ${outValue}: ${existing} is a symlink`);
+}
 const clientDir = path.join(root, "dist/client");
 const serverDir = path.join(root, "dist/server");
 const prerenderDir = path.join(serverDir, "prerendered-routes");
@@ -34,11 +64,6 @@ const CLOUDFLARE_CONFIG = new Set(["_headers", ".assetsignore"]);
 // Same Vary as the Vinext server sends for HTML and RSC responses.
 const VARY = "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Next-Url, X-Vinext-Interception-Context, X-Vinext-Mounted-Slots, X-Vinext-Rsc-Render-Mode";
 const UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g;
-
-function fail(message) {
-  console.error(`vercel-output: FAIL ${message}`);
-  process.exit(1);
-}
 
 function walk(directory, base = directory) {
   const files = [];
@@ -103,7 +128,12 @@ for (const route of manifest.routes) {
     if (segment.startsWith(":")) params[segment.slice(1)] = pathSegments[index];
     else if (segment !== pathSegments[index]) fail(`route ${route.route}: path ${urlPath} does not match`);
   });
-  pages.push({ urlPath, file, params, link: route.headers?.link ?? null });
+  // Only `link` (preload hints) is known; any other prerender header is a FAIL.
+  const routeHeaders = route.headers ?? {};
+  for (const key of Object.keys(routeHeaders)) {
+    if (key.toLowerCase() !== "link") fail(`route ${urlPath}: prerender header ${key} is not supported`);
+  }
+  pages.push({ urlPath, file, params, link: routeHeaders.link ?? null });
 }
 if (!notFound || !fs.existsSync(path.join(prerenderDir, "404.html"))) fail("404.html is missing");
 const prerenderFiles = walk(prerenderDir);
@@ -132,8 +162,14 @@ if (headerRoutes.length === 0) fail("_headers has no rules");
 
 // 4. Static files: dist/client minus Cloudflare-only files, plus the
 //    prerendered HTML and RSC. A name clash between the two is a FAIL.
-const ignored = fs.readFileSync(path.join(clientDir, ".assetsignore"), "utf8").split(/\r?\n/).map((entry) => entry.trim()).filter(Boolean);
-const isIgnored = (file) => CLOUDFLARE_CONFIG.has(file) || ignored.some((entry) => file === entry || file.startsWith(`${entry}/`));
+//    .assetsignore uses gitignore syntax; only plain names are supported: a
+//    name without `/` matches that file or directory at any depth (as in
+//    gitignore). Globs, negation, anchors and paths are a FAIL.
+const ignored = fs.readFileSync(path.join(clientDir, ".assetsignore"), "utf8").split(/\r?\n/).map((entry) => entry.trim()).filter((entry) => entry && !entry.startsWith("#"));
+for (const entry of ignored) {
+  if (/[*?[\]!\\/]/.test(entry)) fail(`.assetsignore entry ${entry} is not supported`);
+}
+const isIgnored = (file) => CLOUDFLARE_CONFIG.has(file) || file.split("/").some((segment) => ignored.includes(segment));
 fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(staticDir, { recursive: true });
 const copied = new Set();

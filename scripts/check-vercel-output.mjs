@@ -22,18 +22,21 @@ import { createHash } from "node:crypto";
 import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
+import { parseArgs } from "node:util";
 import { chromium } from "@playwright/test";
 
-const args = process.argv.slice(2);
-const option = (name, fallback) => {
-  const index = args.indexOf(name);
-  return index === -1 ? fallback : args[index + 1];
-};
+// Strict: an unknown option or an option without its value is an error.
+const { values } = parseArgs({
+  options: { out: { type: "string" }, url: { type: "string" }, variant: { type: "string" }, json: { type: "string" } },
+  strict: true,
+  allowPositionals: false,
+});
+for (const [name, value] of Object.entries(values)) if (value.trim() === "") throw new Error(`--${name} is empty`);
 const root = process.cwd();
-const outDir = path.resolve(root, option("--out", ".vercel/output"));
-const remote = option("--url", null);
-const variant = option("--variant", "full");
-const jsonFile = option("--json", null);
+const outDir = path.resolve(root, values.out ?? ".vercel/output");
+const remote = values.url ?? null;
+const variant = values.variant ?? "full";
+const jsonFile = values.json ?? null;
 if (!["full", "no-compat", "no-rsc"].includes(variant)) throw new Error(`unknown variant ${variant}`);
 if (remote && variant !== "full") throw new Error("--variant works only locally");
 
@@ -80,9 +83,15 @@ function startEmulator() {
   // with `handle: filesystem` (checked after a filesystem miss) and
   // `handle: error` (checked when the result is 404). `vercel build` adds the
   // error section itself, so its position in the array varies.
+  // Keys the emulation implements; any other route key (check, methods,
+  // transforms, locale, middlewarePath, ...) fails instead of being ignored.
+  const SOURCE_KEYS = new Set(["src", "dest", "headers", "status", "continue", "caseSensitive", "has", "missing"]);
+  const HANDLER_KEYS = new Set(["handle"]);
   const sections = { main: [] };
   let section = "main";
   for (const route of routes) {
+    const known = route.handle ? HANDLER_KEYS : SOURCE_KEYS;
+    for (const key of Object.keys(route)) if (!known.has(key)) throw new Error(`route key ${key} is not emulated: ${JSON.stringify(route)}`);
     if (route.handle) {
       if (!["filesystem", "error"].includes(route.handle)) throw new Error(`handle ${route.handle} is not emulated`);
       section = route.handle;
@@ -99,7 +108,9 @@ function startEmulator() {
       if (condition.type === "header") actual = request.headers[condition.key.toLowerCase()];
       else if (condition.type === "query") actual = url.searchParams.get(condition.key) ?? undefined;
       else throw new Error(`condition ${condition.type} is not emulated`);
-      const matches = actual !== undefined && (condition.value === undefined || actual === condition.value);
+      // A string value is regex-like on Vercel; matched here as a full regex.
+      if (condition.value !== undefined && typeof condition.value !== "string") throw new Error(`MatchableValue ${JSON.stringify(condition.value)} is not emulated`);
+      const matches = actual !== undefined && (condition.value === undefined || new RegExp(`^(?:${condition.value})$`).test(actual));
       return matches === wanted;
     });
     return test(route.has, true) && test(route.missing, false);
