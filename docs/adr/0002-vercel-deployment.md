@@ -157,5 +157,5 @@ Evidence — раздел ниже и PR. Команды в свежем `git cl
 22.10.2026, preview `dpl_DWbnTrFD1AgNrNrMtGPbuidg3KPG` (SHA `e36fb13`, target preview), доступ через share-ссылку Vercel MCP (cookie `_vercel_jwt` в `CHECK_COOKIE`; Deployment Protection не менялась). Закрывает INCOMPLETE из «P1-07: evidence»:
 
 - `node scripts/check-vercel-output.mjs --url <preview>` — PASS 155/155 на реальном CDN Vercel: HTTP HTML и RSC (`RSC: 1` → `text/x-component` с compatibility id), direct, refresh и SPA-переход без загрузки документа на 29/29 страницах, `/handbook.md`, 404 (6/6), `/chapters/01/` → 308 `/chapters/01`, `/_next/static/*` — `immutable`, ошибок страниц нет.
-- Parity с ChatGPT Sites (версия 20) — `docs/audits/parity-2026-10-22.md`: контент и якоря 30/30, скриншоты 60/60 равны; расхождения — ожидаемые из P1-12 и заголовки HTTP.
+- Parity с ChatGPT Sites (версия 20) — `docs/audits/parity-2026-10-22.md`: контент и якоря 29/29 страниц, скриншоты 60/60 равны в пределах допуска; расхождения — ожидаемые из P1-12 и заголовки HTTP; страница 404 падает в экран ошибки на обоих сайтах (B1, решение founder).
 - На preview Vercel добавляет `X-Robots-Tag: noindex`; для production проверить отдельно при его включении.

@@ -2,7 +2,8 @@
 // reference (ChatGPT Sites, version 20) and the candidate (Vercel preview).
 // Read-only: GET requests and a headless browser; nothing is changed on either site.
 //   CHROMIUM_PATH=/path/to/chrome CHECK_COOKIE=name=value \
-//     node scripts/parity-audit.mjs --old <origin> --new <origin> --out <dir>
+//     node scripts/parity-audit.mjs --old <origin> --new <origin> --out <dir> [--note <text>]
+// --note is stored in parity.json (revision, deployment id) to bind the run.
 // CHECK_COOKIE (optional) is sent only to --new (Vercel Authentication share
 // link); never printed. Writes <out>/parity.json, first-screen WebP of both
 // sites (<out>/shots/<width>/<slug>.<old|new>.webp) and, where the full pages
@@ -18,7 +19,7 @@ import { chromium } from "@playwright/test";
 import sharp from "sharp";
 
 const { values } = parseArgs({
-  options: { old: { type: "string" }, new: { type: "string" }, out: { type: "string" }, routes: { type: "string" } },
+  options: { old: { type: "string" }, new: { type: "string" }, out: { type: "string" }, routes: { type: "string" }, note: { type: "string" } },
   strict: true,
   allowPositionals: false,
 });
@@ -40,7 +41,7 @@ const sha = (buffer) => createHash("sha256").update(buffer).digest("hex");
 const norm = (text) => text.replace(/\s+/g, " ").trim();
 
 // errors: a check could not run (exit 1); pageErrors: uncaught exceptions of the sites themselves, compared, not fatal.
-const report = { generated: new Date().toISOString(), origins: { old: origins.old, new: origins.new }, http: {}, pages: {}, screenshots: {}, behaviour: {}, pageErrors: { old: [], new: [] }, hydration: { old: [], new: [] }, errors: [] };
+const report = { generated: new Date().toISOString(), note: values.note ?? null, origins: { old: origins.old, new: origins.new }, http: {}, pages: {}, screenshots: {}, behaviour: {}, pageErrors: { old: [], new: [] }, hydration: { old: [], new: [] }, errors: [] };
 
 // ---------- HTTP ----------
 async function get(site, pathname) {
@@ -181,6 +182,10 @@ for (const viewport of widths) {
           status: { old: old.status, new: candidate.status },
           title: old.title === candidate.title, h1: old.h1 === candidate.h1, h1Text: candidate.h1,
           text: norm(old.text) === norm(candidate.text), textLength: { old: norm(old.text).length, new: norm(candidate.text).length },
+          // Equal but empty proves nothing: no reader text on either side (an error screen, a crashed route).
+          vacuous: !norm(old.text) && !norm(candidate.text),
+          // The framework's client error screen replaces the page when rendering throws.
+          errorScreen: { old: /couldn.t load/i.test(old.h1), new: /couldn.t load/i.test(candidate.h1) },
           ids: { old: old.ids.length, new: candidate.ids.length, missing, extra },
           links: JSON.stringify(old.links) === JSON.stringify(candidate.links),
           terms: { old: old.terms, new: candidate.terms },
@@ -328,7 +333,9 @@ fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, "parity.json"), `${JSON.stringify(report, null, 2)}\n`);
 const pageRows = Object.entries(report.pages);
 const shots = Object.values(report.screenshots);
-console.log(`pages: ${pageRows.length}, text equal ${pageRows.filter(([, row]) => row.text).length}, ids equal ${pageRows.filter(([, row]) => !row.ids.missing.length && !row.ids.extra.length).length}`);
+console.log(`pages: ${pageRows.length}, text equal ${pageRows.filter(([, row]) => row.text && !row.vacuous).length}, ids equal ${pageRows.filter(([, row]) => !row.ids.missing.length && !row.ids.extra.length).length}`);
+console.log(`empty on both sides (vacuous): ${pageRows.filter(([, row]) => row.vacuous).map(([route]) => route).join(", ") || "none"}`);
+console.log(`client error screen: old ${pageRows.filter(([, row]) => row.errorScreen.old).map(([route]) => route).join(", ") || "none"}; new ${pageRows.filter(([, row]) => row.errorScreen.new).map(([route]) => route).join(", ") || "none"}`);
 console.log(`screenshots: ${shots.length} compared, identical ${shots.filter((shot) => shot.same).length}`);
 console.log(`not hydrated in 20 s: old ${report.hydration.old.length}, new ${report.hydration.new.length}`);
 console.log(`page errors: old ${report.pageErrors.old.length}, new ${report.pageErrors.new.length}`);

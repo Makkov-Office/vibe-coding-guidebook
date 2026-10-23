@@ -1,5 +1,6 @@
 {
-  "generated": "2026-10-22T20:41:04.655Z",
+  "generated": "2026-10-23T00:59:46.351Z",
+  "note": "new = Vercel preview dpl_DWbnTrFD1AgNrNrMtGPbuidg3KPG, SHA e36fb13ce00fab917ee1e8c07febfe672ee8e7c6 (site code = main d5e275c); old = ChatGPT Sites, version 20 (source a99332ce9cd9d8e40a88552c7803b5bd5ccbf0f7)",
   "origins": {
     "old": "https://agentic-engineering-handbook-makkov.makkov.chatgpt.site",
     "new": "https://vibe-coding-guidebook-mr1ee5og9-makkov-design.vercel.app"
@@ -76,6 +77,11 @@
         "old": 2597,
         "new": 2597
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 36,
         "new": 36,
@@ -101,6 +107,11 @@
       "textLength": {
         "old": 48862,
         "new": 48862
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 425,
@@ -128,6 +139,11 @@
         "old": 154796,
         "new": 154796
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 3529,
         "new": 3529,
@@ -153,6 +169,11 @@
       "textLength": {
         "old": 6839,
         "new": 6839
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 88,
@@ -180,6 +201,11 @@
         "old": 1315,
         "new": 1315
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 22,
         "new": 22,
@@ -205,6 +231,11 @@
       "textLength": {
         "old": 14533,
         "new": 14533
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 372,
@@ -232,6 +263,11 @@
         "old": 15277,
         "new": 15277
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 295,
         "new": 295,
@@ -257,6 +293,11 @@
       "textLength": {
         "old": 1560,
         "new": 1560
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 38,
@@ -284,6 +325,11 @@
         "old": 3244,
         "new": 3244
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 143,
         "new": 143,
@@ -309,6 +355,11 @@
       "textLength": {
         "old": 1993,
         "new": 1993
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 93,
@@ -336,6 +387,11 @@
         "old": 5089,
         "new": 5089
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 180,
         "new": 180,
@@ -361,6 +417,11 @@
       "textLength": {
         "old": 1707,
         "new": 1707
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 68,
@@ -388,6 +449,11 @@
         "old": 1027,
         "new": 1027
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 43,
         "new": 43,
@@ -413,6 +479,11 @@
       "textLength": {
         "old": 2813,
         "new": 2813
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 106,
@@ -440,6 +511,11 @@
         "old": 1706,
         "new": 1706
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 109,
         "new": 109,
@@ -465,6 +541,11 @@
       "textLength": {
         "old": 1114,
         "new": 1114
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 127,
@@ -492,6 +573,11 @@
         "old": 1750,
         "new": 1750
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 111,
         "new": 111,
@@ -517,6 +603,11 @@
       "textLength": {
         "old": 2625,
         "new": 2625
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 129,
@@ -544,6 +635,11 @@
         "old": 2020,
         "new": 2020
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 106,
         "new": 106,
@@ -569,6 +665,11 @@
       "textLength": {
         "old": 2717,
         "new": 2717
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 111,
@@ -596,6 +697,11 @@
         "old": 2201,
         "new": 2201
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 186,
         "new": 186,
@@ -621,6 +727,11 @@
       "textLength": {
         "old": 1551,
         "new": 1551
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 84,
@@ -648,6 +759,11 @@
         "old": 4202,
         "new": 4202
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 207,
         "new": 207,
@@ -673,6 +789,11 @@
       "textLength": {
         "old": 1952,
         "new": 1952
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 71,
@@ -700,6 +821,11 @@
         "old": 2528,
         "new": 2528
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 110,
         "new": 110,
@@ -725,6 +851,11 @@
       "textLength": {
         "old": 3802,
         "new": 3802
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 197,
@@ -752,6 +883,11 @@
         "old": 2114,
         "new": 2114
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 82,
         "new": 82,
@@ -777,6 +913,11 @@
       "textLength": {
         "old": 1347,
         "new": 1347
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
       },
       "ids": {
         "old": 89,
@@ -804,6 +945,11 @@
         "old": 1245,
         "new": 1245
       },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
       "ids": {
         "old": 73,
         "new": 73,
@@ -829,6 +975,11 @@
       "textLength": {
         "old": 0,
         "new": 0
+      },
+      "vacuous": true,
+      "errorScreen": {
+        "old": true,
+        "new": true
       },
       "ids": {
         "old": 1,
@@ -1657,20 +1808,7 @@
     ]
   },
   "hydration": {
-    "old": [
-      {
-        "route": "/chapters/11",
-        "attempt": 1,
-        "width": 360,
-        "seconds": 22
-      },
-      {
-        "route": "/chapters/22",
-        "attempt": 1,
-        "width": 360,
-        "seconds": 23
-      }
-    ],
+    "old": [],
     "new": []
   },
   "errors": []
