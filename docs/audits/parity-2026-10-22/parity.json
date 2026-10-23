@@ -1,0 +1,1815 @@
+{
+  "generated": "2026-10-23T00:59:46.351Z",
+  "note": "new = Vercel preview dpl_DWbnTrFD1AgNrNrMtGPbuidg3KPG, SHA e36fb13ce00fab917ee1e8c07febfe672ee8e7c6 (site code = main d5e275c); old = ChatGPT Sites, version 20 (source a99332ce9cd9d8e40a88552c7803b5bd5ccbf0f7)",
+  "origins": {
+    "old": "https://agentic-engineering-handbook-makkov.makkov.chatgpt.site",
+    "new": "https://vibe-coding-guidebook-mr1ee5og9-makkov-design.vercel.app"
+  },
+  "http": {
+    "old": {
+      "handbook": {
+        "status": 200,
+        "type": "text/markdown",
+        "bytes": 265802,
+        "sha256": "628d55368dc6d665d86f0ab73e8fbca9978c3ccb23cbe01a14100bb433e324af",
+        "equalsSource": false,
+        "equalsSourceIgnoringCR": true
+      },
+      "notFound": [
+        {
+          "route": "/nope",
+          "status": 404
+        },
+        {
+          "route": "/chapters/99",
+          "status": 404
+        },
+        {
+          "route": "/chapters",
+          "status": 404
+        }
+      ],
+      "trailingSlash": {
+        "status": 308,
+        "location": "/chapters/01"
+      }
+    },
+    "new": {
+      "handbook": {
+        "status": 200,
+        "type": "text/markdown; charset=utf-8",
+        "bytes": 265801,
+        "sha256": "3500def696dcd7322381a3c8fcca1fc736c5aebc6142fd48b2dc6a0d37c8ce89",
+        "equalsSource": true,
+        "equalsSourceIgnoringCR": true
+      },
+      "notFound": [
+        {
+          "route": "/nope",
+          "status": 404
+        },
+        {
+          "route": "/chapters/99",
+          "status": 404
+        },
+        {
+          "route": "/chapters",
+          "status": 404
+        }
+      ],
+      "trailingSlash": {
+        "status": 308,
+        "location": "/chapters/01"
+      }
+    }
+  },
+  "pages": {
+    "/": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "ULTIMATE Vibe-coder guidebook [BETA]",
+      "text": true,
+      "textLength": {
+        "old": 2597,
+        "new": 2597
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 36,
+        "new": 36,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 17,
+        "new": 17
+      },
+      "images": true
+    },
+    "/glossary": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "23. Полный тематический глоссарий#",
+      "text": true,
+      "textLength": {
+        "old": 48862,
+        "new": 48862
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 425,
+        "new": 425,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 0,
+        "new": 0
+      },
+      "images": true
+    },
+    "/print": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "",
+      "text": true,
+      "textLength": {
+        "old": 154796,
+        "new": 154796
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 3529,
+        "new": 3529,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 2929,
+        "new": 2929
+      },
+      "images": true
+    },
+    "/resources": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "Полезные материалы#",
+      "text": true,
+      "textLength": {
+        "old": 6839,
+        "new": 6839
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 88,
+        "new": 88,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 38,
+        "new": 38
+      },
+      "images": true
+    },
+    "/tools": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "Обзоры инструментов#",
+      "text": true,
+      "textLength": {
+        "old": 1315,
+        "new": 1315
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 22,
+        "new": 22,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 8,
+        "new": 8
+      },
+      "images": true
+    },
+    "/tools/claude-code": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "Claude Code: рабочий процесс внутри проекта#",
+      "text": true,
+      "textLength": {
+        "old": 14533,
+        "new": 14533
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 372,
+        "new": 372,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 266,
+        "new": 266
+      },
+      "images": true
+    },
+    "/tools/codex": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "Codex: от идеи до проверенного результата#",
+      "text": true,
+      "textLength": {
+        "old": 15277,
+        "new": 15277
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 295,
+        "new": 295,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 189,
+        "new": 189
+      },
+      "images": true
+    },
+    "/chapters/01": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "01. От vibe coding к инженерной системе#",
+      "text": true,
+      "textLength": {
+        "old": 1560,
+        "new": 1560
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 38,
+        "new": 38,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 34,
+        "new": 34
+      },
+      "images": true
+    },
+    "/chapters/02": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "02. Архитектура и источники истины#",
+      "text": true,
+      "textLength": {
+        "old": 3244,
+        "new": 3244
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 143,
+        "new": 143,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 219,
+        "new": 219
+      },
+      "images": true
+    },
+    "/chapters/03": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "03. Agent harness#",
+      "text": true,
+      "textLength": {
+        "old": 1993,
+        "new": 1993
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 93,
+        "new": 93,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 76,
+        "new": 76
+      },
+      "images": true
+    },
+    "/chapters/04": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "04. WSL2 Ubuntu + Dev Container#",
+      "text": true,
+      "textLength": {
+        "old": 5089,
+        "new": 5089
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 180,
+        "new": 180,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 167,
+        "new": 167
+      },
+      "images": true
+    },
+    "/chapters/05": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "05. Роли: Codex, Claude и человек#",
+      "text": true,
+      "textLength": {
+        "old": 1707,
+        "new": 1707
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 68,
+        "new": 68,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 54,
+        "new": 54
+      },
+      "images": true
+    },
+    "/chapters/06": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "06. Исполнимый тикет и Definition of Ready#",
+      "text": true,
+      "textLength": {
+        "old": 1027,
+        "new": 1027
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 43,
+        "new": 43,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 52,
+        "new": 52
+      },
+      "images": true
+    },
+    "/chapters/07": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "07. Полный lifecycle одной задачи#",
+      "text": true,
+      "textLength": {
+        "old": 2813,
+        "new": 2813
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 106,
+        "new": 106,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 225,
+        "new": 225
+      },
+      "images": true
+    },
+    "/chapters/08": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "08. Preflight: начать правильно#",
+      "text": true,
+      "textLength": {
+        "old": 1706,
+        "new": 1706
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 109,
+        "new": 109,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 91,
+        "new": 91
+      },
+      "images": true
+    },
+    "/chapters/09": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "09. Context engineering#",
+      "text": true,
+      "textLength": {
+        "old": 1114,
+        "new": 1114
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 127,
+        "new": 127,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 109,
+        "new": 109
+      },
+      "images": true
+    },
+    "/chapters/10": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "10. Spec, ADR и Docs Impact#",
+      "text": true,
+      "textLength": {
+        "old": 1750,
+        "new": 1750
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 111,
+        "new": 111,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 90,
+        "new": 90
+      },
+      "images": true
+    },
+    "/chapters/11": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "11. Git, GitHub и CI#",
+      "text": true,
+      "textLength": {
+        "old": 2625,
+        "new": 2625
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 129,
+        "new": 129,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 111,
+        "new": 111
+      },
+      "images": true
+    },
+    "/chapters/12": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "12. Change risk: Low / Medium / High#",
+      "text": true,
+      "textLength": {
+        "old": 2020,
+        "new": 2020
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 106,
+        "new": 106,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 88,
+        "new": 88
+      },
+      "images": true
+    },
+    "/chapters/13": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "13. Параллельные агенты: collisions и merge order#",
+      "text": true,
+      "textLength": {
+        "old": 2717,
+        "new": 2717
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 111,
+        "new": 111,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 117,
+        "new": 117
+      },
+      "images": true
+    },
+    "/chapters/14": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "14. Независимое review: author ≠ reviewer#",
+      "text": true,
+      "textLength": {
+        "old": 2201,
+        "new": 2201
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 186,
+        "new": 186,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 163,
+        "new": 163
+      },
+      "images": true
+    },
+    "/chapters/15": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "15. Founder / human gates#",
+      "text": true,
+      "textLength": {
+        "old": 1551,
+        "new": 1551
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 84,
+        "new": 84,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 69,
+        "new": 69
+      },
+      "images": true
+    },
+    "/chapters/16": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "16. Post-merge sync#",
+      "text": true,
+      "textLength": {
+        "old": 4202,
+        "new": 4202
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 207,
+        "new": 207,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 178,
+        "new": 178
+      },
+      "images": true
+    },
+    "/chapters/17": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "17. Security и least privilege#",
+      "text": true,
+      "textLength": {
+        "old": 1952,
+        "new": 1952
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 71,
+        "new": 71,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 67,
+        "new": 67
+      },
+      "images": true
+    },
+    "/chapters/18": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "18. Четыре типичных ошибки и как их предотвратить#",
+      "text": true,
+      "textLength": {
+        "old": 2528,
+        "new": 2528
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 110,
+        "new": 110,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 96,
+        "new": 96
+      },
+      "images": true
+    },
+    "/chapters/19": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "19. Failure modes и recovery#",
+      "text": true,
+      "textLength": {
+        "old": 3802,
+        "new": 3802
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 197,
+        "new": 197,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 180,
+        "new": 180
+      },
+      "images": true
+    },
+    "/chapters/20": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "20. Как повторить систему у себя#",
+      "text": true,
+      "textLength": {
+        "old": 2114,
+        "new": 2114
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 82,
+        "new": 82,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 66,
+        "new": 66
+      },
+      "images": true
+    },
+    "/chapters/21": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "21. Maturity model и будущий Agent Control Center#",
+      "text": true,
+      "textLength": {
+        "old": 1347,
+        "new": 1347
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 89,
+        "new": 89,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 115,
+        "new": 115
+      },
+      "images": true
+    },
+    "/chapters/22": {
+      "status": {
+        "old": 200,
+        "new": 200
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "22. Операционная памятка#",
+      "text": true,
+      "textLength": {
+        "old": 1245,
+        "new": 1245
+      },
+      "vacuous": false,
+      "errorScreen": {
+        "old": false,
+        "new": false
+      },
+      "ids": {
+        "old": 73,
+        "new": 73,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 57,
+        "new": 57
+      },
+      "images": true
+    },
+    "/nope": {
+      "status": {
+        "old": 404,
+        "new": 404
+      },
+      "title": true,
+      "h1": true,
+      "h1Text": "This page couldn’t load",
+      "text": true,
+      "textLength": {
+        "old": 0,
+        "new": 0
+      },
+      "vacuous": true,
+      "errorScreen": {
+        "old": true,
+        "new": true
+      },
+      "ids": {
+        "old": 1,
+        "new": 1,
+        "missing": [],
+        "extra": []
+      },
+      "links": true,
+      "terms": {
+        "old": 0,
+        "new": 0
+      },
+      "images": true
+    }
+  },
+  "screenshots": {
+    "1440 /": {
+      "same": true,
+      "old": "1440x3283",
+      "new": "1440x3283",
+      "differingPixels": 0,
+      "comparedPixels": 4727520,
+      "rows": null
+    },
+    "1440 /glossary": {
+      "same": true,
+      "old": "1440x46556",
+      "new": "1440x46556",
+      "differingPixels": 0,
+      "comparedPixels": 67040640,
+      "rows": null
+    },
+    "1440 /print": {
+      "same": true,
+      "old": "1440x145813",
+      "new": "1440x145813",
+      "differingPixels": 0,
+      "comparedPixels": 209970720,
+      "rows": null
+    },
+    "1440 /resources": {
+      "same": true,
+      "old": "1440x5759",
+      "new": "1440x5759",
+      "differingPixels": 0,
+      "comparedPixels": 8292960,
+      "rows": null
+    },
+    "1440 /tools": {
+      "same": true,
+      "old": "1440x1153",
+      "new": "1440x1153",
+      "differingPixels": 0,
+      "comparedPixels": 1660320,
+      "rows": null
+    },
+    "1440 /tools/claude-code": {
+      "same": true,
+      "old": "1440x16679",
+      "new": "1440x16679",
+      "differingPixels": 0,
+      "comparedPixels": 24017760,
+      "rows": null
+    },
+    "1440 /tools/codex": {
+      "same": true,
+      "old": "1440x17046",
+      "new": "1440x17046",
+      "differingPixels": 0,
+      "comparedPixels": 24546240,
+      "rows": null
+    },
+    "1440 /chapters/01": {
+      "same": true,
+      "old": "1440x1795",
+      "new": "1440x1795",
+      "differingPixels": 0,
+      "comparedPixels": 2584800,
+      "rows": null
+    },
+    "1440 /chapters/02": {
+      "same": true,
+      "old": "1440x4235",
+      "new": "1440x4235",
+      "differingPixels": 0,
+      "comparedPixels": 6098400,
+      "rows": null
+    },
+    "1440 /chapters/03": {
+      "same": true,
+      "old": "1440x2190",
+      "new": "1440x2190",
+      "differingPixels": 0,
+      "comparedPixels": 3153600,
+      "rows": null
+    },
+    "1440 /chapters/04": {
+      "same": true,
+      "old": "1440x4826",
+      "new": "1440x4826",
+      "differingPixels": 0,
+      "comparedPixels": 6949440,
+      "rows": null
+    },
+    "1440 /chapters/05": {
+      "same": true,
+      "old": "1440x1779",
+      "new": "1440x1779",
+      "differingPixels": 0,
+      "comparedPixels": 2561760,
+      "rows": null
+    },
+    "1440 /chapters/06": {
+      "same": true,
+      "old": "1440x1788",
+      "new": "1440x1788",
+      "differingPixels": 0,
+      "comparedPixels": 2574720,
+      "rows": null
+    },
+    "1440 /chapters/07": {
+      "same": true,
+      "old": "1440x3203",
+      "new": "1440x3203",
+      "differingPixels": 0,
+      "comparedPixels": 4612320,
+      "rows": null
+    },
+    "1440 /chapters/08": {
+      "same": true,
+      "old": "1440x1860",
+      "new": "1440x1860",
+      "differingPixels": 0,
+      "comparedPixels": 2678400,
+      "rows": null
+    },
+    "1440 /chapters/09": {
+      "same": true,
+      "old": "1440x1569",
+      "new": "1440x1569",
+      "differingPixels": 0,
+      "comparedPixels": 2259360,
+      "rows": null
+    },
+    "1440 /chapters/10": {
+      "same": true,
+      "old": "1440x2088",
+      "new": "1440x2088",
+      "differingPixels": 0,
+      "comparedPixels": 3006720,
+      "rows": null
+    },
+    "1440 /chapters/11": {
+      "same": true,
+      "old": "1440x2758",
+      "new": "1440x2758",
+      "differingPixels": 0,
+      "comparedPixels": 3971520,
+      "rows": null
+    },
+    "1440 /chapters/12": {
+      "same": true,
+      "old": "1440x1986",
+      "new": "1440x1986",
+      "differingPixels": 0,
+      "comparedPixels": 2859840,
+      "rows": null
+    },
+    "1440 /chapters/13": {
+      "same": true,
+      "old": "1440x3171",
+      "new": "1440x3171",
+      "differingPixels": 0,
+      "comparedPixels": 4566240,
+      "rows": null
+    },
+    "1440 /chapters/14": {
+      "same": true,
+      "old": "1440x2456",
+      "new": "1440x2456",
+      "differingPixels": 0,
+      "comparedPixels": 3536640,
+      "rows": null
+    },
+    "1440 /chapters/15": {
+      "same": true,
+      "old": "1440x1674",
+      "new": "1440x1674",
+      "differingPixels": 0,
+      "comparedPixels": 2410560,
+      "rows": null
+    },
+    "1440 /chapters/16": {
+      "same": true,
+      "old": "1440x3578",
+      "new": "1440x3578",
+      "differingPixels": 0,
+      "comparedPixels": 5152320,
+      "rows": null
+    },
+    "1440 /chapters/17": {
+      "same": true,
+      "old": "1440x2108",
+      "new": "1440x2108",
+      "differingPixels": 0,
+      "comparedPixels": 3035520,
+      "rows": null
+    },
+    "1440 /chapters/18": {
+      "same": true,
+      "old": "1440x2483",
+      "new": "1440x2483",
+      "differingPixels": 0,
+      "comparedPixels": 3575520,
+      "rows": null
+    },
+    "1440 /chapters/19": {
+      "same": true,
+      "old": "1440x3264",
+      "new": "1440x3264",
+      "differingPixels": 0,
+      "comparedPixels": 4700160,
+      "rows": null
+    },
+    "1440 /chapters/20": {
+      "same": true,
+      "old": "1440x2349",
+      "new": "1440x2349",
+      "differingPixels": 0,
+      "comparedPixels": 3382560,
+      "rows": null
+    },
+    "1440 /chapters/21": {
+      "same": true,
+      "old": "1440x1947",
+      "new": "1440x1947",
+      "differingPixels": 0,
+      "comparedPixels": 2803680,
+      "rows": null
+    },
+    "1440 /chapters/22": {
+      "same": true,
+      "old": "1440x2370",
+      "new": "1440x2370",
+      "differingPixels": 0,
+      "comparedPixels": 3412800,
+      "rows": null
+    },
+    "1440 /nope": {
+      "same": true,
+      "old": "1440x1000",
+      "new": "1440x1000",
+      "differingPixels": 0,
+      "comparedPixels": 1440000,
+      "rows": null
+    },
+    "360 /": {
+      "same": true,
+      "old": "360x4802",
+      "new": "360x4802",
+      "differingPixels": 0,
+      "comparedPixels": 1728720,
+      "rows": null
+    },
+    "360 /glossary": {
+      "same": true,
+      "old": "360x60457",
+      "new": "360x60457",
+      "differingPixels": 0,
+      "comparedPixels": 21764520,
+      "rows": null
+    },
+    "360 /print": {
+      "same": true,
+      "old": "360x191062",
+      "new": "360x191062",
+      "differingPixels": 0,
+      "comparedPixels": 68782320,
+      "rows": null
+    },
+    "360 /resources": {
+      "same": true,
+      "old": "360x8638",
+      "new": "360x8638",
+      "differingPixels": 0,
+      "comparedPixels": 3109680,
+      "rows": null
+    },
+    "360 /tools": {
+      "same": true,
+      "old": "360x1753",
+      "new": "360x1753",
+      "differingPixels": 0,
+      "comparedPixels": 631080,
+      "rows": null
+    },
+    "360 /tools/claude-code": {
+      "same": true,
+      "old": "360x17913",
+      "new": "360x17913",
+      "differingPixels": 0,
+      "comparedPixels": 6448680,
+      "rows": null
+    },
+    "360 /tools/codex": {
+      "same": true,
+      "old": "360x18664",
+      "new": "360x18664",
+      "differingPixels": 0,
+      "comparedPixels": 6719040,
+      "rows": null
+    },
+    "360 /chapters/01": {
+      "same": true,
+      "old": "360x2409",
+      "new": "360x2409",
+      "differingPixels": 0,
+      "comparedPixels": 867240,
+      "rows": null
+    },
+    "360 /chapters/02": {
+      "same": true,
+      "old": "360x5444",
+      "new": "360x5444",
+      "differingPixels": 0,
+      "comparedPixels": 1959840,
+      "rows": null
+    },
+    "360 /chapters/03": {
+      "same": true,
+      "old": "360x2938",
+      "new": "360x2938",
+      "differingPixels": 0,
+      "comparedPixels": 1057680,
+      "rows": null
+    },
+    "360 /chapters/04": {
+      "same": true,
+      "old": "360x6316",
+      "new": "360x6316",
+      "differingPixels": 0,
+      "comparedPixels": 2273760,
+      "rows": null
+    },
+    "360 /chapters/05": {
+      "same": true,
+      "old": "360x2229",
+      "new": "360x2229",
+      "differingPixels": 0,
+      "comparedPixels": 802440,
+      "rows": null
+    },
+    "360 /chapters/06": {
+      "same": true,
+      "old": "360x2146",
+      "new": "360x2146",
+      "differingPixels": 0,
+      "comparedPixels": 772560,
+      "rows": null
+    },
+    "360 /chapters/07": {
+      "same": true,
+      "old": "360x4275",
+      "new": "360x4275",
+      "differingPixels": 0,
+      "comparedPixels": 1539000,
+      "rows": null
+    },
+    "360 /chapters/08": {
+      "same": true,
+      "old": "360x2539",
+      "new": "360x2539",
+      "differingPixels": 0,
+      "comparedPixels": 914040,
+      "rows": null
+    },
+    "360 /chapters/09": {
+      "same": true,
+      "old": "360x1908",
+      "new": "360x1908",
+      "differingPixels": 0,
+      "comparedPixels": 686880,
+      "rows": null
+    },
+    "360 /chapters/10": {
+      "same": true,
+      "old": "360x2719",
+      "new": "360x2719",
+      "differingPixels": 0,
+      "comparedPixels": 978840,
+      "rows": null
+    },
+    "360 /chapters/11": {
+      "same": true,
+      "old": "360x3708",
+      "new": "360x3708",
+      "differingPixels": 0,
+      "comparedPixels": 1334880,
+      "rows": null
+    },
+    "360 /chapters/12": {
+      "same": true,
+      "old": "360x2592",
+      "new": "360x2592",
+      "differingPixels": 0,
+      "comparedPixels": 933120,
+      "rows": null
+    },
+    "360 /chapters/13": {
+      "same": true,
+      "old": "360x4164",
+      "new": "360x4164",
+      "differingPixels": 0,
+      "comparedPixels": 1499040,
+      "rows": null
+    },
+    "360 /chapters/14": {
+      "same": true,
+      "old": "360x3226",
+      "new": "360x3226",
+      "differingPixels": 0,
+      "comparedPixels": 1161360,
+      "rows": null
+    },
+    "360 /chapters/15": {
+      "same": true,
+      "old": "360x2201",
+      "new": "360x2201",
+      "differingPixels": 0,
+      "comparedPixels": 792360,
+      "rows": null
+    },
+    "360 /chapters/16": {
+      "same": true,
+      "old": "360x5168",
+      "new": "360x5168",
+      "differingPixels": 0,
+      "comparedPixels": 1860480,
+      "rows": null
+    },
+    "360 /chapters/17": {
+      "same": true,
+      "old": "360x2854",
+      "new": "360x2854",
+      "differingPixels": 0,
+      "comparedPixels": 1027440,
+      "rows": null
+    },
+    "360 /chapters/18": {
+      "same": true,
+      "old": "360x3586",
+      "new": "360x3586",
+      "differingPixels": 0,
+      "comparedPixels": 1290960,
+      "rows": null
+    },
+    "360 /chapters/19": {
+      "same": true,
+      "old": "360x4236",
+      "new": "360x4236",
+      "differingPixels": 0,
+      "comparedPixels": 1524960,
+      "rows": null
+    },
+    "360 /chapters/20": {
+      "same": true,
+      "old": "360x3150",
+      "new": "360x3150",
+      "differingPixels": 0,
+      "comparedPixels": 1134000,
+      "rows": null
+    },
+    "360 /chapters/21": {
+      "same": true,
+      "old": "360x2544",
+      "new": "360x2544",
+      "differingPixels": 0,
+      "comparedPixels": 915840,
+      "rows": null
+    },
+    "360 /chapters/22": {
+      "same": true,
+      "old": "360x2987",
+      "new": "360x2987",
+      "differingPixels": 0,
+      "comparedPixels": 1075320,
+      "rows": null
+    },
+    "360 /nope": {
+      "same": true,
+      "old": "360x800",
+      "new": "360x800",
+      "differingPixels": 0,
+      "comparedPixels": 288000,
+      "rows": null
+    }
+  },
+  "behaviour": {
+    "spa": {
+      "old": [
+        {
+          "from": "/",
+          "to": "/chapters/01",
+          "path": "/chapters/01",
+          "client": true,
+          "h1": "01. От vibe coding к инженерной системе#"
+        },
+        {
+          "from": "/chapters/01",
+          "to": "/glossary",
+          "path": "/glossary",
+          "client": true,
+          "h1": "23. Полный тематический глоссарий#"
+        },
+        {
+          "from": "/glossary",
+          "to": "/chapters/22",
+          "path": "/chapters/22",
+          "client": true,
+          "h1": "22. Операционная памятка#"
+        }
+      ],
+      "new": [
+        {
+          "from": "/",
+          "to": "/chapters/01",
+          "path": "/chapters/01",
+          "client": true,
+          "h1": "01. От vibe coding к инженерной системе#"
+        },
+        {
+          "from": "/chapters/01",
+          "to": "/glossary",
+          "path": "/glossary",
+          "client": true,
+          "h1": "23. Полный тематический глоссарий#"
+        },
+        {
+          "from": "/glossary",
+          "to": "/chapters/22",
+          "path": "/chapters/22",
+          "client": true,
+          "h1": "22. Операционная памятка#"
+        }
+      ]
+    },
+    "search": {
+      "old": {
+        "count": "27 результатов",
+        "first": [
+          "00. Как читать и чему доверять",
+          "01. От vibe coding к инженерной системе",
+          "02. Архитектура и источники истины",
+          "02. Архитектура и источники истины",
+          "03. Agent harness"
+        ],
+        "total": 27,
+        "focusAfterEscape": "body.antialiased",
+        "afterEnter": {
+          "path": "/",
+          "hash": "#ch-00-b1006",
+          "focus": "nav#ch-00-b1006.home-route[Маршрут по главам]"
+        }
+      },
+      "new": {
+        "count": "27 результатов",
+        "first": [
+          "00. Как читать и чему доверять",
+          "01. От vibe coding к инженерной системе",
+          "02. Архитектура и источники истины",
+          "02. Архитектура и источники истины",
+          "03. Agent harness"
+        ],
+        "total": 27,
+        "focusAfterEscape": "button.search-trigger[Найти в руководстве]",
+        "afterEnter": {
+          "path": "/",
+          "hash": "#ch-00-b1006",
+          "focus": "nav#ch-00-b1006.home-route[Маршрут по главам]"
+        }
+      }
+    },
+    "glossary": {
+      "old": [
+        {
+          "width": 1440,
+          "term": "/glossary#term-vibe-coding",
+          "kind": "tooltip",
+          "text": "Vibe coding Разработка через диалог с AI и быстрые итерации; сама по себе не задаёт checks и полномочия.",
+          "closed": true
+        },
+        {
+          "width": 1440,
+          "term": "/glossary#term-vibe-coding",
+          "kind": "tooltip",
+          "text": "Vibe coding Разработка через диалог с AI и быстрые итерации; сама по себе не задаёт checks и полномочия.",
+          "closed": true
+        },
+        {
+          "width": 1440,
+          "term": "/glossary#term-agent",
+          "kind": "tooltip",
+          "text": "Agent Исполнитель, объединяющий модель, контекст и инструменты; может читать файлы, менять код и запускать проверки.",
+          "closed": true
+        },
+        {
+          "width": 1440,
+          "term": "/glossary#term-assumption",
+          "kind": "tooltip",
+          "text": "Assumption Не подтверждённое пока условие, от которого зависит решение; его нужно обозначать и проверять.",
+          "closed": true
+        },
+        {
+          "width": 1440,
+          "term": "/glossary#term-contract",
+          "kind": "tooltip",
+          "text": "Contract Согласованные обязанности, входы, выходы или поведение между частями системы.",
+          "closed": true
+        },
+        {
+          "width": 1440,
+          "term": "/glossary#term-agentic-engineering",
+          "kind": "tooltip",
+          "text": "Agentic engineering Работа агентов внутри процесса с ограниченным scope, доказательствами результата и контролем интеграции.",
+          "closed": true
+        },
+        {
+          "width": 360,
+          "term": "/glossary#term-vibe-coding",
+          "kind": "tooltip",
+          "text": "Vibe coding Разработка через диалог с AI и быстрые итерации; сама по себе не задаёт checks и полномочия.",
+          "closed": true
+        },
+        {
+          "width": 360,
+          "term": "/glossary#term-vibe-coding",
+          "kind": "tooltip",
+          "text": "Vibe coding Разработка через диалог с AI и быстрые итерации; сама по себе не задаёт checks и полномочия.",
+          "closed": true
+        },
+        {
+          "width": 360,
+          "term": "/glossary#term-agent",
+          "kind": "tooltip",
+          "text": "Agent Исполнитель, объединяющий модель, контекст и инструменты; может читать файлы, менять код и запускать проверки.",
+          "closed": true
+        },
+        {
+          "width": 360,
+          "term": "/glossary#term-assumption",
+          "kind": "tooltip",
+          "text": "Assumption Не подтверждённое пока условие, от которого зависит решение; его нужно обозначать и проверять.",
+          "closed": true
+        },
+        {
+          "width": 360,
+          "term": "/glossary#term-contract",
+          "kind": "tooltip",
+          "text": "Contract Согласованные обязанности, входы, выходы или поведение между частями системы.",
+          "closed": true
+        },
+        {
+          "width": 360,
+          "term": "/glossary#term-agentic-engineering",
+          "kind": "tooltip",
+          "text": "Agentic engineering Работа агентов внутри процесса с ограниченным scope, доказательствами результата и контролем интеграции.",
+          "closed": true
+        }
+      ],
+      "new": [
+        {
+          "width": 1440,
+          "term": "/glossary#term-vibe-coding",
+          "kind": "tooltip",
+          "text": "Vibe coding Разработка через диалог с AI и быстрые итерации; сама по себе не задаёт checks и полномочия.",
+          "closed": true
+        },
+        {
+          "width": 1440,
+          "term": "/glossary#term-vibe-coding",
+          "kind": "tooltip",
+          "text": "Vibe coding Разработка через диалог с AI и быстрые итерации; сама по себе не задаёт checks и полномочия.",
+          "closed": true
+        },
+        {
+          "width": 1440,
+          "term": "/glossary#term-agent",
+          "kind": "tooltip",
+          "text": "Agent Исполнитель, объединяющий модель, контекст и инструменты; может читать файлы, менять код и запускать проверки.",
+          "closed": true
+        },
+        {
+          "width": 1440,
+          "term": "/glossary#term-assumption",
+          "kind": "tooltip",
+          "text": "Assumption Не подтверждённое пока условие, от которого зависит решение; его нужно обозначать и проверять.",
+          "closed": true
+        },
+        {
+          "width": 1440,
+          "term": "/glossary#term-contract",
+          "kind": "tooltip",
+          "text": "Contract Согласованные обязанности, входы, выходы или поведение между частями системы.",
+          "closed": true
+        },
+        {
+          "width": 1440,
+          "term": "/glossary#term-agentic-engineering",
+          "kind": "tooltip",
+          "text": "Agentic engineering Работа агентов внутри процесса с ограниченным scope, доказательствами результата и контролем интеграции.",
+          "closed": true
+        },
+        {
+          "width": 360,
+          "term": "/glossary#term-vibe-coding",
+          "kind": "tooltip",
+          "text": "Vibe coding Разработка через диалог с AI и быстрые итерации; сама по себе не задаёт checks и полномочия.",
+          "closed": true
+        },
+        {
+          "width": 360,
+          "term": "/glossary#term-vibe-coding",
+          "kind": "tooltip",
+          "text": "Vibe coding Разработка через диалог с AI и быстрые итерации; сама по себе не задаёт checks и полномочия.",
+          "closed": true
+        },
+        {
+          "width": 360,
+          "term": "/glossary#term-agent",
+          "kind": "tooltip",
+          "text": "Agent Исполнитель, объединяющий модель, контекст и инструменты; может читать файлы, менять код и запускать проверки.",
+          "closed": true
+        },
+        {
+          "width": 360,
+          "term": "/glossary#term-assumption",
+          "kind": "tooltip",
+          "text": "Assumption Не подтверждённое пока условие, от которого зависит решение; его нужно обозначать и проверять.",
+          "closed": true
+        },
+        {
+          "width": 360,
+          "term": "/glossary#term-contract",
+          "kind": "tooltip",
+          "text": "Contract Согласованные обязанности, входы, выходы или поведение между частями системы.",
+          "closed": true
+        },
+        {
+          "width": 360,
+          "term": "/glossary#term-agentic-engineering",
+          "kind": "tooltip",
+          "text": "Agentic engineering Работа агентов внутри процесса с ограниченным scope, доказательствами результата и контролем интеграции.",
+          "closed": true
+        }
+      ]
+    },
+    "xp": {
+      "old": {
+        "reward": "+100 XP · Ещё один шаг в копилку.",
+        "stored": "{\"completed\":[\"ch-01\"],\"exercises\":[]}",
+        "profile": "Учебный профиль 1 из 22 Уровень 1 из 4 Исследователь Брат, уже 1 из 22. Следующий шаг — когда будет удобно. 100 XP 1 Исследователь 0 XP · Исследователь 2 Практик 500 XP · Практик 3 Оркестратор 1100 XP · Оркестратор 4 Инженер 1700 XP · Инженер До уровня «Практик» 400 XP Основы Главы 01–5 · 1 из 5 Рабочий процесс Главы 06–11 · 0 из 6 Качество и доставка Главы 12–17 · 0 из 6 Практика Главы 18–22 · 0 "
+      },
+      "new": {
+        "reward": "+100 XP · Ещё один шаг в копилку.",
+        "stored": "{\"completed\":[\"ch-01\"],\"exercises\":[]}",
+        "profile": "Учебный профиль 1 из 22 Уровень 1 из 4 Исследователь Брат, уже 1 из 22. Следующий шаг — когда будет удобно. 100 XP 1 Исследователь 0 XP · Исследователь 2 Практик 500 XP · Практик 3 Оркестратор 1100 XP · Оркестратор 4 Инженер 1700 XP · Инженер До уровня «Практик» 400 XP Основы Главы 01–5 · 1 из 5 Рабочий процесс Главы 06–11 · 0 из 6 Качество и доставка Главы 12–17 · 0 из 6 Практика Главы 18–22 · 0 "
+      }
+    },
+    "print": {
+      "old": {
+        "pdfPages": 118,
+        "textLength": 155609,
+        "textSha256": "65c98438a36fbf2212f00d00dfc76cda2659a5e1a86c67d0ac518e679398e0e8"
+      },
+      "new": {
+        "pdfPages": 118,
+        "textLength": 155609,
+        "textSha256": "65c98438a36fbf2212f00d00dfc76cda2659a5e1a86c67d0ac518e679398e0e8"
+      }
+    },
+    "drawer": {
+      "old": {
+        "path": "/chapters/02",
+        "focus": "button.menu-trigger[Открыть меню глав]"
+      },
+      "new": {
+        "path": "/chapters/02",
+        "focus": "main#reader"
+      }
+    },
+    "noJs": {
+      "old": {
+        "skeleton": true,
+        "visibleH1": false,
+        "textLength": 1892
+      },
+      "new": {
+        "skeleton": false,
+        "visibleH1": true,
+        "textLength": 1569
+      }
+    },
+    "prefetch": {
+      "old": {
+        "rscOnLoad": 15,
+        "rscAfterHover": 0,
+        "hovered": []
+      },
+      "new": {
+        "rscOnLoad": 2,
+        "rscAfterHover": 1,
+        "hovered": [
+          "/chapters/05"
+        ]
+      }
+    }
+  },
+  "pageErrors": {
+    "old": [
+      "/nope 1440: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "/nope 360: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'."
+    ],
+    "new": [
+      "/nope 1440: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "/nope 360: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'."
+    ]
+  },
+  "hydration": {
+    "old": [],
+    "new": []
+  },
+  "errors": []
+}

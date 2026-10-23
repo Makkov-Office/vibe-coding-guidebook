@@ -11,6 +11,8 @@
 //                      no-compat  drop X-Vinext-RSC-Compatibility-Id
 //                      no-rsc     no RSC rewrite (plain static site)
 //   --json <file>      also write the results as JSON
+// Protected preview (Vercel Authentication, P1-08): CHECK_COOKIE="name=value"
+// from a share link is sent with every request and set in the browser; never printed.
 // Browser: CHROMIUM_PATH (executable) or HANDBOOK_BROWSER_CHANNEL, else the
 // Chromium that @playwright/test installs. Exit 1 on any FAIL.
 //
@@ -39,6 +41,9 @@ const variant = values.variant ?? "full";
 const jsonFile = values.json ?? null;
 if (!["full", "no-compat", "no-rsc"].includes(variant)) throw new Error(`unknown variant ${variant}`);
 if (remote && variant !== "full") throw new Error("--variant works only locally");
+const cookie = process.env.CHECK_COOKIE || null;
+const cookieParts = cookie?.match(/^([^=;\s]+)=([^;\s]+)$/);
+if (cookie && (!remote || !cookieParts)) throw new Error("CHECK_COOKIE needs --url and the form name=value");
 
 const sha = (buffer) => createHash("sha256").update(buffer).digest("hex");
 const prerenderDir = path.join(root, "dist/server/prerendered-routes");
@@ -184,7 +189,7 @@ const compatibilityId = local
   : null;
 
 async function get(pathname, headers = {}) {
-  const response = await fetch(origin + pathname, { headers, redirect: "manual" });
+  const response = await fetch(origin + pathname, { headers: cookie ? { ...headers, Cookie: cookie } : headers, redirect: "manual" });
   return { response, body: Buffer.from(await response.arrayBuffer()) };
 }
 
@@ -221,6 +226,7 @@ const executablePath = process.env.CHROMIUM_PATH || undefined;
 const channel = executablePath ? undefined : process.env.HANDBOOK_BROWSER_CHANNEL || undefined;
 const browser = await chromium.launch({ executablePath, channel, headless: true });
 const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+if (cookieParts) await context.addCookies([{ name: cookieParts[1], value: cookieParts[2], url: origin }]);
 const page = await context.newPage();
 const errors = [];
 page.on("pageerror", (error) => errors.push(error.message));

@@ -1,0 +1,942 @@
+{
+  "summary": {
+    "variant": "full",
+    "origin": "https://vibe-coding-guidebook-mr1ee5og9-makkov-design.vercel.app",
+    "checks": 155,
+    "pass": 155,
+    "fail": 0,
+    "skip": 0
+  },
+  "results": [
+    {
+      "route": "/",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/glossary",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/glossary",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/print",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/print",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/resources",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/resources",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/tools",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/tools",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/tools/claude-code",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/tools/claude-code",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/tools/codex",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/tools/codex",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/01",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/01",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/02",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/02",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/03",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/03",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/04",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/04",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/05",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/05",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/06",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/06",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/07",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/07",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/08",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/08",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/09",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/09",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/10",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/10",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/11",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/11",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/12",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/12",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/13",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/13",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/14",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/14",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/15",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/15",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/16",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/16",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/17",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/17",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/18",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/18",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/19",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/19",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/20",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/20",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/21",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/21",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/chapters/22",
+      "check": "http-html",
+      "result": "PASS",
+      "detail": "200 text/html; charset=utf-8"
+    },
+    {
+      "route": "/chapters/22",
+      "check": "http-rsc",
+      "result": "PASS",
+      "detail": "200 text/x-component id=955006c9-3a6d-4d6f-9898-e8656d5cc0f1"
+    },
+    {
+      "route": "/handbook.md",
+      "check": "http-file",
+      "result": "PASS",
+      "detail": "200 text/markdown; charset=utf-8"
+    },
+    {
+      "route": "/nope",
+      "check": "http-404",
+      "result": "PASS",
+      "detail": "404"
+    },
+    {
+      "route": "/chapters/99",
+      "check": "http-404",
+      "result": "PASS",
+      "detail": "404"
+    },
+    {
+      "route": "/chapters",
+      "check": "http-404",
+      "result": "PASS",
+      "detail": "404"
+    },
+    {
+      "route": "/_headers",
+      "check": "http-404",
+      "result": "PASS",
+      "detail": "404"
+    },
+    {
+      "route": "/.vite/manifest.json",
+      "check": "http-404",
+      "result": "PASS",
+      "detail": "404"
+    },
+    {
+      "route": "/wrangler.json",
+      "check": "http-404",
+      "result": "PASS",
+      "detail": "404"
+    },
+    {
+      "route": "/chapters/01/",
+      "check": "http-308",
+      "result": "PASS",
+      "detail": "308 → /chapters/01"
+    },
+    {
+      "route": "/_next/static/chunks/index-DOFgRDUv.js",
+      "check": "http-immutable",
+      "result": "PASS",
+      "detail": "200 public, max-age=31536000, immutable"
+    },
+    {
+      "route": "/",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"ULTIMATE Vibe-coder guidebook [BETA]\""
+    },
+    {
+      "route": "/",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"ULTIMATE Vibe-coder guidebook [BETA]\""
+    },
+    {
+      "route": "/glossary",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"23. Полный тематический глоссарий#\""
+    },
+    {
+      "route": "/glossary",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"23. Полный тематический глоссарий#\""
+    },
+    {
+      "route": "/print",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"\""
+    },
+    {
+      "route": "/print",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"\""
+    },
+    {
+      "route": "/resources",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"Полезные материалы#\""
+    },
+    {
+      "route": "/resources",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"Полезные материалы#\""
+    },
+    {
+      "route": "/tools",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"Обзоры инструментов#\""
+    },
+    {
+      "route": "/tools",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"Обзоры инструментов#\""
+    },
+    {
+      "route": "/tools/claude-code",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"Claude Code: рабочий процесс внутри прое\""
+    },
+    {
+      "route": "/tools/claude-code",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"Claude Code: рабочий процесс внутри прое\""
+    },
+    {
+      "route": "/tools/codex",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"Codex: от идеи до проверенного результат\""
+    },
+    {
+      "route": "/tools/codex",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"Codex: от идеи до проверенного результат\""
+    },
+    {
+      "route": "/chapters/01",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"01. От vibe coding к инженерной системе#\""
+    },
+    {
+      "route": "/chapters/01",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"01. От vibe coding к инженерной системе#\""
+    },
+    {
+      "route": "/chapters/02",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"02. Архитектура и источники истины#\""
+    },
+    {
+      "route": "/chapters/02",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"02. Архитектура и источники истины#\""
+    },
+    {
+      "route": "/chapters/03",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"03. Agent harness#\""
+    },
+    {
+      "route": "/chapters/03",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"03. Agent harness#\""
+    },
+    {
+      "route": "/chapters/04",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"04. WSL2 Ubuntu + Dev Container#\""
+    },
+    {
+      "route": "/chapters/04",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"04. WSL2 Ubuntu + Dev Container#\""
+    },
+    {
+      "route": "/chapters/05",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"05. Роли: Codex, Claude и человек#\""
+    },
+    {
+      "route": "/chapters/05",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"05. Роли: Codex, Claude и человек#\""
+    },
+    {
+      "route": "/chapters/06",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"06. Исполнимый тикет и Definition of Rea\""
+    },
+    {
+      "route": "/chapters/06",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"06. Исполнимый тикет и Definition of Rea\""
+    },
+    {
+      "route": "/chapters/07",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"07. Полный lifecycle одной задачи#\""
+    },
+    {
+      "route": "/chapters/07",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"07. Полный lifecycle одной задачи#\""
+    },
+    {
+      "route": "/chapters/08",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"08. Preflight: начать правильно#\""
+    },
+    {
+      "route": "/chapters/08",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"08. Preflight: начать правильно#\""
+    },
+    {
+      "route": "/chapters/09",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"09. Context engineering#\""
+    },
+    {
+      "route": "/chapters/09",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"09. Context engineering#\""
+    },
+    {
+      "route": "/chapters/10",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"10. Spec, ADR и Docs Impact#\""
+    },
+    {
+      "route": "/chapters/10",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"10. Spec, ADR и Docs Impact#\""
+    },
+    {
+      "route": "/chapters/11",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"11. Git, GitHub и CI#\""
+    },
+    {
+      "route": "/chapters/11",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"11. Git, GitHub и CI#\""
+    },
+    {
+      "route": "/chapters/12",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"12. Change risk: Low / Medium / High#\""
+    },
+    {
+      "route": "/chapters/12",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"12. Change risk: Low / Medium / High#\""
+    },
+    {
+      "route": "/chapters/13",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"13. Параллельные агенты: collisions и me\""
+    },
+    {
+      "route": "/chapters/13",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"13. Параллельные агенты: collisions и me\""
+    },
+    {
+      "route": "/chapters/14",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"14. Независимое review: author ≠ reviewe\""
+    },
+    {
+      "route": "/chapters/14",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"14. Независимое review: author ≠ reviewe\""
+    },
+    {
+      "route": "/chapters/15",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"15. Founder / human gates#\""
+    },
+    {
+      "route": "/chapters/15",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"15. Founder / human gates#\""
+    },
+    {
+      "route": "/chapters/16",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"16. Post-merge sync#\""
+    },
+    {
+      "route": "/chapters/16",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"16. Post-merge sync#\""
+    },
+    {
+      "route": "/chapters/17",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"17. Security и least privilege#\""
+    },
+    {
+      "route": "/chapters/17",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"17. Security и least privilege#\""
+    },
+    {
+      "route": "/chapters/18",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"18. Четыре типичных ошибки и как их пред\""
+    },
+    {
+      "route": "/chapters/18",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"18. Четыре типичных ошибки и как их пред\""
+    },
+    {
+      "route": "/chapters/19",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"19. Failure modes и recovery#\""
+    },
+    {
+      "route": "/chapters/19",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"19. Failure modes и recovery#\""
+    },
+    {
+      "route": "/chapters/20",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"20. Как повторить систему у себя#\""
+    },
+    {
+      "route": "/chapters/20",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"20. Как повторить систему у себя#\""
+    },
+    {
+      "route": "/chapters/21",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"21. Maturity model и будущий Agent Contr\""
+    },
+    {
+      "route": "/chapters/21",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"21. Maturity model и будущий Agent Contr\""
+    },
+    {
+      "route": "/chapters/22",
+      "check": "direct",
+      "result": "PASS",
+      "detail": "200 \"22. Операционная памятка#\""
+    },
+    {
+      "route": "/chapters/22",
+      "check": "refresh",
+      "result": "PASS",
+      "detail": "200 \"22. Операционная памятка#\""
+    },
+    {
+      "route": "/",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/glossary → /: client transition, rsc requests 4, \"ULTIMATE Vibe-coder guidebook \""
+    },
+    {
+      "route": "/glossary",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /glossary: client transition, rsc requests 1, \"23. Полный тематический глосса\""
+    },
+    {
+      "route": "/print",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /print: client transition, rsc requests 3, \"\""
+    },
+    {
+      "route": "/resources",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /resources: client transition, rsc requests 2, \"Полезные материалы#\""
+    },
+    {
+      "route": "/tools",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /tools: client transition, rsc requests 2, \"Обзоры инструментов#\""
+    },
+    {
+      "route": "/tools/claude-code",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /tools/claude-code: client transition, rsc requests 2, \"Claude Code: рабочий процесс в\""
+    },
+    {
+      "route": "/tools/codex",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /tools/codex: client transition, rsc requests 2, \"Codex: от идеи до проверенного\""
+    },
+    {
+      "route": "/chapters/01",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/chapters/02 → /chapters/01: client transition, rsc requests 1, \"01. От vibe coding к инженерно\""
+    },
+    {
+      "route": "/chapters/02",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/02: client transition, rsc requests 0, \"02. Архитектура и источники ис\""
+    },
+    {
+      "route": "/chapters/03",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/03: client transition, rsc requests 1, \"03. Agent harness#\""
+    },
+    {
+      "route": "/chapters/04",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/04: client transition, rsc requests 1, \"04. WSL2 Ubuntu + Dev Containe\""
+    },
+    {
+      "route": "/chapters/05",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/05: client transition, rsc requests 1, \"05. Роли: Codex, Claude и чело\""
+    },
+    {
+      "route": "/chapters/06",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/06: client transition, rsc requests 3, \"06. Исполнимый тикет и Definit\""
+    },
+    {
+      "route": "/chapters/07",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/07: client transition, rsc requests 1, \"07. Полный lifecycle одной зад\""
+    },
+    {
+      "route": "/chapters/08",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/08: client transition, rsc requests 1, \"08. Preflight: начать правильн\""
+    },
+    {
+      "route": "/chapters/09",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/09: client transition, rsc requests 3, \"09. Context engineering#\""
+    },
+    {
+      "route": "/chapters/10",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/10: client transition, rsc requests 1, \"10. Spec, ADR и Docs Impact#\""
+    },
+    {
+      "route": "/chapters/11",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/11: client transition, rsc requests 1, \"11. Git, GitHub и CI#\""
+    },
+    {
+      "route": "/chapters/12",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/12: client transition, rsc requests 1, \"12. Change risk: Low / Medium \""
+    },
+    {
+      "route": "/chapters/13",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/13: client transition, rsc requests 1, \"13. Параллельные агенты: colli\""
+    },
+    {
+      "route": "/chapters/14",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/14: client transition, rsc requests 1, \"14. Независимое review: author\""
+    },
+    {
+      "route": "/chapters/15",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/15: client transition, rsc requests 3, \"15. Founder / human gates#\""
+    },
+    {
+      "route": "/chapters/16",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/16: client transition, rsc requests 1, \"16. Post-merge sync#\""
+    },
+    {
+      "route": "/chapters/17",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/17: client transition, rsc requests 1, \"17. Security и least privilege\""
+    },
+    {
+      "route": "/chapters/18",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/18: client transition, rsc requests 1, \"18. Четыре типичных ошибки и к\""
+    },
+    {
+      "route": "/chapters/19",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/19: client transition, rsc requests 1, \"19. Failure modes и recovery#\""
+    },
+    {
+      "route": "/chapters/20",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/20: client transition, rsc requests 1, \"20. Как повторить систему у се\""
+    },
+    {
+      "route": "/chapters/21",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/21: client transition, rsc requests 1, \"21. Maturity model и будущий A\""
+    },
+    {
+      "route": "/chapters/22",
+      "check": "spa",
+      "result": "PASS",
+      "detail": "/ → /chapters/22: client transition, rsc requests 2, \"22. Операционная памятка#\""
+    },
+    {
+      "route": "(all pages)",
+      "check": "page-errors",
+      "result": "PASS",
+      "detail": ""
+    }
+  ]
+}
