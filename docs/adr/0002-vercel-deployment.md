@@ -151,3 +151,11 @@ Evidence — раздел ниже и PR. Команды в свежем `git cl
 - Маршруты, HTTP GET через Vercel MCP `web_fetch_vercel_url` (bypass Deployment Protection): 29 страниц — 200 `text/html`, `title` и `h1` равны prerender той же ревизии (байты HTML отличаются от локальной сборки — другой build, иные хэши и compatibility id); `/handbook.md` — 200 `text/markdown; charset=utf-8`, байт-в-байт `content/handbook.md`; `/nope`, `/wrangler.json` — 404, страница 404. Итого 30/30 маршрутов PASS по HTTP.
 - Production: READY production-деплоев 0 (`list_deployments target=production` — одна запись CANCELED, выше); `list_aliases` проекта — только branch-alias на preview.
 - Не проверено (INCOMPLETE): `node scripts/check-vercel-output.mjs --url <preview>` — egress-прокси среды отвечает 403 на CONNECT к `*.vercel.app`, поэтому нет браузерных direct/refresh/SPA, RSC-ответов (`RSC: 1`), 308 и immutable cache на реальном CDN — остаётся для P1-08 (или запуск с машины founder). Фактическая версия Node на Vercel в логе не печатается (настройки: `nodeVersion` 22.x, `engines` `^22.13.0`). `git.deploymentEnabled.main` на платформе — после merge.
+
+## P1-08: проверка на реальном preview
+
+22.10.2026, preview `dpl_DWbnTrFD1AgNrNrMtGPbuidg3KPG` (SHA `e36fb13`, target preview), доступ через share-ссылку Vercel MCP (cookie `_vercel_jwt` в `CHECK_COOKIE`; Deployment Protection не менялась). Закрывает INCOMPLETE из «P1-07: evidence»:
+
+- `node scripts/check-vercel-output.mjs --url <preview>` — PASS 155/155 на реальном CDN Vercel: HTTP HTML и RSC (`RSC: 1` → `text/x-component` с compatibility id), direct, refresh и SPA-переход без загрузки документа на 29/29 страницах, `/handbook.md`, 404 (6/6), `/chapters/01/` → 308 `/chapters/01`, `/_next/static/*` — `immutable`, ошибок страниц нет.
+- Parity с ChatGPT Sites (версия 20) — `docs/audits/parity-2026-10-22.md`: контент и якоря 30/30, скриншоты 60/60 равны; расхождения — ожидаемые из P1-12 и заголовки HTTP.
+- На preview Vercel добавляет `X-Robots-Tag: noindex`; для production проверить отдельно при его включении.
