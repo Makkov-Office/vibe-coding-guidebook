@@ -1,6 +1,6 @@
 # ADR 0002: Деплой на Vercel — статический экспорт через Build Output API
 
-Status: Proposed — 22.10.2026, spike P1-06 (https://github.com/Makkov-Office/vibe-coding-guidebook/issues/8). Accepted — только решением founder при merge PR. Подключение проекта и preview — P1-07 (https://github.com/Makkov-Office/vibe-coding-guidebook/issues/9, раздел «P1-07» ниже); production выключен до отдельного решения founder после P1-08.
+Status: Accepted — 23.10.2026, решение founder «включай production» (P1-16, https://github.com/Makkov-Office/vibe-coding-guidebook/issues/33). История: Proposed 22.10.2026, spike P1-06 (https://github.com/Makkov-Office/vibe-coding-guidebook/issues/8); подключение проекта и preview — P1-07 (https://github.com/Makkov-Office/vibe-coding-guidebook/issues/9, раздел «P1-07» ниже), production был выключен до решения founder после P1-08; включение — раздел «P1-16» ниже.
 
 ## Context
 
@@ -159,3 +159,15 @@ Evidence — раздел ниже и PR. Команды в свежем `git cl
 - `node scripts/check-vercel-output.mjs --url <preview>` — PASS 155/155 на реальном CDN Vercel: HTTP HTML и RSC (`RSC: 1` → `text/x-component` с compatibility id), direct, refresh и SPA-переход без загрузки документа на 29/29 страницах, `/handbook.md`, 404 (6/6), `/chapters/01/` → 308 `/chapters/01`, `/_next/static/*` — `immutable`, ошибок страниц нет.
 - Parity с ChatGPT Sites (версия 20) — `docs/audits/parity-2026-10-22.md`: контент и якоря 29/29 страниц, скриншоты 60/60 равны в пределах допуска; расхождения — ожидаемые из P1-12 и заголовки HTTP; страница 404 падает в экран ошибки на обоих сайтах (B1, решение founder).
 - На preview Vercel добавляет `X-Robots-Tag: noindex`; для production проверить отдельно при его включении.
+
+## P1-16: включение production
+
+Решение founder 23.10.2026 11:57 UTC: «включай production» — после parity-аудита P1-08 и исправления страницы 404 (P1-15, B1 аудита). Снимаются все три слоя запрета из раздела «P1-07»:
+
+1. `vercel.json`: удалён `git.deploymentEnabled: {"main": false}` — push в `main` снова создаёт деплой, для ветки Branch Tracking (`main`) это production.
+2. `vercel.json`: удалён `ignoreCommand` — сборка не отменяется ни для какого `VERCEL_ENV`.
+3. Настройка проекта: `commandForIgnoringBuildStep` установлен в `null` (Vercel MCP `update_project`, 23.10.2026, до merge — иначе после merge он отменил бы production-сборку, потому что `vercel.json` его больше не переопределяет).
+
+Без изменений: preview на каждый PR и Deployment Protection (Vercel Authentication, `all_except_custom_domains`), framework, install/build command, Node из `engines`. Свой домен не привязан; ChatGPT Sites и `.openai/hosting.json` не трогаются, оба адреса работают параллельно, переадресация — решение founder (бриф, раздел 13). Rollback: вернуть правила 1–2 в `vercel.json` (отдельный PR) и при необходимости Instant Rollback в Vercel — решением founder.
+
+Проверка после merge (evidence — в PR P1-16): production-деплой READY на SHA merge-коммита, `target: production`, домен проекта `vibe-coding-guidebook-ivory.vercel.app` указывает на него; 29 страниц, `/handbook.md` и 404 как на preview; `X-Robots-Tag` на production; доступ без входа в Vercel.

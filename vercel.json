@@ -2,11 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "npm ci --include=dev",
-  "buildCommand": "npm run build && node scripts/vercel-output.mjs",
-  "ignoreCommand": "if [ \"$VERCEL_ENV\" = preview ]; then exit 1; fi; echo \"P1-07: only preview builds; production is off until a founder decision\"; exit 0",
-  "git": {
-    "deploymentEnabled": {
-      "main": false
-    }
-  }
+  "buildCommand": "npm run build && node scripts/vercel-output.mjs"
 }
