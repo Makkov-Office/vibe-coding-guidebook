@@ -78,3 +78,29 @@ test('old fonts are gone and new fonts are self-hosted with licences', () => {
     assert.ok(fs.existsSync(new URL(`public${url}`, root)), url);
   }
 });
+
+// Motion (P3-05): durations and curves live only in app/tokens.css. The one exception is the
+// loading spinner, which turns at a constant speed (`linear`); see visual-language.md, section 7.
+test('stylesheets outside app/tokens.css use motion tokens, not durations or curves', () => {
+  const files = [...cssFiles('app'), ...cssFiles('src')].filter((file) => file !== 'app/tokens.css');
+  const offenders = [];
+  for (const file of files) {
+    const css = read(file).replace(/\/\*[\s\S]*?\*\//g, '').replace(/linear-gradient\(/g, '');
+    for (const match of css.matchAll(/(?<![\w-])\d*\.?\d+m?s\b|(?<![\w-])(?:ease(?:-in|-out|-in-out)?|linear|cubic-bezier|steps)\b(?!-)/g)) {
+      const line = css.slice(css.lastIndexOf('\n', match.index) + 1, css.indexOf('\n', match.index));
+      if (match[0] === 'linear' && /loading-spin/.test(line)) continue;
+      offenders.push(`${file}: ${match[0]} in ${line.trim().slice(0, 80)}`);
+    }
+  }
+  assert.deepEqual(offenders, []);
+});
+
+test('reduced motion and data-motion="off" zero every duration token', () => {
+  const durations = [...new Set([...tokens.matchAll(/(--dur-[\w-]+):\d/g)].map((m) => m[1]))];
+  assert.ok(durations.length >= 6, durations.join());
+  const media = tokens.slice(tokens.indexOf('@media (prefers-reduced-motion:reduce)'));
+  const off = tokens.slice(tokens.indexOf(':root[data-motion=off]{'));
+  for (const body of [media.slice(0, media.indexOf('}')), off.slice(0, off.indexOf('}'))]) {
+    for (const name of [...durations, '--shift-appear']) assert.match(body, new RegExp(`${name}:0(?:ms|px)`), name);
+  }
+});

@@ -60,6 +60,10 @@
   --dur-2:240ms;
   --dur-3:480ms;
   --shift-appear:6px;
+  /* Приёмы движения (раздел 7): прорисовка линии, бег точки, смена шага. */
+  --dur-draw:900ms;
+  --dur-dot:6s;
+  --dur-step:350ms;
 
   /* Цвет — светлая тема (palette.json → themes.light). */
   color-scheme:light;
@@ -190,6 +194,8 @@
   --signature-filter:none;
 }
 
+/* Движение выключено: системная настройка или data-motion="off" на <html> (кнопка паузы — P3-04). */
 @media (prefers-reduced-motion:reduce){
-  :root{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--shift-appear:0px}
+  :root{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--dur-draw:0ms;--dur-dot:0ms;--dur-step:0ms;--shift-appear:0px}
 }
+:root[data-motion=off]{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--dur-draw:0ms;--dur-dot:0ms;--dur-step:0ms;--shift-appear:0px}
