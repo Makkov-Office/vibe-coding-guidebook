@@ -21,13 +21,14 @@
 .motion-steps>*{animation:motion-step var(--dur-step) var(--ease) backwards;animation-delay:calc(var(--step,0) * var(--dur-step))}
 @keyframes motion-step{from{opacity:.3}}
 
-/* Переход между страницами: View Transitions API, меняется только колонка чтения. */
+/* Переход между страницами: View Transitions API, меняется только колонка чтения.
+   Колонка выше экрана, и старая страница бывает прокручена далеко вниз: геометрию группы не
+   анимируем (иначе снимок пролетит через экран), старый снимок убираем сразу, новый появляется. */
 .reading-column{view-transition-name:page}
 ::view-transition-group(root),::view-transition-old(root),::view-transition-new(root){animation:none}
-::view-transition-group(page){animation-duration:var(--dur-3);animation-timing-function:var(--ease)}
-::view-transition-old(page){animation:motion-fade-out var(--dur-2) var(--ease) both}
+::view-transition-group(page){animation:none}
+::view-transition-old(page){display:none}
 ::view-transition-new(page){animation:motion-appear var(--dur-3) var(--ease) both}
-@keyframes motion-fade-out{to{opacity:0}}
 
 /* Выключатель: системная настройка или data-motion="off" на <html>. */
 @media (prefers-reduced-motion:reduce){

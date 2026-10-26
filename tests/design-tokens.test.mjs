@@ -86,9 +86,9 @@ test('stylesheets outside app/tokens.css use motion tokens, not durations or cur
   const offenders = [];
   for (const file of files) {
     const css = read(file).replace(/\/\*[\s\S]*?\*\//g, '').replace(/linear-gradient\(/g, '');
-    for (const match of css.matchAll(/(?<![\w-])\d*\.?\d+m?s\b|(?<![\w-])(?:ease(?:-in|-out|-in-out)?|linear|cubic-bezier|steps)\b(?!-)/g)) {
+    for (const match of css.matchAll(/(?<![\w-])\d*\.?\d+(?:e[+-]?\d+)?m?s\b|(?<![\w-])(?:ease(?:-in|-out|-in-out)?|linear|cubic-bezier|steps|step-start|step-end)\b(?!-)/gi)) {
       const line = css.slice(css.lastIndexOf('\n', match.index) + 1, css.indexOf('\n', match.index));
-      if (match[0] === 'linear' && /loading-spin/.test(line)) continue;
+      if (match[0].toLowerCase() === 'linear' && /loading-spin/.test(line)) continue;
       offenders.push(`${file}: ${match[0]} in ${line.trim().slice(0, 80)}`);
     }
   }

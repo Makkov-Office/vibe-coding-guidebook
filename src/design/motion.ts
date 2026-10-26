@@ -35,19 +35,21 @@ export function appear(element: Element | null | undefined, name: MotionToken = 
 type ViewTransitionDocument = Document & { startViewTransition?: (update: () => Promise<void>) => unknown };
 
 /**
- * Page transition: runs `navigate` inside a View Transition when the browser supports it and
- * motion is on; otherwise navigates instantly. The transition waits for `committed` (resolved
- * when the new page renders) for at most one long duration, so a slow route never freezes
- * the old page behind the transition.
+ * Page transition: always runs `navigate`; inside a View Transition when the browser supports it
+ * and motion is on, otherwise directly. `navigate` may return a promise that settles when the new
+ * page renders: the transition waits for it at most one long duration, so a slow route never
+ * freezes the old page behind the transition. Returns whether a transition started.
  */
-export function transitionTo(navigate: () => void, committed: Promise<void>): boolean {
+export function transitionTo(navigate: () => Promise<void> | void): boolean {
   const doc = document as ViewTransitionDocument;
-  if (!doc.startViewTransition || !motionEnabled()) return false;
+  if (!doc.startViewTransition || !motionEnabled()) {
+    void navigate();
+    return false;
+  }
   const limit = motionDuration('--dur-3');
-  const transition = doc.startViewTransition(() => {
-    navigate();
-    return Promise.race([committed, new Promise<void>(resolve => setTimeout(resolve, limit))]);
-  }) as { ready?: Promise<unknown>; finished?: Promise<unknown> } | undefined;
+  const transition = doc.startViewTransition(() =>
+    Promise.race([Promise.resolve(navigate()), new Promise<void>(resolve => setTimeout(resolve, limit))]),
+  ) as { ready?: Promise<unknown>; finished?: Promise<unknown> } | undefined;
   // A skipped transition (hidden tab, a second navigation) rejects `ready`; the page still updates.
   transition?.ready?.catch(() => {});
   transition?.finished?.catch(() => {});
