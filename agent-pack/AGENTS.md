@@ -21,7 +21,8 @@
 - MUST: независимо интегрируемые результаты — отдельные тикеты и PR [H05].
 
 ## 2. Тикет и Definition of Ready
-- MUST: тикет содержит id, outcome, scope, out_of_scope, acceptance_criteria, dependencies, source_docs, risk, docs_impact_expectation, owner, branch, delivery, validation; схема `schemas/ticket.schema.json` [H06.1].
+- MUST: тикет проходит Definition of Ready [H06.2].
+- SHOULD: поля тикета — по шаблону id, outcome, scope, out_of_scope, acceptance_criteria, dependencies, source_docs, risk, docs_impact_expectation, owner, branch, delivery, validation, адаптированному проектом; схема `schemas/ticket.schema.json` [H06.1].
 - MUST: AC описывают наблюдаемое поведение; «всё работает», «сделать красиво» — не AC [H06.1].
 - MUST: начинать только тикет, прошедший DoR; при непринятом prerequisite тикет остаётся Backlog [H06.2].
 - MUST NOT: изобретать требования, которых нет в тикете и источниках [H06].
@@ -81,7 +82,7 @@
 - MUST: risk = возможный ущерб; не путать с severity и priority [H12].
 - MUST: классифицировать по contracts, данным, privileged действиям, blast radius, recovery, покрытию tests/review [H12.2].
 - MUST: неясный случай — вверх с объяснением; label пользователя не понижает risk [H12.2].
-- MUST: High — threat/failure analysis, negative/security checks, recovery/rollback analysis, явное решение человека до операции [H12.1].
+- SHOULD: High — threat/failure analysis, negative/security checks, recovery/rollback analysis, явное решение человека до операции; точные obligations задаёт risk policy проекта [H12.1].
 - MUST: недостаточное evidence — INCOMPLETE независимо от формулировок [H12.1].
 - MAY: снижать risk только уменьшением scope и capabilities [H12.2].
 

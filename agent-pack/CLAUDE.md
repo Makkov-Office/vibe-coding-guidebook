@@ -5,7 +5,8 @@
 `[HCC: <раздел>]` — обзор «Claude Code: рабочий процесс внутри проекта» в handbook; `[Hnn.m]` — как в AGENTS.md.
 
 ## Изоляция
-- MUST: один тикет — отдельная task branch и отдельный worktree (`claude --worktree` или `git worktree add`); не работать в checkout другого автора или человека [H05] [H08.1] [HCC: Агенты и worktrees].
+- MUST: один тикет — отдельная task branch в своей изолированной папке; не работать в checkout другого автора или человека [H05] [H08.1].
+- SHOULD: изолированная папка — worktree (`claude --worktree` или `git worktree add`) [H11.1] [HCC: Агенты и worktrees].
 - MUST NOT: считать worktree разрешением конфликтов: он изолирует файлы, но не смысл contracts [H13] [HCC: Агенты и worktrees].
 - MAY: `/batch` для хорошо разделяемой миграции после проверки границ единиц [HCC: Агенты и worktrees].
 
@@ -33,6 +34,6 @@
 - MUST NOT: считать их заменой независимого review, запуска приложения, evidence и решения человека о merge [H14] [HCC: Review и безопасность].
 
 ## Permissions и hooks
-- SHOULD: подключить `claude/settings.json` и `claude/hooks/` из Agent Pack (deny опасных git-команд) [H17.2].
+- SHOULD: дополнять текстовые правила исполнимыми ограничениями — permissions и hooks; в Agent Pack это `claude/settings.json` и `claude/hooks/` [H03.1] [H19].
 - MUST NOT: ослаблять deny-правила и hooks без решения человека [H15] [H17.2].
 - MUST: проверять, применяются ли permissions и hooks в текущей среде; неподтверждённое enforcement считать отсутствующим [H08.3] [H21].
