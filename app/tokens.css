@@ -1,0 +1,195 @@
+/* Дизайн-токены «Чертёж» v2 (P2-03). Значения — из docs/design/visual-language.md
+   и docs/design/palette.json (--color-<роль> = роль палитры, проверяет
+   tests/design-tokens.test.mjs). Цвета вне этого файла не пишутся. */
+
+@font-face{font-family:Geist;src:url('/fonts/geist-latin-400-600.woff2') format('woff2');font-weight:400 600;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Geist;src:url('/fonts/geist-cyrillic-400-600.woff2') format('woff2');font-weight:400 600;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:Unbounded;src:url('/fonts/unbounded-latin-500.woff2') format('woff2');font-weight:500;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Unbounded;src:url('/fonts/unbounded-cyrillic-500.woff2') format('woff2');font-weight:500;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'Martian Mono';src:url('/fonts/martian-mono-latin-400-500.woff2') format('woff2');font-weight:400 500;font-stretch:87.5%;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Martian Mono';src:url('/fonts/martian-mono-cyrillic-400-500.woff2') format('woff2');font-weight:400 500;font-stretch:87.5%;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'Pixelify Sans';src:url('/fonts/pixelify-sans-latin-500.woff2') format('woff2');font-weight:500;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Pixelify Sans';src:url('/fonts/pixelify-sans-cyrillic-500.woff2') format('woff2');font-weight:500;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+
+:root{
+  /* Шрифты: одна роль на шрифт (раздел 5 спецификации). */
+  --font-display:Unbounded,Geist,system-ui,sans-serif;
+  --font-text:Geist,system-ui,'Segoe UI',sans-serif;
+  --font-mono:'Martian Mono',ui-monospace,Consolas,monospace;
+  --font-game:'Pixelify Sans','Martian Mono',monospace;
+  --font-mono-stretch:87.5%;
+
+  /* Типографическая шкала. */
+  /* Unbounded 500, RD-01 f: hero главной 40 px, hero «Начать» 52 px, hero темы 46 px, заголовок блока 30 px. */
+  --type-hero:clamp(2rem,4vw,2.5rem);
+  --type-hero-start:clamp(2.25rem,5vw,3.25rem);
+  --type-h1:clamp(1.75rem,3.6vw,2.875rem);
+  --type-block:1.875rem;
+  --tracking-display:-.02em;
+  --tracking-heading:-.03em;
+  --type-h2:1.5rem;
+  --type-h3:1.1875rem;
+  --type-body:1rem;
+  --type-small:.875rem;
+  --type-label:.75rem;
+  --type-mono:.8125rem;
+
+  /* Формы: радиусы варианта f, сетка 4 px, касание 44 px (раздел 6). */
+  --radius-xs:4px;
+  --radius-s:8px;
+  --radius-m:12px;
+  --radius-l:16px;
+  --radius-xl:20px;
+  --radius-full:999px;
+  --space-1:4px;
+  --space-2:8px;
+  --space-3:12px;
+  --space-4:16px;
+  --space-5:20px;
+  --space-6:24px;
+  --space-8:32px;
+  --space-10:40px;
+  --space-12:48px;
+  --touch-target:44px;
+  --stroke-line:1.5px;
+  --stroke-border:1px;
+
+  /* Движение: одна кривая, три длительности (раздел 7). */
+  --ease:cubic-bezier(.2,0,0,1);
+  --dur-1:120ms;
+  --dur-2:240ms;
+  --dur-3:480ms;
+  --shift-appear:6px;
+
+  /* Цвет — светлая тема (palette.json → themes.light). */
+  color-scheme:light;
+  --color-background:#FAFAFA;
+  --color-rail:#F3F3F3;
+  --color-surface:#FFFFFF;
+  --color-surface-container-low:#F4F4F4;
+  --color-surface-container:#EDEDED;
+  --color-surface-container-high:#E3E3E3;
+  --color-on-surface:#101010;
+  --color-on-surface-variant:#595959;
+  --color-outline:#595959;
+  --color-outline-variant:#E6E6E6;
+  --color-outline-variant-strong:#D0D0D0;
+  --color-primary:#B4401F;
+  --color-on-primary:#FFFFFF;
+  --color-primary-container:#FDE6DF;
+  --color-on-primary-container:#7A2A16;
+  --color-action-gradient:linear-gradient(120deg,#F9967D,#F87352,#E8613F);
+  --color-on-action-gradient:#101010;
+  --color-agent-container:#F1E4FF;
+  --color-on-agent-container:#4B2380;
+  --color-agent-accent:#E4CAFF;
+  --color-practice-container:#E3FFEB;
+  --color-on-practice-container:#135C2E;
+  --color-practice-accent:#CAFFDA;
+  --color-human-container:#FFF3E2;
+  --color-on-human-container:#6B4210;
+  --color-human-accent:#FFE9CA;
+  --color-error:#B3261E;
+  --color-on-error:#FFFFFF;
+  --color-success:#1E6B3B;
+  --color-warning:#7A4F00;
+  --color-pattern-plus:#D2D2D2;
+  --color-primary-line:#F6C3B5;
+  --color-brand-frame-gradient:linear-gradient(135deg,#FBB9A9 0%,#F87352 40%,#AA6858 70%,#B2B2B2 100%);
+  --scrim:rgb(16 16 16 / .45);
+  /* Не цвета палитры: затемнение под диалогом, чернила печати и светлая плашка под тёмные логотипы продуктов. */
+  --print-ink:#101010;
+  --logo-tile:#F4F4F5;
+  /* Подпись by Makkov — белый SVG автора без изменения байтов: в светлой теме инвертируется. */
+  --signature-filter:invert(1);
+  --shadow-1:0 1px 2px rgb(16 16 16 / .06);
+  --shadow-2:0 1px 2px rgb(16 16 16 / .06),0 12px 32px rgb(16 16 16 / .10);
+}
+
+/* Тёмная тема: системная настройка или явный [data-theme="dark"] (переключатель — P3-04). */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --color-background:#101010;
+    --color-rail:#141414;
+    --color-surface:#1A1A1A;
+    --color-surface-container-low:#1A1A1A;
+    --color-surface-container:#212121;
+    --color-surface-container-high:#2B2B2B;
+    --color-on-surface:#F5F5F5;
+    --color-on-surface-variant:#B2B2B2;
+    --color-outline:#858585;
+    --color-outline-variant:#262626;
+    --color-outline-variant-strong:#3A3A3A;
+    --color-primary:#F87352;
+    --color-on-primary:#101010;
+    --color-primary-container:#33201B;
+    --color-on-primary-container:#FDDCD4;
+    --color-action-gradient:linear-gradient(120deg,#F9967D,#F87352,#E8613F);
+    --color-on-action-gradient:#101010;
+    --color-agent-container:#231C2C;
+    --color-on-agent-container:#E4CAFF;
+    --color-agent-accent:#4A3D5A;
+    --color-practice-container:#17261C;
+    --color-on-practice-container:#CAFFDA;
+    --color-practice-accent:#35503F;
+    --color-human-container:#2A2219;
+    --color-on-human-container:#FFE9CA;
+    --color-human-accent:#574A38;
+    --color-error:#F2B8B5;
+    --color-on-error:#601410;
+    --color-success:#8FD9A8;
+    --color-warning:#F5C26B;
+    --color-pattern-plus:#333333;
+    --color-primary-line:#5A3328;
+    --color-brand-frame-gradient:linear-gradient(135deg,#FFFFFF 0%,#FBB9A9 18%,#F87352 40%,#AA6858 68%,#5D5D5D 100%);
+    --scrim:rgb(0 0 0 / .6);
+    --shadow-1:0 1px 2px rgb(0 0 0 / .5);
+    --shadow-2:0 1px 2px rgb(0 0 0 / .5),0 12px 32px rgb(0 0 0 / .55);
+    --signature-filter:none;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --color-background:#101010;
+  --color-rail:#141414;
+  --color-surface:#1A1A1A;
+  --color-surface-container-low:#1A1A1A;
+  --color-surface-container:#212121;
+  --color-surface-container-high:#2B2B2B;
+  --color-on-surface:#F5F5F5;
+  --color-on-surface-variant:#B2B2B2;
+  --color-outline:#858585;
+  --color-outline-variant:#262626;
+  --color-outline-variant-strong:#3A3A3A;
+  --color-primary:#F87352;
+  --color-on-primary:#101010;
+  --color-primary-container:#33201B;
+  --color-on-primary-container:#FDDCD4;
+  --color-action-gradient:linear-gradient(120deg,#F9967D,#F87352,#E8613F);
+  --color-on-action-gradient:#101010;
+  --color-agent-container:#231C2C;
+  --color-on-agent-container:#E4CAFF;
+  --color-agent-accent:#4A3D5A;
+  --color-practice-container:#17261C;
+  --color-on-practice-container:#CAFFDA;
+  --color-practice-accent:#35503F;
+  --color-human-container:#2A2219;
+  --color-on-human-container:#FFE9CA;
+  --color-human-accent:#574A38;
+  --color-error:#F2B8B5;
+  --color-on-error:#601410;
+  --color-success:#8FD9A8;
+  --color-warning:#F5C26B;
+  --color-pattern-plus:#333333;
+  --color-primary-line:#5A3328;
+  --color-brand-frame-gradient:linear-gradient(135deg,#FFFFFF 0%,#FBB9A9 18%,#F87352 40%,#AA6858 68%,#5D5D5D 100%);
+  --scrim:rgb(0 0 0 / .6);
+  --shadow-1:0 1px 2px rgb(0 0 0 / .5);
+  --shadow-2:0 1px 2px rgb(0 0 0 / .5),0 12px 32px rgb(0 0 0 / .55);
+  --signature-filter:none;
+}
+
+@media (prefers-reduced-motion:reduce){
+  :root{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--shift-appear:0px}
+}

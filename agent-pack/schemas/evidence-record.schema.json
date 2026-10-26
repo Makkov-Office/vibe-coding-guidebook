@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-pack:schema:evidence-record",
+  "title": "Evidence record",
+  "description": "Результат одной проверки, привязанный к состоянию. Handbook 11.3.",
+  "type": "object",
+  "properties": {
+    "ticket": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pr": {
+      "type": "string",
+      "minLength": 1
+    },
+    "head_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "Полный SHA коммита"
+    },
+    "base_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "Полный SHA коммита"
+    },
+    "working_tree": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "clean",
+            "dirty"
+          ]
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "properties": {
+            "state": {
+              "const": "clean"
+            }
+          }
+        },
+        {
+          "properties": {
+            "state": {
+              "const": "dirty"
+            },
+            "changes": {
+              "minItems": 1
+            }
+          },
+          "required": [
+            "changes"
+          ]
+        }
+      ],
+      "description": "dirty — с перечнем изменений (11.3)"
+    },
+    "environment": {
+      "type": "string",
+      "minLength": 1
+    },
+    "check": {
+      "type": "string",
+      "minLength": 1
+    },
+    "result": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "INCOMPLETE"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "ticket",
+    "head_sha",
+    "base_sha",
+    "working_tree",
+    "environment",
+    "check",
+    "result",
+    "timestamp",
+    "limitations"
+  ],
+  "additionalProperties": false
+}
