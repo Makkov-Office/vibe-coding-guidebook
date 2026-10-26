@@ -64,3 +64,20 @@ test('home primary action keeps dark ink on the action gradient in both themes',
  // axe cannot measure text on a gradient: check the token pair directly (palette.json: on-action-gradient on action-gradient).
  for(const colorScheme of ['light','dark'] as const){await page.emulateMedia({colorScheme});await ready(page,'/');const cta=page.locator('.intro-actions .primary-action').first();await expect(cta).toHaveCSS('color','rgb(16, 16, 16)');expect(await cta.evaluate(n=>getComputedStyle(n).backgroundImage)).toContain('linear-gradient');}
 });
+test('design showcase: noindex, themes, keyboard, 44 px targets, reduced motion and axe',async({browser})=>{
+ // P2-04: служебная витрина /design. Тема переключается чипами, движение — чипом и prefers-reduced-motion.
+ const page=await browser.newPage();const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+ await page.goto('/design');await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content',/noindex/);await expect(page.getByRole('heading',{level:1})).toContainText('Чертёж');
+ const bg=()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor);
+ await page.getByRole('button',{name:'Тёмная'}).click();await expect(page.locator('html')).toHaveAttribute('data-theme','dark');expect(await bg()).toBe('rgb(16, 16, 16)');
+ await page.getByRole('button',{name:'Светлая'}).click();expect(await bg()).toBe('rgb(250, 250, 250)');
+ for(const width of [320,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
+  const small=await page.evaluate(()=>[...document.querySelectorAll('main button, main a')].filter(e=>e.getBoundingClientRect().height<44).map(e=>e.textContent));expect(small).toEqual([]);}
+ await page.keyboard.press('Tab');const focused=page.locator(':focus');await expect(focused).toHaveCSS('outline-style','solid');
+ const draw=page.locator('.bp-draw').first();
+ await page.getByRole('button',{name:'Остановить анимации'}).click();await expect(draw).toHaveCSS('animation-name','none');await expect(draw).toHaveCSS('stroke-dashoffset','0px');
+ await page.getByRole('button',{name:'Анимации выключены'}).click();await expect(draw).not.toHaveCSS('animation-name','none');
+ await page.emulateMedia({reducedMotion:'reduce'});await expect(draw).toHaveCSS('animation-name','none');await expect(page.locator('.bp-run')).toHaveCSS('animation-name','none');
+ for(const theme of ['Светлая','Тёмная']){await page.getByRole('button',{name:theme}).click();await page.addScriptTag({path:'node_modules/axe-core/axe.min.js'});const violations=await page.evaluate(async()=>{const result=await(window as unknown as {axe:{run:(options:object)=>Promise<{violations:{id:string}[]}>}}).axe.run({runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}});return result.violations.map(v=>v.id);});expect(violations).toEqual([]);}
+ expect(errors).toEqual([]);await page.close();
+});

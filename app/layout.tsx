@@ -4,6 +4,7 @@ import "./globals.css";
 import "../src/design/home-route.css";
 import "../src/design/tool-reviews.css";
 import "../src/design/product-logos.css";
+import "../src/design/primitives.css";
 import {brandTitle} from "../src/design/brand";
 
 export const metadata: Metadata = {

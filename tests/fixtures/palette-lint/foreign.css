@@ -1,0 +1,5 @@
+/* Фикстура линтера палитры: чужие цвета, линтер обязан упасть. */
+.a{color:#ff0000}
+.b{background:rgb(0 0 0 / .5)}
+.c{border-color:red}
+.ok{color:var(--color-on-surface);fill:currentColor}
