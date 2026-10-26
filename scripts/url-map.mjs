@@ -45,7 +45,7 @@ export function resolveAnchors(map, generated) {
     const headings = new Set(chapter.outline.map((item) => item.id));
     let current = entry.lead;
     for (const [, id] of chapter.html.matchAll(/ id="([^"]+)"/g)) {
-      if (headings.has(id)) current = entry.anchors[id];
+      if (headings.has(id)) current = (entry.anchors ?? {})[id];
       sectionOf.set(id, current);
     }
   }
@@ -54,7 +54,7 @@ export function resolveAnchors(map, generated) {
     const entry = byOld.get(anchor.path);
     if (!entry) throw new Error(`url-map: anchor ${id}: page ${anchor.path} is not in the map`);
     let tab = "overview";
-    if (entry.tabs && id !== entry.chapter) tab = entry.anchors[id] ?? sectionOf.get(id);
+    if (entry.tabs && id !== entry.chapter) tab = (entry.anchors ?? {})[id] ?? sectionOf.get(id);
     if (!tab) throw new Error(`url-map: anchor ${id} on ${anchor.path}: not in the chapter HTML and not listed in anchors`);
     resolved[id] = { path: tabPath(map, entry, tab), tab };
   }
@@ -79,14 +79,21 @@ export function validateUrlMap(map, generated) {
     if (!section) errors.push(`${name}: unknown section ${entry.section}`);
     else if (section.path !== "/" && entry.new !== section.path && !entry.new?.startsWith(`${section.path}/`)) errors.push(`${name}: ${entry.new} is outside section ${section.path}`);
     if (entry.keep && entry.old === entry.new) errors.push(`${name}: keep without a move`);
+    // `/` is Главная and a section root is that section's landing page: only
+    // the page that already lives there may map onto it. A service page
+    // (outside the rail) does not move.
+    if (entry.new === "/" || (section && entry.new === section.path && entry.old !== entry.new)) errors.push(`${name}: ${entry.new} is a section landing page`);
+    if (section?.id === "service" && entry.old !== entry.new) errors.push(`${name}: a service page keeps its address`);
     if (entry.tabs) {
       if (!tabIds.has(entry.lead)) errors.push(`${name}: lead tab ${entry.lead} is unknown`);
+      if (typeof entry.anchors !== "object" || entry.anchors === null) errors.push(`${name}: tabs need an anchors object`);
       for (const [id, tab] of Object.entries(entry.anchors ?? {})) if (!tabIds.has(tab)) errors.push(`${name}: anchor ${id} → unknown tab ${tab}`);
     }
   }
   // Tab addresses are segments of the chapter path, so they must not collide
   // with another page or another chapter's tab.
-  const owners = new Map();
+  // An old address that stays live (`keep`) is owned by that entry too.
+  const owners = new Map((map.pages ?? []).filter((entry) => entry.keep).map((entry) => [entry.old, entry.old]));
   for (const entry of map.pages ?? []) {
     if (entry.alias) continue;
     const addresses = entry.tabs ? [...tabIds].map((tab) => tabPath(map, entry, tab)) : [entry.new];
@@ -130,6 +137,16 @@ export function validateUrlMap(map, generated) {
     }
   }
   return errors;
+}
+
+// Anchors whose registry path (generated.json, used by Reader to restore old
+// links) is an old address that this build already redirects. Reader would
+// send such a link back to the old address, the 308 would bring it to the
+// overview again: a loop. When a page moves, the registry must take its paths
+// from resolveAnchors; until then the build fails here.
+export function staleAnchors(map, generated, builtPaths) {
+  const moved = new Set(map.pages.filter((entry) => redirects(entry) && builtPaths.has(entry.new)).map((entry) => entry.old));
+  return Object.values(generated.anchors).filter((anchor) => moved.has(anchor.path)).map((anchor) => `${anchor.id} → ${anchor.path}`);
 }
 
 // Vercel routes for the entries whose target page is in this build. The

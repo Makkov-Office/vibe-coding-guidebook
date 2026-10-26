@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { currentRoutes, loadUrlMap, redirectRoutes, resolveAnchors, validateUrlMap } from '../scripts/url-map.mjs';
+import { currentRoutes, loadUrlMap, redirectRoutes, resolveAnchors, staleAnchors, validateUrlMap } from '../scripts/url-map.mjs';
 
 const generated = JSON.parse(fs.readFileSync(new URL('../src/content/generated.json', import.meta.url), 'utf8'));
 const map = loadUrlMap(new URL('..', import.meta.url).pathname);
@@ -18,14 +18,14 @@ test('url map is valid and covers every route and anchor', () => {
   assert.deepEqual(Object.keys(resolved).sort(), Object.keys(generated.anchors).sort());
 });
 
-test('every static page of the app is a current route', () => {
-  const routes = new Set(currentRoutes(generated));
+test('every static page of the app is in the map', () => {
+  const routes = new Set(map.pages.map((entry) => entry.old));
   const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((item) => item.isDirectory() ? walk(`${dir}/${item.name}`) : item.name === 'page.tsx' ? [dir] : []);
   const app = new URL('../app', import.meta.url).pathname;
   for (const dir of walk(app)) {
     const route = `/${dir.slice(app.length + 1).split('/').filter((segment) => !segment.startsWith('(')).join('/')}`.replace(/\/$/, '') || '/';
     if (route.includes('[')) continue;
-    assert.ok(routes.has(route), `${route} is served but not a current route`);
+    assert.ok(routes.has(route), `${route} is served but not in src/content/url-map.json`);
   }
 });
 
@@ -55,6 +55,16 @@ test('redirects only to pages that exist in the build, one hop', () => {
   assert.ok(!redirectRoutes(map, new Set(['/start/00-how-to-read'])).length);
 });
 
+test('a redirect is refused while the anchor registry still points to the old address', () => {
+  const built = new Set([...currentRoutes(generated), '/flow/08-preflight']);
+  assert.equal(staleAnchors(map, generated, new Set(currentRoutes(generated))).length, 0);
+  const stale = staleAnchors(map, generated, built);
+  assert.equal(stale.length, Object.values(generated.anchors).filter((anchor) => anchor.path === '/chapters/08').length);
+  const moved = structuredClone(generated);
+  for (const [id, target] of Object.entries(resolveAnchors(map, generated))) moved.anchors[id] = { id, path: target.path };
+  assert.deepEqual(staleAnchors(map, moved, built), []);
+});
+
 test('broken entries fail the check', () => {
   const cases = [
     ['missing route', (copy) => { copy.pages = copy.pages.filter((entry) => entry.old !== '/chapters/14'); }, /route \/chapters\/14 is not in the map/],
@@ -68,6 +78,10 @@ test('broken entries fail the check', () => {
     ['duplicate address', (copy) => { page(copy, '/chapters/09').new = '/flow/08-preflight'; }, /also the address/],
     ['listed twice', (copy) => { copy.pages.push({ ...page(copy, '/print') }); }, /listed twice/],
     ['chapter left out', (copy) => { page(copy, '/tools/codex').chapter = undefined; delete page(copy, '/tools/codex').chapter; }, /chapter ch-codex is not in the map/],
+    ['moved onto Главная', (copy) => { page(copy, '/chapters/22').new = '/'; page(copy, '/chapters/22').section = 'service'; }, /section landing page/],
+    ['moved onto a section root', (copy) => { page(copy, '/chapters/06').new = '/flow'; }, /section landing page/],
+    ['service page moves', (copy) => { page(copy, '/chapters/22').new = '/flow/22-x'; page(copy, '/chapters/22').section = 'service'; }, /service page keeps its address/],
+    ['tabs without anchors', (copy) => { delete page(copy, '/chapters/01').anchors; }, /tabs need an anchors object/],
     ['eight sections', (copy) => { copy.sections = copy.sections.filter((section) => section.id !== 'agents'); }, /9 sections/],
   ];
   for (const [name, breakIt, expected] of cases) {

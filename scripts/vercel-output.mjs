@@ -22,7 +22,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { loadUrlMap, redirectRoutes, tabPath } from "./url-map.mjs";
+import { loadUrlMap, redirectRoutes, staleAnchors, tabPath } from "./url-map.mjs";
 
 function fail(message) {
   console.error(`vercel-output: FAIL ${message}`);
@@ -160,6 +160,8 @@ const mapped = new Set([
 const builtPaths = new Set(pages.map((page) => page.urlPath));
 for (const page of pages) if (!mapped.has(page.urlPath)) fail(`page ${page.urlPath} is not in src/content/url-map.json`);
 const legacyRedirects = redirectRoutes(urlMap, builtPaths);
+const stale = staleAnchors(urlMap, JSON.parse(fs.readFileSync(path.join(root, "src/content/generated.json"), "utf8")), builtPaths);
+if (stale.length > 0) fail(`anchor registry points to ${stale.length} redirected old addresses (first: ${stale[0]}); build it from resolveAnchors`);
 
 // 3. Cloudflare _headers → routes. Only the plain form is supported:
 //    an unindented URL pattern (optional trailing *) and indented headers.
