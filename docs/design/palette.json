@@ -58,7 +58,9 @@
       "on-error": "#FFFFFF",
       "success": "#1E6B3B",
       "warning": "#7A4F00",
-      "pattern-plus": "#D2D2D2"
+      "pattern-plus": "#D2D2D2",
+      "primary-line": "#F6C3B5",
+      "brand-frame-gradient": "linear-gradient(135deg,#FBB9A9 0%,#F87352 40%,#AA6858 70%,#B2B2B2 100%)"
     },
     "dark": {
       "background": "#101010",
@@ -91,7 +93,9 @@
       "on-error": "#601410",
       "success": "#8FD9A8",
       "warning": "#F5C26B",
-      "pattern-plus": "#333333"
+      "pattern-plus": "#333333",
+      "primary-line": "#5A3328",
+      "brand-frame-gradient": "linear-gradient(135deg,#FFFFFF 0%,#FBB9A9 18%,#F87352 40%,#AA6858 68%,#5D5D5D 100%)"
     }
   },
   "pairs": [
@@ -118,5 +122,5 @@
   "forbidden": [
     { "fg": "primary", "bg": "surface-container-high", "theme": "light", "reason": "4.43:1 < 4.5: текст акцента на нажатом состоянии; нажатая ссылка и активный пункт используют primary-container" }
   ],
-  "decorative": ["outline-variant", "outline-variant-strong", "agent-accent", "practice-accent", "human-accent", "pattern-plus"]
+  "decorative": ["outline-variant", "outline-variant-strong", "agent-accent", "practice-accent", "human-accent", "pattern-plus", "primary-line", "brand-frame-gradient"]
 }
