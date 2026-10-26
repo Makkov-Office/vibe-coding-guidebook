@@ -22,6 +22,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
+import { loadUrlMap, redirectRoutes, tabPath } from "./url-map.mjs";
 
 function fail(message) {
   console.error(`vercel-output: FAIL ${message}`);
@@ -148,6 +149,18 @@ const prerenderFiles = walk(prerenderDir);
 const expectedFiles = new Set(["404.html", ...pages.flatMap((page) => [`${page.file}.html`, `${page.file}.rsc`])]);
 for (const file of prerenderFiles) if (!expectedFiles.has(file)) fail(`unexpected prerendered file ${file}`);
 
+// 2b. URL map (P2-05): every built page must be in src/content/url-map.json
+//     (fail closed); an old address gets a 308 only once its new page is in
+//     this build, so the map switches on page by page as the structure moves.
+const urlMap = loadUrlMap(root);
+const mapped = new Set([
+  ...urlMap.sections.map((section) => section.path),
+  ...urlMap.pages.flatMap((entry) => [entry.old, entry.new, ...(entry.tabs ? urlMap.tabs.map((tab) => tabPath(urlMap, entry, tab.id)) : [])]),
+]);
+const builtPaths = new Set(pages.map((page) => page.urlPath));
+for (const page of pages) if (!mapped.has(page.urlPath)) fail(`page ${page.urlPath} is not in src/content/url-map.json`);
+const legacyRedirects = redirectRoutes(urlMap, builtPaths);
+
 // 3. Cloudflare _headers → routes. Only the plain form is supported:
 //    an unindented URL pattern (optional trailing *) and indented headers.
 const headerRoutes = [];
@@ -207,6 +220,9 @@ if (fs.existsSync(path.join(staticDir, "handbook.md"))) overrides["handbook.md"]
 
 const rsc = [{ type: "header", key: "rsc", value: "1" }];
 const routes = [
+  // Old address → new page, 308, before everything else (one hop, also for
+  // the trailing-slash form).
+  ...legacyRedirects,
   // /chapters/01/ → 308 /chapters/01, as with trailingSlash: false in Vinext.
   { src: "^/(.*[^/])/+$", status: 308, headers: { Location: "/$1" } },
   ...headerRoutes,
@@ -225,4 +241,4 @@ for (const page of pages) {
 routes.push({ handle: "filesystem" }, { src: "^/.*$", dest: "/404.html", status: 404 });
 
 fs.writeFileSync(path.join(out, "config.json"), `${JSON.stringify({ version: 3, routes, overrides }, null, 2)}\n`);
-console.log(`vercel-output: PASS ${pages.length} pages (+404), ${copied.size} client files (${skipped} Cloudflare-only skipped), RSC compatibility id ${compatibilityId} → ${path.relative(root, out)}`);
+console.log(`vercel-output: PASS ${pages.length} pages (+404), ${legacyRedirects.length} legacy redirects, ${copied.size} client files (${skipped} Cloudflare-only skipped), RSC compatibility id ${compatibilityId} → ${path.relative(root, out)}`);
