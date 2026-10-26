@@ -33,6 +33,10 @@ Glossary registry извлекается из главы 23. Определен�
 
 Автоссылки сохраняются для всех подходящих вхождений. Словоформы и неоднозначности: `src/content/term-overrides.mjs`. Compatibility registry `block-identities.json` сохраняет IDs неизменённых блоков, `practice-identities.json` — прежние ключи чеклистов. Новые блоки получают отдельный namespace. После редактирования проверьте overrides, targets и **0 unexplained gaps**. Coverage включает динамические evidence/owner panels и definitions previews с явным исключением рекурсивной разметки. Raw executable source защищён; Copy возвращает исходник из registry.
 
+## Agent Pack
+
+`agent-pack/` — переносимый набор правил гайда для AI-агента в чужом репозитории: нормативный `AGENTS.md` (роли, жизненный цикл, gates; каждое правило со ссылкой на главу), `CLAUDE.md` для Claude Code и заготовки `skills/`, `schemas/`, `claude/`. Подключение и версия — `agent-pack/README.md`. Пакет не меняет корневые `AGENTS.md` / `CLAUDE.md` этого репозитория.
+
 ## Чтение и обучение
 
 При JavaScript термины открывают пояснение рядом; без JavaScript это canonical glossary links. Tooltip не меняет scroll, URL или history. Длинные определения и два шаблона (глава 06 / глава 14) используют немодальный desktop drawer / модальный mobile sheet. Явный переход в глоссарий сохраняет точный origin для возврата.
