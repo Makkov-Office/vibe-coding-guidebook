@@ -41,6 +41,8 @@ Glossary registry извлекается из главы 23. Определен�
 
 ## Дизайн и публикация
 
+Новый визуальный язык «Чертёж» v2 (редизайн, P2): спецификация `docs/design/visual-language.md` — палитра бренда UIX PRO, роли тем, цвета-смыслы, шрифты Unbounded / Geist / Martian Mono / Pixelify Sans, формы и движение. Машинная палитра — `docs/design/palette.json`; контраст всех пар в обеих темах — `node scripts/design-contrast.mjs` (`--write` обновляет `docs/design/contrast-v2.json` и таблицу в спецификации), проверяется в `npm test`. Пока токены v2 не подключены (P2-03), сайт рисуется в стиле ниже.
+
 Linear: #010102, графитовые поверхности, #5e6ad2. Manrope и JetBrains Mono self-hosted с кириллицей; лицензии в `public/fonts/`. Tabler Outline: единый размер **20px / stroke 1.75 / currentColor**, registry `src/design/icons.mjs`; декоративные SVG не заменяют accessible labels. Rail 264px закреплён слева от 1024px; мобильная навигация — drawer.
 
 Sites project ID хранится в `.openai/hosting.json`. Используйте native Sites workflow для source push, build/archive и save/deploy. **Текущий public-доступ сохраняется по явному разрешению владельца.** Не создавайте новый Site и не меняйте хостинг.

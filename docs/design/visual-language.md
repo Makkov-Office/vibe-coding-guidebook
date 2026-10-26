@@ -1,0 +1,263 @@
+# Визуальный язык «Чертёж» v2
+
+Статус: утверждено founder 26.10.2026 (концепт — 19:43Z, цвета бренда — 20:40Z, шрифты — 21:02Z). Тикет: P2-02 (#36). Решение о редизайне: `docs/adr/0003-m3-redesign.md` (P2-01).
+
+Это единственная спецификация цвета, шрифтов, форм и движения нового интерфейса. Из неё P2-03 делает CSS-токены, P2-04 — примитивы и SVG-шаблоны, P2-06 — словарь иконок. Значения здесь и в `docs/design/palette.json` совпадают с планом RD-01 (раздел «Концепты», вариант f «Чертёж в цветах бренда»). Если значение нужно поменять, меняется сначала эта спецификация и `palette.json`, потом токены.
+
+Источники, проверено 26.10.2026:
+- Бренд UIX PRO: [makkov.com/uixpro](https://makkov.com/uixpro) — цвета взяты из CSS и SVG страницы (заливки `rgba(…)`, стопы градиента `<stop>`, шрифт заголовков `'Unbounded'`).
+- План RD-01: артефакт founder «План редизайна MAE», копия `/mnt/project-files/redesign/mae-redesign.html`, раздел «Концепты», вариант f.
+- Шрифты: каталог Google Fonts, файлы `METADATA.pb` в [github.com/google/fonts](https://github.com/google/fonts) (`ofl/<family>/METADATA.pb`).
+- Роль error: базовая схема Material 3 (baseline), потому что у бренда нет цвета ошибки.
+
+## 1. Принципы концепта
+
+1. **Чертёж, а не декорация.** Графит и белый, тонкие линии 1.5 px, моноширинные подписи-аннотации, как размеченный макет. Фон страниц чистый: без сеток, точек, пятен и градиентов.
+2. **Паттерн «+» бренда — только на двух экранах:** hero главной и hero «Начать». Плюс 8×8 px в ячейке 28 px, линия 1 px цвета `pattern-plus`. Больше нигде.
+3. **Каждая идея показана живым объектом** (язык interfaces.dev): маленькое демо, формула из «пилюль», сравнение «Так / Не так», пунктирная схема с моно-подписями. Картинка объясняет одну мысль.
+4. **Коралловый градиент — только действие и прогресс** («Твой путь»): главная кнопка, текущий шаг, прогресс главы, уровень. Не для заголовков, фонов секций и ошибок.
+5. **Цвет несёт смысл.** Три цвета модулей бренда стали тремя постоянными смыслами (раздел 4). Один цвет — одно значение на всех страницах.
+6. **Механика M3, формы свои.** Rail, мега-меню, табы, карточки повторяют модель m3.material.io; иллюстрации, формы и бренд рисуем свои (риск копии из RD-01).
+
+## 2. Палитра бренда UIX PRO
+
+| Имя | Значение | Где найдено на makkov.com/uixpro |
+|---|---|---|
+| `graphite-950` | `#101010` | фон и текст, `rgba(16,16,16,1)` |
+| `graphite-900` | `#1A1A1A` | поверхности, `rgba(26,26,26,1)` |
+| `graphite-600` | `#595959` | вторичный текст, `rgba(89,89,89,1)` |
+| `graphite-300` | `#B2B2B2` | вторичный текст на тёмном, `rgba(178,178,178,1)` |
+| `module-lilac` | `#E4CAFF` | цвет модуля курса |
+| `module-mint` | `#CAFFDA` | цвет модуля курса |
+| `module-peach` | `#FFE9CA` | цвет модуля курса |
+
+Фирменный градиент (SVG `<stop>` на странице бренда): `#FFFFFF` 0 → `#FDDCD4` 0.125 → `#FBB9A9` 0.25 → `#F9967D` 0.375 → `#F87352` 0.5 → `#AA6858` 0.75 → `#84635A` 0.875 → `#5D5D5D` 1.
+
+Полный градиент — декоративный (бренд-плашки, иллюстрации P4-02). Для кнопок используется его коралловая середина — «градиент действия» (раздел 3).
+
+## 3. Роли темы
+
+Имена ролей — в стиле Material 3, значения — из палитры бренда и варианта f RD-01. Машинная версия — `docs/design/palette.json`.
+
+### Поверхности и текст
+
+| Роль | Светлая | Тёмная | Назначение |
+|---|---|---|---|
+| `background` | `#FAFAFA` | `#101010` | фон страницы |
+| `rail` | `#F3F3F3` | `#141414` | navigation rail |
+| `surface` | `#FFFFFF` | `#1A1A1A` | карточка, меню, диалог |
+| `surface-container-low` | `#F4F4F4` | `#1A1A1A` | область визуала в карточке, тональный блок |
+| `surface-container` | `#EDEDED` | `#212121` | hover, вложенный блок |
+| `surface-container-high` | `#E3E3E3` | `#2B2B2B` | нажатое состояние, трек прогресса |
+| `on-surface` | `#101010` | `#F5F5F5` | основной текст |
+| `on-surface-variant` | `#595959` | `#B2B2B2` | вторичный текст, подписи, иконки |
+| `outline` | `#595959` | `#858585` | граница контрола (поле, чип, тональная кнопка) |
+| `outline-variant` | `#E6E6E6` | `#262626` | разделитель, граница карточки (декоративно) |
+| `outline-variant-strong` | `#D0D0D0` | `#3A3A3A` | линии схем «Чертёж» второго плана (декоративно) |
+| `pattern-plus` | `#D2D2D2` | `#333333` | паттерн «+» на двух hero |
+
+`outline` тёмной темы (`#858585`) не из бренда: `#5D5D5D` даёт 2.89:1 на `#101010`, ниже порога 3:1 для границ контролов. Выбран ближайший нейтральный серый с запасом.
+
+### Акцент «Твой путь»
+
+| Роль | Светлая | Тёмная | Назначение |
+|---|---|---|---|
+| `primary` | `#B4401F` | `#F87352` | текст акцента, ссылка, кольцо фокуса, точка прогресса |
+| `on-primary` | `#FFFFFF` | `#101010` | текст на сплошной заливке `primary` |
+| `primary-container` | `#FDE6DF` | `#33201B` | тональная кнопка, текущий пункт, активная «пилюля» |
+| `on-primary-container` | `#7A2A16` | `#FDDCD4` | текст и иконка в `primary-container` |
+| `action-gradient` | `linear-gradient(120deg, #F9967D, #F87352, #E8613F)` | то же | главная кнопка-«пилюля» |
+| `on-action-gradient` | `#101010` | `#101010` | текст главной кнопки |
+
+`#B4401F` — текст акцента на светлом фоне: сам `#F87352` на `#FAFAFA` даёт меньше 4.5:1, поэтому коралл бренда в светлой теме живёт только в заливке градиента. `#E8613F` — третий стоп градиента кнопки из RD-01, он темнее `#F87352` и даёт глубину справа.
+
+### Цвета-смыслы
+
+| Группа | Роль | Светлая | Тёмная |
+|---|---|---|---|
+| Агент | `agent-container` / `on-agent-container` | `#F1E4FF` / `#4B2380` | `#231C2C` / `#E4CAFF` |
+| | `agent-accent` (линия, пилюля) | `#E4CAFF` | `#4A3D5A` |
+| Практика | `practice-container` / `on-practice-container` | `#E3FFEB` / `#135C2E` | `#17261C` / `#CAFFDA` |
+| | `practice-accent` | `#CAFFDA` | `#35503F` |
+| Решает человек | `human-container` / `on-human-container` | `#FFF3E2` / `#6B4210` | `#2A2219` / `#FFE9CA` |
+| | `human-accent` | `#FFE9CA` | `#574A38` |
+
+### Статусы
+
+Статусы — не цвета-смыслы: PASS не красится мятным, BLOCKED — не персиковым. Метка статуса всегда содержит слово (`PASS`, `FAIL`, `BLOCKED`, `INCOMPLETE`) и иконку, цвет только дублирует.
+
+| Роль | Светлая | Тёмная | Где |
+|---|---|---|---|
+| `error` / `on-error` | `#B3261E` / `#FFFFFF` | `#F2B8B5` / `#601410` | FAIL, ошибка формы, «Не так» |
+| `success` | `#1E6B3B` | `#8FD9A8` | PASS, «Так» |
+| `warning` | `#7A4F00` | `#F5C26B` | BLOCKED, INCOMPLETE, «Осторожно» |
+
+`error` взят из базовой схемы Material 3. `success` и `warning` у бренда и в RD-01 не заданы (в макете были `#2e9e5b` и `#e3a52b`, они не проходят 4.5:1 как текст на светлом), поэтому подобраны под порог контраста и подтверждаются на витрине P2-04.
+
+## 4. Цвета-смыслы: где можно и где нельзя
+
+Гайд учит одной цепочке: агент делает, практика проверяет, человек решает. У каждого звена свой цвет, как у линий метро.
+
+| Смысл | Цвет | Можно | Нельзя |
+|---|---|---|---|
+| **Твой путь** | коралловый градиент, `primary` | главная кнопка, текущий шаг, прогресс главы и уровня, активный пункт rail, кольцо фокуса | заголовки, фоны секций, ошибки, декоративные плашки |
+| **Агент** | лиловый `#E4CAFF` | что делает или получает агент: промпт, вывод агента, «Скопировать для агента», Agent Pack, skills | действия человека, статусы |
+| **Практика** | мятный `#CAFFDA` | где пользователь действует сам: тренажёр, «Проверь себя», тренажёр дня, XP | статус PASS (у статусов свои метки) |
+| **Решает человек** | персиковый `#FFE9CA` | gate, merge, решение founder, правило MUST: место, где агент останавливается и ждёт человека | предупреждения об ошибке |
+
+Правила применения:
+- На одном блоке — один смысл. Если блок про агента и gate одновременно, смысл выбирается по тому, кто действует.
+- Цвет-смысл всегда вместе с подписью или иконкой роли (P2-06), чтобы смысл читался без цвета.
+- Текст внутри блока — только парная роль `on-*-container`. Цвета модулей бренда (`*-accent`) в светлой теме — фон «пилюли» с текстом `on-*-container`, в тёмной — линия и граница.
+
+## 5. Шрифты
+
+У каждого шрифта одна роль. Все пять — свободные (SIL Open Font License 1.1), с кириллицей, подключаются как свои файлы из `public/fonts` (woff2, подмножества cyrillic + latin), лицензии кладутся в `public/licenses` — это делает P2-03. Загрузки с Google при открытии страницы нет.
+
+| Роль | Шрифт | Начертания | Где | Правило |
+|---|---|---|---|---|
+| Hero и H1 | **Unbounded** 500 | 500 | главная, «Начать», название главы | не длиннее двух строк; широкий, поэтому не в длинных заголовках и тексте |
+| Заголовки, текст, UI | **Geist** | 400 текст, 500 UI, 600 заголовки | всё остальное | текст 16 px, заголовки 600 |
+| Код, аннотации, статусы | **Martian Mono**, ширина 87.5 | 400, 500 | блоки кода, аннотации «чертежа», подписи на схемах, статусы | только моноширинное содержимое |
+| Игровые метки | **Pixelify Sans** 500 | 500 | XP, уровни, счётчики шагов | до трёх слов, никогда в абзацах |
+| Резерв текста | **Onest** | 400, 600 | не подключается | если Geist на русском окажется сухим, меняется только текстовый шрифт |
+
+Факты о шрифтах (Google Fonts, `METADATA.pb`, проверено 26.10.2026):
+
+| Шрифт | Авторы | Лицензия | Оси | Подмножества | Исходный репозиторий |
+|---|---|---|---|---|---|
+| Unbounded | NaN | OFL 1.1 | `wght` 200–900 | cyrillic, cyrillic-ext, latin, latin-ext, vietnamese | [googlefonts/unbounded](https://github.com/googlefonts/unbounded) |
+| Geist | Andrés Briganti, Mateo Zaragoza, Guillermo Rauch, Evil Rabbit, José Rago, Facundo Santana | OFL 1.1 | `wght` 100–900, есть курсив | cyrillic, cyrillic-ext, latin, latin-ext, vietnamese | [vercel/geist-font](https://github.com/vercel/geist-font) |
+| Martian Mono | Roman Shamin, Evil Martians | OFL 1.1 | `wdth` 75–112.5, `wght` 100–800 | cyrillic, cyrillic-ext, latin, latin-ext | [evilmartians/mono](https://github.com/evilmartians/mono) |
+| Pixelify Sans | Stefie Justprince | OFL 1.1 | `wght` 400–700 | cyrillic, latin, latin-ext | [eifetx/Pixelify-Sans](https://github.com/eifetx/Pixelify-Sans) |
+| Onest | Dmitri Voloshin, Andrey Kudryavtsev | OFL 1.1 | `wght` 100–900 | cyrillic, cyrillic-ext, latin, latin-ext | [simpals/onest](https://github.com/simpals/onest) |
+
+Отсеяны на этапе RD-01, потому что нет кириллицы: Geist Pixel, Space Grotesk, Silkscreen, Mona Sans, Instrument Sans, Doto. Manrope и JetBrains Mono текущего сайта уходят, когда на них не останется ссылок (P2-03).
+
+## 6. Формы
+
+- Радиусы (вариант f RD-01): крупная карточка и hero — 20 px, карточка — 16 px, малый блок и поле — 12 px; таб-бар, кнопки, чипы и «пилюли» скруглены полностью. Внутренний радиус = внешний − отступ.
+- Линии: 1.5 px для схем и иконок (Tabler, P2-06), 1 px для границ и разделителей.
+- Сетка отступов — 4 px. Высота касания интерактивного элемента — не меньше 44 px.
+- Тени почти не используются: `0 1px 2px` + мягкая `0 12px 32px` только у всплывающих слоёв (мега-меню, диалог), карточки различаются тоном поверхности.
+
+## 7. Движение
+
+Каждое движение объясняет, что произошло: что появилось, что связано, куда идёт задача, какой шаг пройден. Всё остальное не двигается.
+
+Токены: одна кривая `cubic-bezier(.2, 0, 0, 1)`, длительности 120 / 240 / 480 мс (короткая — hover и нажатие, средняя — меню и подсказки, длинная — экран).
+
+| Приём | Что происходит | Время |
+|---|---|---|
+| Появление | экран, меню, подсказка: прозрачность и сдвиг на 6 px, без размытия и «пружины» | 240–480 мс |
+| Прорисовка линии | линия схемы рисуется, когда схема появилась или на неё навели; один раз, без зацикливания | 900 мс, один раз |
+| Бег точки | одна точка идёт по пути задачи; плавный старт и остановка, на схеме не больше одной | 5–7 с, пауза в конце |
+| Смена шага | чек-лист и путь задачи: пройденные шаги загораются по одному, слева направо | 350 мс на шаг |
+
+Убрано: парение фигур, пульсация, вращение, волна флажка, «дышащие» пятна, пружина с перелётом, размытие при появлении, бегущий пунктир.
+
+Reduced motion: при `prefers-reduced-motion: reduce` все длительности обнуляются, линии показываются сразу прорисованными, точка стоит в конце пути, шаги сразу в итоговом состоянии. Кнопка паузы в rail (P3-04) останавливает все анимации так же.
+
+## 8. Контраст
+
+Пороги WCAG 2.2: текст не меньше 4.5:1 (1.4.3), границы контролов, иконки и фокус не меньше 3:1 (1.4.11). Таблицу ниже и `docs/design/contrast-v2.json` генерирует `node scripts/design-contrast.mjs --write` из `docs/design/palette.json`; тест `tests/design-palette.test.mjs` в `npm test` падает, если пара ниже порога или таблица устарела. Декоративные роли (`outline-variant*`, `*-accent` как линия, `pattern-plus`) порогу не подчиняются и не несут смысла без текста или иконки рядом. Для градиента проверяется каждый стоп.
+
+<!-- contrast-table:start -->
+| Тема | Цвет | Фон | Где | Порог | Контраст | Итог |
+|---|---|---|---|---|---|---|
+| light | `on-surface` #101010 | `background` #FAFAFA | основной текст | 4.5:1 | 18.23 | PASS |
+| light | `on-surface` #101010 | `rail` #F3F3F3 | основной текст | 4.5:1 | 17.15 | PASS |
+| light | `on-surface` #101010 | `surface` #FFFFFF | основной текст | 4.5:1 | 19.03 | PASS |
+| light | `on-surface` #101010 | `surface-container-low` #F4F4F4 | основной текст | 4.5:1 | 17.30 | PASS |
+| light | `on-surface` #101010 | `surface-container` #EDEDED | основной текст | 4.5:1 | 16.25 | PASS |
+| light | `on-surface` #101010 | `surface-container-high` #E3E3E3 | основной текст | 4.5:1 | 14.83 | PASS |
+| light | `on-surface-variant` #595959 | `background` #FAFAFA | вторичный текст, подписи | 4.5:1 | 6.71 | PASS |
+| light | `on-surface-variant` #595959 | `rail` #F3F3F3 | вторичный текст, подписи | 4.5:1 | 6.31 | PASS |
+| light | `on-surface-variant` #595959 | `surface` #FFFFFF | вторичный текст, подписи | 4.5:1 | 7.00 | PASS |
+| light | `on-surface-variant` #595959 | `surface-container-low` #F4F4F4 | вторичный текст, подписи | 4.5:1 | 6.37 | PASS |
+| light | `on-surface-variant` #595959 | `surface-container` #EDEDED | вторичный текст, подписи | 4.5:1 | 5.98 | PASS |
+| light | `on-surface-variant` #595959 | `surface-container-high` #E3E3E3 | вторичный текст, подписи | 4.5:1 | 5.46 | PASS |
+| light | `primary` #B4401F | `background` #FAFAFA | текст акцента, ссылки «Твой путь» | 4.5:1 | 5.45 | PASS |
+| light | `primary` #B4401F | `surface` #FFFFFF | текст акцента, ссылки «Твой путь» | 4.5:1 | 5.69 | PASS |
+| light | `primary` #B4401F | `surface-container-low` #F4F4F4 | текст акцента, ссылки «Твой путь» | 4.5:1 | 5.17 | PASS |
+| light | `primary` #B4401F | `surface-container` #EDEDED | текст акцента, ссылки «Твой путь» | 4.5:1 | 4.86 | PASS |
+| light | `on-primary` #FFFFFF | `primary` #B4401F | текст на сплошной акцентной кнопке | 4.5:1 | 5.69 | PASS |
+| light | `on-primary-container` #7A2A16 | `primary-container` #FDE6DF | тональная кнопка, текущий шаг | 4.5:1 | 8.09 | PASS |
+| light | `on-action-gradient` #101010 | `action-gradient[0]` #F9967D | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 8.78 | PASS |
+| light | `on-action-gradient` #101010 | `action-gradient[1]` #F87352 | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 6.86 | PASS |
+| light | `on-action-gradient` #101010 | `action-gradient[2]` #E8613F | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 5.63 | PASS |
+| light | `on-agent-container` #4B2380 | `agent-container` #F1E4FF | блок «Агент» | 4.5:1 | 9.33 | PASS |
+| light | `on-practice-container` #135C2E | `practice-container` #E3FFEB | блок «Практика» | 4.5:1 | 7.61 | PASS |
+| light | `on-human-container` #6B4210 | `human-container` #FFF3E2 | блок «Решает человек» | 4.5:1 | 7.95 | PASS |
+| light | `on-agent-container` #4B2380 | `agent-accent` #E4CAFF | пилюля «Агент» на цвете модуля | 4.5:1 | 7.67 | PASS |
+| light | `on-practice-container` #135C2E | `practice-accent` #CAFFDA | пилюля «Практика» на цвете модуля | 4.5:1 | 7.25 | PASS |
+| light | `on-human-container` #6B4210 | `human-accent` #FFE9CA | пилюля «Решает человек» на цвете модуля | 4.5:1 | 7.36 | PASS |
+| light | `error` #B3261E | `background` #FAFAFA | статус FAIL, ошибка | 4.5:1 | 6.26 | PASS |
+| light | `error` #B3261E | `surface` #FFFFFF | статус FAIL, ошибка | 4.5:1 | 6.54 | PASS |
+| light | `error` #B3261E | `surface-container` #EDEDED | статус FAIL, ошибка | 4.5:1 | 5.58 | PASS |
+| light | `on-error` #FFFFFF | `error` #B3261E | текст на плашке ошибки | 4.5:1 | 6.54 | PASS |
+| light | `success` #1E6B3B | `background` #FAFAFA | статус PASS | 4.5:1 | 6.25 | PASS |
+| light | `success` #1E6B3B | `surface` #FFFFFF | статус PASS | 4.5:1 | 6.52 | PASS |
+| light | `success` #1E6B3B | `surface-container` #EDEDED | статус PASS | 4.5:1 | 5.57 | PASS |
+| light | `warning` #7A4F00 | `background` #FAFAFA | статусы BLOCKED / INCOMPLETE | 4.5:1 | 6.83 | PASS |
+| light | `warning` #7A4F00 | `surface` #FFFFFF | статусы BLOCKED / INCOMPLETE | 4.5:1 | 7.13 | PASS |
+| light | `warning` #7A4F00 | `surface-container` #EDEDED | статусы BLOCKED / INCOMPLETE | 4.5:1 | 6.09 | PASS |
+| light | `outline` #595959 | `background` #FAFAFA | граница контрола (поле, чип, тональная кнопка) | 3:1 | 6.71 | PASS |
+| light | `outline` #595959 | `surface` #FFFFFF | граница контрола (поле, чип, тональная кнопка) | 3:1 | 7.00 | PASS |
+| light | `outline` #595959 | `surface-container-high` #E3E3E3 | граница контрола (поле, чип, тональная кнопка) | 3:1 | 5.46 | PASS |
+| light | `primary` #B4401F | `background` #FAFAFA | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 5.45 | PASS |
+| light | `primary` #B4401F | `surface` #FFFFFF | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 5.69 | PASS |
+| light | `primary` #B4401F | `surface-container-high` #E3E3E3 | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 4.43 | PASS |
+| light | `on-surface-variant` #595959 | `background` #FAFAFA | иконки rail и интерфейса | 3:1 | 6.71 | PASS |
+| light | `on-surface-variant` #595959 | `rail` #F3F3F3 | иконки rail и интерфейса | 3:1 | 6.31 | PASS |
+| light | `on-surface-variant` #595959 | `surface` #FFFFFF | иконки rail и интерфейса | 3:1 | 7.00 | PASS |
+| dark | `on-surface` #F5F5F5 | `background` #101010 | основной текст | 4.5:1 | 17.45 | PASS |
+| dark | `on-surface` #F5F5F5 | `rail` #141414 | основной текст | 4.5:1 | 16.90 | PASS |
+| dark | `on-surface` #F5F5F5 | `surface` #1A1A1A | основной текст | 4.5:1 | 15.96 | PASS |
+| dark | `on-surface` #F5F5F5 | `surface-container-low` #1A1A1A | основной текст | 4.5:1 | 15.96 | PASS |
+| dark | `on-surface` #F5F5F5 | `surface-container` #212121 | основной текст | 4.5:1 | 14.77 | PASS |
+| dark | `on-surface` #F5F5F5 | `surface-container-high` #2B2B2B | основной текст | 4.5:1 | 12.99 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `background` #101010 | вторичный текст, подписи | 4.5:1 | 8.97 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `rail` #141414 | вторичный текст, подписи | 4.5:1 | 8.69 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `surface` #1A1A1A | вторичный текст, подписи | 4.5:1 | 8.21 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `surface-container-low` #1A1A1A | вторичный текст, подписи | 4.5:1 | 8.21 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `surface-container` #212121 | вторичный текст, подписи | 4.5:1 | 7.59 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `surface-container-high` #2B2B2B | вторичный текст, подписи | 4.5:1 | 6.68 | PASS |
+| dark | `primary` #F87352 | `background` #101010 | текст акцента, ссылки «Твой путь» | 4.5:1 | 6.86 | PASS |
+| dark | `primary` #F87352 | `surface` #1A1A1A | текст акцента, ссылки «Твой путь» | 4.5:1 | 6.27 | PASS |
+| dark | `primary` #F87352 | `surface-container-low` #1A1A1A | текст акцента, ссылки «Твой путь» | 4.5:1 | 6.27 | PASS |
+| dark | `primary` #F87352 | `surface-container` #212121 | текст акцента, ссылки «Твой путь» | 4.5:1 | 5.80 | PASS |
+| dark | `on-primary` #101010 | `primary` #F87352 | текст на сплошной акцентной кнопке | 4.5:1 | 6.86 | PASS |
+| dark | `on-primary-container` #FDDCD4 | `primary-container` #33201B | тональная кнопка, текущий шаг | 4.5:1 | 12.00 | PASS |
+| dark | `on-action-gradient` #101010 | `action-gradient[0]` #F9967D | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 8.78 | PASS |
+| dark | `on-action-gradient` #101010 | `action-gradient[1]` #F87352 | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 6.86 | PASS |
+| dark | `on-action-gradient` #101010 | `action-gradient[2]` #E8613F | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 5.63 | PASS |
+| dark | `on-agent-container` #E4CAFF | `agent-container` #231C2C | блок «Агент» | 4.5:1 | 11.14 | PASS |
+| dark | `on-practice-container` #CAFFDA | `practice-container` #17261C | блок «Практика» | 4.5:1 | 14.15 | PASS |
+| dark | `on-human-container` #FFE9CA | `human-container` #2A2219 | блок «Решает человек» | 4.5:1 | 13.24 | PASS |
+| dark | `error` #F2B8B5 | `background` #101010 | статус FAIL, ошибка | 4.5:1 | 11.14 | PASS |
+| dark | `error` #F2B8B5 | `surface` #1A1A1A | статус FAIL, ошибка | 4.5:1 | 10.19 | PASS |
+| dark | `error` #F2B8B5 | `surface-container` #212121 | статус FAIL, ошибка | 4.5:1 | 9.43 | PASS |
+| dark | `on-error` #601410 | `error` #F2B8B5 | текст на плашке ошибки | 4.5:1 | 7.66 | PASS |
+| dark | `success` #8FD9A8 | `background` #101010 | статус PASS | 4.5:1 | 11.47 | PASS |
+| dark | `success` #8FD9A8 | `surface` #1A1A1A | статус PASS | 4.5:1 | 10.49 | PASS |
+| dark | `success` #8FD9A8 | `surface-container` #212121 | статус PASS | 4.5:1 | 9.71 | PASS |
+| dark | `warning` #F5C26B | `background` #101010 | статусы BLOCKED / INCOMPLETE | 4.5:1 | 11.61 | PASS |
+| dark | `warning` #F5C26B | `surface` #1A1A1A | статусы BLOCKED / INCOMPLETE | 4.5:1 | 10.62 | PASS |
+| dark | `warning` #F5C26B | `surface-container` #212121 | статусы BLOCKED / INCOMPLETE | 4.5:1 | 9.82 | PASS |
+| dark | `outline` #858585 | `background` #101010 | граница контрола (поле, чип, тональная кнопка) | 3:1 | 5.16 | PASS |
+| dark | `outline` #858585 | `surface` #1A1A1A | граница контрола (поле, чип, тональная кнопка) | 3:1 | 4.72 | PASS |
+| dark | `outline` #858585 | `surface-container-high` #2B2B2B | граница контрола (поле, чип, тональная кнопка) | 3:1 | 3.84 | PASS |
+| dark | `primary` #F87352 | `background` #101010 | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 6.86 | PASS |
+| dark | `primary` #F87352 | `surface` #1A1A1A | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 6.27 | PASS |
+| dark | `primary` #F87352 | `surface-container-high` #2B2B2B | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 5.10 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `background` #101010 | иконки rail и интерфейса | 3:1 | 8.97 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `rail` #141414 | иконки rail и интерфейса | 3:1 | 8.69 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `surface` #1A1A1A | иконки rail и интерфейса | 3:1 | 8.21 | PASS |
+<!-- contrast-table:end -->
+
+## 9. Что дальше
+
+- P2-03: CSS-токены из ролей раздела 3 и шрифты раздела 5 (`app/globals.css`), перевод текущих страниц.
+- P2-04: примитивы и SVG-шаблоны «Чертёж», линтер палитры, витрина `/design`; раздел «Примитивы и шаблоны» этой спецификации.
+- P2-06: словарь иконок Tabler; раздел «Иконки» этой спецификации.
