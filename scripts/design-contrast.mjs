@@ -49,12 +49,19 @@ export function checkPalette(palette) {
     for (const [name, theme] of themes) resolve(theme, name, role);
   }
   const names = themes.map(([name]) => name);
+  const PAIR_KEYS = ["fg", "bg", "kind", "theme", "use"];
+  const RULE_KEYS = ["fg", "bg", "theme", "reason"];
+  const unknownKey = (item, allowed) => Object.keys(item).find((key) => !allowed.includes(key));
   for (const pair of palette.pairs) {
+    const extra = unknownKey(pair, PAIR_KEYS);
+    if (extra) throw new Error(`pair ${pair.fg}: unknown key ${extra}`);
     if (pair.theme && !names.includes(pair.theme)) throw new Error(`pair ${pair.fg}: unknown theme ${pair.theme}`);
     if (!pair.bg?.length) throw new Error(`pair ${pair.fg}: empty bg list`);
   }
   const sameTheme = (a, b) => !a || !b || a === b;
   for (const rule of palette.forbidden ?? []) {
+    const extra = unknownKey(rule, RULE_KEYS);
+    if (extra) throw new Error(`forbidden ${rule.fg}: unknown key ${extra}`);
     if (rule.theme && !names.includes(rule.theme)) throw new Error(`forbidden ${rule.fg}: unknown theme ${rule.theme}`);
     for (const [name, theme] of themes) {
       resolve(theme, name, rule.fg);

@@ -60,7 +60,14 @@ test('pairs and forbidden rules fail closed on typos', () => {
   assert.throws(() => checkPalette(empty), /empty bg/);
   const rule = structuredClone(palette);
   rule.forbidden[0].bg = 'surface-containr-high';
-  assert.throws(() => checkPalette(rule), /unknown role/);  const darkOnly = structuredClone(palette);
+  assert.throws(() => checkPalette(rule), /unknown role/);
+  const typoKey = structuredClone(palette);
+  typoKey.pairs[0].themes = 'dark';
+  assert.throws(() => checkPalette(typoKey), /unknown key themes/);
+  const typoRule = structuredClone(palette);
+  typoRule.forbidden[0].themes = typoRule.forbidden[0].theme;
+  assert.throws(() => checkPalette(typoRule), /unknown key themes/);
+  const darkOnly = structuredClone(palette);
   darkOnly.pairs.push({ fg: 'primary', bg: ['surface-container-high'], kind: 'text', theme: 'dark', use: 'x' });
   assert.ok(checkPalette(darkOnly).some((r) => r.theme === 'dark' && r.bg === 'surface-container-high' && r.kind === 'text'));
 });
