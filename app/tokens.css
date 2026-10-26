@@ -96,8 +96,8 @@
   --color-pattern-plus:#D2D2D2;
   --color-primary-line:#F6C3B5;
   --color-brand-frame-gradient:linear-gradient(135deg,#FBB9A9 0%,#F87352 40%,#AA6858 70%,#B2B2B2 100%);
-  --color-scrim:rgb(16 16 16 / .45);
-  /* Не цвета палитры: чернила печати и светлая плашка под тёмные логотипы продуктов. */
+  --scrim:rgb(16 16 16 / .45);
+  /* Не цвета палитры: затемнение под диалогом, чернила печати и светлая плашка под тёмные логотипы продуктов. */
   --print-ink:#101010;
   --logo-tile:#F4F4F5;
   /* Подпись by Makkov — белый SVG автора без изменения байтов: в светлой теме инвертируется. */
@@ -143,7 +143,7 @@
     --color-pattern-plus:#333333;
     --color-primary-line:#5A3328;
     --color-brand-frame-gradient:linear-gradient(135deg,#FFFFFF 0%,#FBB9A9 18%,#F87352 40%,#AA6858 68%,#5D5D5D 100%);
-    --color-scrim:rgb(0 0 0 / .6);
+    --scrim:rgb(0 0 0 / .6);
     --shadow-1:0 1px 2px rgb(0 0 0 / .5);
     --shadow-2:0 1px 2px rgb(0 0 0 / .5),0 12px 32px rgb(0 0 0 / .55);
     --signature-filter:none;
@@ -184,7 +184,7 @@
   --color-pattern-plus:#333333;
   --color-primary-line:#5A3328;
   --color-brand-frame-gradient:linear-gradient(135deg,#FFFFFF 0%,#FBB9A9 18%,#F87352 40%,#AA6858 68%,#5D5D5D 100%);
-  --color-scrim:rgb(0 0 0 / .6);
+  --scrim:rgb(0 0 0 / .6);
   --shadow-1:0 1px 2px rgb(0 0 0 / .5);
   --shadow-2:0 1px 2px rgb(0 0 0 / .5),0 12px 32px rgb(0 0 0 / .55);
   --signature-filter:none;

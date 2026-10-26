@@ -31,17 +31,15 @@ function expected(theme) {
   return map;
 }
 
-const withoutRgbTokens = (map) => new Map([...map].filter(([name]) => name !== 'scrim'));
-
 test('light tokens equal palette.json light roles', () => {
-  assert.deepEqual(withoutRgbTokens(colors(block(':root'))), expected('light'));
+  assert.deepEqual(colors(block(':root')), expected('light'));
 });
 
 test('dark tokens equal palette.json dark roles in both dark blocks', () => {
   const media = colors(block(':root:not([data-theme="light"])'));
   const explicit = colors(block(':root[data-theme="dark"]'));
   assert.deepEqual(media, explicit);
-  assert.deepEqual(withoutRgbTokens(explicit), expected('dark'));
+  assert.deepEqual(explicit, expected('dark'));
 });
 
 function cssFiles(dir) {
@@ -66,8 +64,11 @@ test('stylesheets outside app/tokens.css use tokens, not colour literals', () =>
 });
 
 test('old fonts are gone and new fonts are self-hosted with licences', () => {
-  for (const file of ['app/globals.css', 'app/tokens.css']) assert.doesNotMatch(read(file), /Manrope|JetBrains Mono/);
+  for (const file of [...cssFiles('app'), ...cssFiles('src')]) assert.doesNotMatch(read(file), /Manrope|JetBrains Mono/, file);
   const fonts = fs.readdirSync(new URL('public/fonts/', root));
+  assert.deepEqual(fonts.filter((f) => /^(?:manrope|jetbrains-mono)-/.test(f)), []);
+  const pkg = JSON.parse(read('package.json'));
+  assert.deepEqual(Object.keys(pkg.dependencies).filter((d) => /manrope|jetbrains-mono/.test(d)), []);
   for (const family of ['geist', 'unbounded', 'martian-mono', 'pixelify-sans']) {
     assert.ok(fonts.some((f) => f.startsWith(`${family}-cyrillic`)), `${family} cyrillic`);
     assert.ok(fonts.some((f) => f.startsWith(`${family}-latin`)), `${family} latin`);

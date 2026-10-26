@@ -126,6 +126,8 @@
 | Игровые метки | **Pixelify Sans** 500 | 500 | XP, уровни, счётчики шагов | до трёх слов, никогда в абзацах |
 | Резерв текста | **Onest** | 400, 600 | не подключается | если Geist на русском окажется сухим, меняется только текстовый шрифт |
 
+В кириллице Pixelify Sans v3 (Google Fonts) нет заглавных О и П (U+041E, U+041F), а также Ѐ, І, Ѝ, ѐ, ѝ: проверено по cmap файла 26.10.2026. Эти буквы рисуются запасным Martian Mono, поэтому игровые метки на кириллице без О и П или латиницей (XP, LVL).
+
 Факты о шрифтах (Google Fonts, `METADATA.pb`, проверено 26.10.2026):
 
 | Шрифт | Авторы | Лицензия | Оси | Подмножества | Исходный репозиторий |
@@ -266,12 +268,16 @@ P2-03 переносит спецификацию в `app/tokens.css` один �
 
 | Раздел | Токены |
 |---|---|
-| 3. Роли темы | `--color-<роль>` для каждой роли `palette.json` (светлая — `:root`, тёмная — `prefers-color-scheme: dark` и `[data-theme="dark"]`), плюс `--color-scrim`, `--shadow-1/2` |
+| 3. Роли темы | `--color-<роль>` для каждой роли `palette.json` (светлая — `:root`, тёмная — `prefers-color-scheme: dark` и `[data-theme="dark"]`), плюс `--shadow-1/2` |
 | 5. Шрифты | `--font-display` Unbounded, `--font-text` Geist, `--font-mono` Martian Mono, `--font-game` Pixelify Sans; `--type-hero`, `--type-hero-start`, `--type-h1`, `--type-block`, `--type-h2/h3/body/small/label/mono`, `--tracking-display`, `--tracking-heading` |
 | 6. Формы | `--radius-xs/s/m/l/xl/full`, `--space-1…12` (шаг 4 px), `--touch-target` 44 px, `--stroke-line`, `--stroke-border` |
 | 7. Движение | `--ease`, `--dur-1/2/3`, `--shift-appear`; при reduced motion обнуляются |
 
-Совпадение `--color-*` с `palette.json` и отсутствие цветовых литералов вне `app/tokens.css` проверяет `tests/design-tokens.test.mjs`. Не из палитры в токенах только `--print-ink` (печать), `--logo-tile` (плашка под тёмные логотипы продуктов) и `--signature-filter` (белый SVG подписи by Makkov в светлой теме).
+Совпадение `--color-*` с `palette.json` и отсутствие цветовых литералов вне `app/tokens.css` проверяет `tests/design-tokens.test.mjs`. Не из палитры в токенах только `--scrim` (полупрозрачное затемнение под диалогом и панелью: `rgb(16 16 16 / .45)` в светлой теме, `rgb(0 0 0 / .6)` в тёмной; текст на нём не лежит), `--print-ink` (печать), `--logo-tile` (плашка под тёмные логотипы продуктов) и `--signature-filter` (белый SVG подписи by Makkov в светлой теме).
+
+Граница поля ввода и поля поиска — `--color-outline` (раздел 3: граница контрола, ≥ 3:1). Остальные рамки карточек, панелей и вторичных кнопок пока на `outline-variant-strong`: у них есть подпись или фон, границу заменят примитивы P2-04.
+
+Шкала `--type-*` и движение `--ease` / `--dur-*` определены, но текущая вёрстка ещё на прежних размерах и длительностях: их применяют примитивы P2-04 и новый макет фазы 3.
 
 ## 10. Что дальше
 
