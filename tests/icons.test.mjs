@@ -4,7 +4,10 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import * as tabler from '@tabler/icons-react';
-import { ICON_STROKE, iconProps, iconRoles, icons } from '../src/design/icons.mjs';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import * as iconModule from '../src/design/icons.mjs';
+const { ICON_STROKE, iconProps, iconRoles, icons } = iconModule;
 
 const root = new URL('../', import.meta.url);
 const read = (file) => fs.readFileSync(new URL(file, root), 'utf8');
@@ -24,6 +27,17 @@ test('every interface icon uses the 1.5 px stroke', () => {
   assert.equal(iconProps['aria-hidden'], true);
 });
 
+test('components/ui wrappers keep the 1.5 px stroke and hide from screen readers', () => {
+  const wrappers = Object.entries(iconModule).filter(([name]) => /^[A-Z]\w*Icon$/.test(name));
+  assert.ok(wrappers.length >= 10);
+  for (const [name, Icon] of wrappers) {
+    const html = renderToStaticMarkup(createElement(Icon, { stroke: 3, strokeWidth: 3 }));
+    assert.match(html, /stroke-width="1.5"/, name);
+    assert.match(html, /aria-hidden="true"/, name);
+  }
+  assert.doesNotMatch(renderToStaticMarkup(createElement(iconModule.XIcon, { 'aria-hidden': false, 'aria-label': 'Закрыть' })), /aria-hidden="true"/);
+});
+
 test('role dictionary covers 34 meanings with real Tabler icons', () => {
   const roles = Object.entries(iconRoles);
   assert.equal(roles.length, 34);
@@ -38,7 +52,7 @@ test('role dictionary covers 34 meanings with real Tabler icons', () => {
 
 test('only src/design/icons.mjs imports Tabler; lucide-react is gone', () => {
   const files = ['app', 'src', 'components', 'hooks', 'lib'].flatMap(sources);
-  const tablerImports = files.filter((file) => /from\s*['"]@tabler\/icons-react['"]/.test(read(file)));
+  const tablerImports = files.filter((file) => /['"]@tabler\/icons-react(?:\/[^'"]*)?['"]/.test(read(file)));
   assert.deepEqual(tablerImports, ['src/design/icons.mjs']);
   assert.deepEqual(files.filter((file) => read(file).includes('lucide-react')), []);
   const pkg = JSON.parse(read('package.json'));

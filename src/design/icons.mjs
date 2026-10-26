@@ -92,9 +92,10 @@ export const iconRoles={
 };
 
 // Иконки для компонентов components/ui (раньше — отдельная библиотека Lucide): те же Tabler, тот же контур.
+// Контур не переопределяется пропсами; aria-hidden по умолчанию, как было у Lucide (кнопка-иконка получает aria-label сама).
 /** @param {import('@tabler/icons-react').Icon} Icon @returns {import('@tabler/icons-react').Icon} */
 const ui=(Icon)=>{
-  const Wrapped=/** @type {import('@tabler/icons-react').Icon} */(forwardRef((props,ref)=>createElement(Icon,{stroke:ICON_STROKE,...props,ref})));
+  const Wrapped=/** @type {import('@tabler/icons-react').Icon} */(forwardRef((props,ref)=>createElement(Icon,{'aria-hidden':true,...props,stroke:ICON_STROKE,strokeWidth:ICON_STROKE,ref})));
   Wrapped.displayName=Icon.displayName;
   return Wrapped;
 };
