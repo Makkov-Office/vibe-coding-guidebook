@@ -21,8 +21,8 @@ permissions:
 
 concurrency:
   # PR: one group per PR, a new push cancels the outdated run.
-  # Push to main: one group per commit SHA, so a newer main commit never
-  # cancels a running or pending run of an older one; each keeps its result.
+  # Push to main and merge queue: one group per commit SHA, so a newer commit
+  # never cancels a running or pending run of an older one; each keeps its result.
   group: ci-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('push-{0}', github.sha) }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
