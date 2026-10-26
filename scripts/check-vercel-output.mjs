@@ -26,6 +26,7 @@ import http from "node:http";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import { chromium } from "@playwright/test";
+import { loadUrlMap, redirects } from "./url-map.mjs";
 
 // Strict: an unknown option or an option without its value is an error.
 const { values } = parseArgs({
@@ -193,6 +194,27 @@ async function get(pathname, headers = {}) {
   return { response, body: Buffer.from(await response.arrayBuffer()) };
 }
 
+// URL map (P2-05), checked first: an old address answers 308 → its new page
+// when that page exists, otherwise it stays as it is (200; 404 for an alias
+// that is not a page today). Never a redirect to a missing page, never two
+// hops. A built page whose old address already redirects is checked here
+// only and left out of the page checks below.
+const redirected = new Set();
+for (const entry of loadUrlMap(root).pages.filter(redirects)) {
+  const old = await get(entry.old);
+  const target = await get(entry.new);
+  const location = old.response.headers.get("location");
+  const moved = old.response.status === 308 && location === entry.new && target.response.status === 200;
+  const stays = target.response.status !== 200 && old.response.status === (entry.alias ? 404 : 200);
+  if (moved) redirected.add(entry.old);
+  record(entry.old, "http-legacy", moved || stays, `${old.response.status}${location ? ` → ${location}` : ""}, target ${entry.new} ${target.response.status}`);
+}
+if (local) {
+  const legacyRoutes = JSON.parse(fs.readFileSync(path.join(outDir, "config.json"), "utf8")).routes.filter((route) => route.status === 308 && !route.src.startsWith("^/(.*"));
+  record("(config)", "http-legacy-count", legacyRoutes.length === redirected.size, `${legacyRoutes.length} legacy routes in config.json, ${redirected.size} answered 308`);
+}
+for (let index = pages.length - 1; index >= 0; index--) if (redirected.has(pages[index].urlPath)) pages.splice(index, 1);
+
 // HTTP: HTML and RSC payload of every page, byte-exact against the build.
 for (const page of pages) {
   const { response, body } = await get(page.urlPath);
@@ -284,7 +306,7 @@ routesInTable.forEach((route, index) => {
   console.log(`| ${index + 1} | \`${route}\` | ${cell(route, file ? "http-file" : "http-html")} | ${file ? "n/a" : cell(route, "http-rsc")} | ${file ? "n/a" : cell(route, "direct")} | ${file ? "n/a" : cell(route, "refresh")} | ${file ? "n/a" : cell(route, "spa")} |`);
 });
 console.log("\nOther checks:");
-for (const entry of results.filter((item) => !routesInTable.includes(item.route) || ["page-errors"].includes(item.check))) {
+for (const entry of results.filter((item) => !routesInTable.includes(item.route) || ["page-errors", "http-legacy", "http-legacy-count"].includes(item.check))) {
   console.log(`- ${entry.result} ${entry.check} ${entry.route} ${entry.detail}`);
 }
 const failed = results.filter((entry) => entry.result === "FAIL");
