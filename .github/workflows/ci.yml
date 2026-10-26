@@ -10,6 +10,9 @@ on:
   # purpose: a job skipped by `if` reports a `validate` check as success and
   # every title/body edit would create one; see PR #15 for the base-change case.
   pull_request:
+  # Merge queue (P1-18): the same checks on the queue's merge commit, so main
+  # needs no "up to date" rule. github.sha is that commit below.
+  merge_group:
   push:
     branches: [main]
 
