@@ -63,6 +63,8 @@ test('a redirect is refused while the anchor registry still points to the old ad
   const moved = structuredClone(generated);
   for (const [id, target] of Object.entries(resolveAnchors(map, generated))) moved.anchors[id] = { id, path: target.path };
   assert.deepEqual(staleAnchors(map, moved, built), []);
+  // `/` stays Главная, but once the intro page exists its anchors must follow it.
+  assert.equal(staleAnchors(map, generated, new Set(['/start/00-how-to-read'])).length, Object.values(generated.anchors).filter((anchor) => anchor.path === '/').length);
 });
 
 test('broken entries fail the check', () => {

@@ -142,10 +142,12 @@ export function validateUrlMap(map, generated) {
 // Anchors whose registry path (generated.json, used by Reader to restore old
 // links) is an old address that this build already redirects. Reader would
 // send such a link back to the old address, the 308 would bring it to the
-// overview again: a loop. When a page moves, the registry must take its paths
-// from resolveAnchors; until then the build fails here.
+// overview again: a loop (for a `keep` entry the link just stays on the old
+// page, which no longer has that content). When a page moves, the registry
+// must take its paths from resolveAnchors; until then the build fails here.
 export function staleAnchors(map, generated, builtPaths) {
-  const moved = new Set(map.pages.filter((entry) => redirects(entry) && builtPaths.has(entry.new)).map((entry) => entry.old));
+  // A `keep` entry has no 308, but its content has left the old address too.
+  const moved = new Set(map.pages.filter((entry) => entry.old !== entry.new && builtPaths.has(entry.new)).map((entry) => entry.old));
   return Object.values(generated.anchors).filter((anchor) => moved.has(anchor.path)).map((anchor) => `${anchor.id} → ${anchor.path}`);
 }
 
