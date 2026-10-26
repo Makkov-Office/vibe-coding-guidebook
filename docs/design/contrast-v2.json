@@ -19,7 +19,7 @@
     "bgHex": "#F3F3F3",
     "kind": "text",
     "use": "основной текст",
-    "ratio": 17.15,
+    "ratio": 17.14,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -31,7 +31,7 @@
     "bgHex": "#FFFFFF",
     "kind": "text",
     "use": "основной текст",
-    "ratio": 19.03,
+    "ratio": 19.02,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -67,7 +67,7 @@
     "bgHex": "#E3E3E3",
     "kind": "text",
     "use": "основной текст",
-    "ratio": 14.83,
+    "ratio": 14.82,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -115,7 +115,7 @@
     "bgHex": "#F4F4F4",
     "kind": "text",
     "use": "вторичный текст, подписи",
-    "ratio": 6.37,
+    "ratio": 6.36,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -139,7 +139,7 @@
     "bgHex": "#E3E3E3",
     "kind": "text",
     "use": "вторичный текст, подписи",
-    "ratio": 5.46,
+    "ratio": 5.45,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -151,7 +151,7 @@
     "bgHex": "#FAFAFA",
     "kind": "text",
     "use": "текст акцента, ссылки «Твой путь»",
-    "ratio": 5.45,
+    "ratio": 5.44,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -163,7 +163,7 @@
     "bgHex": "#FFFFFF",
     "kind": "text",
     "use": "текст акцента, ссылки «Твой путь»",
-    "ratio": 5.69,
+    "ratio": 5.68,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -175,7 +175,7 @@
     "bgHex": "#F4F4F4",
     "kind": "text",
     "use": "текст акцента, ссылки «Твой путь»",
-    "ratio": 5.17,
+    "ratio": 5.16,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -187,7 +187,7 @@
     "bgHex": "#EDEDED",
     "kind": "text",
     "use": "текст акцента, ссылки «Твой путь»",
-    "ratio": 4.86,
+    "ratio": 4.85,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -199,7 +199,7 @@
     "bgHex": "#B4401F",
     "kind": "text",
     "use": "текст на сплошной акцентной кнопке",
-    "ratio": 5.69,
+    "ratio": 5.68,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -223,7 +223,7 @@
     "bgHex": "#F9967D",
     "kind": "text",
     "use": "главная кнопка с градиентом (каждый стоп)",
-    "ratio": 8.78,
+    "ratio": 8.77,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -235,7 +235,7 @@
     "bgHex": "#F87352",
     "kind": "text",
     "use": "главная кнопка с градиентом (каждый стоп)",
-    "ratio": 6.86,
+    "ratio": 6.85,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -247,7 +247,7 @@
     "bgHex": "#E8613F",
     "kind": "text",
     "use": "главная кнопка с градиентом (каждый стоп)",
-    "ratio": 5.63,
+    "ratio": 5.62,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -271,7 +271,7 @@
     "bgHex": "#E3FFEB",
     "kind": "text",
     "use": "блок «Практика»",
-    "ratio": 7.61,
+    "ratio": 7.6,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -283,7 +283,7 @@
     "bgHex": "#FFF3E2",
     "kind": "text",
     "use": "блок «Решает человек»",
-    "ratio": 7.95,
+    "ratio": 7.94,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -295,7 +295,7 @@
     "bgHex": "#E4CAFF",
     "kind": "text",
     "use": "пилюля «Агент» на цвете модуля",
-    "ratio": 7.67,
+    "ratio": 7.66,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -307,7 +307,7 @@
     "bgHex": "#CAFFDA",
     "kind": "text",
     "use": "пилюля «Практика» на цвете модуля",
-    "ratio": 7.25,
+    "ratio": 7.24,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -343,7 +343,7 @@
     "bgHex": "#FFFFFF",
     "kind": "text",
     "use": "статус FAIL, ошибка",
-    "ratio": 6.54,
+    "ratio": 6.53,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -367,7 +367,7 @@
     "bgHex": "#B3261E",
     "kind": "text",
     "use": "текст на плашке ошибки",
-    "ratio": 6.54,
+    "ratio": 6.53,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -379,7 +379,7 @@
     "bgHex": "#FAFAFA",
     "kind": "text",
     "use": "статус PASS",
-    "ratio": 6.25,
+    "ratio": 6.24,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -391,7 +391,7 @@
     "bgHex": "#FFFFFF",
     "kind": "text",
     "use": "статус PASS",
-    "ratio": 6.52,
+    "ratio": 6.51,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -403,7 +403,7 @@
     "bgHex": "#EDEDED",
     "kind": "text",
     "use": "статус PASS",
-    "ratio": 5.57,
+    "ratio": 5.56,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -415,7 +415,7 @@
     "bgHex": "#FAFAFA",
     "kind": "text",
     "use": "статусы BLOCKED / INCOMPLETE",
-    "ratio": 6.83,
+    "ratio": 6.82,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -427,7 +427,7 @@
     "bgHex": "#FFFFFF",
     "kind": "text",
     "use": "статусы BLOCKED / INCOMPLETE",
-    "ratio": 7.13,
+    "ratio": 7.12,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -439,7 +439,7 @@
     "bgHex": "#EDEDED",
     "kind": "text",
     "use": "статусы BLOCKED / INCOMPLETE",
-    "ratio": 6.09,
+    "ratio": 6.08,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -475,7 +475,7 @@
     "bgHex": "#E3E3E3",
     "kind": "ui",
     "use": "граница контрола (поле, чип, тональная кнопка)",
-    "ratio": 5.46,
+    "ratio": 5.45,
     "threshold": 3,
     "status": "PASS"
   },
@@ -487,7 +487,7 @@
     "bgHex": "#FAFAFA",
     "kind": "ui",
     "use": "кольцо фокуса, иконка акцента, точка прогресса",
-    "ratio": 5.45,
+    "ratio": 5.44,
     "threshold": 3,
     "status": "PASS"
   },
@@ -499,7 +499,7 @@
     "bgHex": "#FFFFFF",
     "kind": "ui",
     "use": "кольцо фокуса, иконка акцента, точка прогресса",
-    "ratio": 5.69,
+    "ratio": 5.68,
     "threshold": 3,
     "status": "PASS"
   },
@@ -511,7 +511,7 @@
     "bgHex": "#E3E3E3",
     "kind": "ui",
     "use": "кольцо фокуса, иконка акцента, точка прогресса",
-    "ratio": 4.43,
+    "ratio": 4.42,
     "threshold": 3,
     "status": "PASS"
   },
@@ -571,7 +571,7 @@
     "bgHex": "#141414",
     "kind": "text",
     "use": "основной текст",
-    "ratio": 16.9,
+    "ratio": 16.89,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -607,7 +607,7 @@
     "bgHex": "#212121",
     "kind": "text",
     "use": "основной текст",
-    "ratio": 14.77,
+    "ratio": 14.76,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -619,7 +619,7 @@
     "bgHex": "#2B2B2B",
     "kind": "text",
     "use": "основной текст",
-    "ratio": 12.99,
+    "ratio": 12.98,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -643,7 +643,7 @@
     "bgHex": "#141414",
     "kind": "text",
     "use": "вторичный текст, подписи",
-    "ratio": 8.69,
+    "ratio": 8.68,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -655,7 +655,7 @@
     "bgHex": "#1A1A1A",
     "kind": "text",
     "use": "вторичный текст, подписи",
-    "ratio": 8.21,
+    "ratio": 8.2,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -667,7 +667,7 @@
     "bgHex": "#1A1A1A",
     "kind": "text",
     "use": "вторичный текст, подписи",
-    "ratio": 8.21,
+    "ratio": 8.2,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -691,7 +691,7 @@
     "bgHex": "#2B2B2B",
     "kind": "text",
     "use": "вторичный текст, подписи",
-    "ratio": 6.68,
+    "ratio": 6.67,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -703,7 +703,7 @@
     "bgHex": "#101010",
     "kind": "text",
     "use": "текст акцента, ссылки «Твой путь»",
-    "ratio": 6.86,
+    "ratio": 6.85,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -751,7 +751,7 @@
     "bgHex": "#F87352",
     "kind": "text",
     "use": "текст на сплошной акцентной кнопке",
-    "ratio": 6.86,
+    "ratio": 6.85,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -775,7 +775,7 @@
     "bgHex": "#F9967D",
     "kind": "text",
     "use": "главная кнопка с градиентом (каждый стоп)",
-    "ratio": 8.78,
+    "ratio": 8.77,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -787,7 +787,7 @@
     "bgHex": "#F87352",
     "kind": "text",
     "use": "главная кнопка с градиентом (каждый стоп)",
-    "ratio": 6.86,
+    "ratio": 6.85,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -799,7 +799,7 @@
     "bgHex": "#E8613F",
     "kind": "text",
     "use": "главная кнопка с градиентом (каждый стоп)",
-    "ratio": 5.63,
+    "ratio": 5.62,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -811,7 +811,7 @@
     "bgHex": "#231C2C",
     "kind": "text",
     "use": "блок «Агент»",
-    "ratio": 11.14,
+    "ratio": 11.13,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -895,7 +895,7 @@
     "bgHex": "#101010",
     "kind": "text",
     "use": "статус PASS",
-    "ratio": 11.47,
+    "ratio": 11.46,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -919,7 +919,7 @@
     "bgHex": "#212121",
     "kind": "text",
     "use": "статус PASS",
-    "ratio": 9.71,
+    "ratio": 9.7,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -931,7 +931,7 @@
     "bgHex": "#101010",
     "kind": "text",
     "use": "статусы BLOCKED / INCOMPLETE",
-    "ratio": 11.61,
+    "ratio": 11.6,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -943,7 +943,7 @@
     "bgHex": "#1A1A1A",
     "kind": "text",
     "use": "статусы BLOCKED / INCOMPLETE",
-    "ratio": 10.62,
+    "ratio": 10.61,
     "threshold": 4.5,
     "status": "PASS"
   },
@@ -967,7 +967,7 @@
     "bgHex": "#101010",
     "kind": "ui",
     "use": "граница контрола (поле, чип, тональная кнопка)",
-    "ratio": 5.16,
+    "ratio": 5.15,
     "threshold": 3,
     "status": "PASS"
   },
@@ -979,7 +979,7 @@
     "bgHex": "#1A1A1A",
     "kind": "ui",
     "use": "граница контрола (поле, чип, тональная кнопка)",
-    "ratio": 4.72,
+    "ratio": 4.71,
     "threshold": 3,
     "status": "PASS"
   },
@@ -991,7 +991,7 @@
     "bgHex": "#2B2B2B",
     "kind": "ui",
     "use": "граница контрола (поле, чип, тональная кнопка)",
-    "ratio": 3.84,
+    "ratio": 3.83,
     "threshold": 3,
     "status": "PASS"
   },
@@ -1003,7 +1003,7 @@
     "bgHex": "#101010",
     "kind": "ui",
     "use": "кольцо фокуса, иконка акцента, точка прогресса",
-    "ratio": 6.86,
+    "ratio": 6.85,
     "threshold": 3,
     "status": "PASS"
   },
@@ -1051,7 +1051,7 @@
     "bgHex": "#141414",
     "kind": "ui",
     "use": "иконки rail и интерфейса",
-    "ratio": 8.69,
+    "ratio": 8.68,
     "threshold": 3,
     "status": "PASS"
   },
@@ -1063,7 +1063,7 @@
     "bgHex": "#1A1A1A",
     "kind": "ui",
     "use": "иконки rail и интерфейса",
-    "ratio": 8.21,
+    "ratio": 8.2,
     "threshold": 3,
     "status": "PASS"
   }

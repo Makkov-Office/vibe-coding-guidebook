@@ -33,6 +33,22 @@ test('check fails closed on low contrast and unknown roles', () => {
   assert.ok(checkPalette(bad).some((r) => r.status === 'FAIL'));
   bad.pairs.push({ fg: 'no-such-role', bg: ['background'], kind: 'text', use: 'x' });
   assert.throws(() => checkPalette(bad), /unknown role/);
+  assert.throws(() => checkPalette({ ...palette, pairs: [] }), /no themes or pairs/);
+  const forbidden = structuredClone(palette);
+  forbidden.pairs[2].bg.push('surface-container-high');
+  assert.throws(() => checkPalette(forbidden), /forbidden pair/);
+  const uneven = structuredClone(palette);
+  delete uneven.themes.dark.rail;
+  assert.throws(() => checkPalette(uneven), /role set differs/);
+});
+
+test('threshold is compared without rounding up', () => {
+  const edge = { themes: { light: { a: '#767676', b: '#FFFFFF' } }, pairs: [{ fg: 'a', bg: ['b'], kind: 'text', use: 'x' }] };
+  const [row] = checkPalette(edge);
+  assert.ok(contrast('#767676', '#FFFFFF') >= 4.5);
+  assert.equal(row.status, 'PASS');
+  edge.themes.light.a = '#777777';
+  assert.equal(checkPalette(edge)[0].status, 'FAIL');
 });
 
 test('palette keeps the approved brand and concept values', () => {

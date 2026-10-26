@@ -56,7 +56,7 @@
 | `outline-variant-strong` | `#D0D0D0` | `#3A3A3A` | линии схем «Чертёж» второго плана (декоративно) |
 | `pattern-plus` | `#D2D2D2` | `#333333` | паттерн «+» на двух hero |
 
-`outline` тёмной темы (`#858585`) не из бренда: `#5D5D5D` даёт 2.89:1 на `#101010`, ниже порога 3:1 для границ контролов. Выбран ближайший нейтральный серый с запасом.
+`outline` светлой темы (`#595959`) — вывод автора, в RD-01 f заданы только декоративные линии `#E6E6E6` / `#D0D0D0`: для границ контролов взят вторичный графит бренда. `outline` тёмной темы (`#858585`) не из бренда и не из RD-01: `#5D5D5D` даёт 2.89:1 на `#101010`, ниже порога 3:1 для границ контролов. Выбран ближайший нейтральный серый с запасом.
 
 ### Акцент «Твой путь»
 
@@ -68,6 +68,8 @@
 | `on-primary-container` | `#7A2A16` | `#FDDCD4` | текст и иконка в `primary-container` |
 | `action-gradient` | `linear-gradient(120deg, #F9967D, #F87352, #E8613F)` | то же | главная кнопка-«пилюля» |
 | `on-action-gradient` | `#101010` | `#101010` | текст главной кнопки |
+
+Текст `primary` не ставится на `surface-container-high` (светлая тема: 4.43:1, ниже 4.5). Нажатая ссылка и активный пункт меняют фон на `primary-container`, а не на `surface-container-high`; запрет записан в `palette.json` (`forbidden`), скрипт контраста не даёт использовать эту пару как текстовую.
 
 `#B4401F` — текст акцента на светлом фоне: сам `#F87352` на `#FAFAFA` даёт меньше 4.5:1, поэтому коралл бренда в светлой теме живёт только в заливке градиента. `#E8613F` — третий стоп градиента кнопки из RD-01, он темнее `#F87352` и даёт глубину справа.
 
@@ -117,7 +119,7 @@
 | Роль | Шрифт | Начертания | Где | Правило |
 |---|---|---|---|---|
 | Hero и H1 | **Unbounded** 500 | 500 | главная, «Начать», название главы | не длиннее двух строк; широкий, поэтому не в длинных заголовках и тексте |
-| Заголовки, текст, UI | **Geist** | 400 текст, 500 UI, 600 заголовки | всё остальное | текст 16 px, заголовки 600 |
+| Заголовки, текст, UI | **Geist** | 400 текст, 600 заголовки; 500 для UI добавлен тикетом P2-03 (в RD-01 — 400 / 600) | всё остальное | текст 16 px, заголовки 600 |
 | Код, аннотации, статусы | **Martian Mono**, ширина 87.5 | 400, 500 | блоки кода, аннотации «чертежа», подписи на схемах, статусы | только моноширинное содержимое |
 | Игровые метки | **Pixelify Sans** 500 | 500 | XP, уровни, счётчики шагов | до трёх слов, никогда в абзацах |
 | Резерв текста | **Onest** | 400, 600 | не подключается | если Geist на русском окажется сухим, меняется только текстовый шрифт |
@@ -126,11 +128,11 @@
 
 | Шрифт | Авторы | Лицензия | Оси | Подмножества | Исходный репозиторий |
 |---|---|---|---|---|---|
-| Unbounded | NaN | OFL 1.1 | `wght` 200–900 | cyrillic, cyrillic-ext, latin, latin-ext, vietnamese | [googlefonts/unbounded](https://github.com/googlefonts/unbounded) |
+| Unbounded | студия NaN | OFL 1.1 | `wght` 200–900 | cyrillic, cyrillic-ext, latin, latin-ext, vietnamese | [googlefonts/unbounded](https://github.com/googlefonts/unbounded) |
 | Geist | Andrés Briganti, Mateo Zaragoza, Guillermo Rauch, Evil Rabbit, José Rago, Facundo Santana | OFL 1.1 | `wght` 100–900, есть курсив | cyrillic, cyrillic-ext, latin, latin-ext, vietnamese | [vercel/geist-font](https://github.com/vercel/geist-font) |
 | Martian Mono | Roman Shamin, Evil Martians | OFL 1.1 | `wdth` 75–112.5, `wght` 100–800 | cyrillic, cyrillic-ext, latin, latin-ext | [evilmartians/mono](https://github.com/evilmartians/mono) |
 | Pixelify Sans | Stefie Justprince | OFL 1.1 | `wght` 400–700 | cyrillic, latin, latin-ext | [eifetx/Pixelify-Sans](https://github.com/eifetx/Pixelify-Sans) |
-| Onest | Dmitri Voloshin, Andrey Kudryavtsev | OFL 1.1 | `wght` 100–900 | cyrillic, cyrillic-ext, latin, latin-ext | [simpals/onest](https://github.com/simpals/onest) |
+| Onest | Dmitri Voloshin, Andrey Kudryavtsev | OFL 1.1 | `wght` 100–900 | cyrillic, cyrillic-ext, latin, latin-ext, vietnamese, math, symbols | [simpals/onest](https://github.com/simpals/onest) |
 
 Отсеяны на этапе RD-01, потому что нет кириллицы: Geist Pixel, Space Grotesk, Silkscreen, Mona Sans, Instrument Sans, Doto. Manrope и JetBrains Mono текущего сайта уходят, когда на них не останется ссылок (P2-03).
 
@@ -160,100 +162,100 @@ Reduced motion: при `prefers-reduced-motion: reduce` все длительн�
 
 ## 8. Контраст
 
-Пороги WCAG 2.2: текст не меньше 4.5:1 (1.4.3), границы контролов, иконки и фокус не меньше 3:1 (1.4.11). Таблицу ниже и `docs/design/contrast-v2.json` генерирует `node scripts/design-contrast.mjs --write` из `docs/design/palette.json`; тест `tests/design-palette.test.mjs` в `npm test` падает, если пара ниже порога или таблица устарела. Декоративные роли (`outline-variant*`, `*-accent` как линия, `pattern-plus`) порогу не подчиняются и не несут смысла без текста или иконки рядом. Для градиента проверяется каждый стоп.
+Пороги WCAG 2.2: текст не меньше 4.5:1 (1.4.3), границы контролов, иконки и фокус не меньше 3:1 (1.4.11). Отношение сравнивается с порогом без округления, в таблице оно округлено вниз до сотых. Таблицу ниже и `docs/design/contrast-v2.json` генерирует `node scripts/design-contrast.mjs --write` из `docs/design/palette.json`; тест `tests/design-palette.test.mjs` в `npm test` падает, если пара ниже порога или таблица устарела. Декоративные роли (`outline-variant*`, `*-accent` как линия, `pattern-plus`) порогу не подчиняются и не несут смысла без текста или иконки рядом. Для градиента проверяется каждый стоп.
 
 <!-- contrast-table:start -->
 | Тема | Цвет | Фон | Где | Порог | Контраст | Итог |
 |---|---|---|---|---|---|---|
 | light | `on-surface` #101010 | `background` #FAFAFA | основной текст | 4.5:1 | 18.23 | PASS |
-| light | `on-surface` #101010 | `rail` #F3F3F3 | основной текст | 4.5:1 | 17.15 | PASS |
-| light | `on-surface` #101010 | `surface` #FFFFFF | основной текст | 4.5:1 | 19.03 | PASS |
+| light | `on-surface` #101010 | `rail` #F3F3F3 | основной текст | 4.5:1 | 17.14 | PASS |
+| light | `on-surface` #101010 | `surface` #FFFFFF | основной текст | 4.5:1 | 19.02 | PASS |
 | light | `on-surface` #101010 | `surface-container-low` #F4F4F4 | основной текст | 4.5:1 | 17.30 | PASS |
 | light | `on-surface` #101010 | `surface-container` #EDEDED | основной текст | 4.5:1 | 16.25 | PASS |
-| light | `on-surface` #101010 | `surface-container-high` #E3E3E3 | основной текст | 4.5:1 | 14.83 | PASS |
+| light | `on-surface` #101010 | `surface-container-high` #E3E3E3 | основной текст | 4.5:1 | 14.82 | PASS |
 | light | `on-surface-variant` #595959 | `background` #FAFAFA | вторичный текст, подписи | 4.5:1 | 6.71 | PASS |
 | light | `on-surface-variant` #595959 | `rail` #F3F3F3 | вторичный текст, подписи | 4.5:1 | 6.31 | PASS |
 | light | `on-surface-variant` #595959 | `surface` #FFFFFF | вторичный текст, подписи | 4.5:1 | 7.00 | PASS |
-| light | `on-surface-variant` #595959 | `surface-container-low` #F4F4F4 | вторичный текст, подписи | 4.5:1 | 6.37 | PASS |
+| light | `on-surface-variant` #595959 | `surface-container-low` #F4F4F4 | вторичный текст, подписи | 4.5:1 | 6.36 | PASS |
 | light | `on-surface-variant` #595959 | `surface-container` #EDEDED | вторичный текст, подписи | 4.5:1 | 5.98 | PASS |
-| light | `on-surface-variant` #595959 | `surface-container-high` #E3E3E3 | вторичный текст, подписи | 4.5:1 | 5.46 | PASS |
-| light | `primary` #B4401F | `background` #FAFAFA | текст акцента, ссылки «Твой путь» | 4.5:1 | 5.45 | PASS |
-| light | `primary` #B4401F | `surface` #FFFFFF | текст акцента, ссылки «Твой путь» | 4.5:1 | 5.69 | PASS |
-| light | `primary` #B4401F | `surface-container-low` #F4F4F4 | текст акцента, ссылки «Твой путь» | 4.5:1 | 5.17 | PASS |
-| light | `primary` #B4401F | `surface-container` #EDEDED | текст акцента, ссылки «Твой путь» | 4.5:1 | 4.86 | PASS |
-| light | `on-primary` #FFFFFF | `primary` #B4401F | текст на сплошной акцентной кнопке | 4.5:1 | 5.69 | PASS |
+| light | `on-surface-variant` #595959 | `surface-container-high` #E3E3E3 | вторичный текст, подписи | 4.5:1 | 5.45 | PASS |
+| light | `primary` #B4401F | `background` #FAFAFA | текст акцента, ссылки «Твой путь» | 4.5:1 | 5.44 | PASS |
+| light | `primary` #B4401F | `surface` #FFFFFF | текст акцента, ссылки «Твой путь» | 4.5:1 | 5.68 | PASS |
+| light | `primary` #B4401F | `surface-container-low` #F4F4F4 | текст акцента, ссылки «Твой путь» | 4.5:1 | 5.16 | PASS |
+| light | `primary` #B4401F | `surface-container` #EDEDED | текст акцента, ссылки «Твой путь» | 4.5:1 | 4.85 | PASS |
+| light | `on-primary` #FFFFFF | `primary` #B4401F | текст на сплошной акцентной кнопке | 4.5:1 | 5.68 | PASS |
 | light | `on-primary-container` #7A2A16 | `primary-container` #FDE6DF | тональная кнопка, текущий шаг | 4.5:1 | 8.09 | PASS |
-| light | `on-action-gradient` #101010 | `action-gradient[0]` #F9967D | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 8.78 | PASS |
-| light | `on-action-gradient` #101010 | `action-gradient[1]` #F87352 | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 6.86 | PASS |
-| light | `on-action-gradient` #101010 | `action-gradient[2]` #E8613F | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 5.63 | PASS |
+| light | `on-action-gradient` #101010 | `action-gradient[0]` #F9967D | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 8.77 | PASS |
+| light | `on-action-gradient` #101010 | `action-gradient[1]` #F87352 | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 6.85 | PASS |
+| light | `on-action-gradient` #101010 | `action-gradient[2]` #E8613F | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 5.62 | PASS |
 | light | `on-agent-container` #4B2380 | `agent-container` #F1E4FF | блок «Агент» | 4.5:1 | 9.33 | PASS |
-| light | `on-practice-container` #135C2E | `practice-container` #E3FFEB | блок «Практика» | 4.5:1 | 7.61 | PASS |
-| light | `on-human-container` #6B4210 | `human-container` #FFF3E2 | блок «Решает человек» | 4.5:1 | 7.95 | PASS |
-| light | `on-agent-container` #4B2380 | `agent-accent` #E4CAFF | пилюля «Агент» на цвете модуля | 4.5:1 | 7.67 | PASS |
-| light | `on-practice-container` #135C2E | `practice-accent` #CAFFDA | пилюля «Практика» на цвете модуля | 4.5:1 | 7.25 | PASS |
+| light | `on-practice-container` #135C2E | `practice-container` #E3FFEB | блок «Практика» | 4.5:1 | 7.60 | PASS |
+| light | `on-human-container` #6B4210 | `human-container` #FFF3E2 | блок «Решает человек» | 4.5:1 | 7.94 | PASS |
+| light | `on-agent-container` #4B2380 | `agent-accent` #E4CAFF | пилюля «Агент» на цвете модуля | 4.5:1 | 7.66 | PASS |
+| light | `on-practice-container` #135C2E | `practice-accent` #CAFFDA | пилюля «Практика» на цвете модуля | 4.5:1 | 7.24 | PASS |
 | light | `on-human-container` #6B4210 | `human-accent` #FFE9CA | пилюля «Решает человек» на цвете модуля | 4.5:1 | 7.36 | PASS |
 | light | `error` #B3261E | `background` #FAFAFA | статус FAIL, ошибка | 4.5:1 | 6.26 | PASS |
-| light | `error` #B3261E | `surface` #FFFFFF | статус FAIL, ошибка | 4.5:1 | 6.54 | PASS |
+| light | `error` #B3261E | `surface` #FFFFFF | статус FAIL, ошибка | 4.5:1 | 6.53 | PASS |
 | light | `error` #B3261E | `surface-container` #EDEDED | статус FAIL, ошибка | 4.5:1 | 5.58 | PASS |
-| light | `on-error` #FFFFFF | `error` #B3261E | текст на плашке ошибки | 4.5:1 | 6.54 | PASS |
-| light | `success` #1E6B3B | `background` #FAFAFA | статус PASS | 4.5:1 | 6.25 | PASS |
-| light | `success` #1E6B3B | `surface` #FFFFFF | статус PASS | 4.5:1 | 6.52 | PASS |
-| light | `success` #1E6B3B | `surface-container` #EDEDED | статус PASS | 4.5:1 | 5.57 | PASS |
-| light | `warning` #7A4F00 | `background` #FAFAFA | статусы BLOCKED / INCOMPLETE | 4.5:1 | 6.83 | PASS |
-| light | `warning` #7A4F00 | `surface` #FFFFFF | статусы BLOCKED / INCOMPLETE | 4.5:1 | 7.13 | PASS |
-| light | `warning` #7A4F00 | `surface-container` #EDEDED | статусы BLOCKED / INCOMPLETE | 4.5:1 | 6.09 | PASS |
+| light | `on-error` #FFFFFF | `error` #B3261E | текст на плашке ошибки | 4.5:1 | 6.53 | PASS |
+| light | `success` #1E6B3B | `background` #FAFAFA | статус PASS | 4.5:1 | 6.24 | PASS |
+| light | `success` #1E6B3B | `surface` #FFFFFF | статус PASS | 4.5:1 | 6.51 | PASS |
+| light | `success` #1E6B3B | `surface-container` #EDEDED | статус PASS | 4.5:1 | 5.56 | PASS |
+| light | `warning` #7A4F00 | `background` #FAFAFA | статусы BLOCKED / INCOMPLETE | 4.5:1 | 6.82 | PASS |
+| light | `warning` #7A4F00 | `surface` #FFFFFF | статусы BLOCKED / INCOMPLETE | 4.5:1 | 7.12 | PASS |
+| light | `warning` #7A4F00 | `surface-container` #EDEDED | статусы BLOCKED / INCOMPLETE | 4.5:1 | 6.08 | PASS |
 | light | `outline` #595959 | `background` #FAFAFA | граница контрола (поле, чип, тональная кнопка) | 3:1 | 6.71 | PASS |
 | light | `outline` #595959 | `surface` #FFFFFF | граница контрола (поле, чип, тональная кнопка) | 3:1 | 7.00 | PASS |
-| light | `outline` #595959 | `surface-container-high` #E3E3E3 | граница контрола (поле, чип, тональная кнопка) | 3:1 | 5.46 | PASS |
-| light | `primary` #B4401F | `background` #FAFAFA | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 5.45 | PASS |
-| light | `primary` #B4401F | `surface` #FFFFFF | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 5.69 | PASS |
-| light | `primary` #B4401F | `surface-container-high` #E3E3E3 | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 4.43 | PASS |
+| light | `outline` #595959 | `surface-container-high` #E3E3E3 | граница контрола (поле, чип, тональная кнопка) | 3:1 | 5.45 | PASS |
+| light | `primary` #B4401F | `background` #FAFAFA | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 5.44 | PASS |
+| light | `primary` #B4401F | `surface` #FFFFFF | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 5.68 | PASS |
+| light | `primary` #B4401F | `surface-container-high` #E3E3E3 | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 4.42 | PASS |
 | light | `on-surface-variant` #595959 | `background` #FAFAFA | иконки rail и интерфейса | 3:1 | 6.71 | PASS |
 | light | `on-surface-variant` #595959 | `rail` #F3F3F3 | иконки rail и интерфейса | 3:1 | 6.31 | PASS |
 | light | `on-surface-variant` #595959 | `surface` #FFFFFF | иконки rail и интерфейса | 3:1 | 7.00 | PASS |
 | dark | `on-surface` #F5F5F5 | `background` #101010 | основной текст | 4.5:1 | 17.45 | PASS |
-| dark | `on-surface` #F5F5F5 | `rail` #141414 | основной текст | 4.5:1 | 16.90 | PASS |
+| dark | `on-surface` #F5F5F5 | `rail` #141414 | основной текст | 4.5:1 | 16.89 | PASS |
 | dark | `on-surface` #F5F5F5 | `surface` #1A1A1A | основной текст | 4.5:1 | 15.96 | PASS |
 | dark | `on-surface` #F5F5F5 | `surface-container-low` #1A1A1A | основной текст | 4.5:1 | 15.96 | PASS |
-| dark | `on-surface` #F5F5F5 | `surface-container` #212121 | основной текст | 4.5:1 | 14.77 | PASS |
-| dark | `on-surface` #F5F5F5 | `surface-container-high` #2B2B2B | основной текст | 4.5:1 | 12.99 | PASS |
+| dark | `on-surface` #F5F5F5 | `surface-container` #212121 | основной текст | 4.5:1 | 14.76 | PASS |
+| dark | `on-surface` #F5F5F5 | `surface-container-high` #2B2B2B | основной текст | 4.5:1 | 12.98 | PASS |
 | dark | `on-surface-variant` #B2B2B2 | `background` #101010 | вторичный текст, подписи | 4.5:1 | 8.97 | PASS |
-| dark | `on-surface-variant` #B2B2B2 | `rail` #141414 | вторичный текст, подписи | 4.5:1 | 8.69 | PASS |
-| dark | `on-surface-variant` #B2B2B2 | `surface` #1A1A1A | вторичный текст, подписи | 4.5:1 | 8.21 | PASS |
-| dark | `on-surface-variant` #B2B2B2 | `surface-container-low` #1A1A1A | вторичный текст, подписи | 4.5:1 | 8.21 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `rail` #141414 | вторичный текст, подписи | 4.5:1 | 8.68 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `surface` #1A1A1A | вторичный текст, подписи | 4.5:1 | 8.20 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `surface-container-low` #1A1A1A | вторичный текст, подписи | 4.5:1 | 8.20 | PASS |
 | dark | `on-surface-variant` #B2B2B2 | `surface-container` #212121 | вторичный текст, подписи | 4.5:1 | 7.59 | PASS |
-| dark | `on-surface-variant` #B2B2B2 | `surface-container-high` #2B2B2B | вторичный текст, подписи | 4.5:1 | 6.68 | PASS |
-| dark | `primary` #F87352 | `background` #101010 | текст акцента, ссылки «Твой путь» | 4.5:1 | 6.86 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `surface-container-high` #2B2B2B | вторичный текст, подписи | 4.5:1 | 6.67 | PASS |
+| dark | `primary` #F87352 | `background` #101010 | текст акцента, ссылки «Твой путь» | 4.5:1 | 6.85 | PASS |
 | dark | `primary` #F87352 | `surface` #1A1A1A | текст акцента, ссылки «Твой путь» | 4.5:1 | 6.27 | PASS |
 | dark | `primary` #F87352 | `surface-container-low` #1A1A1A | текст акцента, ссылки «Твой путь» | 4.5:1 | 6.27 | PASS |
 | dark | `primary` #F87352 | `surface-container` #212121 | текст акцента, ссылки «Твой путь» | 4.5:1 | 5.80 | PASS |
-| dark | `on-primary` #101010 | `primary` #F87352 | текст на сплошной акцентной кнопке | 4.5:1 | 6.86 | PASS |
+| dark | `on-primary` #101010 | `primary` #F87352 | текст на сплошной акцентной кнопке | 4.5:1 | 6.85 | PASS |
 | dark | `on-primary-container` #FDDCD4 | `primary-container` #33201B | тональная кнопка, текущий шаг | 4.5:1 | 12.00 | PASS |
-| dark | `on-action-gradient` #101010 | `action-gradient[0]` #F9967D | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 8.78 | PASS |
-| dark | `on-action-gradient` #101010 | `action-gradient[1]` #F87352 | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 6.86 | PASS |
-| dark | `on-action-gradient` #101010 | `action-gradient[2]` #E8613F | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 5.63 | PASS |
-| dark | `on-agent-container` #E4CAFF | `agent-container` #231C2C | блок «Агент» | 4.5:1 | 11.14 | PASS |
+| dark | `on-action-gradient` #101010 | `action-gradient[0]` #F9967D | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 8.77 | PASS |
+| dark | `on-action-gradient` #101010 | `action-gradient[1]` #F87352 | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 6.85 | PASS |
+| dark | `on-action-gradient` #101010 | `action-gradient[2]` #E8613F | главная кнопка с градиентом (каждый стоп) | 4.5:1 | 5.62 | PASS |
+| dark | `on-agent-container` #E4CAFF | `agent-container` #231C2C | блок «Агент» | 4.5:1 | 11.13 | PASS |
 | dark | `on-practice-container` #CAFFDA | `practice-container` #17261C | блок «Практика» | 4.5:1 | 14.15 | PASS |
 | dark | `on-human-container` #FFE9CA | `human-container` #2A2219 | блок «Решает человек» | 4.5:1 | 13.24 | PASS |
 | dark | `error` #F2B8B5 | `background` #101010 | статус FAIL, ошибка | 4.5:1 | 11.14 | PASS |
 | dark | `error` #F2B8B5 | `surface` #1A1A1A | статус FAIL, ошибка | 4.5:1 | 10.19 | PASS |
 | dark | `error` #F2B8B5 | `surface-container` #212121 | статус FAIL, ошибка | 4.5:1 | 9.43 | PASS |
 | dark | `on-error` #601410 | `error` #F2B8B5 | текст на плашке ошибки | 4.5:1 | 7.66 | PASS |
-| dark | `success` #8FD9A8 | `background` #101010 | статус PASS | 4.5:1 | 11.47 | PASS |
+| dark | `success` #8FD9A8 | `background` #101010 | статус PASS | 4.5:1 | 11.46 | PASS |
 | dark | `success` #8FD9A8 | `surface` #1A1A1A | статус PASS | 4.5:1 | 10.49 | PASS |
-| dark | `success` #8FD9A8 | `surface-container` #212121 | статус PASS | 4.5:1 | 9.71 | PASS |
-| dark | `warning` #F5C26B | `background` #101010 | статусы BLOCKED / INCOMPLETE | 4.5:1 | 11.61 | PASS |
-| dark | `warning` #F5C26B | `surface` #1A1A1A | статусы BLOCKED / INCOMPLETE | 4.5:1 | 10.62 | PASS |
+| dark | `success` #8FD9A8 | `surface-container` #212121 | статус PASS | 4.5:1 | 9.70 | PASS |
+| dark | `warning` #F5C26B | `background` #101010 | статусы BLOCKED / INCOMPLETE | 4.5:1 | 11.60 | PASS |
+| dark | `warning` #F5C26B | `surface` #1A1A1A | статусы BLOCKED / INCOMPLETE | 4.5:1 | 10.61 | PASS |
 | dark | `warning` #F5C26B | `surface-container` #212121 | статусы BLOCKED / INCOMPLETE | 4.5:1 | 9.82 | PASS |
-| dark | `outline` #858585 | `background` #101010 | граница контрола (поле, чип, тональная кнопка) | 3:1 | 5.16 | PASS |
-| dark | `outline` #858585 | `surface` #1A1A1A | граница контрола (поле, чип, тональная кнопка) | 3:1 | 4.72 | PASS |
-| dark | `outline` #858585 | `surface-container-high` #2B2B2B | граница контрола (поле, чип, тональная кнопка) | 3:1 | 3.84 | PASS |
-| dark | `primary` #F87352 | `background` #101010 | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 6.86 | PASS |
+| dark | `outline` #858585 | `background` #101010 | граница контрола (поле, чип, тональная кнопка) | 3:1 | 5.15 | PASS |
+| dark | `outline` #858585 | `surface` #1A1A1A | граница контрола (поле, чип, тональная кнопка) | 3:1 | 4.71 | PASS |
+| dark | `outline` #858585 | `surface-container-high` #2B2B2B | граница контрола (поле, чип, тональная кнопка) | 3:1 | 3.83 | PASS |
+| dark | `primary` #F87352 | `background` #101010 | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 6.85 | PASS |
 | dark | `primary` #F87352 | `surface` #1A1A1A | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 6.27 | PASS |
 | dark | `primary` #F87352 | `surface-container-high` #2B2B2B | кольцо фокуса, иконка акцента, точка прогресса | 3:1 | 5.10 | PASS |
 | dark | `on-surface-variant` #B2B2B2 | `background` #101010 | иконки rail и интерфейса | 3:1 | 8.97 | PASS |
-| dark | `on-surface-variant` #B2B2B2 | `rail` #141414 | иконки rail и интерфейса | 3:1 | 8.69 | PASS |
-| dark | `on-surface-variant` #B2B2B2 | `surface` #1A1A1A | иконки rail и интерфейса | 3:1 | 8.21 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `rail` #141414 | иконки rail и интерфейса | 3:1 | 8.68 | PASS |
+| dark | `on-surface-variant` #B2B2B2 | `surface` #1A1A1A | иконки rail и интерфейса | 3:1 | 8.20 | PASS |
 <!-- contrast-table:end -->
 
 ## 9. Что дальше

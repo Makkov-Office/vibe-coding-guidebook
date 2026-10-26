@@ -115,5 +115,8 @@
     { "fg": "primary", "bg": ["background", "surface", "surface-container-high"], "kind": "ui", "use": "кольцо фокуса, иконка акцента, точка прогресса" },
     { "fg": "on-surface-variant", "bg": ["background", "rail", "surface"], "kind": "ui", "use": "иконки rail и интерфейса" }
   ],
+  "forbidden": [
+    { "fg": "primary", "bg": "surface-container-high", "theme": "light", "reason": "4.43:1 < 4.5: текст акцента на нажатом состоянии; нажатая ссылка и активный пункт используют primary-container" }
+  ],
   "decorative": ["outline-variant", "outline-variant-strong", "agent-accent", "practice-accent", "human-accent", "pattern-plus"]
 }

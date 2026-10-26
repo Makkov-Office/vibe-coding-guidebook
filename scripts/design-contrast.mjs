@@ -39,6 +39,20 @@ function resolve(theme, name, role) {
 }
 
 export function checkPalette(palette) {
+  const themes = Object.entries(palette.themes ?? {});
+  if (themes.length === 0 || !palette.pairs?.length) throw new Error("palette has no themes or pairs");
+  const roles = Object.keys(themes[0][1]).sort().join();
+  for (const [name, theme] of themes) {
+    if (Object.keys(theme).sort().join() !== roles) throw new Error(`${name}: role set differs between themes`);
+  }
+  for (const role of palette.decorative ?? []) {
+    for (const [name, theme] of themes) resolve(theme, name, role);
+  }
+  for (const rule of palette.forbidden ?? []) {
+    if (palette.pairs.some((p) => p.fg === rule.fg && p.kind === "text" && p.bg.includes(rule.bg))) {
+      throw new Error(`forbidden pair ${rule.fg} on ${rule.bg} is used as text`);
+    }
+  }
   const rows = [];
   for (const [name, theme] of Object.entries(palette.themes)) {
     for (const pair of palette.pairs) {
@@ -48,11 +62,12 @@ export function checkPalette(palette) {
       for (const [fgRole, fg] of resolve(theme, name, pair.fg)) {
         for (const bgRole of pair.bg) {
           for (const [bgName, bg] of resolve(theme, name, bgRole)) {
-            const ratio = Math.round(contrast(fg, bg) * 100) / 100;
+            // Compare the exact ratio: WCAG does not allow rounding up to the threshold.
+            const exact = contrast(fg, bg);
             rows.push({
               theme: name, fg: fgRole, fgHex: fg, bg: bgName, bgHex: bg,
-              kind: pair.kind, use: pair.use, ratio, threshold,
-              status: ratio >= threshold ? "PASS" : "FAIL",
+              kind: pair.kind, use: pair.use, ratio: Math.floor(exact * 100) / 100, threshold,
+              status: exact >= threshold ? "PASS" : "FAIL",
             });
           }
         }
@@ -86,6 +101,7 @@ const read = (file) => readFileSync(path.join(root, file), "utf8");
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const rows = checkPalette(JSON.parse(read(PALETTE)));
   const failed = rows.filter((r) => r.status !== "PASS");
+  if (rows.length === 0) failed.push({ theme: "-", fg: "-", bg: "-", ratio: 0, threshold: 0 });
   if (process.argv.includes("--write")) {
     writeFileSync(path.join(root, REPORT), renderReport(rows));
     writeFileSync(path.join(root, SPEC), renderSpec(read(SPEC), rows));
