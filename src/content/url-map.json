@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "about": "P2-05: old address -> address in the 9-section structure (RD-01, ADR-0003). Edited by hand, checked by tests/url-map.test.mjs; redirects are built from it by scripts/vercel-output.mjs only for entries whose target page exists in the build. How to add a page: README.md, section «Карта адресов».",
+  "tabs": [
+    { "id": "overview", "segment": "", "label": "Обзор" },
+    { "id": "how-it-works", "segment": "how-it-works", "label": "Как устроено" },
+    { "id": "apply", "segment": "apply", "label": "Как применять" },
+    { "id": "check", "segment": "check", "label": "Проверь себя" }
+  ],
+  "sections": [
+    { "id": "home", "label": "Главная", "path": "/", "rail": true },
+    { "id": "start", "label": "Начать", "path": "/start", "rail": true },
+    { "id": "base", "label": "Основы", "path": "/base", "rail": true },
+    { "id": "flow", "label": "Процесс", "path": "/flow", "rail": true },
+    { "id": "control", "label": "Контроль", "path": "/control", "rail": true },
+    { "id": "reliability", "label": "Надёжность", "path": "/reliability", "rail": true },
+    { "id": "practice", "label": "Практика", "path": "/practice", "rail": true },
+    { "id": "tools", "label": "Инструменты", "path": "/tools", "rail": true },
+    { "id": "agents", "label": "Agent Pack", "path": "/agents", "rail": true },
+    { "id": "reference", "label": "Справочник", "path": "/reference", "rail": false },
+    { "id": "service", "label": "Служебные страницы", "path": "/", "rail": false }
+  ],
+  "pages": [
+    { "old": "/", "new": "/start/00-how-to-read", "keep": true, "section": "start", "chapter": "ch-00" },
+    { "old": "/chapters/01", "new": "/start/01-from-vibe-coding", "section": "start", "chapter": "ch-01", "tabs": true, "lead": "how-it-works", "anchors": {} },
+    { "old": "/chapters/02", "new": "/base/02-architecture", "section": "base", "chapter": "ch-02", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-02-2-1-кто-за-что-отвечает": "how-it-works",
+      "ch-02-2-2-иерархия-по-области-ответственности": "how-it-works",
+      "ch-02-2-3-где-заканчивается-orchestration": "how-it-works",
+      "architecture-panel": "check"
+    } },
+    { "old": "/chapters/03", "new": "/base/03-agent-harness", "section": "base", "chapter": "ch-03", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-03-3-1-три-степени-силы-правила": "how-it-works",
+      "ch-03-3-2-минимальный-harness-для-собственного-проекта": "apply"
+    } },
+    { "old": "/chapters/04", "new": "/base/04-wsl2-dev-container", "section": "base", "chapter": "ch-04", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-04-4-1-что-дает-каждый-слой": "how-it-works",
+      "ch-04-4-2-проверка-готовности-среды": "apply",
+      "ch-04-4-3-где-живут-код-среда-и-входы": "how-it-works",
+      "ch-04-4-4-один-docker-endpoint-и-lifecycle-hooks": "apply"
+    } },
+    { "old": "/chapters/05", "new": "/base/05-roles", "section": "base", "chapter": "ch-05", "tabs": true, "lead": "how-it-works", "anchors": {} },
+    { "old": "/chapters/06", "new": "/flow/06-ticket", "section": "flow", "chapter": "ch-06", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-06-6-1-контракт-задачи": "how-it-works",
+      "ch-06-6-2-definition-of-ready": "apply"
+    } },
+    { "old": "/chapters/07", "new": "/flow/07-lifecycle", "section": "flow", "chapter": "ch-07", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-07-7-1-переходы-и-evidence": "how-it-works",
+      "ch-07-7-2-что-означают-фразы-агентов": "apply",
+      "lifecycle-panel": "check"
+    } },
+    { "old": "/chapters/08", "new": "/flow/08-preflight", "section": "flow", "chapter": "ch-08", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-08-8-1-последовательность": "apply",
+      "ch-08-8-2-отчет-preflight": "apply",
+      "ch-08-8-3-fail-closed": "how-it-works"
+    } },
+    { "old": "/chapters/09", "new": "/flow/09-context-engineering", "section": "flow", "chapter": "ch-09", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-09-9-1-четыре-слоя": "how-it-works",
+      "ch-09-9-2-пример-launcher-для-автора": "apply",
+      "ch-09-9-3-handoff-после-прерывания": "apply"
+    } },
+    { "old": "/chapters/10", "new": "/flow/10-spec-adr-docs-impact", "section": "flow", "chapter": "ch-10", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-10-10-1-каждый-документ-решает-свой-вопрос": "how-it-works",
+      "ch-10-10-2-минимальный-adr": "apply",
+      "ch-10-10-3-docs-impact": "apply",
+      "ch-10-10-4-spec-conflict-contract": "how-it-works"
+    } },
+    { "old": "/chapters/11", "new": "/flow/11-git-github-ci", "section": "flow", "chapter": "ch-11", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-11-11-1-изоляция-и-маленькие-pr": "how-it-works",
+      "ch-11-11-2-минимально-полезное-описание-pr": "apply",
+      "ch-11-11-3-evidence-привязано-к-состоянию": "how-it-works",
+      "ch-11-11-4-что-проверяет-ci": "how-it-works"
+    } },
+    { "old": "/chapters/12", "new": "/control/12-change-risk", "section": "control", "chapter": "ch-12", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-12-12-1-практическая-матрица": "how-it-works",
+      "ch-12-12-2-алгоритм-классификации": "apply",
+      "ch-12-12-3-примеры": "apply"
+    } },
+    { "old": "/chapters/13", "new": "/control/13-parallel-agents", "section": "control", "chapter": "ch-13", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-13-13-1-четыре-collision-classes": "how-it-works",
+      "ch-13-13-2-какие-данные-учитывать": "how-it-works",
+      "ch-13-13-3-merge-order-как-dependency-graph": "how-it-works",
+      "ch-13-13-4-контракт-параллельной-волны": "apply",
+      "collisions-panel": "check"
+    } },
+    { "old": "/chapters/14", "new": "/control/14-independent-review", "section": "control", "chapter": "ch-14", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-14-14-1-что-reviewer-получает": "how-it-works",
+      "ch-14-14-2-проверки": "how-it-works",
+      "ch-14-14-3-finding-contract": "how-it-works",
+      "ch-14-14-4-готовый-reviewer-prompt": "apply"
+    } },
+    { "old": "/chapters/15", "new": "/control/15-human-gates", "section": "control", "chapter": "ch-15", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-15-15-1-пакет-для-решения": "apply"
+    } },
+    { "old": "/chapters/16", "new": "/control/16-post-merge-sync", "section": "control", "chapter": "ch-16", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-16-16-1-последовательность": "apply",
+      "ch-16-16-2-две-ловушки-из-истории": "how-it-works",
+      "ch-16-16-3-безопасное-восстановление": "apply",
+      "ch-16-16-4-три-разных-вида-автоматизации": "how-it-works",
+      "ch-16-16-5-короткие-фразы-для-новичка": "apply"
+    } },
+    { "old": "/chapters/17", "new": "/reliability/17-security", "section": "reliability", "chapter": "ch-17", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-17-17-1-границы-доверия": "how-it-works",
+      "ch-17-17-2-практические-правила": "apply",
+      "ch-17-17-3-incident-contract": "apply"
+    } },
+    { "old": "/chapters/18", "new": "/reliability/18-typical-mistakes", "section": "reliability", "chapter": "ch-18", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-18-18-1-pr-готов-тикет-все-еще-in-progress": "how-it-works",
+      "ch-18-18-2-зеленый-ci-и-небезопасный-post-merge-sync": "how-it-works",
+      "ch-18-18-3-зависимые-изменения-и-неполный-diff": "how-it-works",
+      "ch-18-18-4-docs-impact-проверять-hosted-поведение": "how-it-works"
+    } },
+    { "old": "/chapters/19", "new": "/reliability/19-failure-modes", "section": "reliability", "chapter": "ch-19", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-19-19-1-если-ничего-не-изменилось-краткая-диагностика": "apply"
+    } },
+    { "old": "/chapters/20", "new": "/practice/20-adopt-the-system", "section": "practice", "chapter": "ch-20", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-20-20-1-минимальная-последовательность-внедрения": "apply",
+      "ch-20-20-2-упражнения-для-брата": "check"
+    } },
+    { "old": "/chapters/21", "new": "/practice/21-maturity-model", "section": "practice", "chapter": "ch-21", "tabs": true, "lead": "how-it-works", "anchors": {
+      "ch-21-21-1-control-center-сначала-наблюдение": "how-it-works",
+      "maturity-panel": "check"
+    } },
+    { "old": "/chapters/22", "new": "/reference/22-cheatsheet", "section": "reference", "chapter": "ch-22" },
+    { "old": "/glossary", "new": "/reference/glossary", "section": "reference", "chapter": "ch-23" },
+    { "old": "/chapters/23", "new": "/reference/glossary", "section": "reference", "alias": true },
+    { "old": "/tools", "new": "/tools", "section": "tools", "chapter": "ch-tools" },
+    { "old": "/tools/codex", "new": "/tools/codex", "section": "tools", "chapter": "ch-codex" },
+    { "old": "/tools/claude-code", "new": "/tools/claude-code", "section": "tools", "chapter": "ch-claude-code" },
+    { "old": "/resources", "new": "/tools/resources", "section": "tools", "chapter": "ch-resources" },
+    { "old": "/print", "new": "/print", "section": "service" }
+  ]
+}
