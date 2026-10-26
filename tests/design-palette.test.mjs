@@ -47,8 +47,29 @@ test('threshold is compared without rounding up', () => {
   const [row] = checkPalette(edge);
   assert.ok(contrast('#767676', '#FFFFFF') >= 4.5);
   assert.equal(row.status, 'PASS');
-  edge.themes.light.a = '#777777';
+  edge.themes.light.a = '#647A86'; // 4.4969: rounds to 4.50, must still FAIL
   assert.equal(checkPalette(edge)[0].status, 'FAIL');
+});
+
+test('pairs and forbidden rules fail closed on typos', () => {
+  const typo = structuredClone(palette);
+  typo.pairs[0].theme = 'ligth';
+  assert.throws(() => checkPalette(typo), /unknown theme/);
+  const empty = structuredClone(palette);
+  empty.pairs[0].bg = [];
+  assert.throws(() => checkPalette(empty), /empty bg/);
+  const rule = structuredClone(palette);
+  rule.forbidden[0].bg = 'surface-containr-high';
+  assert.throws(() => checkPalette(rule), /unknown role/);  const darkOnly = structuredClone(palette);
+  darkOnly.pairs.push({ fg: 'primary', bg: ['surface-container-high'], kind: 'text', theme: 'dark', use: 'x' });
+  assert.ok(checkPalette(darkOnly).some((r) => r.theme === 'dark' && r.bg === 'surface-container-high' && r.kind === 'text'));
+});
+
+test('every non-decorative role is checked in at least one pair', () => {
+  const used = new Set(palette.pairs.flatMap((p) => [p.fg, ...p.bg]));
+  const unchecked = Object.keys(palette.themes.light)
+    .filter((role) => !used.has(role) && !palette.decorative.includes(role));
+  assert.deepEqual(unchecked, []);
 });
 
 test('palette keeps the approved brand and concept values', () => {

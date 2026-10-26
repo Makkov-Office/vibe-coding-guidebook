@@ -48,8 +48,19 @@ export function checkPalette(palette) {
   for (const role of palette.decorative ?? []) {
     for (const [name, theme] of themes) resolve(theme, name, role);
   }
+  const names = themes.map(([name]) => name);
+  for (const pair of palette.pairs) {
+    if (pair.theme && !names.includes(pair.theme)) throw new Error(`pair ${pair.fg}: unknown theme ${pair.theme}`);
+    if (!pair.bg?.length) throw new Error(`pair ${pair.fg}: empty bg list`);
+  }
+  const sameTheme = (a, b) => !a || !b || a === b;
   for (const rule of palette.forbidden ?? []) {
-    if (palette.pairs.some((p) => p.fg === rule.fg && p.kind === "text" && p.bg.includes(rule.bg))) {
+    if (rule.theme && !names.includes(rule.theme)) throw new Error(`forbidden ${rule.fg}: unknown theme ${rule.theme}`);
+    for (const [name, theme] of themes) {
+      resolve(theme, name, rule.fg);
+      resolve(theme, name, rule.bg);
+    }
+    if (palette.pairs.some((p) => p.fg === rule.fg && p.kind === "text" && p.bg.includes(rule.bg) && sameTheme(p.theme, rule.theme))) {
       throw new Error(`forbidden pair ${rule.fg} on ${rule.bg} is used as text`);
     }
   }
