@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-pack:schema:handoff",
+  "title": "Handoff",
+  "description": "Передача задачи после прерывания. Handbook 9.3.",
+  "type": "object",
+  "properties": {
+    "task": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repository": {
+      "type": "string",
+      "minLength": 1
+    },
+    "branch": {
+      "type": "string",
+      "minLength": 1
+    },
+    "worktree": {
+      "type": "string",
+      "minLength": 1
+    },
+    "head_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "Полный SHA коммита"
+    },
+    "base_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "Полный SHA коммита"
+    },
+    "approved_scope": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "completed_ac": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "remaining_work": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "uncommitted_changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "owner": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "path",
+          "owner"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "minLength": 1
+          },
+          "result": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "INCOMPLETE"
+            ]
+          },
+          "tested_state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$",
+                "description": "Полный SHA коммита"
+              },
+              {
+                "const": "dirty"
+              }
+            ],
+            "description": "SHA проверенного состояния или dirty"
+          }
+        },
+        "required": [
+          "command",
+          "result",
+          "tested_state"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "pr": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ci": {
+      "type": "string",
+      "minLength": 1
+    },
+    "unresolved_findings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "collisions": {
+      "type": "string",
+      "minLength": 1
+    },
+    "merge_order": {
+      "type": "string",
+      "minLength": 1
+    },
+    "next_allowed_action": {
+      "type": "string",
+      "minLength": 1
+    },
+    "human_decisions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "task",
+    "owner",
+    "repository",
+    "branch",
+    "worktree",
+    "head_sha",
+    "base_sha",
+    "approved_scope",
+    "sources",
+    "completed_ac",
+    "remaining_work",
+    "uncommitted_changes",
+    "tests",
+    "unresolved_findings",
+    "collisions",
+    "merge_order",
+    "next_allowed_action",
+    "human_decisions"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-pack:schema:decision-packet",
+  "title": "Decision packet",
+  "description": "Пакет для решения человека о конкретном действии. Handbook 15, 15.1.",
+  "type": "object",
+  "properties": {
+    "proposed_action": {
+      "type": "string",
+      "minLength": 1
+    },
+    "head_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "Полный SHA коммита"
+    },
+    "base_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "Полный SHA коммита"
+    },
+    "main_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "Полный SHA коммита"
+    },
+    "outcome": {
+      "type": "string",
+      "minLength": 1
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "risk": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "enum": [
+            "Low",
+            "Medium",
+            "High"
+          ]
+        },
+        "accepted_residual_risks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "level",
+        "accepted_residual_risks"
+      ],
+      "additionalProperties": false
+    },
+    "ci_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "review_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "docs_impact": {
+      "type": "string",
+      "minLength": 1
+    },
+    "spec_conflicts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "collisions": {
+      "type": "string",
+      "minLength": 1
+    },
+    "merge_order": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rollback": {
+      "type": "string",
+      "minLength": 1
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "decision_requested": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "proposed_action",
+    "head_sha",
+    "base_sha",
+    "main_sha",
+    "outcome",
+    "acceptance_criteria",
+    "risk",
+    "ci_evidence",
+    "review_evidence",
+    "docs_impact",
+    "spec_conflicts",
+    "collisions",
+    "merge_order",
+    "rollback",
+    "limitations",
+    "decision_requested"
+  ],
+  "additionalProperties": false
+}
