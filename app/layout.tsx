@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "./tokens.css";
 import "./globals.css";
 import "../src/design/home-route.css";
 import "../src/design/tool-reviews.css";
@@ -21,6 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
+      <head>
+        <link rel="preload" href="/fonts/geist-cyrillic-400-600.woff2" as="font" type="font/woff2" crossOrigin="" />
+        <link rel="preload" href="/fonts/geist-latin-400-600.woff2" as="font" type="font/woff2" crossOrigin="" />
+      </head>
       <body className="antialiased">{children}</body>
     </html>
   );
