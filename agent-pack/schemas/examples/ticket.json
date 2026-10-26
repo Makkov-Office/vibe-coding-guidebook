@@ -1,0 +1,31 @@
+{
+  "id": "DEMO-42",
+  "title": "Add title search to the knowledge catalogue",
+  "outcome": "User finds published entries by title",
+  "scope": [
+    "Search existing published entries by title",
+    "Show empty and no-results states"
+  ],
+  "out_of_scope": [
+    "Full-text indexing",
+    "AI recommendations",
+    "New authentication or data source"
+  ],
+  "acceptance_criteria": [
+    "Empty query shows the existing catalogue",
+    "Matching is case-insensitive for Russian and English titles",
+    "No matches shows an explicit no-results state",
+    "Existing entry links remain functional"
+  ],
+  "dependencies": [],
+  "source_docs": [
+    "Product catalogue spec",
+    "Repository UI contracts"
+  ],
+  "risk": "Medium",
+  "docs_impact_expectation": "Update catalogue behavior documentation",
+  "owner": "One primary author session",
+  "branch": "demo-42-title-search",
+  "delivery": "One PR; stop before merge",
+  "validation": "Contract tests and relevant interface checks"
+}

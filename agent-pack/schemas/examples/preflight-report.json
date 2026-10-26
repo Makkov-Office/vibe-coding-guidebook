@@ -1,0 +1,46 @@
+{
+  "ticket": {
+    "id": "DEMO-42",
+    "status": "Todo"
+  },
+  "readiness": {
+    "result": "PASS",
+    "notes": "dependencies resolved"
+  },
+  "repository": "verified project remote",
+  "base": {
+    "ref": "origin/main",
+    "sha": "9c0d1e2f3a4b5c6d7e8f90a1b2c3d4e5f6a7b8c9"
+  },
+  "branch": "demo-42-title-search",
+  "ownership": "primary author in dedicated worktree",
+  "local_state": {
+    "state": "clean",
+    "changes": []
+  },
+  "environment": {
+    "result": "PASS",
+    "check": "doctor"
+  },
+  "risk": {
+    "level": "Medium",
+    "reason": "changes catalogue behavior"
+  },
+  "docs_impact": "catalogue contract update",
+  "collisions": [
+    {
+      "with": "DEMO-43",
+      "class": "file overlap only",
+      "evidence": "shared index reviewed"
+    }
+  ],
+  "merge_order": "no semantic dependency; recheck before merge",
+  "plan": [
+    "implement title filtering",
+    "test AC",
+    "validate",
+    "open PR"
+  ],
+  "blockers": [],
+  "result": "PASS"
+}

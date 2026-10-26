@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-pack:schema:finding",
+  "title": "Finding",
+  "description": "Finding независимого review. Handbook 14.3 (finding contract и шкала severity).",
+  "type": "object",
+  "properties": {
+    "severity": {
+      "enum": [
+        "BLOCKER",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "NOTE"
+      ]
+    },
+    "original_severity": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Исходная шкала инструмента, если она другая (14.3)"
+    },
+    "reviewed_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "Полный SHA коммита"
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lines": {
+          "type": "string",
+          "minLength": 1
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "file"
+      ],
+      "additionalProperties": false
+    },
+    "defect": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scenario": {
+      "type": "string",
+      "minLength": 1
+    },
+    "impact": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fix": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "severity",
+    "reviewed_sha",
+    "location",
+    "defect",
+    "scenario",
+    "impact",
+    "evidence",
+    "fix"
+  ],
+  "additionalProperties": false
+}
