@@ -26,14 +26,30 @@
       "minLength": 1
     },
     "head_sha": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{40}$",
-      "description": "Полный SHA коммита"
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$",
+          "description": "Полный SHA коммита"
+        },
+        {
+          "const": "unknown"
+        }
+      ],
+      "description": "Полный SHA или unknown (8.3, 13.2)"
     },
     "base_sha": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{40}$",
-      "description": "Полный SHA коммита"
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$",
+          "description": "Полный SHA коммита"
+        },
+        {
+          "const": "unknown"
+        }
+      ],
+      "description": "Полный SHA или unknown (8.3, 13.2)"
     },
     "approved_scope": {
       "type": "array",

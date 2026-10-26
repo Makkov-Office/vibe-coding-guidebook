@@ -93,6 +93,8 @@ test('invalid documents fail', () => {
     ['handoff', (d) => { d.tests[0].tested_state = 'latest'; }],
     ['handoff', (d) => { d.head_sha = sha.toUpperCase(); }],
     ['handoff', (d) => { delete d.ci; }],
+    ['preflight-report', (d) => { d.base.sha = 'unknown'; }],
+    ['handoff', (d) => { d.base_sha = 'latest'; }],
     ['evidence-record', (d) => { d.working_tree = { state: 'dirty' }; }],
     ['preflight-report', (d) => { d.local_state = { state: 'dirty', changes: [] }; }],
     ['evidence-record', (d) => { d.timestamp = '2026-13-45T99:99:99Z'; }],
@@ -104,6 +106,14 @@ test('invalid documents fail', () => {
     mutate(doc);
     assert.notDeepEqual(validate(loadSchema(name), doc), [], `${name}: ${mutate}`);
   }
+  // Unknown evidence stays unknown (handbook 8.3): allowed only where the result is not PASS.
+  const incomplete = readJson(path.join(pack, 'schemas/examples/preflight-report.json'));
+  Object.assign(incomplete, { result: 'INCOMPLETE', blockers: ['fetch of main failed'] });
+  incomplete.base.sha = 'unknown';
+  assert.deepEqual(validate(loadSchema('preflight-report'), incomplete), []);
+  const handoff = readJson(path.join(pack, 'schemas/examples/handoff.json'));
+  handoff.base_sha = 'unknown';
+  assert.deepEqual(validate(loadSchema('handoff'), handoff), []);
   assert.throws(() => checkKeywords({ type: 'object', oneOf: [] }), /unsupported keyword oneOf/);
 });
 

@@ -17,7 +17,7 @@ Preflight проверяет эту задачу в этой среде сейч
 1. MUST: получить актуальный тикет, статус, dependencies и исходные документы [H08.1].
 2. MUST: прочитать entrypoint и профильные contracts репозитория [H08.1].
 3. MUST: проверить repo identity, remote, branch, HEAD, worktrees и локальные изменения [H08.1].
-4. MUST: обновить main через документированный безопасный fetch; записать полный base SHA [H08.1].
+4. MUST: обновить main через документированный безопасный fetch; записать полный base SHA; если fetch не удался — `base.sha: unknown`, результат не PASS [H08.1] [H08.3].
 5. MUST: установить owner; создать или переиспользовать разрешённую task branch/worktree с точным именем из тикета [H08.1] [H11.1].
 6. MUST: проверить DoR, capabilities и bootstrap/doctor [H06.2] [H08.1].
 7. MUST: оценить risk, Docs Impact, active PRs и collision class [H08.1] [H12.2] [H13.1].

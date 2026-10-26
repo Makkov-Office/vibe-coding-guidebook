@@ -56,9 +56,17 @@
           "minLength": 1
         },
         "sha": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{40}$",
-          "description": "Полный SHA коммита"
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$",
+              "description": "Полный SHA коммита"
+            },
+            {
+              "const": "unknown"
+            }
+          ],
+          "description": "Полный SHA; unknown — если свежий main получить не удалось (8.3)"
         }
       },
       "required": [
@@ -241,5 +249,34 @@
     "plan",
     "result"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "anyOf": [
+    {
+      "properties": {
+        "result": {
+          "const": "PASS"
+        },
+        "base": {
+          "properties": {
+            "sha": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$",
+              "description": "Полный SHA коммита"
+            }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "result": {
+          "enum": [
+            "FAIL",
+            "BLOCKED",
+            "INCOMPLETE"
+          ]
+        }
+      }
+    }
+  ]
 }
