@@ -35,7 +35,7 @@ Status: Accepted — 23.10.2026, решение founder «включай product
 ## Consequences
 
 - Плюсы: SPA-переходы, прямой заход и refresh работают так же, как на Worker; HTML и RSC — байт-в-байт файлы prerender; нет функций и серверного кода на Vercel; Cloudflare/Sites и `.openai/hosting.json` не тронуты.
-- Связность с внутренностями Vinext beta: имена заголовков, формат `?_rsc`, раскладка `prerendered-routes`, UUID в bundle. Скрипт падает закрыто; при ошибочном id деградация мягкая — полная загрузка страниц, контент верный. Обновление Vinext — отдельный тикет с повторным `check-vercel-output` (бриф, раздел 12).
+- Связность с внутренностями Vinext beta: имена заголовков, формат `?_rsc`, раскладка `prerendered-routes`, UUID в bundle. Скрипт падает закрыто; при ошибочном id деградация мягкая — полная загрузка страниц, контент верный. Обновление Vinext — отдельный тикет с повторным `check-vercel-output` (бриф, раздел 15).
 - RSC payload в prerender отличается от ответа Worker (`wrangler dev`): Worker рендерит на запрос и добавляет streaming metadata, в prerender её нет. Браузерная проверка переходов на prerender-файлах — PASS; расхождение для P1-08 (parity) записано здесь.
 - `vercel build` (CLI 62.7.0) переносит наш `config.json` как есть, но ставит 308-маршрут после маршрутов с `continue` и добавляет свою секцию `handle: error` → `404.html`. Проверка выполнялась по итоговому `config.json` после `vercel build`.
 - CLI выбирает builder `@vercel/next` при зависимости `next`, если проект создан до 01.03.2020 или framework не задан; для нового проекта с `framework: null` — static build и passthrough `.vercel/output` (наблюдение в коде CLI `detectFrontBuilder` и в локальном прогоне). В P1-07 проверить, что preview собран без `@vercel/next`.
@@ -43,7 +43,7 @@ Status: Accepted — 23.10.2026, решение founder «включай product
 - Установка: `npm ci --include=dev` ставит devDependencies (vite, vinext, wrangler нужны сборке) и 29 записей `@img/sharp-*` с `"dev": true` даже при `NODE_ENV=production` (входное условие из комментария к #8).
 - Вход для P1-07 (Skew Protection): если при сборке задан `NEXT_DEPLOYMENT_ID` (env проекта или платформы), compatibility id равен ему, UUID в bundle нет, и `vercel-output.mjs` падает с `expected one RSC compatibility id, found 0` (проверено сборкой с `NEXT_DEPLOYMENT_ID=p106probe`). Сборка падает закрыто, деплоя нет. В P1-07 проверить env preview/production; Skew Protection — отдельное решение (тогда скрипт берёт id из `NEXT_DEPLOYMENT_ID`, отдельный тикет). Документация Vercel описывает системную `VERCEL_DEPLOYMENT_ID` для Skew Protection; ставит ли платформа `NEXT_DEPLOYMENT_ID` для static build — не проверено.
 - Итоговый `config.json` после `vercel build` содержит `framework` (`{"slug": "nextjs", …}` — CLI определил Next.js по зависимости). По документации Build Output Configuration это поле «used for display purposes only»; builder и маршрутизацию оно не меняет (в логе `vercel build` нет `@vercel/next` и `Detected Next.js`).
-- Production по-прежнему ChatGPT Sites; два адреса и переадресация — решение founder (бриф, раздел 13).
+- Production по-прежнему ChatGPT Sites; два адреса и переадресация — решение founder (бриф, раздел 16).
 
 ## Validation
 
@@ -168,6 +168,6 @@ Evidence — раздел ниже и PR. Команды в свежем `git cl
 2. `vercel.json`: удалён `ignoreCommand` — сборка не отменяется ни для какого `VERCEL_ENV`.
 3. Настройка проекта: `commandForIgnoringBuildStep` установлен в `null` (Vercel MCP `update_project`, 23.10.2026, до merge — иначе после merge он отменил бы production-сборку, потому что `vercel.json` его больше не переопределяет).
 
-Без изменений: preview на каждый PR и Deployment Protection (Vercel Authentication, `all_except_custom_domains`), framework, install/build command, Node из `engines`. Свой домен не привязан; ChatGPT Sites и `.openai/hosting.json` не трогаются, оба адреса работают параллельно, переадресация — решение founder (бриф, раздел 13). Rollback: вернуть правила 1–2 в `vercel.json` (отдельный PR) и при необходимости Instant Rollback в Vercel — решением founder.
+Без изменений: preview на каждый PR и Deployment Protection (Vercel Authentication, `all_except_custom_domains`), framework, install/build command, Node из `engines`. Свой домен не привязан; ChatGPT Sites и `.openai/hosting.json` не трогаются, оба адреса работают параллельно, переадресация — решение founder (бриф, раздел 16). Rollback: вернуть правила 1–2 в `vercel.json` (отдельный PR) и при необходимости Instant Rollback в Vercel — решением founder.
 
 Проверка после merge (evidence — в PR P1-16): production-деплой READY на SHA merge-коммита, `target: production`, домен проекта `vibe-coding-guidebook-ivory.vercel.app` указывает на него; 29 страниц, `/handbook.md` и 404 как на preview; `X-Robots-Tag` на production; доступ без входа в Vercel.
