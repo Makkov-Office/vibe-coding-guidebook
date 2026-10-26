@@ -23,7 +23,7 @@ Handoff передаёт ownership новой сессии; два primary autho
 - MUST: выполнить preflight (`schemas/preflight-report.schema.json`) до продолжения правок [H08.1].
 - MUST: после compaction восстановить scope, evidence и незавершённые gates [H09.3].
 - MUST: тест на dirty state не подтверждает будущий SHA; после commit — повторить [H11.3].
-- MUST NOT: принимать чужие uncommitted changes без подтверждения их owner [H05] [H13.2].
+- MUST NOT: трогать чужие uncommitted changes; их owner указан в handoff [H08.1] [H09.3].
 
 ## Текстовая форма
 ```text

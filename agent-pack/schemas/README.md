@@ -11,4 +11,4 @@ JSON Schema (draft 2020-12) для документов Agent Pack. У кажд�
 | `handoff.schema.json` | Передача задачи | 9.3 |
 | `decision-packet.schema.json` | Пакет для решения человека | 15.1 |
 
-SHA везде — полный 40-символьный hex. Объекты закрыты (`additionalProperties: false`): поле вне схемы — ошибка. Схемы используют только `type`, `properties`, `required`, `additionalProperties`, `items`, `enum`, `const`, `pattern`, `minLength`, `minItems`, `format`, `anyOf`, поэтому их проверяет любой валидатор 2020-12.
+SHA везде — полный 40-символьный hex. Объекты закрыты (`additionalProperties: false`): поле вне схемы — ошибка. Шаблоны handbook учебные (6.1): проект, который добавляет или убирает поля, меняет схему вместе с примером. `working_tree` / `local_state` со значением `dirty` требуют непустой `changes` (11.3). Схемы используют только `type`, `properties`, `required`, `additionalProperties`, `items`, `enum`, `const`, `pattern`, `minLength`, `minItems`, `format`, `anyOf`, поэтому их проверяет любой валидатор 2020-12.

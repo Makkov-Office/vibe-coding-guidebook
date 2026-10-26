@@ -43,7 +43,30 @@
       "required": [
         "state"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "properties": {
+            "state": {
+              "const": "clean"
+            }
+          }
+        },
+        {
+          "properties": {
+            "state": {
+              "const": "dirty"
+            },
+            "changes": {
+              "minItems": 1
+            }
+          },
+          "required": [
+            "changes"
+          ]
+        }
+      ],
+      "description": "dirty — с перечнем изменений (11.3)"
     },
     "environment": {
       "type": "string",

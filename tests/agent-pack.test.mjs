@@ -47,7 +47,7 @@ function validate(s, v, at = '$') {
   if (typeof v === 'string') {
     if (s.minLength !== undefined && [...v].length < s.minLength) errors.push(`${at}: shorter than ${s.minLength}`);
     if (s.pattern && !new RegExp(s.pattern, 'u').test(v)) errors.push(`${at}: does not match ${s.pattern}`);
-    if (s.format === 'date-time' && !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/.test(v)) errors.push(`${at}: not date-time`);
+    if (s.format === 'date-time' && !(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/.test(v) && !Number.isNaN(Date.parse(v)))) errors.push(`${at}: not date-time`);
   }
   if (Array.isArray(v)) {
     if (s.minItems !== undefined && v.length < s.minItems) errors.push(`${at}: fewer than ${s.minItems} items`);
@@ -92,6 +92,10 @@ test('invalid documents fail', () => {
     ['finding', (d) => { delete d.location.file; }],
     ['handoff', (d) => { d.tests[0].tested_state = 'latest'; }],
     ['handoff', (d) => { d.head_sha = sha.toUpperCase(); }],
+    ['handoff', (d) => { delete d.ci; }],
+    ['evidence-record', (d) => { d.working_tree = { state: 'dirty' }; }],
+    ['preflight-report', (d) => { d.local_state = { state: 'dirty', changes: [] }; }],
+    ['evidence-record', (d) => { d.timestamp = '2026-13-45T99:99:99Z'; }],
     ['decision-packet', (d) => { d.decision_requested = ''; }],
     ['decision-packet', (d) => { delete d.rollback; }],
   ];
@@ -125,6 +129,9 @@ test('agent-pack/claude does not weaken .claude/', () => {
   // Repository-only paths (generated content, hosting config) are not part of the pack.
   const repoOnly = (rule) => /\((\.openai|src\/content|public)\//.test(rule);
   for (const rule of repo.permissions.deny.filter((r) => !repoOnly(r))) assert.ok(packed.permissions.deny.includes(rule), `missing deny ${rule}`);
+  // No permission may be widened: only keys the repository has, no allow/ask/defaultMode beyond it.
+  for (const key of Object.keys(packed)) assert.ok(Object.hasOwn(repo, key), `extra settings key ${key}`);
+  assert.deepEqual(Object.keys(packed.permissions), Object.keys(repo.permissions));
   assert.deepEqual(packed.hooks, repo.hooks);
   for (const file of ['guard-git.sh', 'guard_git.py']) {
     assert.ok(fs.readFileSync(path.join(pack, 'claude/hooks', file)).equals(fs.readFileSync(path.join(root, '.claude/hooks', file))), `${file} differs from .claude/hooks`);

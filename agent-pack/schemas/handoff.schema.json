@@ -173,6 +173,8 @@
     "remaining_work",
     "uncommitted_changes",
     "tests",
+    "pr",
+    "ci",
     "unresolved_findings",
     "collisions",
     "merge_order",
