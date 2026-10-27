@@ -256,7 +256,9 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
       for(const row of rows) {
         const cells=row.children.filter(n=>n.tagName==='td');const anchor=cells[0]?.children.find(n=>n.tagName==='a');const term=terms.find(t=>t.id===anchor?.properties.id);if(!term) continue;
         cells[0].children=cells[0].children.filter(n=>n!==anchor);
-        const card=el('article',{id:term.id,tabIndex:-1,className:['term-definition'],'data-topic':term.topic,'data-term':term.id,'data-level':term.level},[el('h4',{},cells[0].children),el('p',{},cells[1].children)]);
+        // The level is shown on the card too (P6-07b); the copy-link button joins it in the browser.
+        const meta=term.level?[el('p',{className:['term-meta']},[el('span',{className:['term-level'],'data-level':term.level},[txt(levels.names[term.level])])])]:[];
+        const card=el('article',{id:term.id,tabIndex:-1,className:['term-definition'],'data-topic':term.topic,'data-term':term.id,'data-level':term.level},[el('h4',{},cells[0].children),...meta,el('p',{},cells[1].children)]);
         if(termProduct(term.id))card.children[0].children.unshift(productImage(termProduct(term.id)));
         decorateProductLinks(card);
         visit(card,'element',n=>{if(n.tagName==='a'&&/^https?:/.test(n.properties.href??'')){n.properties.target='_blank';n.properties.rel=['noopener','noreferrer'];n.properties['aria-label']=`${toText(n)} — открывается в новой вкладке`;n.children.push(structuredClone(externalIcon));}});
@@ -273,6 +275,9 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
           node.children.push(el('details',{className:['glossary-basics'],'data-level':'basic'},[el('summary',{},[txt(summary)]),el('div',{className:['glossary-list']},basic)]));
         }
       }
+    } else if(chapter==='ch-23'&&node.tagName==='p'&&node.children[0]?.tagName==='strong'&&toText(node.children[0])==='Служебный формат для сайта:'){
+      // A note on the source format, written for the site and agents: kept in the Markdown, hidden on the page and from search (P6-07b).
+      node.properties.hidden=true;node.properties.className=['glossary-service-note'];
     } else {
       if(chapter!=='ch-23') annotate(node,{id,chapter});
       visit(node,'element',(n,index,parent)=>{

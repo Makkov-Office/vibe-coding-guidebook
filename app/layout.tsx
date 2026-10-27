@@ -7,6 +7,7 @@ import "../src/design/tool-reviews.css";
 import "../src/design/product-logos.css";
 import "../src/design/primitives.css";
 import "../src/components/drill.css";
+import "../src/design/glossary.css";
 import {brandTitle} from "../src/design/brand";
 
 export const metadata: Metadata = {
