@@ -128,6 +128,7 @@
     { "old": "/tools/codex", "new": "/tools/codex", "section": "tools", "chapter": "ch-codex" },
     { "old": "/tools/claude-code", "new": "/tools/claude-code", "section": "tools", "chapter": "ch-claude-code" },
     { "old": "/resources", "new": "/tools/resources", "section": "tools", "chapter": "ch-resources" },
+    { "old": "/agents", "new": "/agents", "section": "agents" },
     { "old": "/print", "new": "/print", "section": "service" },
     { "old": "/design", "new": "/design", "section": "service" }
   ]
