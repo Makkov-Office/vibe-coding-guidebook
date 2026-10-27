@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type {ReactNode} from 'react';
 import {handbook} from './HandbookPage';
 import {ReaderPageData} from './ReaderPageData';
 import {InteractivePanel} from './InteractivePanel';
@@ -8,7 +9,8 @@ import {chapterTabs,chapterTabHrefs} from '../content/chapter-routes';
 import type {TabId} from '../content/types';
 // One tab of a live chapter (P5-02b): the chapter heading, the tab's HTML and panels.
 // The tab bar and the links between tabs are temporary: the chapter template of P5-02 replaces them.
-export function ChapterTabPage({chapterId,tabId}:{chapterId:string;tabId:TabId}){
+// children: tab content after the text and panels (the drill of the «check» tab); with it the tab is not empty.
+export function ChapterTabPage({chapterId,tabId,children}:{chapterId:string;tabId:TabId;children?:ReactNode}){
  const chapter=handbook.chapters.find(c=>c.id===chapterId)!,tab=chapter.tabs!.find(t=>t.id===tabId)!,hrefs=chapterTabHrefs(chapterId);
  const heading=chapter.heading!.replace('<h2','<h1').replace('</h2>','</h1>'),html=tab.html.replace(/<(\/?)h3\b/g,'<$1h2').replace(/<(\/?)h4\b/g,'<$1h3');
  const panels=handbook.panels.filter(p=>p.chapter===chapterId&&tab.panels.includes(p.id));
@@ -21,7 +23,8 @@ export function ChapterTabPage({chapterId,tabId}:{chapterId:string;tabId:TabId})
  return <><ReaderPageData value={metadata}/><main id="reader" tabIndex={-1}><section className="chapter chapter-tabbed" data-chapter={chapterId} data-tab={tabId}>
   <div className="reader-prose" dangerouslySetInnerHTML={{__html:heading}}/>
   <nav className="chapter-tabs-stub" aria-label="Разделы главы"><ul>{chapterTabs.map(t=><li key={t.id}><Link href={hrefs[t.id]} aria-current={t.id===tabId?'page':undefined}>{t.label}</Link></li>)}</ul></nav>
-  {html?<div className="reader-prose" dangerouslySetInnerHTML={{__html:html}}/>:<p className="tab-empty">Раздел «{chapterTabs[at].label}» этой главы появится позже.</p>}
+  {html&&<div className="reader-prose" dangerouslySetInnerHTML={{__html:html}}/>}{!html&&!children&&<p className="tab-empty">Раздел «{chapterTabs[at].label}» этой главы появится позже.</p>}
+  {children}
   {panels.map(panel=><div id={`${panel.id}-panel`} key={panel.id}><InteractivePanel panel={panel}/></div>)}
   <nav className="chapter-pagination" aria-label="Переходы по главе">{previous&&<Link className="pagination-previous" href={previous.href}><span><ProjectIcon name="arrowLeft"/> Назад</span><strong>{previous.label}</strong></Link>}{next&&<Link className="pagination-next" href={next.href}><span>Дальше <ProjectIcon name="arrowRight"/></span><strong>{next.label}</strong></Link>}</nav>
  </section></main><LearningProgress chapter={chapterId}/></>;

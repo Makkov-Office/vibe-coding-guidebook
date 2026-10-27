@@ -19,7 +19,7 @@ test('the chapter opens on its overview tab and switches tabs by address',async(
  await expect(page).toHaveTitle(/^Как применять · 08\. Preflight/);
  // Keyboard: the tab bar is reachable and opens a tab.
  await tabs(page).getByRole('link',{name:'Как применять'}).focus();await page.keyboard.press('Tab');await expect(tabs(page).getByRole('link',{name:'Проверь себя'})).toBeFocused();await page.keyboard.press('Enter');
- await expect(page).toHaveURL(/\/flow\/08-preflight\/check$/);await expect(page.locator('.tab-empty')).toContainText('Проверь себя');
+ await expect(page).toHaveURL(/\/flow\/08-preflight\/check$/);await expect(page.locator('section.drill')).toBeVisible();
  // The links between tabs go on to the next chapter at the last tab.
  await expect(page.locator('.pagination-previous')).toHaveAttribute('href','/flow/08-preflight/apply');
  await expect(page.locator('.pagination-next')).toHaveAttribute('href','/chapters/09');

@@ -1,0 +1,111 @@
+{
+  "id": "preflight-dispatcher",
+  "chapter": "ch-08",
+  "title": "Preflight-диспетчер",
+  "minutes": 3,
+  "intro": "Агент готовится взять задачу. По каждой ситуации реши, какой результат у проверки перед стартом или что делать дальше.",
+  "cards": [
+    {
+      "id": "all-checks-pass",
+      "scenario": "Задача DEMO-42 готова, зависимости закрыты. Base SHA записан, рабочая папка задачи чистая, doctor — PASS. Пересечение только по файлам с DEMO-43, общий индекс просмотрен.",
+      "question": "Какой результат preflight?",
+      "options": [
+        { "id": "pass", "label": "PASS" },
+        { "id": "fail", "label": "FAIL" },
+        { "id": "blocked", "label": "BLOCKED" },
+        { "id": "incomplete", "label": "INCOMPLETE" }
+      ],
+      "answer": "pass",
+      "explanation": "Все обязательные проверки получены и прошли. Пересечение по файлам названо и просмотрено: это не нарушение. Можно переводить задачу в работу.",
+      "anchor": "ch-08-8-2-отчет-preflight",
+      "difficulty": 1
+    },
+    {
+      "id": "diff-timeout",
+      "scenario": "Команда, которая получает diff с main, оборвалась по таймауту. На экране пусто.",
+      "question": "Какой результат preflight?",
+      "options": [
+        { "id": "pass", "label": "PASS: изменений нет" },
+        { "id": "fail", "label": "FAIL" },
+        { "id": "blocked", "label": "BLOCKED" },
+        { "id": "incomplete", "label": "INCOMPLETE" }
+      ],
+      "answer": "incomplete",
+      "explanation": "Недоступный diff не является пустым diff. Обязательное evidence получить не удалось — это INCOMPLETE: проверка останавливается и называет причину.",
+      "anchor": "ch-08-b011",
+      "difficulty": 2
+    },
+    {
+      "id": "doctor-fail",
+      "scenario": "doctor вернул FAIL: версия Node не совпадает с той, что записана в engines проекта.",
+      "question": "Какой результат preflight?",
+      "options": [
+        { "id": "pass", "label": "PASS: версия почти та же" },
+        { "id": "fail", "label": "FAIL" },
+        { "id": "blocked", "label": "BLOCKED" },
+        { "id": "incomplete", "label": "INCOMPLETE" }
+      ],
+      "answer": "fail",
+      "explanation": "Проверка дала ответ, и он отрицательный: обнаружено нарушение. Это FAIL, а FAIL не равен PASS.",
+      "anchor": "ch-08-b009",
+      "difficulty": 1
+    },
+    {
+      "id": "missing-decision",
+      "scenario": "В задаче не решено, какой из двух форматов выдачи нужен. Решение принимает владелец продукта, он ещё не ответил.",
+      "question": "Какой результат preflight?",
+      "options": [
+        { "id": "pass", "label": "PASS: выберу сам" },
+        { "id": "fail", "label": "FAIL" },
+        { "id": "blocked", "label": "BLOCKED" },
+        { "id": "incomplete", "label": "INCOMPLETE" }
+      ],
+      "answer": "blocked",
+      "explanation": "Не хватает решения, которое агент не вправе принять сам. Это BLOCKED: работа ждёт решения, а не начинается по догадке.",
+      "anchor": "ch-08-b009",
+      "difficulty": 2
+    },
+    {
+      "id": "unknown-owner",
+      "scenario": "Агент не смог узнать, кто владеет веткой этой задачи: сервис, где это видно, не ответил.",
+      "question": "Как поступить?",
+      "options": [
+        { "id": "take", "label": "Считать, что никто не работает, и начать" },
+        { "id": "stop", "label": "Остановиться и сообщить, каких данных не хватает" },
+        { "id": "new-branch", "label": "Тихо создать вторую ветку под ту же задачу" }
+      ],
+      "answer": "stop",
+      "explanation": "Неизвестный владелец ветки не означает «никто не работает». Без обязательных данных проверка останавливает зависимое решение и явно называет причину.",
+      "anchor": "ch-08-b011",
+      "difficulty": 2
+    },
+    {
+      "id": "dirty-checkout",
+      "scenario": "В основной папке founder лежат незакоммиченные изменения. Агенту нужна чистая папка для своей задачи.",
+      "question": "Что делать?",
+      "options": [
+        { "id": "reset", "label": "Очистить папку founder через reset" },
+        { "id": "own-worktree", "label": "Работать в своей изолированной папке задачи" },
+        { "id": "commit", "label": "Закоммитить чужие изменения, чтобы стало чисто" }
+      ],
+      "answer": "own-worktree",
+      "explanation": "«Чистый checkout» — требование к своей рабочей папке. Грязную папку founder не очищают ради preflight: агент берёт свою изолированную папку и не трогает чужие файлы.",
+      "anchor": "ch-08-b005",
+      "difficulty": 2
+    },
+    {
+      "id": "when-in-progress",
+      "scenario": "Агент прочитал задачу и правила репозитория, но ещё не проверил риск и пересечения с другими PR.",
+      "question": "Когда задачу переводят в In Progress?",
+      "options": [
+        { "id": "now", "label": "Сейчас: задача уже прочитана" },
+        { "id": "after-pass", "label": "Только после результата PASS" },
+        { "id": "after-pr", "label": "Когда откроется PR" }
+      ],
+      "answer": "after-pass",
+      "explanation": "Последний шаг последовательности: только при PASS задачу переводят в In Progress и начинают реализацию. До этого остаются проверки риска, Docs Impact и пересечений.",
+      "anchor": "ch-08-8-1-последовательность",
+      "difficulty": 1
+    }
+  ]
+}
