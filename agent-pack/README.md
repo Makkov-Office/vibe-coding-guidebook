@@ -26,6 +26,8 @@
 
 `[H08.2]` — глава 08, раздел 8.2. `[HCC: <раздел>]` — обзор инструмента «Claude Code: рабочий процесс внутри проекта». Пакет не вводит новых правил: всё, что в нём есть, определено в handbook.
 
+Handbook: <https://vibe-coding-guidebook-ivory.vercel.app>. Глава в Markdown — адрес главы + `.md`: `[H08.2]` → <https://vibe-coding-guidebook-ivory.vercel.app/chapters/08.md>, раздел 8.2; `[HCC: …]` → <https://vibe-coding-guidebook-ivory.vercel.app/tools/claude-code.md>. Карта для LLM — `/llms.txt`, весь текст — `/llms-full.txt`.
+
 ## Skills
 
 | Skill | Когда загружать | Схема результата |
