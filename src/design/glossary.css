@@ -11,3 +11,9 @@
 @media (max-width:599px){.term-definition>.term-meta{grid-column:1/-1;grid-row:auto;margin-block:0 var(--space-2)}.term-meta .term-copy{margin-block:0}}
 .term-copy-fallback{grid-column:1/-1;margin:var(--space-2) 0 0;font-size:var(--type-label);color:var(--color-on-surface-variant);overflow-wrap:anywhere}
 .term-copy-fallback code{user-select:all}
+
+/* Hero страницы (P6-07c): разметка и стили шаблона главы (.ct-hero, chapter-template.css); здесь только отличия. */
+.chapter.glossary-page{padding-top:0}
+.glossary-lead{max-width:65ch;color:var(--color-on-surface-variant)}
+.glossary-lead>p:last-child{margin-bottom:0}
+.glossary-page>.glossary-filter{margin:0}
