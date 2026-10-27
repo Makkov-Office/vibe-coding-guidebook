@@ -1,4 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
+import {railNavigate} from './nav';
 // Motion system (P3-05, docs/design/visual-language.md section 7): one curve and token durations,
 // page transitions through the View Transitions API, and two switches that remove every animation.
 async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
@@ -9,7 +10,7 @@ const started=(page:Page)=>page.evaluate(()=>(window as unknown as {__started:st
 const probe=(page:Page)=>page.evaluate(()=>{const a=document.createElement('a');a.href='/chapters/06#ch-06-6-2-definition-of-ready';a.id='motion-probe';a.textContent='6.2';const prose=document.querySelector('.reader-prose');prose?.insertBefore(a,prose.firstChild);});
 // Interactions that start animations when motion is on: hover, page change, search dialog, details.
 async function exercise(page:Page){
- const link=page.locator('.sidebar a[href="/chapters/08"]');await link.hover();await link.click();await expect(page.locator('main [data-chapter="ch-08"]')).toBeVisible();
+ await railNavigate(page,'/chapters/08');await expect(page.locator('main [data-chapter="ch-08"]')).toBeVisible();
  await page.keyboard.press('Control+k');await expect(page.locator('.search-dialog')).toBeVisible();await page.keyboard.press('Escape');
  const details=page.locator('main details').first();if(await details.count())await details.locator('summary').click();
 }
