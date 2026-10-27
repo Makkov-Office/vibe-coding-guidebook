@@ -23,7 +23,8 @@ export const SITE_ORIGIN='https://vibe-coding-guidebook-ivory.vercel.app';
 const PACK='agent-pack',ZIP='/agent-pack.zip';
 
 /** Markdown of every page: the handbook split at its chapter headings, the top-level `##` of the
- *  CommonMark tree (so a `##` inside code, a quote or a list never starts a page). */
+ *  CommonMark tree (so a `##` inside code, a quote or a list never starts a page). A chapter with
+ *  an overview (P5-01) gets it first, under «### Обзор», as on its site page. */
 export function splitPages(source,chapters){
   const lines=source.split('\n');
   const starts=unified().use(remarkParse).use(remarkGfm).parse(source).children.filter(node=>node.type==='heading'&&node.depth===2).map(node=>node.position.start.line-1);
@@ -37,6 +38,8 @@ export function splitPages(source,chapters){
     if(seen.has(chapter.id))throw Error(`agent-delivery: chapter ${chapter.id} appears twice`);
     seen.add(chapter.id);
     const from=i===0?0:start,body=lines.slice(from,starts[i+1]??lines.length);
+    // A rule after it marks where the chapter text itself starts.
+    if(chapter.overview)body.splice(start-from+1,0,'',...chapter.overview.trimEnd().split('\n'),'','---');
     // The rule and HTML anchor before the next heading belong to the next chapter.
     while(body.length&&/^(---|<a id="[^"]+"><\/a>|\s*)$/.test(body.at(-1)))body.pop();
     // Site links become absolute, so the text still leads somewhere once pasted into an agent.
@@ -45,6 +48,20 @@ export function splitPages(source,chapters){
   const missing=chapters.filter(c=>!pages.some(p=>p.id===c.id));
   if(missing.length)throw Error(`agent-delivery: no Markdown for ${missing.map(c=>c.id).join(', ')}`);
   return pages;
+}
+/** The overview file of a tabbed chapter as Markdown for agents: no front matter, its `##` sections
+ *  one level below «### Обзор», and `#anchor` links pointed at the tab that holds the anchor. */
+export function overviewMarkdown(source,chapter){
+  const where=`content/overview/${chapter.number}.md`;
+  const body=source.replace(/^---\n[\s\S]*?\n---\n/,'');
+  if(body===source)throw Error(`agent-delivery: ${where} has no front matter`);
+  const tabPath=tab=>tab==='overview'?chapter.href:`${chapter.href}/${tab}`;
+  const resolved=body.replace(/^## /gm,'#### ').replace(/\]\(#([^)\s]+)\)/g,(_,id)=>{
+    const tab=chapter.tabs.find(item=>item.html.includes(`id="${id}"`));
+    if(!tab)throw Error(`agent-delivery: ${where} links to #${id}, which no tab of ${chapter.id} holds`);
+    return `](${tabPath(tab.id)}#${encodeURIComponent(id)})`;
+  });
+  return `### Обзор\n\n${resolved.trim()}\n`;
 }
 export const mdPath=pagePath=>pagePath==='/'?'/index.md':`${pagePath}.md`;
 
@@ -119,7 +136,11 @@ export function packFiles(root=PACK){
 async function main(){
   const generated=JSON.parse(fs.readFileSync('src/content/generated.json','utf8'));
   // A live chapter (P5-02b) has its new address in href; its Markdown follows it.
-  const chapters=generated.chapters.map(({id,title,path,href})=>({id,title,path:href??path}));
+  const chapters=generated.chapters.map(chapter=>{
+    const file=`content/overview/${chapter.number}.md`;
+    const overview=chapter.overview&&chapter.href?overviewMarkdown(fs.readFileSync(file,'utf8'),chapter):undefined;
+    return {id:chapter.id,title:chapter.title,path:chapter.href??chapter.path,overview};
+  });
   const pages=splitPages(fs.readFileSync('content/handbook.md','utf8'),chapters);
   // A page's Markdown also stays at its old address from the URL map, so links like
   // /chapters/08.md in the pack keep working after the page moves (P5).

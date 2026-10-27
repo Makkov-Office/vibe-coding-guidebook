@@ -112,14 +112,14 @@ test('progress in the menu follows chapter completion',async({page})=>{
  await item(page,'practice').hover();await expect(menu(page,'practice').locator('.mega-progress')).toContainText('1 из 3 пройдено');
 });
 
-test('below 1024 px the rail is hidden and the menu button stays; on a short screen the rail scrolls',async({page})=>{
+test('below 1024 px the rail is hidden and the bottom bar stays; on a short screen the rail scrolls',async({page})=>{
  for(const width of [320,360,768,1023]){
   await page.setViewportSize({width,height:900});await ready(page,'/flow/08-preflight');
-  await expect(page.locator('.nav-rail')).toBeHidden();await expect(page.locator('.menu-trigger')).toBeVisible();
+  await expect(page.locator('.nav-rail')).toBeHidden();await expect(page.locator('.bottom-bar')).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  }
  await page.setViewportSize({width:1024,height:900});await ready(page,'/flow/08-preflight');
- await expect(page.locator('.nav-rail')).toBeVisible();await expect(page.locator('.menu-trigger')).toBeHidden();
+ await expect(page.locator('.nav-rail')).toBeVisible();await expect(page.locator('.bottom-bar')).toBeHidden();
  // A short desktop viewport: the rail scrolls, so the last section stays reachable and its menu opens.
  await page.setViewportSize({width:1024,height:600});await ready(page,'/flow/08-preflight');
  await item(page,'agents').click();await expect(page).toHaveURL(/\/agents$/);

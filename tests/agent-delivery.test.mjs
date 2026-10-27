@@ -4,7 +4,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {splitPages,packFiles,zip,crc32,mdPath,SITE_ORIGIN} from '../scripts/agent-delivery.mjs';
+import {splitPages,overviewMarkdown,packFiles,zip,crc32,mdPath,SITE_ORIGIN} from '../scripts/agent-delivery.mjs';
 
 const archive=fs.readFileSync('public/agent-pack.zip');
 const pack=JSON.parse(fs.readFileSync('src/content/agent-pack.json','utf8'));
@@ -77,6 +77,11 @@ test('every page has its Markdown, at the current and the old address',()=>{
   const chapter08=fs.readFileSync('public/flow/08-preflight.md','utf8');
   assert.equal(fs.readFileSync('public/chapters/08.md','utf8'),chapter08,'the old address serves the same text');
   assert.match(chapter08,/^## 08\. /);assert.ok(!/\n## 09\./.test(chapter08),'chapter 08 stops before 09');
+  // The overview comes first, as on the site, with its anchors pointed at the tab that holds them.
+  assert.match(chapter08,/^## 08\. [^\n]+\n\n### Обзор\n\n#### Зачем\n/);
+  assert.ok(chapter08.includes(`](${SITE_ORIGIN}/flow/08-preflight/apply#${encodeURIComponent('ch-08-8-2-отчет-preflight')})`),'overview anchor → apply tab');
+  assert.ok(!/\]\(#/.test(chapter08),'no relative anchors left');
+  assert.ok(chapter08.indexOf('---\n\nPreflight проверяет')>chapter08.indexOf('#### Проверь себя'),'the chapter text follows the overview');
 });
 
 test('split covers every chapter heading and fails closed on an unknown one',()=>{
@@ -93,6 +98,13 @@ test('split covers every chapter heading and fails closed on an unknown one',()=
   assert.deepEqual(nested.map(p=>p.id),['ch-00','ch-01']);
   assert.match(nested[1].markdown,new RegExp(`\\]\\(${SITE_ORIGIN}/tools/codex\\)`));
   assert.match(nested[1].markdown,/\]\(https:\/\/x\.dev\/a\)/);
+});
+
+test('overview Markdown fails closed on a missing front matter or an anchor no tab holds',()=>{
+  const chapter={id:'ch-08',number:'08',href:'/flow/08-x',tabs:[{id:'overview',html:'<h2 id="a">'},{id:'apply',html:'<p id="b">'}]};
+  assert.equal(overviewMarkdown('---\nchapter: "08"\n---\n## Зачем\nСм. [b](#b) и [a](#a).\n',chapter),'### Обзор\n\n#### Зачем\nСм. [b](/flow/08-x/apply#b) и [a](/flow/08-x#a).\n');
+  assert.throws(()=>overviewMarkdown('## Зачем\n',chapter),/no front matter/);
+  assert.throws(()=>overviewMarkdown('---\nx: 1\n---\n[c](#c)\n',chapter),/#c, which no tab of ch-08 holds/);
 });
 
 test('the pack points agents to the handbook, so [Hnn.m] resolves outside this repository',()=>{
