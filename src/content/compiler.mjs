@@ -103,8 +103,44 @@ export function parseOverview(number,text){
   return {meta,body};
 }
 
-// urlMap: src/content/url-map.json (tabs of each chapter); overviews: { '08': markdown of content/overview/08.md }.
-export async function compileHandbook(source, {urlMap, overviews={}}={}) {
+export const LEVELS=['basic','professional'];
+// Glossary levels (P6-07): content/glossary-levels.json. Every term stands in
+// exactly one list of its own topic; anything else fails the build.
+export function parseGlossaryLevels(value,terms,topics){
+  const fail=message=>{throw Error(`content/glossary-levels.json: ${message}`);};
+  if(!value||typeof value!=='object'||!value.terms||typeof value.terms!=='object')fail('expected {levels, collapsed, terms}');
+  const names=value.levels??{};
+  for(const level of LEVELS)if(typeof names[level]!=='string'||!names[level].trim())fail(`levels.${level} needs a label`);
+  if(Object.keys(names).some(level=>!LEVELS.includes(level)))fail(`levels: only ${LEVELS.join(', ')}`);
+  const number=topic=>topic.match(/^(23\.\d+)\./)?.[1];
+  const known=new Set(topics.map(number));
+  const level=new Map();
+  for(const [topic,lists] of Object.entries(value.terms)){
+    if(!known.has(topic))fail(`unknown topic ${topic}`);
+    if(!lists||typeof lists!=='object'||Object.keys(lists).some(key=>!LEVELS.includes(key)))fail(`${topic}: only ${LEVELS.join(', ')} lists`);
+    for(const name of LEVELS)if(lists[name]!==undefined&&(!Array.isArray(lists[name])||lists[name].some(id=>typeof id!=='string')))fail(`${topic}.${name}: expected a list of term ids`);
+    for(const name of LEVELS)for(const id of lists[name]??[]){
+      const term=terms.find(t=>t.id===id);
+      if(!term)fail(`${topic}: unknown term ${id}`);
+      if(number(term.topic)!==topic)fail(`${id} belongs to ${number(term.topic)}, not ${topic}`);
+      if(level.has(id))fail(`${id} is listed twice`);
+      level.set(id,name);
+    }
+  }
+  const missing=terms.filter(term=>!level.has(term.id)).map(term=>term.id);
+  if(missing.length)fail(`no level for ${missing.join(', ')}`);
+  const collapsed=new Map();
+  for(const [topic,summary] of Object.entries(value.collapsed??{})){
+    if(!known.has(topic))fail(`collapsed: unknown topic ${topic}`);
+    if(typeof summary!=='string'||!summary.trim())fail(`collapsed.${topic} needs a summary`);
+    collapsed.set(topic,summary.trim());
+  }
+  return {level,names,collapsed,number};
+}
+
+// urlMap: src/content/url-map.json (tabs of each chapter); overviews: { '08': markdown of content/overview/08.md };
+// glossaryLevels: content/glossary-levels.json (without it terms carry no level).
+export async function compileHandbook(source, {urlMap, overviews={}, glossaryLevels}={}) {
   if(/Конец учебного руководства|Codex implementation prompt|## 17\. README и handoff/.test(source)) throw Error('Implementation appendix in reader source');
   const tree=unified().use(remarkParse).use(remarkGfm).parse(source);
   const terms=[]; const topics=[]; let topic=''; let inGlossary=false;
@@ -121,6 +157,8 @@ export async function compileHandbook(source, {urlMap, overviews={}}={}) {
       terms.push({id,label,aliases:variants,topic,definition,definitionHtml:'',previewKind:previewKind(definition,row.children[1].children.some(n=>!['text','strong','emphasis','inlineCode','link','break'].includes(n.type)),linked)});
     }
   }
+  const levels=glossaryLevels?parseGlossaryLevels(glossaryLevels,terms,topics):null;
+  if(levels)for(const term of terms)term.level=levels.level.get(term.id);
   const matcher=makeMatcher(terms);
   const audit={topics:topics.length,definitions:terms.length,recognized:0,linked:0,exceptions:[],ambiguous:[],unexplainedGaps:0,tabs:{chapters:0,blocks:0,overviews:0}};
   const occurrenceIds={};
@@ -214,13 +252,22 @@ export async function compileHandbook(source, {urlMap, overviews={}}={}) {
       for(const row of rows) {
         const cells=row.children.filter(n=>n.tagName==='td');const anchor=cells[0]?.children.find(n=>n.tagName==='a');const term=terms.find(t=>t.id===anchor?.properties.id);if(!term) continue;
         cells[0].children=cells[0].children.filter(n=>n!==anchor);
-        const card=el('article',{id:term.id,tabIndex:-1,className:['term-definition'],'data-topic':term.topic,'data-term':term.id},[el('h4',{},cells[0].children),el('p',{},cells[1].children)]);
+        const card=el('article',{id:term.id,tabIndex:-1,className:['term-definition'],'data-topic':term.topic,'data-term':term.id,'data-level':term.level},[el('h4',{},cells[0].children),el('p',{},cells[1].children)]);
         if(termProduct(term.id))card.children[0].children.unshift(productImage(termProduct(term.id)));
         decorateProductLinks(card);
         visit(card,'element',n=>{if(n.tagName==='a'&&/^https?:/.test(n.properties.href??'')){n.properties.target='_blank';n.properties.rel=['noopener','noreferrer'];n.properties['aria-label']=`${toText(n)} — открывается в новой вкладке`;n.children.push(structuredClone(externalIcon));}});
         term.definitionHtml=stringify(el('p',{},cells[1].children));
         node.children.push(card);usedIds.add(term.id);
         search.push({id:term.id,chapter,title:term.label,type:'термин',text:`${term.label} ${term.aliases.join(' ')} ${term.definition}`});
+      }
+      // Basic terms of a collapsed topic (Git) go to a closed group at the end of the topic.
+      const summary=levels?.collapsed.get(levels.number(terms.find(t=>t.id===node.children[0]?.properties.id)?.topic??''));
+      if(summary){
+        const basic=node.children.filter(card=>card.properties['data-level']==='basic');
+        if(basic.length){
+          node.children=node.children.filter(card=>!basic.includes(card));
+          node.children.push(el('details',{className:['glossary-basics'],'data-level':'basic'},[el('summary',{},[txt(`${summary} · ${basic.length}`)]),el('div',{className:['glossary-list']},basic)]));
+        }
       }
     } else {
       if(chapter!=='ch-23') annotate(node,{id,chapter});
@@ -391,5 +438,6 @@ export async function compileHandbook(source, {urlMap, overviews={}}={}) {
   const finalHtml=intro+chapters.map(c=>`<section data-chapter="${c.id}">${c.html}</section>`).join('');
   if(/ai-artefacts|AI Artefacts|chatgpt-conversation:|PR #\d|TICKET-\d/.test(JSON.stringify({finalHtml,search,panels,presentation})))throw Error('Private provenance in publication');
   for(const fragment of [finalHtml,...chapters.flatMap(c=>c.tabs?[c.heading,...c.tabs.map(tab=>tab.html)]:[]),...panels.flatMap(p=>p.choices.map(c=>c.html))])for(const [,path,target]of fragment.matchAll(/href="([^"#]*)#([^"]+)"/g))if(!targets[decode(target)]||targets[decode(target)].path!==path)throw Error(`Invalid route target: ${path}#${target}`);
-  return {html:finalHtml,intro,chapters,terms,topics,search,diagrams,blocks,panels,presentation,anchors,audit};
+  const levelNames=levels?Object.fromEntries(LEVELS.map(level=>[level,levels.names[level].trim()])):null;
+  return {html:finalHtml,intro,chapters,terms,topics,levels:levelNames,search,diagrams,blocks,panels,presentation,anchors,audit};
 }

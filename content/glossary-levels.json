@@ -1,0 +1,56 @@
+{
+  "$comment": "Уровень терминов глоссария (P6-07). basic — общий словарь разработки: термин значит то же самое вне этого руководства (Git, GitHub, среда, тесты, веб-форматы, сервисы). professional — термины метода агентной инженерии и строгие формулировки руководства: роли, состояния, evidence, риск, интеграция. Каждый термин раздела 23 стоит ровно в одном списке своей темы; компилятор проверяет это. collapsed — темы, базовые термины которых свёрнуты по умолчанию.",
+  "levels": {
+    "basic": "Базовое",
+    "professional": "Профессиональное"
+  },
+  "collapsed": {
+    "23.3": "Базовые термины Git"
+  },
+  "terms": {
+    "23.1": {
+      "basic": ["term-ai", "term-vibe-coding", "term-model", "term-agent", "term-codex", "term-claude", "term-implementation", "term-read-only", "term-runtime"],
+      "professional": ["term-agentic-engineering", "term-ai-native", "term-multi-agent", "term-orchestration", "term-harness", "term-autonomy", "term-bounded-execution", "term-cloud-agent", "term-primary-author", "term-reviewer", "term-founder", "term-owner", "term-session", "term-clean-session", "term-issue-scoped", "term-helper", "term-capability", "term-tool", "term-tool-policy", "term-human-in-loop"]
+    },
+    "23.2": {
+      "basic": ["term-ticket", "term-linear", "term-roadmap", "term-backlog", "term-todo", "term-in-progress", "term-in-review", "term-done", "term-lifecycle", "term-workflow", "term-pipeline", "term-release", "term-deployment", "term-dependency", "term-blocker", "term-priority", "term-template", "term-task-tracker", "term-mvp", "term-milestone"],
+      "professional": ["term-product-hq", "term-delivery", "term-scope", "term-out-of-scope", "term-scope-creep", "term-outcome", "term-requirement", "term-expectation", "term-constraint", "term-intent", "term-ac", "term-dor", "term-dod", "term-relations", "term-ready-review", "term-changes-required", "term-ready-founder", "term-ready-merge", "term-transition", "term-gate", "term-consequential", "term-follow-up", "term-wave", "term-exit-criterion"]
+    },
+    "23.3": {
+      "basic": ["term-git", "term-repository", "term-checkout", "term-clone", "term-worktree", "term-index", "term-branch", "term-main", "term-commit", "term-conventional-commit", "term-library", "term-git-object", "term-uncommitted", "term-head", "term-sha", "term-base", "term-tip", "term-remote", "term-origin-main", "term-ref", "term-fetch", "term-pull", "term-push", "term-merge", "term-fast-forward", "term-squash", "term-rebase", "term-switch", "term-diff", "term-tracked", "term-untracked", "term-ignored", "term-staged", "term-dirty", "term-conflict", "term-force-push", "term-reset", "term-prune", "term-tag"],
+      "professional": ["term-trunk", "term-refspec", "term-autofetch", "term-refresh", "term-changed-files", "term-local-only", "term-divergence", "term-merge-driver"]
+    },
+    "23.4": {
+      "basic": ["term-github", "term-pr", "term-pr-body", "term-open-closed", "term-draft-pr", "term-check", "term-required-check", "term-branch-protection", "term-required-review", "term-github-actions", "term-job-step", "term-run", "term-runner", "term-event", "term-review-thread", "term-inline-comment", "term-review", "term-fix", "term-approval", "term-github-cli", "term-auth-login", "term-auth-setup-git", "term-404"],
+      "professional": ["term-header", "term-issue-reference", "term-advisory", "term-bypass", "term-event-path", "term-pull-request-target", "term-finding", "term-verdict", "term-mergeable", "term-stale", "term-github-identity"]
+    },
+    "23.5": {
+      "basic": ["term-spec", "term-interface", "term-enum", "term-export", "term-architecture", "term-infrastructure", "term-adr", "term-context", "term-prompt", "term-snapshot", "term-case-study", "term-coupling", "term-abstraction", "term-refactor", "term-parser", "term-metadata", "term-machine-readable"],
+      "professional": ["term-source-truth", "term-canonical", "term-contract", "term-supersede", "term-revisit", "term-docs-impact", "term-declaration", "term-spec-conflict", "term-entrypoint", "term-agents-md", "term-architecture-md", "term-docs-index", "term-context-engineering", "term-launcher", "term-handoff", "term-compaction", "term-durable-decision", "term-drift", "term-live-state", "term-provenance", "term-authority", "term-boundary", "term-build-ledger", "term-fresh-agent"]
+    },
+    "23.6": {
+      "basic": ["term-wsl", "term-ubuntu", "term-filesystem", "term-host", "term-vscode", "term-workspace", "term-devcontainer", "term-devcontainer-json", "term-docker", "term-docker-engine", "term-endpoint", "term-docker-desktop", "term-wsl-integration", "term-container", "term-image", "term-layer", "term-dockerfile", "term-socket", "term-mount", "term-bind-mount", "term-volume", "term-persistence", "term-writable-layer", "term-rebuild", "term-restart", "term-cache", "term-post-create", "term-post-start", "term-post-attach", "term-toolchain", "term-pin", "term-deterministic", "term-node", "term-package-manager", "term-corepack", "term-lockfile", "term-registry", "term-shell", "term-env", "term-env-stage", "term-script", "term-credentials", "term-configuration", "term-extension", "term-exit-code", "term-disk-space"],
+      "professional": ["term-dood", "term-auth-store", "term-bootstrap", "term-doctor"]
+    },
+    "23.7": {
+      "basic": ["term-ci", "term-cicd", "term-test", "term-unit", "term-integration-test", "term-e2e", "term-regression", "term-contract-test", "term-negative-case", "term-happy-path", "term-edge-case", "term-race-condition", "term-build", "term-lint", "term-defect", "term-report", "term-artifact", "term-log", "term-qa"],
+      "professional": ["term-preflight", "term-validation", "term-verification", "term-evidence", "term-pass-fail", "term-self-review", "term-independent-review", "term-revalidation", "term-reproducer", "term-throwaway", "term-correctness", "term-status-sync", "term-wiring", "term-selective-ci", "term-assumption", "term-semantic-gap"]
+    },
+    "23.8": {
+      "basic": ["term-severity", "term-permission", "term-privilege", "term-authorization", "term-authentication", "term-logout", "term-secret", "term-token", "term-sandbox", "term-rls", "term-migration", "term-rollback", "term-recovery", "term-backup", "term-cleanup", "term-immutable", "term-tls"],
+      "professional": ["term-risk", "term-risk-matrix", "term-impact", "term-blast-radius", "term-least-privilege", "term-policy", "term-enforcement", "term-retention", "term-untrusted", "term-trust-boundary", "term-prompt-injection", "term-shell-injection", "term-fail-closed", "term-failure-mode", "term-security-review", "term-containment", "term-rotation", "term-residual-risk", "term-destructive", "term-supply-chain"]
+    },
+    "23.9": {
+      "basic": ["term-dag", "term-dedup", "term-sync", "term-lock", "term-hook", "term-scheduler"],
+      "professional": ["term-collision", "term-isolated", "term-overlap", "term-contract-dependency", "term-direct-conflict", "term-semantic-conflict", "term-merge-order", "term-provider-consumer", "term-reconciliation", "term-post-merge", "term-auto-sync", "term-non-blocking-hook", "term-wrapper", "term-freshness"]
+    },
+    "23.10": {
+      "basic": ["term-telemetry", "term-adapter", "term-schema", "term-payload", "term-idempotency", "term-timestamp", "term-retry", "term-dashboard", "term-feature-flag", "term-analytics"],
+      "professional": ["term-acc", "term-maturity", "term-control-plane", "term-ingestion", "term-normalized-events", "term-event-log", "term-read-model", "term-ordering", "term-lease", "term-durable-run", "term-interruption", "term-budget", "term-audit", "term-command-request"]
+    },
+    "23.11": {
+      "basic": ["term-standalone", "term-figma", "term-slack", "term-vercel", "term-plugin", "term-api", "term-webmcp", "term-frontend", "term-backend", "term-framework", "term-stack", "term-react", "term-typescript", "term-markdown", "term-html", "term-css", "term-json", "term-yaml", "term-mermaid", "term-svg", "term-ast", "term-static-render", "term-build-time", "term-bundle", "term-cdn", "term-cms", "term-readme", "term-preview", "term-storybook", "term-hosting", "term-browser-automation", "term-fallback", "term-ui-ux"],
+      "professional": []
+    }
+  }
+}

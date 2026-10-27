@@ -9,7 +9,9 @@ for(const file of overviewFiles.sort()){
   if(!/^\d{2}\.md$/.test(file))throw Error(`content/overview/${file}: expected NN.md`);
   overviews[file.slice(0,2)]=await fs.readFile(`content/overview/${file}`,'utf8');
 }
-const data=await compileHandbook(source,{urlMap:loadUrlMap(),overviews});
+// Level of each glossary term (P6-07); the file is required.
+const glossaryLevels=JSON.parse(await fs.readFile('content/glossary-levels.json','utf8'));
+const data=await compileHandbook(source,{urlMap:loadUrlMap(),overviews,glossaryLevels});
 await fs.writeFile('src/content/generated.json',JSON.stringify(data));
 await fs.writeFile('public/handbook.md',source);
 await fs.writeFile('docs/coverage-report.json',JSON.stringify(data.audit,null,2));
