@@ -7,7 +7,7 @@ async function ready(page:Page,path:string){await page.goto(path);await page.wai
 async function record(page:Page){await page.addInitScript(()=>{const w=window as unknown as {__transitions:number;__started:string[]};w.__transitions=0;w.__started=[];const doc=document as unknown as {startViewTransition?:(...a:unknown[])=>unknown};const start=doc.startViewTransition?.bind(document);if(start)doc.startViewTransition=(...a:unknown[])=>{w.__transitions++;return start(...a);};for(const type of ['animationstart','transitionrun'])addEventListener(type,event=>{const e=event as AnimationEvent&TransitionEvent;w.__started.push(`${type}:${e.animationName??e.propertyName}`);},true);});}
 const transitions=(page:Page)=>page.evaluate(()=>(window as unknown as {__transitions:number}).__transitions);
 const started=(page:Page)=>page.evaluate(()=>(window as unknown as {__started:string[]}).__started);
-const probe=(page:Page)=>page.evaluate(()=>{const a=document.createElement('a');a.href='/chapters/06#ch-06-6-2-definition-of-ready';a.id='motion-probe';a.textContent='6.2';const prose=document.querySelector('.reader-prose');prose?.insertBefore(a,prose.firstChild);});
+const probe=(page:Page)=>page.evaluate(()=>{const a=document.createElement('a');a.href='/chapters/06#ch-06-6-2-definition-of-ready';a.id='motion-probe';a.textContent='6.2';const prose=document.querySelector('.reader-prose')??document.querySelector('main .ct');prose?.insertBefore(a,prose.firstChild);});
 // Interactions that start animations when motion is on: hover, page change, search dialog, details.
 async function exercise(page:Page){
  await railNavigate(page,'/flow/08-preflight');await expect(page.locator('main [data-chapter="ch-08"]')).toBeVisible();
