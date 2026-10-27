@@ -3,11 +3,12 @@ import {useEffect,useRef,useState} from 'react';
 import type {InteractivePanel as Panel} from '../content/types';
 import {ProjectIcon} from './ProjectIcon';
 import {ProductMark} from './ProductMark';
+import {appear} from '../design/motion';
 export function InteractivePanel({panel}:{panel:Panel}){
   const [selected,setSelected]=useState(0),[scenario,setScenario]=useState(0);
   const [ready,setReady]=useState(false);useEffect(()=>{const frame=requestAnimationFrame(()=>setReady(true));return()=>cancelAnimationFrame(frame);},[]);
   const detail=useRef<HTMLDivElement>(null);
-  useEffect(()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const animation=detail.current?.animate([{opacity:.35,transform:'translateY(8px)'},{opacity:1,transform:'translateY(0)'}],{duration:260,easing:'cubic-bezier(.22,1,.36,1)'});return()=>animation?.cancel();},[selected,scenario]);
+  useEffect(()=>{const animation=appear(detail.current);return()=>animation?.cancel();},[selected,scenario]);
   const choice=panel.choices[selected];
   const points=[[500,36],[167,144],[500,144],[833,144],[167,252],[500,252],[833,252],[167,360],[500,360],[833,360]];
   const edges=[[0,1],[0,2],[0,3],[1,4],[2,4],[3,4],[4,5],[5,6],[6,7],[7,8],[0,8],[8,9]];

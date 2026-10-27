@@ -7,6 +7,7 @@ import {ProjectIcon,ChapterIcon} from './ProjectIcon';
 import {ContextPreview} from './ContextPreview';
 import {BrandSignature} from './BrandSignature';
 import {brandTitle} from '../design/brand';
+import {transitionTo} from '../design/motion';
 import {readLocal,writeLocal,removeLocal} from './localState';
 import type {Chapter,SearchEntry} from '../content/types';
 import {ReaderPageContext,type PageData} from './ReaderPageData';
@@ -25,6 +26,9 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
  const current=useRef({pageData,chapterId,pathname});current.current={pageData,chapterId,pathname};
  const hasChecklists=pageData.chapterId===chapterId&&pageData.hasChecklists;
  const router=useRouter();
+ // Page transition (P3-05): client navigation inside a View Transition that waits for the new page to commit, see transitionTo.
+ const committed=useRef<(()=>void)|null>(null);
+ const go=(href:string)=>transitionTo(()=>{committed.current?.();router.push(href);return new Promise<void>(resolve=>{committed.current=resolve;});});
  // Route skeleton without a Suspense boundary (P1-12): a slow transition swaps the old page for the skeleton until the route commits.
  const [skeletonFor,setSkeletonFor]=useState<string|null>(null),skeleton=pending&&skeletonFor===pathname;
  useEffect(()=>{if(!pending)return;const from=current.current.pathname,timer=setTimeout(()=>setSkeletonFor(from),skeletonDelay);return()=>{clearTimeout(timer);setSkeletonFor(null);};},[pending]);
@@ -39,11 +43,11 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
  function reveal(id:string){const target=document.getElementById(id);if(!target)return;if(id.startsWith('term-'))window.dispatchEvent(new CustomEvent('glossary-reveal'));target.hidden=false;let node:HTMLElement|null=target;while(node){if(node instanceof HTMLDetailsElement)node.open=true;node=node.parentElement;}requestAnimationFrame(()=>{target.scrollIntoView({block:'start',behavior:'instant'});target.tabIndex=-1;target.focus({preventScroll:true});if(id.startsWith('term-')){document.querySelectorAll('.term-arrival').forEach(n=>n.classList.remove('term-arrival'));target.classList.add('term-arrival');if(highlight.current)clearTimeout(highlight.current);highlight.current=setTimeout(()=>target.classList.remove('term-arrival'),1000);}});}
  // Route change moves focus to the new page; a drawer closed for it must not pull focus back to the menu button.
  function closeDrawerForNavigation(){if(drawerRef.current?.open){drawerNavigating.current=true;drawerRef.current.close();}}
- function result(entry:SearchEntry){searchNavigating.current=true;searchRef.current?.close();if(entry.path===location.pathname){history.pushState(null,'',`${entry.path}#${entry.id}`);reveal(entry.id);}else {setPending(true);router.push(`${entry.path}#${entry.id}`);}}
+ function result(entry:SearchEntry){searchNavigating.current=true;searchRef.current?.close();if(entry.path===location.pathname){history.pushState(null,'',`${entry.path}#${entry.id}`);reveal(entry.id);}else {setPending(true);go(`${entry.path}#${entry.id}`);}}
  useEffect(()=>{
   setReady(true);document.documentElement.classList.add('js-enabled');
   const key=(event:KeyboardEvent)=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){event.preventDefault();openSearch();}};
-  const click=async(event:MouseEvent)=>{const node=event.target as HTMLElement,practice=node.closest<HTMLElement>('.practice-text');if(practice&&!node.closest('a,button,input,select,textarea')){practice.parentElement?.querySelector<HTMLInputElement>('input[type=checkbox]')?.click();return;}const copy=node.closest<HTMLButtonElement>('[data-copy]');if(copy){try{await navigator.clipboard.writeText(current.current.pageData.blocks.find(b=>b.id===copy.dataset.copy)?.raw??'');setStatus('Пример скопирован без изменений.');}catch{setStatus('Копирование недоступно. Выделите и скопируйте текст вручную.');}return;}const link=node.closest<HTMLAnchorElement>('a[href]');if(!link||link.classList.contains('term-link')||link.download||link.target||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||event.button!==0)return;const url=new URL(link.href);if(url.origin!==location.origin)return;if(url.pathname!==location.pathname){setPending(true);closeDrawerForNavigation();if(link.classList.contains('route-chapter')){event.preventDefault();router.push(url.pathname+url.search+url.hash);}}else if(url.hash){event.preventDefault();drawerRef.current?.close();history.pushState(null,'',url.pathname+url.hash);reveal(decodeURIComponent(url.hash.slice(1)));}};
+  const click=async(event:MouseEvent)=>{const node=event.target as HTMLElement,practice=node.closest<HTMLElement>('.practice-text');if(practice&&!node.closest('a,button,input,select,textarea')){practice.parentElement?.querySelector<HTMLInputElement>('input[type=checkbox]')?.click();return;}const copy=node.closest<HTMLButtonElement>('[data-copy]');if(copy){try{await navigator.clipboard.writeText(current.current.pageData.blocks.find(b=>b.id===copy.dataset.copy)?.raw??'');setStatus('Пример скопирован без изменений.');}catch{setStatus('Копирование недоступно. Выделите и скопируйте текст вручную.');}return;}const link=node.closest<HTMLAnchorElement>('a[href]');if(!link||link.classList.contains('term-link')||link.closest('.search-results')||link.download||link.target||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||event.button!==0)return;const url=new URL(link.href);if(url.origin!==location.origin)return;if(url.pathname!==location.pathname){if(/\.[a-z0-9]+$/i.test(url.pathname))return;event.preventDefault();setPending(true);closeDrawerForNavigation();go(url.pathname+url.search+url.hash);}else if(url.hash){event.preventDefault();drawerRef.current?.close();history.pushState(null,'',url.pathname+url.hash);reveal(decodeURIComponent(url.hash.slice(1)));}};
   const change=(event:Event)=>{const box=event.target as HTMLInputElement;if(!box.matches('[data-practice]'))return;if(!writeLocal('practice:'+box.dataset.practice,box.checked?'1':'0'))setStatus('Хранилище недоступно: отметки сохраняются до перезагрузки вкладки.');};
   const updateProgress=()=>{const range=document.documentElement.scrollHeight-innerHeight,progress=range>0?Math.min(1,Math.max(0,scrollY/range)):1;if(readingProgress.current)readingProgress.current.style.transform='scaleX('+progress+')';};
   const size=new ResizeObserver(updateProgress);const column=document.querySelector('.reading-column');if(column)size.observe(column);window.addEventListener('resize',updateProgress);updateProgress();
@@ -57,7 +61,7 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
  // close() on an already closed dialog fires no close event, so the flag is set only when it will be reset by onClose.
  useEffect(()=>{setStatus('');setReturnTo(null);window.dispatchEvent(new Event('context-close'));if(searchRef.current?.open){searchNavigating.current=true;searchRef.current.close();}closeDrawerForNavigation();},[pathname]);
  useEffect(()=>{
-  if(pageData.chapterId!==chapterId)return;setPending(false);let disposed=false,frame=0;
+  if(pageData.chapterId!==chapterId)return;setPending(false);committed.current?.();committed.current=null;let disposed=false,frame=0;
   document.querySelectorAll<HTMLButtonElement>('[data-copy],[data-example]').forEach(button=>button.disabled=false);
   document.querySelectorAll<HTMLInputElement>('[data-practice]').forEach(box=>box.checked=readLocal('practice:'+box.dataset.practice)==='1');
   let stored:{path:string;y:number;id:string}|null=null;try{stored=JSON.parse(sessionStorage.getItem('handbook-return')??'null');}catch{}
