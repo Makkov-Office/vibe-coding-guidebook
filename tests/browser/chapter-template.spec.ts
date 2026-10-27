@@ -1,6 +1,6 @@
 import {test,expect,type Page} from '@playwright/test';
 // P5-02: шаблон страницы главы на служебных образцах /design/chapters/07 и /08.
-async function open(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('main.ct')).toBeVisible();await page.locator('.ct-live').waitFor({state:'attached'});}
+async function open(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('main .ct')).toBeVisible();await page.locator('.ct-live').waitFor({state:'attached'});}
 // axe проверяет устоявшийся вид: конечные анимации (переход страницы P3-05) должны закончиться.
 async function settled(page:Page){await page.evaluate(()=>Promise.all(document.getAnimations().filter(a=>Number.isFinite(Number(a.effect?.getComputedTiming().endTime))).map(a=>a.finished.catch(()=>undefined))));}
 const errorsOf=(page:Page)=>{const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});return errors;};
@@ -94,7 +94,7 @@ test('chapter template: widths, table cards, reduced motion and axe',async({page
   await page.setViewportSize({width,height:900});
   await page.evaluate(t=>document.documentElement.setAttribute('data-theme',t),theme);
   await settled(page);await page.addScriptTag({path:'node_modules/axe-core/axe.min.js'});
-  const violations=await page.evaluate(async()=>{const result=await(window as unknown as {axe:{run:(context:string,options:object)=>Promise<{violations:{id:string}[]}>}}).axe.run('main.ct',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}});return result.violations.map(v=>v.id);});
+  const violations=await page.evaluate(async()=>{const result=await(window as unknown as {axe:{run:(context:string,options:object)=>Promise<{violations:{id:string}[]}>}}).axe.run('main .ct',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}});return result.violations.map(v=>v.id);});
   expect(violations,`${width} ${theme}`).toEqual([]);
  }
 });

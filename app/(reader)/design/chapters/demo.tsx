@@ -7,7 +7,7 @@ import generated from '../../../../src/content/generated.json';
 export const demoMetadata:Metadata={title:`Шаблон главы · ${brandTitle}`,robots:{index:false,follow:false}};
 export const demoChapters=['07','08'];
 export const demoTabs:TabId[]=['how-it-works','apply','check'];
-const link=(id:string)=>{const c=generated.chapters.find(c=>c.id===id)!;return {href:c.path,label:c.title};};
+const link=(id:string)=>{const c=generated.chapters.find(c=>c.id===id)!;return {href:c.href,label:c.title};};
 // Чипы уровня и шаблона — образец: уровень по шкале брифа (раздел 2), шаблон — раздел 8.2 главы 08.
 const meta:Record<string,{level:string;template?:string}>={'07':{level:'2 · Инженер'},'08':{level:'2 · Инженер',template:'Отчёт preflight'}};
 export function ChapterDemo({number,tab}:{number:string;tab:TabId}){

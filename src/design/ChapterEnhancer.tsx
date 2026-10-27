@@ -8,7 +8,7 @@ export function ChapterEnhancer(){
   const icon=useRef<HTMLSpanElement>(null);
   const [status,setStatus]=useState('');
   useEffect(()=>{
-    const main=icon.current?.closest('main');const prose=main?.querySelector('.ct-prose');
+    const main=icon.current?.closest('.ct');const prose=main?.querySelector('.ct-prose');
     if(!main||!prose)return;
     const cleanup:(()=>void)[]=[];
     // Тот же текст подряд live region не объявит: сначала очистить, затем показать.

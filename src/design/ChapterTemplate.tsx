@@ -1,21 +1,18 @@
 // Шаблон страницы главы (P5-02, бриф 8.3): hero, полоса 4 табов, «На этой странице», соседние страницы, copy link.
-// Данные — формат P5-01 (chapter.heading, chapter.tabs[]); адреса табов — tabHrefs(адрес главы из url-map).
+// Данные — формат P5-01 (chapter.heading, chapter.tabs[]); адреса табов — chapterTabHrefs (P5-02b) или tabHrefs для образцов.
 import Link from 'next/link';
 import type {ReactNode} from 'react';
 import generated from '../content/generated.json';
-import urlMap from '../content/url-map.json';
-import type {Handbook} from '../content/types';
+import type {Handbook,TabId} from '../content/types';
+import {chapterTabs as tabs} from '../content/chapter-routes';
 import {InteractivePanel} from '../components/InteractivePanel';
 import {ReaderPageData,type PageData} from '../components/ReaderPageData';
 import {Annotation,ButtonLink,RoleIcon} from './primitives';
 import {ChapterTabBar} from './ChapterTabBar';
 import {ChapterEnhancer} from './ChapterEnhancer';
-import './chapter-template.css';
 
-export type TabId='overview'|'how-it-works'|'apply'|'check';
+export type {TabId};
 export type PageLink={href:string;label:string};
-type Tab={id:TabId;html:string;outline:{id:string;title:string}[];panels:string[]};
-type TabbedChapter=Handbook['chapters'][number]&{heading:string;tabs:Tab[]};
 export type ChapterTemplateProps={
   chapterId:string;tabId:TabId;hrefs:Record<TabId,string>;
   /** Соседние главы: на первом табе «Предыдущая», на последнем «Дальше». */
@@ -28,7 +25,6 @@ export type ChapterTemplateProps={
 };
 
 const handbook=generated as unknown as Handbook;
-const tabs=urlMap.tabs as {id:TabId;segment:string;label:string}[];
 const WORDS_PER_MINUTE=180;
 /** Минуты чтения по тексту HTML: не меньше одной у непустого таба. */
 export function readingMinutes(html:string){const words=html.replace(/<[^>]+>/g,' ').split(/\s+/).filter(Boolean).length;return words?Math.max(1,Math.round(words/WORDS_PER_MINUTE)):0;}
@@ -41,8 +37,8 @@ const lift=(html:string)=>html.replace(/<(\/?)h3\b/g,'<$1h2').replace(/<(\/?)h4\
 const heading=(html:string)=>html.replace(/<a [^>]*class="permalink"[^>]*>#<\/a>/,'').replace(/^<h2/,'<h1').replace(/<\/h2>$/,'</h1>');
 
 export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,aside}:ChapterTemplateProps){
-  const chapter=handbook.chapters.find(c=>c.id===chapterId) as TabbedChapter|undefined;
-  if(!chapter?.tabs)throw new Error(`ChapterTemplate: ${chapterId} has no tabs`);
+  const chapter=handbook.chapters.find(c=>c.id===chapterId);
+  if(!chapter?.tabs||!chapter.heading)throw new Error(`ChapterTemplate: ${chapterId} has no tabs`);
   const tab=chapter.tabs.find(t=>t.id===tabId);
   if(!tab)throw new Error(`ChapterTemplate: ${chapterId} has no tab ${tabId}`);
   const index=tabs.findIndex(t=>t.id===tabId);
@@ -54,13 +50,13 @@ export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,a
   const filled=chapter.tabs.find((t,i)=>i>index&&t.html)??chapter.tabs.find(t=>t.html&&t.id!==tabId);
   const panels=tab.panels.map(id=>handbook.panels.find(p=>p.chapter===chapterId&&p.id===id)).filter(p=>p!==undefined);
   // Термины и блоки кода — как в HandbookPage, но только для текста этого таба.
-  const blocks=handbook.blocks.filter(b=>b.id.startsWith(chapterId)&&tab.html.includes(b.id));
-  const required=new Set([...JSON.stringify([tab.html,panels]).matchAll(/term-[a-z0-9-]+/g)].map(m=>m[0]));for(const block of blocks)for(const term of block.terms)required.add(term);
+  const blocks=handbook.blocks.filter(b=>tab.html.includes(` id="${b.id}"`));
+  const required=new Set([...JSON.stringify([chapter.heading,tab.html,panels]).matchAll(/term-[a-z0-9-]+/g)].map(m=>m[0]));for(const block of blocks)for(const term of block.terms)required.add(term);
   const data:PageData={chapterId,outline:tab.outline,hasChecklists:tab.html.includes('data-practice='),terms:handbook.terms.filter(t=>required.has(t.id)),levels:handbook.levels,blocks,...pageData};
 
   return <>
     <ReaderPageData value={data}/>
-    <main id="reader" tabIndex={-1} className="ct" data-chapter={chapterId} data-tab={tabId}>
+    <main id="reader" tabIndex={-1}><article className="ct" data-chapter={chapterId} data-tab={tabId}>
       <header className="ct-hero">
         <Annotation>Глава {chapter.number}</Annotation>
         <div className="ct-title" dangerouslySetInnerHTML={{__html:heading(chapter.heading)}}/>
@@ -83,6 +79,6 @@ export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,a
         {after&&<Link className="ct-pager-link ct-pager-next" href={after.href}><span>{after.kind}<RoleIcon role="next"/></span><strong>{after.label}</strong></Link>}
       </nav>}
       <ChapterEnhancer key={`${chapterId}/${tabId}`}/>
-    </main>
+    </article></main>
   </>;
 }

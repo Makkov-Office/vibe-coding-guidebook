@@ -1,13 +1,13 @@
 import {test,expect,type Page} from '@playwright/test';
 // P5-02b: chapter 08 lives at /flow/08-preflight and its tabs; the old address and its anchors lead to the right tab.
 async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
-const tabs=(page:Page)=>page.getByRole('navigation',{name:'Разделы главы'});
+const tabs=(page:Page)=>page.getByRole('navigation',{name:'Табы главы'});
 
 test('the chapter opens on its overview tab and switches tabs by address',async({page})=>{
  await ready(page,'/flow/08-preflight');
  await expect(page.locator('main h1')).toContainText('Preflight: начать правильно');
  await expect(page.locator('main [data-chapter="ch-08"]')).toHaveAttribute('data-tab','overview');
- const bar=tabs(page);await expect(bar.getByRole('link')).toHaveText(['Обзор','Как устроено','Как применять','Проверь себя']);
+ const bar=tabs(page);await expect(bar.getByRole('link')).toHaveText([/^Обзор/,/^Как устроено/,/^Как применять/,/^Проверь себя/]);
  await expect(bar.getByRole('link',{name:'Обзор'})).toHaveAttribute('aria-current','page');
  await expect(page).toHaveTitle(/^08\. Preflight: начать правильно · /);
  await expect(page.locator('.sidebar a[href="/flow/08-preflight"]')).toHaveAttribute('aria-current','page');
@@ -19,10 +19,10 @@ test('the chapter opens on its overview tab and switches tabs by address',async(
  await expect(page).toHaveTitle(/^Как применять · 08\. Preflight/);
  // Keyboard: the tab bar is reachable and opens a tab.
  await tabs(page).getByRole('link',{name:'Как применять'}).focus();await page.keyboard.press('Tab');await expect(tabs(page).getByRole('link',{name:'Проверь себя'})).toBeFocused();await page.keyboard.press('Enter');
- await expect(page).toHaveURL(/\/flow\/08-preflight\/check$/);await expect(page.locator('.tab-empty')).toContainText('Проверь себя');
+ await expect(page).toHaveURL(/\/flow\/08-preflight\/check$/);await expect(page.locator('.ct-empty')).toContainText('Проверь себя');
  // The links between tabs go on to the next chapter at the last tab.
- await expect(page.locator('.pagination-previous')).toHaveAttribute('href','/flow/08-preflight/apply');
- await expect(page.locator('.pagination-next')).toHaveAttribute('href','/chapters/09');
+ await expect(page.locator('.ct-pager-prev')).toHaveAttribute('href','/flow/08-preflight/apply');
+ await expect(page.locator('.ct-pager-next')).toHaveAttribute('href','/chapters/09');
 });
 
 test('the old address and its anchors land on the tab that holds them',async({page})=>{
