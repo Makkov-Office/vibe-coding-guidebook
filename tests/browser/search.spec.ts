@@ -53,6 +53,19 @@ test('an empty query suggests the glossary, the memo and pages opened recently',
  await expect(page).toHaveURL(/\/chapters\/22$/);await expect(page.locator('main#reader')).toBeFocused();
 });
 
+test('when the index fails to load, suggestions stay and the error sits outside the listbox',async({page})=>{
+ await page.route('**/data/search-*.json',route=>route.abort());
+ await ready(page,'/chapters/08');await page.keyboard.press('Control+k');
+ await expect(page.locator('.search-dialog [role=status]',{hasText:'Поиск не загрузился.'})).toBeVisible();
+ await expect(page.locator('#search-results [role=status]')).toHaveCount(0);
+ await expect(group(page,'Подсказки').getByRole('option').first()).toHaveText(/Глоссарий/);
+ // Every child of the listbox is a group of options.
+ expect(await page.locator('#search-results').evaluate(box=>[...box.children].every(child=>child.getAttribute('role')==='group'&&[...child.querySelectorAll('[role=option]')].length>0))).toBe(true);
+ // A second opening starts at the first suggestion.
+ await page.keyboard.press('ArrowDown');await page.keyboard.press('Escape');await page.keyboard.press('Control+k');
+ await expect(page.locator('#search-result-0')).toHaveAttribute('aria-selected','true');
+});
+
 test('on a phone the bottom bar opens search and a result navigates',async({page})=>{
  await ready(page,'/chapters/08',360);
  await page.getByRole('navigation',{name:'Навигация'}).getByRole('button',{name:'Поиск'}).click();
