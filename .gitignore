@@ -51,3 +51,14 @@ next-env.d.ts
 
 # Claude Code local overrides
 .claude/settings.local.json
+
+# Agent delivery (P8-03): built by `npm run content` from content/ and agent-pack/
+/public/agent-pack.zip
+/public/llms.txt
+/public/llms-full.txt
+/public/index.md
+/public/chapters/
+/public/glossary.md
+/public/resources.md
+/public/tools.md
+/public/tools/

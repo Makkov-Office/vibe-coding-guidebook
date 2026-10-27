@@ -58,6 +58,16 @@ Glossary registry извлекается из главы 23. Определен�
 
 `agent-pack/` — переносимый набор правил гайда для AI-агента в чужом репозитории: нормативный `AGENTS.md` (роли, жизненный цикл, gates; каждое правило со ссылкой на главу), `CLAUDE.md` для Claude Code и заготовки `skills/`, `schemas/`, `claude/`. Подключение и версия — `agent-pack/README.md`. Пакет не меняет корневые `AGENTS.md` / `CLAUDE.md` этого репозитория.
 
+Доставка агенту (P8-03, бриф 11.3) собирается последним шагом `npm run content` — `scripts/agent-delivery.mjs`, без новых зависимостей:
+
+- `/agents` — страница пакета: кнопка «Скачать Agent Pack (.zip)», ссылки на `llms.txt`, описание из `agent-pack/README.md` и список файлов. Данные страницы — `src/content/agent-pack.json` (коммитится, как `generated.json`).
+- `/agent-pack.zip` — ровно файлы `agent-pack/` в папке `agent-pack/`. Без сжатия, пути по алфавиту, одна дата у всех записей, права Unix (hooks исполняемые): одинаковые файлы дают одинаковые байты на любой машине.
+- Markdown каждой страницы — адрес страницы + `.md` (`/chapters/08.md`, `/tools/codex.md`; вводная глава — `/index.md`). Текст режется из `content/handbook.md` по заголовкам глав `##` вне блоков кода; заголовок, которого нет в `generated.json`, — FAIL. Файл пишется и по старому адресу из карты адресов, чтобы ссылки из пакета пережили переезд страниц (P5).
+- `/llms.txt` — карта для LLM по формату [llmstxt.org](https://llmstxt.org) (проверено 27.10.2026): H1, цитата-резюме, списки ссылок по разделам rail, глоссарий и материалы — в `## Optional`. `/llms-full.txt` — тот же заголовок и весь `content/handbook.md`. Ссылки абсолютные, на production (`SITE_ORIGIN` в скрипте; меняется вместе с доменом, P4-05).
+- «Скопировать для агента» на каждой главе и обзоре (`src/components/CopyForAgent.tsx`) копирует Markdown страницы и сообщает результат через `role=status`.
+
+Архив, `llms*.txt` и `.md` страниц — артефакты сборки в `.gitignore`; проверки — `tests/agent-delivery.test.mjs` (архив побайтно равен `agent-pack/`, воспроизводимость, формат `llms.txt`, Markdown у каждой страницы) и `tests/browser/agents.spec.ts`.
+
 ## Чтение и обучение
 
 При JavaScript термины открывают пояснение рядом; без JavaScript это canonical glossary links. Tooltip не меняет scroll, URL или history. Длинные определения и два шаблона (глава 06 / глава 14) используют немодальный desktop drawer / модальный mobile sheet. Явный переход в глоссарий сохраняет точный origin для возврата.
