@@ -275,7 +275,8 @@ const behaviours = {
     const reward = norm(await page.locator(".profile-reward").first().innerText().catch(() => ""));
     await go(page, site, "/");
     const profile = norm(await page.locator(".learning-profile").first().innerText().catch(() => ""));
-    const stored = await page.evaluate(() => localStorage.getItem("handbook-learning-v2"));
+    // Chapters marked, from ProgressStore (P7-01) or the v1 key of an older build.
+    const stored = await page.evaluate(() => { try { const record = JSON.parse(localStorage.getItem("mae-progress") ?? localStorage.getItem("handbook-learning-v2") ?? "null"); return record ? JSON.stringify({ completed: record.completed, exercises: record.exercises }) : null; } catch { return null; } });
     await context.close();
     return { reward, stored, profile: profile.slice(0, 400) };
   },

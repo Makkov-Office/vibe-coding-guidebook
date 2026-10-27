@@ -8,11 +8,9 @@ import {useEffect,useMemo,useRef,useState,type KeyboardEvent,type PointerEvent} 
 import {iconProps,iconRoles} from '../design/icons.mjs';
 import {appear} from '../design/motion';
 import {navSections,currentSection,type NavChapter,type NavPage,type NavSection} from '../design/nav-sections';
-import {readLocal} from './localState';
-import {normalizeMarks} from './learning-profile';
+import {progressStore} from './progress-store.mjs';
 import '../design/nav-rail.css';
 
-const learningKey='handbook-learning-v2',changeEvent='handbook-learning-change';
 // Hover intent: open after the pointer rests, close after it has left both rail and menu.
 const openDelay=90,closeDelay=180;
 
@@ -49,9 +47,10 @@ export function NavRail({chapters,pathname}:{chapters:NavChapter[];pathname:stri
  const [roving,setRoving]=useState<{active:string|null;id:string}|null>(null);
  const focusable=roving&&roving.active===active?roving.id:active??sections[0].id,setFocusable=(id:string)=>setRoving({active,id});
  useEffect(()=>{
-  const read=()=>{try{setCompleted(normalizeMarks(JSON.parse(readLocal(learningKey)??'null')).completed);}catch{setCompleted([]);}};
-  read();window.addEventListener(changeEvent,read);window.addEventListener('storage',read);
-  return()=>{window.removeEventListener(changeEvent,read);window.removeEventListener('storage',read);};
+  // Chapter marks come from the progress store (P7-01); another tab's marks arrive with the storage event.
+  const read=()=>setCompleted(progressStore.get().completed);
+  read();const unsubscribe=progressStore.subscribe(read);window.addEventListener('storage',read);
+  return()=>{unsubscribe();window.removeEventListener('storage',read);};
  },[]);
  useEffect(()=>{if(open)appear(panels.current.get(open),'--dur-2');},[open]);
  useEffect(()=>()=>{if(timer.current)clearTimeout(timer.current);},[]);
