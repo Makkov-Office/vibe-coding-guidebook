@@ -1,7 +1,7 @@
 {
   "topics": 11,
   "definitions": 394,
-  "recognized": 2986,
+  "recognized": 2987,
   "linked": 2871,
   "exceptions": [
     {
@@ -1252,6 +1252,11 @@
     {
       "block": "ch-resources-b1015",
       "term": "term-live-state",
+      "reason": "existing link or semantic control"
+    },
+    {
+      "block": "ch-08-overview-b008",
+      "term": "term-preflight",
       "reason": "existing link or semantic control"
     },
     {
