@@ -15,5 +15,6 @@
 /* Hero страницы (P6-07c): разметка и стили шаблона главы (.ct-hero, chapter-template.css); здесь только отличия. */
 .chapter.glossary-page{padding-top:0}
 .glossary-lead{max-width:65ch;color:var(--color-on-surface-variant)}
-.glossary-lead>p:last-child{margin-bottom:0}
+/* Отступы только между абзацами: скрытая служебная заметка (последний p) не оставляет поля под текстом. */
+.glossary-lead>p{margin:0}.glossary-lead>p+p{margin-top:var(--space-3)}
 .glossary-page>.glossary-filter{margin:0}

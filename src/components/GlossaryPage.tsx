@@ -7,14 +7,14 @@ import {ChapterEnhancer} from '../design/ChapterEnhancer';
 import {GlossaryFilter} from './GlossaryFilter';
 import {GlossaryEnhancer} from './GlossaryEnhancer';
 import {ProjectIcon} from './ProjectIcon';
+import {plural} from './plural';
 
-/** 1 термин, 2 термина, 5 терминов. */
-export function plural(n:number,[one,few,many]:[string,string,string]){const d=n%10,h=n%100;return `${n} ${d===1&&h!==11?one:d>=2&&d<=4&&(h<12||h>14)?few:many}`;}
 
 export function GlossaryPage({chapter,handbook,html,tools}:{chapter:Chapter;handbook:Handbook;html:string;tools?:ReactNode}){
   // html — текст раздела с h1 и темами в h2 (как в HandbookPage). Заголовок и вводные абзацы уходят в hero
   // (заголовок без старого «#»), темы — после фильтра: ChapterEnhancer берёт первый .ct-prose, в нём должны быть темы.
-  const end=html.indexOf('</h1>')+'</h1>'.length,topics=html.indexOf('<h2',end);
+  const close=html.indexOf('</h1>');if(close<0)throw new Error('GlossaryPage: the glossary has no h1');
+  const end=close+'</h1>'.length,topics=html.indexOf('<h2',end);
   const heading=html.slice(0,end).replace(/<a [^>]*class="permalink"[^>]*>#<\/a>/,'');
   const intro=html.slice(end,topics<0?html.length:topics),rest=topics<0?'':html.slice(topics);
   const levels=handbook.levels;

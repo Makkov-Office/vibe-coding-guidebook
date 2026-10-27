@@ -1,4 +1,7 @@
 import {test,expect,type Page} from '@playwright/test';
+import fs from 'node:fs';
+import {plural} from '../../src/components/plural';
+const generated=JSON.parse(fs.readFileSync('src/content/generated.json','utf8')) as {terms:unknown[];topics:unknown[]};
 // P6-07c: глоссарий в шаблоне «Чертежа» — hero главы, вводный текст в нём, фильтр под hero, copy link у тем.
 async function ready(page:Page){await page.goto('/glossary');await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();await page.locator('.ct-live').waitFor({state:'attached'});}
 async function settled(page:Page){await page.evaluate(()=>Promise.all(document.getAnimations().filter(a=>Number.isFinite(Number(a.effect?.getComputedTiming().endTime))).map(a=>a.finished.catch(()=>undefined))));}
@@ -11,7 +14,7 @@ test('glossary hero: title, chips, lead, then filter, then topics',async({page})
  await expect(page.locator('main h1')).toHaveCount(1);
  await expect(hero.locator('h1#ch-23')).toHaveText('23. Полный тематический глоссарий');
  await expect(hero.locator('h1 .permalink')).toHaveCount(0);
- await expect(hero.getByRole('list',{name:'О глоссарии'}).locator('li')).toHaveText(['394 термина','11 тем','2 уровня']);
+ await expect(hero.getByRole('list',{name:'О глоссарии'}).locator('li')).toHaveText([plural(generated.terms.length,['термин','термина','терминов']),plural(generated.topics.length,['тема','темы','тем']),'2 уровня']);
  await expect(hero.locator('.glossary-lead')).toContainText('Сначала выбери тему');
  await expect(hero.getByRole('button',{name:'Скопировать для агента'})).toBeVisible();
  // Порядок: hero → фильтр → первая тема.
