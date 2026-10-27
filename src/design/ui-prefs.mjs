@@ -41,5 +41,28 @@ export function writePrefs(update){
   return memory;
 }
 
+// Another tab changed the record: drop the cached copy, so a stale tab never writes old values back.
+/** @param {StorageEvent} event */
+function storageChanged(event){
+  if(event.key!==UI_PREFS_KEY&&event.key!==null)return;
+  memory=null;const prefs=readPrefs();
+  applyPrefs(prefs,document.documentElement);
+  for(const listener of listeners)listener(prefs);
+}
+
 /** @param {(prefs:UiPrefs)=>void} listener */
-export function subscribePrefs(listener){listeners.add(listener);return()=>{listeners.delete(listener);};}
+export function subscribePrefs(listener){
+  if(!listeners.size)window.addEventListener('storage',storageChanged);
+  listeners.add(listener);
+  return()=>{listeners.delete(listener);if(!listeners.size)window.removeEventListener('storage',storageChanged);};
+}
+
+/**
+ * The next theme of the cycle. After «Как в системе» comes the opposite of the system theme, so
+ * the first click always changes the page. @param {UiPrefs['theme']} theme @param {boolean} systemDark
+ * @returns {UiPrefs['theme']}
+ */
+export function nextTheme(theme,systemDark){
+  const [first,second]=systemDark?['light','dark']:['dark','light'];
+  return theme==='system'?first:theme===first?second:'system';
+}

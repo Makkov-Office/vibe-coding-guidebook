@@ -30,3 +30,9 @@ test('the inline script survives a storage that throws',()=>{
  vm.runInNewContext(uiPrefsScript,{localStorage:{getItem(){throw new Error('denied');}},document:{documentElement:html},JSON});
  assert.equal(html.attrs.size,0);
 });
+
+test('nextTheme: after the system theme comes its opposite, then the same, then the system',async()=>{
+ const {nextTheme}=await import('../src/design/ui-prefs.mjs');
+ assert.deepEqual([nextTheme('system',false),nextTheme('dark',false),nextTheme('light',false)],['dark','light','system']);
+ assert.deepEqual([nextTheme('system',true),nextTheme('light',true),nextTheme('dark',true)],['light','dark','system']);
+});
