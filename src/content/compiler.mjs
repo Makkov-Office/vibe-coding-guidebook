@@ -39,6 +39,7 @@ const chapterMarkup=id=>chapterProduct(id)?productMarkup(chapterProduct(id)):ico
 const featureIcon=title=>title.includes('Dots')?'dots':title.includes('Artifacts')?'docs':title.includes('Design')?'design':title.includes('Security')?'security':title.includes('Appshots')?'photo':title.includes('Подписки')?'tags':title.includes('Cloud')?'cloud':title.includes('Расписание')?'schedule':title.includes('От прототипа')?'world':title.includes('Браузер')||title.includes('Визуальный')?'world':title.includes('Review')||title.includes('review')?'review':title.includes('агент')||title.includes('Агенты')?'users':title.includes('План')||title.includes('/goal')?'lifecycle':title.includes('Контекст')?'context':title.includes('Модел')||title.includes('Mods')||title.includes('навыки')||title.includes('plugins')?'setup':'terminal';
 export const normalize = s => s.normalize('NFKC').toLocaleLowerCase('ru').replaceAll('ё','е');
 const toolPages={'Обзоры инструментов':{id:'ch-tools',path:'/tools'},'Codex: от идеи до проверенного результата':{id:'ch-codex',path:'/tools/codex'},'Claude Code: рабочий процесс внутри проекта':{id:'ch-claude-code',path:'/tools/claude-code'}};
+// The old address of a page: the url-map key. Links use href (new address of a moved page), not path.
 export const chapterPath = id => Object.values(toolPages).find(page=>page.id===id)?.path??(id==='ch-00'?'/':id==='ch-23'?'/glossary':id==='ch-resources'?'/resources':`/chapters/${id.slice(3)}`);
 export function previewKind(definition, structured=false, linked=false){return !structured && [...definition.trim().replace(/\s+/g,' ')].length<=160?(linked?'popover':'tooltip'):'panel';}
 const slug = s => normalize(s).replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'');
@@ -264,7 +265,7 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
         visit(card,'element',n=>{if(n.tagName==='a'&&/^https?:/.test(n.properties.href??'')){n.properties.target='_blank';n.properties.rel=['noopener','noreferrer'];n.properties['aria-label']=`${toText(n)} — открывается в новой вкладке`;n.children.push(structuredClone(externalIcon));}});
         term.definitionHtml=stringify(el('p',{},cells[1].children));
         node.children.push(card);usedIds.add(term.id);
-        search.push({id:term.id,chapter,title:term.label,type:'термин',text:`${term.label} ${term.aliases.join(' ')} ${term.definition}`});
+        search.push({id:term.id,chapter,title:term.label,type:'термин',text:`${term.label} ${term.aliases.join(' ')} ${term.definition}`,...(term.level?{level:levels.names[term.level].trim()}:{})});
       }
       // Basic terms of a collapsed topic (Git) go to a closed group at the end of the topic.
       const summary=levels?.collapsed.get(levels.number(terms.find(t=>t.id===node.children[0]?.properties.id)?.topic??''));

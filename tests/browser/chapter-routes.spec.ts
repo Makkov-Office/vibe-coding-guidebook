@@ -44,7 +44,7 @@ test('the old address and its anchors land on the tab that holds them',async({pa
 test('search opens the tab of the result',async({page})=>{
  await ready(page,'/reference/glossary');
  await page.keyboard.press('Control+k');await page.getByLabel('Термин, фраза или текст примера').fill('Fail closed');
- const result=page.locator('.search-results>a[href="/flow/08-preflight/how-it-works#ch-08-8-3-fail-closed"]');await expect(result).toBeVisible();await result.click();
+ const result=page.locator('.search-results [role=option][href="/flow/08-preflight/how-it-works#ch-08-8-3-fail-closed"]');await expect(result).toBeVisible();await result.click();
  await expect(page).toHaveURL(/\/flow\/08-preflight\/how-it-works#ch-08-8-3-fail-closed$/);await expect(page.locator('#ch-08-8-3-fail-closed')).toBeFocused();
 });
 
@@ -64,7 +64,7 @@ test('the glossary and the cheat sheet live at their new addresses; links lead t
  await expect(page.locator('.sidebar a[href="/reference/22-cheatsheet"]')).toHaveAttribute('aria-current','page');
  await expect(page.locator('main .term-link').first()).toHaveAttribute('href',/^\/reference\/glossary#term-/);
  await expect(page.locator('.header-glossary')).toHaveAttribute('href','/reference/glossary');
- await page.locator('.header-glossary').click();
+ await page.setViewportSize({width:800,height:900});await page.locator('.header-glossary').click();
  await expect(page).toHaveURL(/\/reference\/glossary$/);await expect(page.locator('main [data-chapter="ch-23"]')).toBeVisible();
  await expect(page).toHaveTitle(/^Глоссарий · /);
  // The old address of a heading anchor is found in the registry and opens the new page.

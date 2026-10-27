@@ -50,7 +50,7 @@ test('arrival at a collapsed term opens its group, from a link and from search',
  await expect(page.locator('details.glossary-basics')).toHaveAttribute('open','');await expect(page.locator('#term-commit')).toBeFocused();
  await ready(page,'/reference/glossary');await page.getByRole('group',{name:'Уровень'}).getByRole('button',{name:/^Профессиональное/}).click();
  await page.keyboard.press('Control+k');await page.getByLabel('Термин, фраза или текст примера').fill('Squash merge');
- const result=page.locator('.search-results>a',{hasText:'Squash merge'}).first();await expect(result).toBeVisible();await result.click();
+ const result=page.locator('.search-results [role=option]',{hasText:'Squash merge'}).first();await expect(result).toBeVisible();await result.click();
  await expect(page.locator('#term-squash')).toBeVisible();await expect(page.locator('#term-squash')).toBeFocused();
  await expect(page.getByRole('group',{name:'Уровень'}).getByRole('button',{name:'Все'})).toHaveAttribute('aria-pressed','true');
 });
