@@ -26,7 +26,7 @@ export function ChapterEnhancer(){
         // Имя раздела в сообщении: повторное копирование другого раздела снова объявляется.
         const name=h.textContent?.trim();
         try{await navigator.clipboard.writeText(url);announce(`Ссылка на раздел «${name}» скопирована.`);}
-        catch{announce(`Не удалось скопировать. Адрес раздела: ${url}`);}
+        catch{announce(`Не удалось скопировать. Адрес раздела: ${decodeURI(url)}`);}
       };
       button.addEventListener('click',copy);h.appendChild(button);
       cleanup.push(()=>{button.removeEventListener('click',copy);button.remove();});

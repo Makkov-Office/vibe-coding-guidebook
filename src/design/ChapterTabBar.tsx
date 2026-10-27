@@ -19,9 +19,13 @@ export function ChapterTabBar({title,current,tabs}:{title:string;current:TabId;t
   useEffect(()=>{
     const node=bar.current;if(!node||typeof IntersectionObserver==='undefined')return;
     // Полоса прилипла, когда её верх упёрся в нижний край шапки: тогда она на пиксель заходит под границу root.
-    const top=parseFloat(getComputedStyle(node).top)||0;
-    const observer=new IntersectionObserver(([entry])=>setStuck(entry.intersectionRatio<1&&entry.boundingClientRect.top<=top+1),{rootMargin:`-${top+1}px 0px 0px 0px`,threshold:[1]});
-    observer.observe(node);return()=>observer.disconnect();
+    // Высота шапки меняется на 768 px (поворот телефона), поэтому observer пересоздаётся.
+    let observer:IntersectionObserver|undefined;
+    const watch=()=>{observer?.disconnect();const top=parseFloat(getComputedStyle(node).top)||0;
+      observer=new IntersectionObserver(([entry])=>setStuck(entry.intersectionRatio<1&&entry.boundingClientRect.top<=top+1),{rootMargin:`-${top+1}px 0px 0px 0px`,threshold:[1]});
+      observer.observe(node);};
+    const narrow=matchMedia('(max-width:767px)');watch();narrow.addEventListener('change',watch);
+    return()=>{narrow.removeEventListener('change',watch);observer?.disconnect();};
   },[]);
   return <>
     <nav ref={bar} className="ct-tabs" aria-label="Табы главы" data-stuck={stuck||undefined}>

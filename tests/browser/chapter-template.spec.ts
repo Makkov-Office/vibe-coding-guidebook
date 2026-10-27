@@ -47,6 +47,9 @@ test('chapter template: sticky tab bar condenses into a pill right under the hea
   const header=(await page.locator('.topbar').boundingBox())!;expect(Math.abs((await bar.boundingBox())!.y-(header.y+header.height)),`${width}`).toBeLessThanOrEqual(1);
   await page.mouse.wheel(0,-5000);await expect(bar).not.toHaveAttribute('data-stuck');
  }
+ // Служебные образцы не перезаписывают позицию чтения настоящей главы.
+ await page.waitForTimeout(900);await page.mouse.wheel(0,600);await page.waitForTimeout(300);
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('mae-progress')??'{}').reading??null)).toBeNull();
 });
 
 test('chapter template: copy link, keyboard and clipboard refusal',async({page})=>{
