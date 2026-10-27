@@ -104,7 +104,7 @@ export function NavRail({chapters,pathname}:{chapters:NavChapter[];pathname:stri
      {s.pages.length>0&&<ul className="mega-list">{s.pages.map(p=><PageLink key={p.chapter} page={p} pathname={pathname} completed={completed} onNavigate={()=>setOpen(null)}/>)}</ul>}
      {s.groups.filter(g=>g.pages.length).map(g=><div key={g.label} className="mega-group"><p className="mega-group-label">{g.label}</p><ul className="mega-list">{g.pages.map(p=><PageLink key={p.chapter} page={p} pathname={pathname} completed={completed} onNavigate={()=>setOpen(null)}/>)}</ul></div>)}
      <Progress section={s} completed={completed} onNavigate={()=>setOpen(null)}/>
-     {s.links.length>0&&<ul className="mega-links">{s.links.map(l=><li key={l.href}>{/\.[a-z0-9]+$/i.test(l.href)?<a href={l.href} download={l.download||undefined}>{l.label}</a>:<Link href={l.href} prefetch={false} onClick={()=>setOpen(null)}>{l.label}</Link>}</li>)}</ul>}
+     {s.links.length>0&&<ul className="mega-links">{s.links.map(l=><li key={l.href}>{/\.[a-z0-9]+$/i.test(l.href)?<a href={l.href} download={l.download||undefined} onClick={()=>setOpen(null)}>{l.label}</a>:<Link href={l.href} prefetch={false} onClick={()=>setOpen(null)}>{l.label}</Link>}</li>)}</ul>}
     </div>}
    </li>;
   })}</ul>

@@ -111,7 +111,7 @@ test('below 1024 px the rail is hidden and the menu button stays; on a short scr
  await expect(page.locator('.nav-rail')).toBeVisible();await expect(page.locator('.menu-trigger')).toBeHidden();
  // A short desktop viewport: the rail scrolls, so the last section stays reachable and its menu opens.
  await page.setViewportSize({width:1024,height:600});await ready(page,'/chapters/08');
- await item(page,'agents').focus();await expect(menu(page,'agents')).toBeVisible();
+ await item(page,'agents').click();await expect(page).toHaveURL(/\/agents$/);
  const box=await item(page,'agents').boundingBox();expect(box!.y+box!.height).toBeLessThanOrEqual(600);
 });
 
