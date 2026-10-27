@@ -1,4 +1,4 @@
-// Tabler icons (P2-06): one library, one stroke, a 34-role dictionary, no lucide-react.
+// Tabler icons (P2-06): one library, one stroke, a 38-role dictionary, no lucide-react.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -38,9 +38,9 @@ test('components/ui wrappers keep the 1.5 px stroke and hide from screen readers
   assert.doesNotMatch(renderToStaticMarkup(createElement(iconModule.XIcon, { 'aria-hidden': false, 'aria-label': 'Закрыть' })), /aria-hidden="true"/);
 });
 
-test('role dictionary covers 34 meanings with real Tabler icons', () => {
+test('role dictionary covers 38 meanings with real Tabler icons', () => {
   const roles = Object.entries(iconRoles);
-  assert.equal(roles.length, 34);
+  assert.equal(roles.length, 38);
   assert.equal(roles.filter(([, r]) => r.group === 'rail').length, 9);
   assert.equal(roles.filter(([, r]) => r.group === 'tabs').length, 4);
   for (const [name, role] of roles) {
