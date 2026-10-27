@@ -12,7 +12,7 @@
 .bottom-item:disabled{opacity:.6;cursor:default}
 .bottom-indicator{display:grid;place-items:center;width:56px;height:32px;border-radius:var(--radius-full);transition:background-color var(--dur-1) var(--ease)}
 .bottom-item:hover:not(:disabled) .bottom-indicator,.bottom-item[aria-expanded=true] .bottom-indicator{background:color-mix(in srgb,var(--color-on-surface) 8%,transparent)}
-.bottom-item[aria-current=page],.bottom-item-current{color:var(--color-on-surface)}
+.bottom-item[aria-current=page]{color:var(--color-on-surface)}
 .bottom-item[aria-current=page] .bottom-indicator{background:var(--color-primary-container);color:var(--color-on-primary-container)}
 .bottom-item:focus-visible{outline:none}
 .bottom-item:focus-visible .bottom-indicator{outline:2px solid var(--color-primary);outline-offset:2px}
