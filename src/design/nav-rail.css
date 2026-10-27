@@ -1,5 +1,5 @@
 /* Navigation rail и мега-меню (P3-01, docs/design/visual-language.md, «Навигация»). С 1024 px
-   rail заменяет боковое меню; уже 1024 px остаётся кнопка меню и drawer (до P3-02). */
+   rail заменяет боковое меню; уже 1024 px — нижняя панель и меню «Разделы» (P3-02, mobile-nav.css). */
 .nav-rail{display:none}
 @media(min-width:1024px){
   /* On a short viewport the nine items do not fit: the rail scrolls (the menus are fixed, not clipped). */

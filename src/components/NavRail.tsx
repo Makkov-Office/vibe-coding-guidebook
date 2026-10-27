@@ -14,7 +14,7 @@ import '../design/nav-rail.css';
 // Hover intent: open after the pointer rests, close after it has left both rail and menu.
 const openDelay=90,closeDelay=180;
 
-function RoleIcon({role,filled=false}:{role:keyof typeof iconRoles;filled?:boolean}){
+export function RoleIcon({role,filled=false}:{role:keyof typeof iconRoles;filled?:boolean}){
  const entry=iconRoles[role] as {icon:typeof iconRoles.home.icon;filled?:typeof iconRoles.home.icon};
  const Icon=filled&&entry.filled?entry.filled:entry.icon;
  return <Icon {...iconProps}/>;
@@ -25,7 +25,7 @@ function Ring({state}:{state:'done'|'current'|'todo'}){
  return <svg className={`nav-ring nav-ring-${state}`} viewBox="0 0 20 20" aria-hidden="true"><circle className="nav-ring-bg" cx="10" cy="10" r="7"/><circle className="nav-ring-fg" cx="10" cy="10" r="7" strokeDasharray={c.toFixed(1)} strokeDashoffset={(state==='done'?0:state==='current'?c/2:c).toFixed(1)}/></svg>;
 }
 
-function PageLink({page,pathname,completed,onNavigate}:{page:NavPage;pathname:string;completed:string[];onNavigate:()=>void}){
+export function PageLink({page,pathname,completed,onNavigate}:{page:NavPage;pathname:string;completed:string[];onNavigate:()=>void}){
  const router=useRouter(),warm=()=>router.prefetch(page.href);
  const current=onPage(page.href,pathname),done=completed.includes(page.chapter);
  const state=done?'done':current?'current':'todo';
@@ -35,23 +35,28 @@ function PageLink({page,pathname,completed,onNavigate}:{page:NavPage;pathname:st
  </Link></li>;
 }
 
+/** Completed chapters from the progress store (P7-01); another tab's marks arrive with the storage event. */
+export function useCompleted(){
+ const [completed,setCompleted]=useState<string[]>([]);
+ useEffect(()=>{
+  const read=()=>setCompleted(progressStore.get().completed);
+  read();const unsubscribe=progressStore.subscribe(read);window.addEventListener('storage',read);
+  return()=>{unsubscribe();window.removeEventListener('storage',read);};
+ },[]);
+ return completed;
+}
+
 export function NavRail({chapters,pathname}:{chapters:NavChapter[];pathname:string}){
  const router=useRouter(),sections=useMemo(()=>navSections(chapters),[chapters]);
  const active=currentSection(sections,pathname);
  // Open menu and roving focus belong to a page: both reset when the route or section changes.
- const [openState,setOpenState]=useState<{path:string;id:string|null}>({path:pathname,id:null}),[completed,setCompleted]=useState<string[]>([]);
+ const [openState,setOpenState]=useState<{path:string;id:string|null}>({path:pathname,id:null}),completed=useCompleted();
  const open=openState.path===pathname?openState.id:null,setOpen=(id:string|null)=>setOpenState({path:pathname,id});
  const timer=useRef<ReturnType<typeof setTimeout>|null>(null),touch=useRef(false),returning=useRef(false);
  const items=useRef(new Map<string,HTMLElement>()),panels=useRef(new Map<string,HTMLDivElement>());
  // Roving tabindex: one rail item is in the tab order, arrows move between the others.
  const [roving,setRoving]=useState<{active:string|null;id:string}|null>(null);
  const focusable=roving&&roving.active===active?roving.id:active??sections[0].id,setFocusable=(id:string)=>setRoving({active,id});
- useEffect(()=>{
-  // Chapter marks come from the progress store (P7-01); another tab's marks arrive with the storage event.
-  const read=()=>setCompleted(progressStore.get().completed);
-  read();const unsubscribe=progressStore.subscribe(read);window.addEventListener('storage',read);
-  return()=>{unsubscribe();window.removeEventListener('storage',read);};
- },[]);
  useEffect(()=>{if(open)appear(panels.current.get(open),'--dur-2');},[open]);
  useEffect(()=>()=>{if(timer.current)clearTimeout(timer.current);},[]);
  const schedule=(next:string|null,delay:number)=>{if(timer.current)clearTimeout(timer.current);timer.current=setTimeout(()=>setOpen(next),delay);};
@@ -111,7 +116,7 @@ export function NavRail({chapters,pathname}:{chapters:NavChapter[];pathname:stri
  </nav>;
 }
 
-function Progress({section,completed,onNavigate}:{section:NavSection;completed:string[];onNavigate:()=>void}){
+export function Progress({section,completed,onNavigate}:{section:NavSection;completed:string[];onNavigate:()=>void}){
  const pages=[...section.pages,...section.groups.flatMap(g=>g.pages)].filter(p=>p.completable);
  if(!pages.length)return null;
  const done=pages.filter(p=>completed.includes(p.chapter)).length,next=pages.find(p=>!completed.includes(p.chapter));
