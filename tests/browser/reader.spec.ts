@@ -72,11 +72,15 @@ test('design showcase: noindex, themes, keyboard, 44 px targets, reduced motion 
  await page.getByRole('button',{name:'Тёмная'}).click();await expect(page.locator('html')).toHaveAttribute('data-theme','dark');expect(await bg()).toBe('rgb(16, 16, 16)');
  await page.getByRole('button',{name:'Светлая'}).click();expect(await bg()).toBe('rgb(250, 250, 250)');
  for(const width of [320,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
-  const small=await page.evaluate(()=>[...document.querySelectorAll('main button, main a')].filter(e=>e.getBoundingClientRect().height<44).map(e=>e.textContent));expect(small).toEqual([]);}
+  const small=await page.evaluate(()=>[...document.querySelectorAll('main button, main a')].filter(e=>{const r=e.getBoundingClientRect();return r.height<44||r.width<44;}).map(e=>e.textContent));expect(small).toEqual([]);
+  // Подписи шагов не вылезают из своей ячейки; схема не мельче viewBox и прокручивается в фокусируемой рамке.
+  const overlap=await page.evaluate(()=>[...document.querySelectorAll('.bp-steps li')].filter(li=>{const label=li.querySelector('.bp-step-label')!;const r=label.getBoundingClientRect();if(r.width<=1)return false;const range=document.createRange();range.selectNodeContents(label);const t=range.getBoundingClientRect();const c=li.getBoundingClientRect();return t.right>c.right+0.5||t.left<c.left-0.5;}).map(li=>li.textContent));expect(overlap).toEqual([]);
+  const frame=page.locator('.bp-svg-frame').first();await expect(frame).toHaveAttribute('tabindex','0');expect(await frame.evaluate(n=>n.querySelector('svg')!.getBoundingClientRect().width)).toBeGreaterThanOrEqual(620);
+  if(width===320)expect(await frame.evaluate(n=>n.scrollWidth>n.clientWidth)).toBe(true);}
  await page.keyboard.press('Tab');const focused=page.locator(':focus');await expect(focused).toHaveCSS('outline-style','solid');
  const draw=page.locator('.bp-draw').first();
- await page.getByRole('button',{name:'Остановить анимации'}).click();await expect(draw).toHaveCSS('animation-name','none');await expect(draw).toHaveCSS('stroke-dashoffset','0px');
- await page.getByRole('button',{name:'Анимации выключены'}).click();await expect(draw).not.toHaveCSS('animation-name','none');
+ const pause=page.getByRole('button',{name:'Пауза анимаций'});await pause.click();await expect(pause).toHaveAttribute('aria-pressed','true');await expect(draw).toHaveCSS('animation-name','none');await expect(draw).toHaveCSS('stroke-dashoffset','0px');
+ await pause.click();await expect(pause).toHaveAttribute('aria-pressed','false');await expect(draw).not.toHaveCSS('animation-name','none');
  await page.emulateMedia({reducedMotion:'reduce'});await expect(draw).toHaveCSS('animation-name','none');await expect(page.locator('.bp-run')).toHaveCSS('animation-name','none');
  for(const theme of ['Светлая','Тёмная']){await page.getByRole('button',{name:theme}).click();await page.addScriptTag({path:'node_modules/axe-core/axe.min.js'});const violations=await page.evaluate(async()=>{const result=await(window as unknown as {axe:{run:(options:object)=>Promise<{violations:{id:string}[]}>}}).axe.run({runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}});return result.violations.map(v=>v.id);});expect(violations).toEqual([]);}
  expect(errors).toEqual([]);await page.close();

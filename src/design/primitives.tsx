@@ -41,7 +41,7 @@ export function StepLine({steps,current,animate=false,label}:{steps:string[];cur
   return <ol className={cx('bp-steps',animate&&'bp-steps--animate')} aria-label={label}>
     {steps.map((step,i)=>{
       const state=i<current?'done':i===current?'current':'todo';
-      return <li key={step} data-state={state} aria-current={state==='current'?'step':undefined} style={{'--i':i} as CSSProperties}>{step}</li>;
+      return <li key={step} data-state={state} aria-current={state==='current'?'step':undefined} style={{'--i':i} as CSSProperties}><span className="bp-step-label">{step}</span></li>;
     })}
   </ol>;
 }
@@ -67,14 +67,18 @@ export function PlusBanner({children}:{children:ReactNode}){
   </section>;
 }
 
-/* Шаблоны SVG «Чертёж». */
+/* Шаблоны SVG «Чертёж». Схема не сжимается меньше ширины viewBox (подписи не мельче 10.5 px):
+   на узком экране она прокручивается в рамке, рамка доступна с клавиатуры. */
 export function Blueprint({viewBox,title,children}:{viewBox:string;title:string;children:ReactNode}){
   const id=useId();
-  return <svg className="bp-svg" viewBox={viewBox} role="img" aria-labelledby={`${id}-t`}>
+  const width=Number(viewBox.trim().split(/[\s,]+/)[2]);
+  return <div className="bp-svg-frame" role="region" tabIndex={0} aria-label={`Схема: ${title}`}>
+  <svg className="bp-svg" viewBox={viewBox} role="img" aria-labelledby={`${id}-t`} style={{'--bp-min-width':`${width}px`} as CSSProperties}>
     <title id={`${id}-t`}>{title}</title>
     <defs><marker id={`${id}-a`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path className="bp-arrowhead" d="M0 1 9 5 0 9z"/></marker></defs>
     <g style={{'--bp-arrow':`url(#${id}-a)`} as CSSProperties}>{children}</g>
-  </svg>;
+  </svg>
+  </div>;
 }
 
 export function BpNode({x,y,w=148,h=56,meaning,label,sub}:{x:number;y:number;w?:number;h?:number;meaning?:Meaning;label:string;sub?:string}){

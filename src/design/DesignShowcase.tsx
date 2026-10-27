@@ -1,7 +1,7 @@
 'use client';
 // Витрина /design (P2-04): все примитивы, цвета-смыслы, шрифты, четыре приёма движения, обе темы.
 // Страница служебная: noindex, не в навигации; для контрольной точки founder (неделя 2).
-import {useEffect,useState} from 'react';
+import {useEffect,useRef,useState} from 'react';
 import {iconRoles} from './icons.mjs';
 import {Annotation,Blueprint,BpArrow,BpLabel,BpNode,BpRunDot,Button,ButtonLink,Card,Chip,GameLabel,Pill,PlusBanner,ProgressDots,RoleIcon,StepLine,type Meaning} from './primitives';
 
@@ -19,16 +19,23 @@ const fonts=[
   {name:'Pixelify Sans 500',role:'игровые метки',className:'ds-font-game',sample:'XP 120 · LVL 2'},
 ];
 const steps=['Тикет','Preflight','Правки','Evidence','Review'];
-const taskPath='M168 60 H 236 M384 60 H 452';
+// Один непрерывный путь задачи: агент → практика → человек.
+const taskPath='M168 60 H 452';
 
 export function DesignShowcase(){
   const [theme,setTheme]=useState<Theme>('system');
   const [motion,setMotion]=useState(true);
   const [run,setRun]=useState(0);
   const [chips,setChips]=useState<string[]>(['Основы']);
-  useEffect(()=>{const root=document.documentElement;if(theme==='system')delete root.dataset.theme;else root.dataset.theme=theme;},[theme]);
-  useEffect(()=>{const root=document.documentElement;if(motion)delete root.dataset.motion;else root.dataset.motion='off';},[motion]);
-  useEffect(()=>()=>{delete document.documentElement.dataset.theme;delete document.documentElement.dataset.motion;},[]);
+  // Витрина меняет html только по нажатию и при уходе возвращает то, что было до неё (выбор пользователя, P3-04).
+  const initial=useRef<{theme?:string;motion?:string}>({});
+  const setData=(key:'theme'|'motion',value?:string)=>{const data=document.documentElement.dataset;if(value===undefined)delete data[key];else data[key]=value;};
+  useEffect(()=>{
+    const data=document.documentElement.dataset;initial.current={theme:data.theme,motion:data.motion};
+    return()=>{setData('theme',initial.current.theme);setData('motion',initial.current.motion);};
+  },[]);
+  const chooseTheme=(t:Theme)=>{setTheme(t);setData('theme',t==='system'?undefined:t);};
+  const toggleMotion=()=>{const next=!motion;setMotion(next);setData('motion',next?undefined:'off');};
   const toggleChip=(name:string)=>setChips(list=>list.includes(name)?list.filter(x=>x!==name):[...list,name]);
 
   return <main className="ds" id="design">
@@ -39,10 +46,10 @@ export function DesignShowcase(){
         <p>Служебная страница: всё, из чего собираются экраны и схемы. Переключи тему и движение, пройди Tab-ом по элементам.</p>
       </div>
       <div className="ds-controls" role="group" aria-label="Тема и движение">
-        {(['light','dark','system'] as Theme[]).map(t=><Chip key={t} pressed={theme===t} onClick={()=>setTheme(t)}>
+        {(['light','dark','system'] as Theme[]).map(t=><Chip key={t} pressed={theme===t} onClick={()=>chooseTheme(t)}>
           <RoleIcon role={t==='light'?'themeLight':t==='dark'?'themeDark':'themeSystem'}/>{t==='light'?'Светлая':t==='dark'?'Тёмная':'Системная'}
         </Chip>)}
-        <Chip pressed={!motion} onClick={()=>setMotion(m=>!m)}><RoleIcon role={motion?'motionPause':'motionPlay'}/>{motion?'Остановить анимации':'Анимации выключены'}</Chip>
+        <Chip pressed={!motion} onClick={toggleMotion}><RoleIcon role={motion?'motionPause':'motionPlay'}/>Пауза анимаций</Chip>
       </div>
     </header>
 
