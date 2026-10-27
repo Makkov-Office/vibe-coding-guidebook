@@ -22,7 +22,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { loadUrlMap, redirectRoutes, staleAnchors, tabPath } from "./url-map.mjs";
+import { loadUrlMap, mappedPaths, redirectRoutes, staleAnchors } from "./url-map.mjs";
 
 function fail(message) {
   console.error(`vercel-output: FAIL ${message}`);
@@ -153,10 +153,7 @@ for (const file of prerenderFiles) if (!expectedFiles.has(file)) fail(`unexpecte
 //     (fail closed); an old address gets a 308 only once its new page is in
 //     this build, so the map switches on page by page as the structure moves.
 const urlMap = loadUrlMap(root);
-const mapped = new Set([
-  ...urlMap.sections.map((section) => section.path),
-  ...urlMap.pages.flatMap((entry) => [entry.old, entry.new, ...(entry.tabs ? urlMap.tabs.map((tab) => tabPath(urlMap, entry, tab.id)) : [])]),
-]);
+const mapped = mappedPaths(urlMap);
 const builtPaths = new Set(pages.map((page) => page.urlPath));
 for (const page of pages) if (!mapped.has(page.urlPath)) fail(`page ${page.urlPath} is not in src/content/url-map.json`);
 const legacyRedirects = redirectRoutes(urlMap, builtPaths);
