@@ -53,8 +53,8 @@ export function llmsText(pages,urlMap,pack){
   const sectionOf=new Map(urlMap.pages.filter(e=>e.chapter).map(e=>[e.chapter,e.section]));
   const brand=fs.readFileSync('src/design/brand.ts','utf8').match(/brandTitle='([^']+)'/)?.[1];
   if(!brand)throw Error('agent-delivery: brandTitle not found in src/design/brand.ts');
-  // The summary is the handbook's own lead quote (content/handbook.md), not text written here.
-  const summary=fs.readFileSync('content/handbook.md','utf8').match(/^> (.+)$/m)?.[1];
+  // The summary is the handbook's own lead quote (before the first chapter), not text written here.
+  const summary=fs.readFileSync('content/handbook.md','utf8').split(/^## /m)[0].match(/^> (.+)$/m)?.[1];
   if(!summary)throw Error('agent-delivery: no lead quote in content/handbook.md');
   const out=[`# ${brand}`,'',`> ${summary}`,'',
     `Каждая страница есть в Markdown: адрес страницы + \`.md\`, вводная глава — \`/index.md\`. Ссылки вида \`[H08.2]\` в Agent Pack ведут на главу 08, раздел 8.2.`,'',
