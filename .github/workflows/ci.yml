@@ -10,6 +10,9 @@ on:
   # purpose: a job skipped by `if` reports a `validate` check as success and
   # every title/body edit would create one; see PR #15 for the base-change case.
   pull_request:
+  # Merge queue (P1-18): the same checks on the queue's merge commit, so main
+  # needs no "up to date" rule. github.sha is that commit below.
+  merge_group:
   push:
     branches: [main]
 
@@ -18,8 +21,8 @@ permissions:
 
 concurrency:
   # PR: one group per PR, a new push cancels the outdated run.
-  # Push to main: one group per commit SHA, so a newer main commit never
-  # cancels a running or pending run of an older one; each keeps its result.
+  # Push to main and merge queue: one group per commit SHA, so a newer commit
+  # never cancels a running or pending run of an older one; each keeps its result.
   group: ci-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('push-{0}', github.sha) }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 

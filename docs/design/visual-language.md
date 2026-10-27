@@ -297,7 +297,29 @@ P2-03 переносит спецификацию в `app/tokens.css` один �
 
 Шкала `--type-*` определена, но текущая вёрстка ещё на прежних размерах: её применяют примитивы P2-04 и новый макет фазы 3. Движение переведено на токены целиком (P3-05).
 
-## 10. Что дальше
+## 10. Иконки
+
+Одна библиотека — [Tabler Icons](https://tabler.io/icons) (MIT, `@tabler/icons-react` 3.49.0, лицензия в `public/licenses/tabler-icons-MIT.txt`). Решение и сравнение с Material Symbols и Lucide — RD-01, раздел «Шрифты и иконки», и ADR-0003.
+
+- Контур 1.5 px, цвет `currentColor`, размер `--icon-size` (20 px) или `--icon-size-s` (16 px). Толщина задаётся один раз в `src/design/icons.mjs` (`ICON_STROKE`), без переопределений на месте.
+- Декоративная иконка рядом с текстом — `aria-hidden`; одиночная кнопка-иконка получает `aria-label` на кнопке.
+- Активный пункт rail: тональная «пилюля» `primary-container` + filled-вариант иконки, где он есть в Tabler.
+- Логотипы продуктов — официальные файлы `src/design/product-logos.*`; Tabler-логотипы только там, где официального пресс-кита в проекте нет.
+
+Словарь «смысл → иконка» (`iconRoles`, 34 смысла):
+
+| Группа | Смысл → иконка Tabler |
+|---|---|
+| Rail (9) | Главная → `IconHome`*, Начать → `IconFlag`*, Основы → `IconStack2`*, Процесс → `IconRoute`, Контроль → `IconShieldCheck`*, Надёжность → `IconLifebuoy`*, Практика → `IconTarget`, Инструменты → `IconTool`, Agent Pack → `IconPackage` |
+| Табы главы (4) | Обзор → `IconInfoCircle`*, Как устроено → `IconLayoutGrid`*, Как применять → `IconListCheck`*, Проверь себя → `IconChecks` |
+| Интерфейс (11) | поиск → `IconSearch`, меню → `IconMenu2`, закрыть → `IconX`, светлая / тёмная / системная тема → `IconSun` / `IconMoon` / `IconDeviceDesktop`, пауза / запуск анимаций → `IconPlayerPause` / `IconPlayerPlay`, копировать → `IconCopy`, внешняя ссылка → `IconExternalLink`, ссылка на раздел → `IconLink` |
+| Цвета-смыслы (3) | Агент → `IconSparkles`, Практика → `IconBarbell`, Решает человек → `IconUserCheck` |
+| Прогресс и игра (3) | прогресс → `IconProgressCheck`, XP → `IconBolt`, уровень → `IconTrophy` |
+| Git (2) | ветка → `IconGitBranch`, pull request → `IconGitPullRequest` |
+| Логотипы (2) | GitHub → `IconBrandGithub`, OpenAI → `IconBrandOpenai` |
+
+`*` — есть filled-вариант для активного пункта. Кнопка музыки (`IconMusic`) появится в P9.
+
+## 11. Что дальше
 
 - P2-04: примитивы и SVG-шаблоны «Чертёж», линтер палитры, витрина `/design`; раздел «Примитивы и шаблоны» этой спецификации.
-- P2-06: словарь иконок Tabler; раздел «Иконки» этой спецификации.
