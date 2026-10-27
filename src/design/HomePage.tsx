@@ -50,6 +50,6 @@ export function HomePage(){
       <h2 id="home-next">{home.next.heading}</h2>
       <ul className="home-next">{home.next.items.map(item=><li key={item.label}>{item.href?<Link className="bp-card home-next-item" href={item.href}><h3>{item.label}</h3><p>{item.text}</p><span className="home-next-arrow"><ProjectIcon name="arrowRight"/></span></Link>:<div className="bp-card bp-card--low home-next-item"><h3>{item.label}</h3><p>{item.text}</p></div>}</li>)}</ul>
     </section>
-    <nav className="home-footer" aria-label={home.footer.heading}>{home.footer.groups.map(group=><div key={group.heading}><h2>{group.heading}</h2><ul>{group.links.map(link=><li key={link.href}>{/\.\w+$/.test(link.href)?<a href={link.href}>{link.label}</a>:<Link href={link.href}>{link.label}</Link>}</li>)}</ul></div>)}</nav>
+    <nav className="home-footer" aria-label={home.footer.heading}>{home.footer.groups.map(group=><div key={group.heading}><h2>{group.heading}</h2><ul>{group.links.map(link=><li key={link.href}>{/^https:/.test(link.href)?<a href={link.href} rel="noopener noreferrer">{link.label}</a>:/\.\w+$/.test(link.href)?<a href={link.href}>{link.label}</a>:<Link href={link.href}>{link.label}</Link>}</li>)}</ul></div>)}</nav>
   </main></>;
 }

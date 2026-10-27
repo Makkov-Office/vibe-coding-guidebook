@@ -53,7 +53,7 @@
 ### Учиться
 
 - [Как читать руководство](/start/00-how-to-read)
-- [Глава 01](/chapters/01)
+- [Тренажёр главы 08](/flow/08-preflight/check)
 - [Уровни M0–M5](/chapters/21)
 
 ### Справочник
@@ -67,3 +67,4 @@
 - [Agent Pack](/agents)
 - [llms.txt](/llms.txt)
 - [Всё руководство в Markdown](/handbook.md)
+- [GitHub](https://github.com/Makkov-Office/vibe-coding-guidebook)

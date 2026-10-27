@@ -20,6 +20,8 @@ test('content/home.md compiles into generated.home', () => {
   assert.equal(home.subtitle, 'Полный цикл разработки с AI-агентами — от вайбкодинга до top-tier SDLC');
   assert.deepEqual(home.actions.map(action => action.label), ['Начать изучение', 'Определить уровень']);
   assert.equal(home.path.steps.length, 8);
+  // Единственная внешняя ссылка — репозиторий в подвале (бриф 7.3, п. 5).
+  assert.deepEqual(home.footer.groups.at(-1).links.at(-1), {label: 'GitHub', href: 'https://github.com/Makkov-Office/vibe-coding-guidebook'});
   // Подпись узла 124 px: Martian Mono 10.5 px, 14 знаков при равных отступах 14 px.
   for (const step of home.path.steps) assert.ok([...step.sub].length <= 14, `${step.label}: «${step.sub}» longer than 14`);
   assert.deepEqual(home.sections.cards.map(card => card.label), rail);
@@ -29,7 +31,7 @@ test('every link of Главная is a page the map knows or a published file',
   const home = parseHome(source, rail);
   const known = mappedPaths(urlMap);
   const links = [...home.actions, ...home.next.items.filter(item => item.href), ...home.footer.groups.flatMap(group => group.links)];
-  for (const { href } of links) assert.ok(known.has(href) || href === '/print' || fs.existsSync(`${root}public${href}`), href);
+  for (const { href } of links.filter(link => !link.href.startsWith('https:'))) assert.ok(known.has(href) || href === '/print' || fs.existsSync(`${root}public${href}`), href);
 });
 
 test('a broken home.md fails with the rule', () => {
@@ -38,6 +40,7 @@ test('a broken home.md fails with the rule', () => {
     [broken('- Контроль: Риск, параллельная работа и проверка\n', ''), /rail sections in order/],
     [broken('- Deploy: production\n', ''), /8 steps/],
     [broken('(/chapters/21)\n\n## Путь', '(https://example.com)\n\n## Путь'), /must be a site path/],
+    [broken('(https://github.com/Makkov-Office/vibe-coding-guidebook)', '(https://example.com/repo)'), /must be a site path/],
     [broken('Путь одной задачи', '<b>Путь</b> одной задачи'), /raw HTML/],
     [broken('- Founder: ставит цель', '- Founder ставит цель'), /is not «Название: текст»/],
     [broken('## Продолжить\n', '## Продолжить\n\n**Важно.**\n'), /only plain text and links|one paragraph/],

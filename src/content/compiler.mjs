@@ -127,7 +127,8 @@ export function parseHome(text,railLabels){
   const plain=node=>{visit(node,n=>{if(!['paragraph','text','listItem','list','link','heading'].includes(n.type))fail(`only plain text and links, found ${n.type}`);});return toString(node).trim();};
   const paragraph=section=>{const p=section.nodes.filter(node=>node.type==='paragraph');if(p.length!==1||!plain(p[0]))fail(`«${section.title}» needs one paragraph`);return plain(p[0]);};
   const items=(section,list=section.nodes.find(node=>node.type==='list'))=>{if(!list||list.ordered)fail(`«${section.title}» needs a bulleted list`);return list.children.map(item=>{if(item.children.length!==1||item.children[0].type!=='paragraph')fail(`«${section.title}»: one line per item`);return item.children[0];});};
-  const link=(node,section)=>{const first=node.children[0];if(first?.type!=='link')return null;if(!/^\/(?!\/)/.test(first.url))fail(`«${section.title}»: link ${first.url} must be a site path`);if(!plain(first))fail(`«${section.title}»: empty link text`);return {label:plain(first),href:first.url,rest:toString({type:'paragraph',children:node.children.slice(1)}).replace(/^:\s*/,'').trim()};};
+  // Only the footer may link out, and only to the project repository on GitHub.
+  const link=(node,section,external=false)=>{const first=node.children[0];if(first?.type!=='link')return null;if(!/^\/(?!\/)/.test(first.url)&&!(external&&/^https:\/\/github\.com\/Makkov-Office\//.test(first.url)))fail(`«${section.title}»: link ${first.url} must be a site path`);if(!plain(first))fail(`«${section.title}»: empty link text`);return {label:plain(first),href:first.url,rest:toString({type:'paragraph',children:node.children.slice(1)}).replace(/^:\s*/,'').trim()};};
   const pair=(node,section)=>{const m=plain(node).match(/^([^:]+):\s+(.+)$/);if(!m)fail(`«${section.title}»: «${plain(node)}» is not «Название: текст»`);return {label:m[1].trim(),text:m[2].trim()};};
   const actions=items(hero).map(node=>link(node,hero)??fail('«Первый экран»: every action is a link'));
   if(actions.length!==2||actions.some(action=>action.rest))fail('«Первый экран» needs exactly 2 links');
@@ -141,7 +142,7 @@ export function parseHome(text,railLabels){
   const groups=[];
   for(const node of footer.nodes){
     if(node.type==='heading'&&node.depth===3)groups.push({heading:plain(node),links:[]});
-    else if(node.type==='list'&&groups.length&&!groups.at(-1).links.length)groups.at(-1).links=items(footer,node).map(item=>{const target=link(item,footer);if(!target||target.rest)fail('«Ссылки руководства»: every item is just a link');return {label:target.label,href:target.href};});
+    else if(node.type==='list'&&groups.length&&!groups.at(-1).links.length)groups.at(-1).links=items(footer,node).map(item=>{const target=link(item,footer,true);if(!target||target.rest)fail('«Ссылки руководства»: every item is just a link');return {label:target.label,href:target.href};});
     else fail('«Ссылки руководства» is ### groups, each with one list of links');
   }
   if(groups.length!==3||groups.some(group=>!group.links.length))fail('«Ссылки руководства» needs 3 groups of links');
