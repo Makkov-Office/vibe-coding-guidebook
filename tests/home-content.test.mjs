@@ -20,6 +20,8 @@ test('content/home.md compiles into generated.home', () => {
   assert.equal(home.subtitle, 'Полный цикл разработки с AI-агентами — от вайбкодинга до top-tier SDLC');
   assert.deepEqual(home.actions.map(action => action.label), ['Начать изучение', 'Определить уровень']);
   assert.equal(home.path.steps.length, 8);
+  // Подпись узла 124 px: Martian Mono 10.5 px, 14 знаков при равных отступах 14 px.
+  for (const step of home.path.steps) assert.ok([...step.sub].length <= 14, `${step.label}: «${step.sub}» longer than 14`);
   assert.deepEqual(home.sections.cards.map(card => card.label), rail);
 });
 
