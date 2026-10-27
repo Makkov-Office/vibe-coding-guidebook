@@ -10,8 +10,8 @@ test('level filter counts and hides terms; basic Git terms are collapsed until n
  await ready(page,'/glossary');
  const group=page.locator('details.glossary-basics');const status=page.locator('.glossary-filter [role=status]');
  await expect(group).toHaveCount(1);await expect(group).not.toHaveAttribute('open','');
- await expect(group.locator('summary')).toHaveText(`Базовые термины Git · ${gitBasic.length}`);
- await expect(page.locator('#term-commit')).toBeHidden();await expect(page.locator('#term-trunk')).toBeVisible();
+ await expect(group.locator('summary')).toHaveText('Базовые термины Git');await expect(group.locator('.term-definition')).toHaveCount(gitBasic.length);
+ await expect(page.locator('#term-commit')).toBeHidden();await expect(page.locator('#term-refresh')).toBeVisible();
  const levels=page.getByRole('group',{name:'Уровень'});
  await expect(levels.getByRole('button',{name:'Все'})).toHaveAttribute('aria-pressed','true');
  await expect(levels.getByRole('button',{name:/^Базовое/})).toContainText(String(basic.length));
@@ -20,6 +20,8 @@ test('level filter counts and hides terms; basic Git terms are collapsed until n
  await expect(status).toHaveText(`Найдено определений: ${professional.length}`);
  await expect(page.locator('.term-definition[data-level=basic]:visible')).toHaveCount(0);await expect(group).toBeHidden();
  await expect(page.locator('#term-harness')).toBeVisible();
+ // Print keeps the whole glossary, the filtered-out Git group included.
+ await page.emulateMedia({media:'print'});await expect(page.locator('#term-commit')).toBeVisible();await expect(page.locator('.term-definition:visible')).toHaveCount(data.terms.length);await page.emulateMedia({media:'screen'});
  await levels.getByRole('button',{name:/^Базовое/}).click();
  await expect(status).toHaveText(`Найдено определений: ${basic.length}`);
  await expect(page.locator('.term-definition[data-level=professional]:visible')).toHaveCount(0);
@@ -30,9 +32,14 @@ test('level filter counts and hides terms; basic Git terms are collapsed until n
  await page.getByRole('button',{name:'Сбросить фильтр'}).click();
  await expect(levels.getByRole('button',{name:'Все'})).toHaveAttribute('aria-pressed','true');
  await expect(status).toHaveText(`Найдено определений: ${data.terms.length}`);
+ // The group the filter opened closes again once the filter is cleared.
+ await expect(group).not.toHaveAttribute('open','');
  // A search in the closed group opens it.
  await page.reload();await page.waitForSelector('html.js-enabled');await expect(group).not.toHaveAttribute('open','');
  await page.getByLabel('Термин',{exact:true}).fill('fast-forward');await expect(group).toHaveAttribute('open','');await expect(page.locator('#term-fast-forward')).toBeVisible();
+ await page.getByLabel('Термин',{exact:true}).fill('');await expect(group).not.toHaveAttribute('open','');
+ // A group the reader opened stays open when a filter is cleared.
+ await group.locator('summary').click();await expect(group).toHaveAttribute('open','');await page.getByLabel('Термин',{exact:true}).fill('rebase');await page.getByLabel('Термин',{exact:true}).fill('');await expect(group).toHaveAttribute('open','');
  // Keyboard: the level buttons are reachable and pressable.
  await page.getByRole('button',{name:'Сбросить фильтр'}).click();
  await levels.getByRole('button',{name:'Все'}).focus();await page.keyboard.press('Tab');await expect(levels.getByRole('button',{name:/^Базовое/})).toBeFocused();await page.keyboard.press('Enter');await expect(levels.getByRole('button',{name:/^Базовое/})).toHaveAttribute('aria-pressed','true');

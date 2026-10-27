@@ -30,7 +30,7 @@ test('every term has exactly one level, and generated.json carries it', async ()
 
 test('levels change no definition, alias, anchor or search entry', async () => {
   const leveled = await data(), base = await without();
-  assert.deepEqual(leveled.terms.map(({ level, ...term }) => term), base.terms);
+  assert.deepEqual(leveled.terms.map(term => Object.fromEntries(Object.entries(term).filter(([key]) => key !== 'level'))), base.terms);
   assert.deepEqual(leveled.search, base.search);
   assert.deepEqual(Object.keys(leveled.anchors).sort(), Object.keys(base.anchors).sort());
   assert.equal(base.levels, null);
@@ -52,7 +52,7 @@ test('basic Git terms sit in one closed group at the end of their topic', async 
   const git = terms.filter(term => term.topic.startsWith('23.3.'));
   const basic = git.filter(term => term.level === 'basic').map(term => term.id);
   assert.ok(basic.length > 0 && basic.length < git.length);
-  assert.match(groups[0][1], new RegExp(`<summary>.*Базовые термины Git · ${basic.length}</summary>`));
+  assert.match(groups[0][1], /<summary>.*Базовые термины Git<\/summary>/);
   assert.deepEqual(Object.keys(cards(groups[0][1])), basic);
   // Professional Git terms stay open, before the group, in source order.
   const topic = html.slice(html.indexOf('23.3. Git'), groups[0].index);
@@ -75,10 +75,13 @@ test('fail closed: the build stops on a missing, repeated, unknown or misplaced 
     ['collapsed topic', value => { value.collapsed['23.42'] = 'Нет такой темы'; }, /collapsed: unknown topic 23\.42/],
     ['empty summary', value => { value.collapsed['23.3'] = ' '; }, /collapsed\.23\.3 needs a summary/],
     ['shape', () => null, /expected \{levels, collapsed, terms\}/],
+    ['null', () => 'null', /expected \{levels, collapsed, terms\}/],
+    ['false', () => 'false', /expected \{levels, collapsed, terms\}/],
   ];
   for (const [name, change, error] of cases) {
-    const value = copy();
-    const result = change(value) === null ? null : value;
-    await assert.rejects(() => compileHandbook(source, { glossaryLevels: result ?? 'broken' }), error, name);
+    const value = copy(), changed = change(value);
+    // null and false are valid JSON in the file: they must fail too, not compile without levels.
+    const supplied = changed === null ? 'broken' : changed === 'null' ? null : changed === 'false' ? false : value;
+    await assert.rejects(() => compileHandbook(source, { glossaryLevels: supplied }), error, name);
   }
 });

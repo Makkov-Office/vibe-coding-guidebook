@@ -157,7 +157,8 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
       terms.push({id,label,aliases:variants,topic,definition,definitionHtml:'',previewKind:previewKind(definition,row.children[1].children.some(n=>!['text','strong','emphasis','inlineCode','link','break'].includes(n.type)),linked)});
     }
   }
-  const levels=glossaryLevels?parseGlossaryLevels(glossaryLevels,terms,topics):null;
+  // Only an omitted option skips levels: a supplied value is always validated.
+  const levels=glossaryLevels!==undefined?parseGlossaryLevels(glossaryLevels,terms,topics):null;
   if(levels)for(const term of terms)term.level=levels.level.get(term.id);
   const matcher=makeMatcher(terms);
   const audit={topics:topics.length,definitions:terms.length,recognized:0,linked:0,exceptions:[],ambiguous:[],unexplainedGaps:0,tabs:{chapters:0,blocks:0,overviews:0}};
@@ -266,7 +267,7 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
         const basic=node.children.filter(card=>card.properties['data-level']==='basic');
         if(basic.length){
           node.children=node.children.filter(card=>!basic.includes(card));
-          node.children.push(el('details',{className:['glossary-basics'],'data-level':'basic'},[el('summary',{},[txt(`${summary} · ${basic.length}`)]),el('div',{className:['glossary-list']},basic)]));
+          node.children.push(el('details',{className:['glossary-basics'],'data-level':'basic'},[el('summary',{},[txt(summary)]),el('div',{className:['glossary-list']},basic)]));
         }
       }
     } else {

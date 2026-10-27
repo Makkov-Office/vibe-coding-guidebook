@@ -10,14 +10,16 @@ export function GlossaryFilter({terms,topics,levels}:{terms:Term[];topics:string
   const count=terms.filter(term=>matches(term)).length;
   const [ready,setReady]=useState(false);useEffect(()=>{const frame=requestAnimationFrame(()=>setReady(true));return()=>cancelAnimationFrame(frame);},[]);
   const reset=()=>{setQuery('');setTopic('');setLevel('');};
-  useEffect(()=>{const clear=()=>{setQuery('');setTopic('');setLevel('');document.querySelectorAll<HTMLElement>('.term-definition,.glossary-basics').forEach(n=>n.hidden=false);};window.addEventListener('glossary-reveal',clear);return()=>window.removeEventListener('glossary-reveal',clear);},[]);
+  useEffect(()=>{const clear=()=>{setQuery('');setTopic('');setLevel('');document.querySelectorAll<HTMLElement>('.term-definition,.glossary-basics').forEach(n=>{n.hidden=false;delete n.dataset.filterOpened;});};window.addEventListener('glossary-reveal',clear);return()=>window.removeEventListener('glossary-reveal',clear);},[]);
   useEffect(()=>{
     for(const term of terms){const element=document.getElementById(term.id);if(element)element.hidden=!matches(term);}
-    // A collapsed group (basic Git terms) hides when nothing in it matches and opens when a search or the basic level finds something in it.
+    // A collapsed group (basic Git terms) hides when nothing in it matches and opens when a search or the basic level finds something in it;
+    // once that filter is cleared, a group the filter opened closes again.
     for(const group of document.querySelectorAll<HTMLDetailsElement>('.glossary-basics')){
       const shown=group.querySelector('.term-definition:not([hidden])')!==null;
       group.hidden=!shown;
-      if(shown&&(query.trim()||level==='basic'))group.open=true;
+      if(shown&&(query.trim()||level==='basic')){if(!group.open){group.open=true;group.dataset.filterOpened='';}}
+      else if(group.dataset.filterOpened!==undefined){group.open=false;delete group.dataset.filterOpened;}
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[terms,query,topic,level]);
