@@ -1,0 +1,143 @@
+{
+ "zip": {
+  "href": "/agent-pack.zip",
+  "size": 134584
+ },
+ "files": [
+  {
+   "path": "AGENTS.md",
+   "size": 14368
+  },
+  {
+   "path": "CLAUDE.md",
+   "size": 4545
+  },
+  {
+   "path": "README.md",
+   "size": 4132
+  },
+  {
+   "path": "claude/README.md",
+   "size": 1429
+  },
+  {
+   "path": "claude/hooks/guard-git.sh",
+   "size": 1263
+  },
+  {
+   "path": "claude/hooks/guard_git.py",
+   "size": 58726
+  },
+  {
+   "path": "claude/settings.json",
+   "size": 919
+  },
+  {
+   "path": "schemas/README.md",
+   "size": 1639
+  },
+  {
+   "path": "schemas/decision-packet.schema.json",
+   "size": 2788
+  },
+  {
+   "path": "schemas/evidence-record.schema.json",
+   "size": 2271
+  },
+  {
+   "path": "schemas/examples/decision-packet.json",
+   "size": 947
+  },
+  {
+   "path": "schemas/examples/evidence-record.json",
+   "size": 427
+  },
+  {
+   "path": "schemas/examples/finding.json",
+   "size": 523
+  },
+  {
+   "path": "schemas/examples/handoff.json",
+   "size": 1098
+  },
+  {
+   "path": "schemas/examples/preflight-report.json",
+   "size": 973
+  },
+  {
+   "path": "schemas/examples/ticket.json",
+   "size": 985
+  },
+  {
+   "path": "schemas/finding.schema.json",
+   "size": 1679
+  },
+  {
+   "path": "schemas/handoff.schema.json",
+   "size": 4155
+  },
+  {
+   "path": "schemas/preflight-report.schema.json",
+   "size": 5608
+  },
+  {
+   "path": "schemas/ticket.schema.json",
+   "size": 1935
+  },
+  {
+   "path": "skills/docs-impact/SKILL.md",
+   "size": 3190
+  },
+  {
+   "path": "skills/handoff/SKILL.md",
+   "size": 2636
+  },
+  {
+   "path": "skills/independent-review/SKILL.md",
+   "size": 3754
+  },
+  {
+   "path": "skills/post-merge-sync/SKILL.md",
+   "size": 3959
+  },
+  {
+   "path": "skills/preflight/SKILL.md",
+   "size": 3400
+  },
+  {
+   "path": "skills/spec-conflict/SKILL.md",
+   "size": 3299
+  }
+ ],
+ "readmeHtml": "<p>Версия: 0.2.0 (правила, skills, schemas, защита для Claude Code).</p>\n<p>Набор файлов, который переносит правила handbook Mastering Agentic Engineering в репозиторий, где работает AI-агент. Агент читает <code>AGENTS.md</code> как контракт: роли, жизненный цикл тикета, preflight, review, human gates и post-merge sync. Каждое правило имеет силу MUST / SHOULD / MAY и ссылку <code>[Hnn.m]</code> на главу и раздел handbook, где оно определено.</p>\n<h2>Состав</h2>\n<div class=\"table-scroll\"><table>\n<thead>\n<tr>\n<th>Путь</th>\n<th>Что это</th>\n<th>Статус в 0.2.0</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>AGENTS.md</code></td>\n<td>Нормативный контракт агента, ≤ 150 строк</td>\n<td>Готов</td>\n</tr>\n<tr>\n<td><code>CLAUDE.md</code></td>\n<td><code>@AGENTS.md</code> + специфика Claude Code: worktree, plan mode, субагент-ревьюер</td>\n<td>Готов</td>\n</tr>\n<tr>\n<td><code>skills/</code></td>\n<td>Процедуры, загружаются по необходимости: <code>preflight</code>, <code>independent-review</code>, <code>post-merge-sync</code>, <code>docs-impact</code>, <code>spec-conflict</code>, <code>handoff</code></td>\n<td>Готов</td>\n</tr>\n<tr>\n<td><code>schemas/</code></td>\n<td>JSON Schema 2020-12 и примеры: <code>ticket</code>, <code>preflight-report</code>, <code>evidence-record</code>, <code>finding</code>, <code>handoff</code>, <code>decision-packet</code></td>\n<td>Готов</td>\n</tr>\n<tr>\n<td><code>claude/</code></td>\n<td><code>settings.json</code> с deny-списком опасных git-команд и PreToolUse-hook <code>hooks/guard-git.sh</code></td>\n<td>Готов</td>\n</tr>\n</tbody>\n</table></div>\n<h2>Как подключить</h2>\n<ol>\n<li>Скопируйте содержимое <code>agent-pack/</code> в корень своего репозитория. Если <code>AGENTS.md</code> или <code>CLAUDE.md</code> уже есть, сохраните свои правила проекта и добавьте правила пакета отдельным разделом или файлом.</li>\n<li>Для Claude Code <code>CLAUDE.md</code> импортирует <code>AGENTS.md</code> строкой <code>@AGENTS.md</code>. Агенты, которые читают <code>AGENTS.md</code> напрямую, используют его без изменений.</li>\n<li>Допишите правила своего проекта: команды проверки, имена веток, risk policy, PR template. Правила проекта уточняют пакет там, где они строже или конкретнее.</li>\n<li>Для Claude Code скопируйте <code>claude/settings.json</code> и <code>claude/hooks/</code> в <code>.claude/</code> (подробности — <code>claude/README.md</code>).</li>\n<li>Проверьте в новой сессии, что инструкции действительно загружены (в Claude Code — <code>/memory</code>).</li>\n</ol>\n<h2>Ссылки на handbook</h2>\n<p><code>[H08.2]</code> — глава 08, раздел 8.2. <code>[HCC: &#x3C;раздел>]</code> — обзор инструмента «Claude Code: рабочий процесс внутри проекта». Пакет не вводит новых правил: всё, что в нём есть, определено в handbook.</p>\n<p>Handbook: <a href=\"https://vibe-coding-guidebook-ivory.vercel.app\">https://vibe-coding-guidebook-ivory.vercel.app</a>. Глава в Markdown — адрес главы + <code>.md</code>: <code>[H08.2]</code> → <a href=\"https://vibe-coding-guidebook-ivory.vercel.app/chapters/08.md\">https://vibe-coding-guidebook-ivory.vercel.app/chapters/08.md</a>, раздел 8.2; <code>[HCC: …]</code> → <a href=\"https://vibe-coding-guidebook-ivory.vercel.app/tools/claude-code.md\">https://vibe-coding-guidebook-ivory.vercel.app/tools/claude-code.md</a>. Карта для LLM — <code>/llms.txt</code>, весь текст — <code>/llms-full.txt</code>.</p>\n<h2>Skills</h2>\n<div class=\"table-scroll\"><table>\n<thead>\n<tr>\n<th>Skill</th>\n<th>Когда загружать</th>\n<th>Схема результата</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>preflight</code></td>\n<td>До первых правок по тикету</td>\n<td><code>preflight-report</code></td>\n</tr>\n<tr>\n<td><code>independent-review</code></td>\n<td>В отдельной сессии reviewer</td>\n<td><code>finding</code></td>\n</tr>\n<tr>\n<td><code>post-merge-sync</code></td>\n<td>После подтверждённого merge</td>\n<td><code>evidence-record</code></td>\n</tr>\n<tr>\n<td><code>docs-impact</code></td>\n<td>Перед открытием PR и после изменения diff</td>\n<td><code>evidence-record</code></td>\n</tr>\n<tr>\n<td><code>spec-conflict</code></td>\n<td>При расхождении источников требований</td>\n<td><code>decision-packet</code></td>\n</tr>\n<tr>\n<td><code>handoff</code></td>\n<td>При прерывании и при приёме чужой работы</td>\n<td><code>handoff</code></td>\n</tr>\n</tbody>\n</table></div>\n<p>Каждый <code>skills/&#x3C;name>/SKILL.md</code> — frontmatter <code>name</code> / <code>description</code> и не больше 300 строк.</p>",
+ "markdown": {
+  "ch-00": "/index.md",
+  "ch-01": "/chapters/01.md",
+  "ch-02": "/chapters/02.md",
+  "ch-03": "/chapters/03.md",
+  "ch-04": "/chapters/04.md",
+  "ch-05": "/chapters/05.md",
+  "ch-06": "/chapters/06.md",
+  "ch-07": "/chapters/07.md",
+  "ch-08": "/flow/08-preflight.md",
+  "ch-09": "/chapters/09.md",
+  "ch-10": "/chapters/10.md",
+  "ch-11": "/chapters/11.md",
+  "ch-12": "/chapters/12.md",
+  "ch-13": "/chapters/13.md",
+  "ch-14": "/chapters/14.md",
+  "ch-15": "/chapters/15.md",
+  "ch-16": "/chapters/16.md",
+  "ch-17": "/chapters/17.md",
+  "ch-18": "/chapters/18.md",
+  "ch-19": "/chapters/19.md",
+  "ch-20": "/chapters/20.md",
+  "ch-21": "/chapters/21.md",
+  "ch-22": "/chapters/22.md",
+  "ch-23": "/glossary.md",
+  "ch-tools": "/tools.md",
+  "ch-codex": "/tools/codex.md",
+  "ch-claude-code": "/tools/claude-code.md",
+  "ch-resources": "/resources.md"
+ }
+}
