@@ -1,0 +1,45 @@
+/* Главная (P4-01): только токены app/tokens.css и примитивы P2-04 (primitives.css).
+   Подключается в app/layout.tsx: <link> стиля из компонента поднимается в <head>, и vinext не фокусирует main#reader. */
+.home{display:grid;gap:var(--space-12);padding-block:var(--space-6) var(--space-12)}
+.home h2{margin:0;font:600 var(--type-h2)/1.25 var(--font-text);letter-spacing:var(--tracking-heading)}
+.home-lead{margin:var(--space-2) 0 0;color:var(--color-on-surface-variant)}
+
+/* Hero: текст и путь задачи; от 1024 px — две колонки. */
+.home-hero .bp-banner{align-items:center}
+.home-hero-text{display:grid;gap:var(--space-4);min-width:0}
+.home-hero h1{margin:0;font:500 var(--type-hero)/1.05 var(--font-display);letter-spacing:var(--tracking-display);overflow-wrap:anywhere}
+.home-hero-text p{margin:0;max-width:52ch;color:var(--color-on-surface-variant)}
+.home-hero-text .home-subtitle{color:var(--color-on-surface);font-weight:600}
+.home-actions{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-2)}
+.home-path{margin:0;min-width:0;max-width:440px;justify-self:center;width:100%}
+.home-path figcaption{margin-top:var(--space-2);font:500 var(--type-label)/1.4 var(--font-mono);font-stretch:var(--font-mono-stretch);color:var(--color-on-surface-variant);text-align:center}
+@media (min-width:1024px){.home-hero .bp-banner{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:var(--space-8)}}
+
+/* Карточки разделов: при наведении под заголовком прорисовывается линия (приём «прорисовка»). */
+.home-cards,.home-next{display:grid;gap:var(--space-4);margin:var(--space-6) 0 0;padding:0;list-style:none}
+.home-cards{grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr))}
+.home-cards>li,.home-next>li{display:flex;min-width:0}
+.home-card,.home-next-item{flex:1;position:relative}
+.home-card-icon{display:inline-grid;place-items:center;width:var(--touch-target);height:var(--touch-target);border-radius:var(--radius-m);background:var(--color-surface-container);color:var(--color-on-surface)}
+.home-card-line{display:block;height:var(--stroke-line);margin-top:auto;background:var(--color-primary);transform:scaleX(0);transform-origin:left;transition:transform var(--dur-2) var(--ease)}
+a.home-card:hover .home-card-line,a.home-card:focus-visible .home-card-line{transform:scaleX(1)}
+div.home-card .home-card-icon{color:var(--color-on-surface-variant)}
+.home-next{grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr))}
+.home-next-item{padding-inline-end:calc(var(--space-5) + var(--touch-target))}
+.home-next-arrow{position:absolute;inset-block-start:var(--space-4);inset-inline-end:var(--space-3);display:grid;place-items:center;width:var(--touch-target);height:var(--touch-target);color:var(--color-primary)}
+
+/* «Продолжить». */
+.home-resume{display:grid;justify-items:start;gap:var(--space-3);padding:var(--space-6);border:var(--stroke-border) solid var(--color-outline-variant);border-radius:var(--radius-l);background:var(--color-surface-container-low)}
+.home-resume .home-lead{margin:0}
+.home-resume-place{margin:0;font-weight:600}
+
+/* Подвал главной: три группы ссылок; подпись «by Makkov» и Open Source — общий подвал Reader. */
+.home-footer{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:var(--space-6);padding-top:var(--space-8);border-top:var(--stroke-border) solid var(--color-outline-variant)}
+.home-footer h2{font:600 var(--type-label)/1.4 var(--font-mono);font-stretch:var(--font-mono-stretch);letter-spacing:.04em;text-transform:uppercase;color:var(--color-on-surface-variant)}
+.home-footer ul{display:grid;margin:var(--space-2) 0 0;padding:0;list-style:none}
+.home-footer a{display:inline-flex;align-items:center;min-height:var(--touch-target);color:var(--color-on-surface)}
+.home-footer a:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+
+@media (max-width:600px){.home{gap:var(--space-10)}}
+@media (prefers-reduced-motion:reduce){.home-card-line{transition:none}}
+@media print{.home-path,.home-actions,.home-resume,.home-card-line,.home-next-arrow{display:none!important}}

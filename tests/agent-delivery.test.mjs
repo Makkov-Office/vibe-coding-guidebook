@@ -61,14 +61,14 @@ test('llms.txt follows the llmstxt.org format and every link resolves',()=>{
     assert.ok(local==='/agents'||fs.existsSync(`public${local}`),`${local} exists`);
   }
   for(const chapter of generated.chapters)assert.ok(text.includes(`${SITE_ORIGIN}${mdPath(chapter.href??chapter.path)})`),`${chapter.id} listed`);
-  assert.ok(text.includes(`${SITE_ORIGIN}/index.md)`),'introduction listed');
+  assert.ok(text.includes(`${SITE_ORIGIN}/start/00-how-to-read.md)`),'introduction listed');
   const full=fs.readFileSync('public/llms-full.txt','utf8');
   assert.ok(full.startsWith(lines[0])&&full.endsWith(fs.readFileSync('content/handbook.md','utf8')),'llms-full.txt is the header plus the whole handbook');
 });
 
 test('every page has its Markdown, at the current and the old address',()=>{
   const map=JSON.parse(fs.readFileSync('src/content/url-map.json','utf8'));
-  for(const chapter of [...generated.chapters,{id:'ch-00',path:'/'}]){
+  for(const chapter of [...generated.chapters,{id:'ch-00',path:'/start/00-how-to-read'}]){
     const file=pack.markdown[chapter.id];
     assert.equal(file,mdPath(chapter.href??chapter.path),chapter.id);
     assert.ok(fs.existsSync(`public${file}`),file);

@@ -38,7 +38,9 @@ const chapterMarkup=id=>chapterProduct(id)?productMarkup(chapterProduct(id)):ico
 const featureIcon=title=>title.includes('Dots')?'dots':title.includes('Artifacts')?'docs':title.includes('Design')?'design':title.includes('Security')?'security':title.includes('Appshots')?'photo':title.includes('Подписки')?'tags':title.includes('Cloud')?'cloud':title.includes('Расписание')?'schedule':title.includes('От прототипа')?'world':title.includes('Браузер')||title.includes('Визуальный')?'world':title.includes('Review')||title.includes('review')?'review':title.includes('агент')||title.includes('Агенты')?'users':title.includes('План')||title.includes('/goal')?'lifecycle':title.includes('Контекст')?'context':title.includes('Модел')||title.includes('Mods')||title.includes('навыки')||title.includes('plugins')?'setup':'terminal';
 export const normalize = s => s.normalize('NFKC').toLocaleLowerCase('ru').replaceAll('ё','е');
 const toolPages={'Обзоры инструментов':{id:'ch-tools',path:'/tools'},'Codex: от идеи до проверенного результата':{id:'ch-codex',path:'/tools/codex'},'Claude Code: рабочий процесс внутри проекта':{id:'ch-claude-code',path:'/tools/claude-code'}};
-export const chapterPath = id => Object.values(toolPages).find(page=>page.id===id)?.path??(id==='ch-00'?'/':id==='ch-23'?'/glossary':id==='ch-resources'?'/resources':`/chapters/${id.slice(3)}`);
+// The introduction (ch-00) moved from «/» to its page in «Начать» (P4-01); «/» is Главная.
+export const INTRO_PATH='/start/00-how-to-read';
+export const chapterPath = id => Object.values(toolPages).find(page=>page.id===id)?.path??(id==='ch-00'?INTRO_PATH:id==='ch-23'?'/glossary':id==='ch-resources'?'/resources':`/chapters/${id.slice(3)}`);
 export function previewKind(definition, structured=false, linked=false){return !structured && [...definition.trim().replace(/\s+/g,' ')].length<=160?(linked?'popover':'tooltip'):'panel';}
 const slug = s => normalize(s).replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'');
 const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
@@ -103,6 +105,48 @@ export function parseOverview(number,text){
   return {meta,body};
 }
 
+const HOME_SECTIONS=['Первый экран','Путь задачи','Разделы','Продолжить','Следующие шаги','Подвал'];
+// Главная (P4-01): content/home.md. Plain text and links in a fixed order of
+// sections; the cards follow the rail sections of url-map (without Главная).
+// Throws with the broken rule; the result goes to generated.json as `home`.
+export function parseHome(text,railLabels){
+  const fail=message=>{throw Error(`content/home.md: ${message}`);};
+  const tree=unified().use(remarkParse).use(remarkGfm).parse(text.replace(/^﻿/,'').replace(/\r\n?/g,'\n'));
+  visit(tree,'html',()=>fail('raw HTML is not allowed'));
+  const [h1,lead,...rest]=tree.children;
+  if(h1?.type!=='heading'||h1.depth!==1||lead?.type!=='paragraph')fail('starts with # title and the subtitle paragraph');
+  const sections=[];
+  for(const node of rest){
+    if(node.type==='heading'&&node.depth===2)sections.push({title:toString(node),nodes:[]});
+    else if(!sections.length)fail('text between the subtitle and the first section');
+    else sections.at(-1).nodes.push(node);
+  }
+  if(sections.map(section=>section.title).join('|')!==HOME_SECTIONS.join('|'))fail(`sections must be exactly: ${HOME_SECTIONS.join(' / ')}`);
+  const [hero,path,cards,resume,next,footer]=sections;
+  const plain=node=>{visit(node,n=>{if(!['paragraph','text','listItem','list','link','heading'].includes(n.type))fail(`only plain text and links, found ${n.type}`);});return toString(node).trim();};
+  const paragraph=section=>{const p=section.nodes.filter(node=>node.type==='paragraph');if(p.length!==1||!plain(p[0]))fail(`«${section.title}» needs one paragraph`);return plain(p[0]);};
+  const items=(section,list=section.nodes.find(node=>node.type==='list'))=>{if(!list||list.ordered)fail(`«${section.title}» needs a bulleted list`);return list.children.map(item=>{if(item.children.length!==1||item.children[0].type!=='paragraph')fail(`«${section.title}»: one line per item`);return item.children[0];});};
+  const link=(node,section)=>{const first=node.children[0];if(first?.type!=='link')return null;if(!/^\/(?!\/)/.test(first.url))fail(`«${section.title}»: link ${first.url} must be a site path`);if(!plain(first))fail(`«${section.title}»: empty link text`);return {label:plain(first),href:first.url,rest:toString({type:'paragraph',children:node.children.slice(1)}).replace(/^:\s*/,'').trim()};};
+  const pair=(node,section)=>{const m=plain(node).match(/^([^:]+):\s+(.+)$/);if(!m)fail(`«${section.title}»: «${plain(node)}» is not «Название: текст»`);return {label:m[1].trim(),text:m[2].trim()};};
+  const actions=items(hero).map(node=>link(node,hero)??fail('«Первый экран»: every action is a link'));
+  if(actions.length!==2||actions.some(action=>action.rest))fail('«Первый экран» needs exactly 2 links');
+  const steps=items(path).map(node=>{const {label,text}=pair(node,path);return {label,sub:text};});
+  if(steps.length!==8)fail(`«Путь задачи» needs 8 steps, found ${steps.length}`);
+  const cardList=items(cards).map(node=>pair(node,cards));
+  if(cardList.map(card=>card.label).join('|')!==railLabels.join('|'))fail(`«Разделы» must list the rail sections in order: ${railLabels.join(', ')}`);
+  const button=items(resume).map(plain);if(button.length!==1||!button[0])fail('«Продолжить» needs one button label');
+  const steps2=items(next).map(node=>{const target=link(node,next);if(target){if(!target.rest)fail(`«Следующие шаги»: ${target.label} needs a line`);return {label:target.label,href:target.href,text:target.rest};}const {label,text}=pair(node,next);return {label,href:null,text};});
+  if(steps2.length<3||steps2.length>4)fail('«Следующие шаги» needs 3 or 4 items');
+  const groups=[];
+  for(const node of footer.nodes){
+    if(node.type==='heading'&&node.depth===3)groups.push({heading:plain(node),links:[]});
+    else if(node.type==='list'&&groups.length&&!groups.at(-1).links.length)groups.at(-1).links=items(footer,node).map(item=>{const target=link(item,footer);if(!target||target.rest)fail('«Подвал»: every item is just a link');return {label:target.label,href:target.href};});
+    else fail('«Подвал» is ### groups, each with one list of links');
+  }
+  if(groups.length!==3||groups.some(group=>!group.links.length))fail('«Подвал» needs 3 groups of links');
+  return {title:plain(h1),subtitle:plain(lead),lead:paragraph(hero),actions:actions.map(({label,href})=>({label,href})),path:{title:paragraph(path),steps},sections:{heading:cards.title,lead:paragraph(cards),cards:cardList},resume:{heading:resume.title,lead:paragraph(resume),action:button[0]},next:{heading:next.title,items:steps2},footer:{heading:footer.title,groups}};
+}
+
 export const LEVELS=['basic','professional'];
 // Glossary levels (P6-07): content/glossary-levels.json. Every term stands in
 // exactly one list of its own topic; anything else fails the build.
@@ -140,7 +184,7 @@ export function parseGlossaryLevels(value,terms,topics){
 
 // urlMap: src/content/url-map.json (tabs of each chapter); overviews: { '08': markdown of content/overview/08.md };
 // glossaryLevels: content/glossary-levels.json (without it terms carry no level).
-export async function compileHandbook(source, {urlMap, overviews={}, glossaryLevels}={}) {
+export async function compileHandbook(source, {urlMap, overviews={}, glossaryLevels, home}={}) {
   if(/Конец учебного руководства|Codex implementation prompt|## 17\. README и handoff/.test(source)) throw Error('Implementation appendix in reader source');
   const tree=unified().use(remarkParse).use(remarkGfm).parse(source);
   const terms=[]; const topics=[]; let topic=''; let inGlossary=false;
@@ -454,5 +498,7 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
   if(/ai-artefacts|AI Artefacts|chatgpt-conversation:|PR #\d|TICKET-\d/.test(JSON.stringify({finalHtml,search,panels,presentation})))throw Error('Private provenance in publication');
   for(const fragment of [finalHtml,...chapters.flatMap(c=>c.tabs?[c.heading,...c.tabs.map(tab=>tab.html)]:[]),...panels.flatMap(p=>p.choices.map(c=>c.html))])for(const [,path,target]of fragment.matchAll(/href="([^"#]*)#([^"]+)"/g))if(!targets[decode(target)]||targets[decode(target)].path!==path)throw Error(`Invalid route target: ${path}#${target}`);
   const levelNames=levels?Object.fromEntries(LEVELS.map(level=>[level,levels.names[level].trim()])):null;
-  return {html:finalHtml,intro,chapters,terms,topics,levels:levelNames,search,diagrams,blocks,panels,presentation,anchors,audit};
+  // Главная (P4-01): the rail sections after Главная are its cards.
+  const homePage=home!==undefined?parseHome(home,(urlMap?.sections??[]).filter(section=>section.rail&&section.id!=='home').map(section=>section.label)):null;
+  return {home:homePage,html:finalHtml,intro,chapters,terms,topics,levels:levelNames,search,diagrams,blocks,panels,presentation,anchors,audit};
 }

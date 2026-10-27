@@ -15,6 +15,7 @@ import remarkGfm from 'remark-gfm';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
 import {loadUrlMap} from './url-map.mjs';
+import {INTRO_PATH} from '../src/content/compiler.mjs';
 
 // Canonical address of the site: llms.txt and the pack point here, so that a file pasted into an
 // agent elsewhere still resolves. Changes together with the domain (P4-05).
@@ -30,8 +31,8 @@ export function splitPages(source,chapters){
   const pages=[];
   starts.forEach((start,i)=>{
     const title=lines[start].replace(/^##\s+/,'').trim();
-    // The introduction (ch-00, at "/") also carries the handbook title above it.
-    const chapter=/^00\. /.test(title)?{id:'ch-00',title,path:'/'}:byTitle.get(title);
+    // The introduction (ch-00, at /start/00-how-to-read since P4-01) also carries the handbook title above it.
+    const chapter=/^00\. /.test(title)?{id:'ch-00',title,path:INTRO_PATH}:byTitle.get(title);
     if(!chapter)throw Error(`agent-delivery: heading "${title}" is not a chapter of generated.json`);
     if(seen.has(chapter.id))throw Error(`agent-delivery: chapter ${chapter.id} appears twice`);
     seen.add(chapter.id);
@@ -57,7 +58,7 @@ export function llmsText(pages,urlMap,pack){
   const summary=fs.readFileSync('content/handbook.md','utf8').split(/^## /m)[0].match(/^> (.+)$/m)?.[1];
   if(!summary)throw Error('agent-delivery: no lead quote in content/handbook.md');
   const out=[`# ${brand}`,'',`> ${summary}`,'',
-    `Каждая страница есть в Markdown: адрес страницы + \`.md\` (у глав с табами — адрес главы + \`.md\`, один файл на всю главу), вводная глава — \`/index.md\`. Ссылки вида \`[H08.2]\` в Agent Pack ведут на главу 08, раздел 8.2.`,'',
+    `Каждая страница есть в Markdown: адрес страницы + \`.md\` (у глав с табами — адрес главы + \`.md\`, один файл на всю главу), вводная глава — \`${INTRO_PATH}.md\`. Ссылки вида \`[H08.2]\` в Agent Pack ведут на главу 08, раздел 8.2.`,'',
     '## Agent Pack','',
     `- [Agent Pack (.zip)](${url(ZIP)}): ${pack.files.length} файлов — AGENTS.md, CLAUDE.md, skills, JSON Schema, hooks для Claude Code`,
     `- [Agent Pack: что внутри и как подключить](${url('/agents')})`,''];
