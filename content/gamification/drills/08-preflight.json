@@ -7,7 +7,7 @@
   "cards": [
     {
       "id": "all-checks-pass",
-      "scenario": "Задача DEMO-42 готова, зависимости закрыты. Base SHA записан, рабочая папка задачи чистая, doctor — PASS. Пересечение только по файлам с DEMO-43, общий индекс просмотрен.",
+      "scenario": "Задача DEMO-42 готова, зависимости закрыты. Base SHA записан, рабочая папка задачи чистая, doctor — PASS. Риск и Docs Impact оценены, владелец задачи известен. Пересечение только по файлам с DEMO-43, общий индекс просмотрен.",
       "question": "Какой результат preflight?",
       "options": [
         { "id": "pass", "label": "PASS" },
@@ -37,7 +37,7 @@
     },
     {
       "id": "doctor-fail",
-      "scenario": "doctor вернул FAIL: версия Node не совпадает с той, что записана в engines проекта.",
+      "scenario": "doctor вернул FAIL: версия Node не та, которую требует проект.",
       "question": "Какой результат preflight?",
       "options": [
         { "id": "pass", "label": "PASS: версия почти та же" },

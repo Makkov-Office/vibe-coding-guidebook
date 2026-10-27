@@ -12,11 +12,13 @@ for(const file of overviewFiles.sort()){
 // Level of each glossary term (P6-07); the file is required.
 const glossaryLevels=JSON.parse(await fs.readFile('content/glossary-levels.json','utf8'));
 // Drills of the chapters (P7-03): content/gamification/drills/*.json against the schema.
-const drillFiles=(await fs.readdir('content/gamification/drills').catch(error=>{if(error.code==='ENOENT')return [];throw error;})).sort();
+const drillFiles=(await fs.readdir('content/gamification/drills')).sort();
 const drills=[];
 for(const file of drillFiles){
   if(!/^\d{2}-[a-z0-9-]+\.json$/.test(file))throw Error(`content/gamification/drills/${file}: expected NN-name.json`);
-  drills.push({file:`content/gamification/drills/${file}`,data:JSON.parse(await fs.readFile(`content/gamification/drills/${file}`,'utf8'))});
+  const path=`content/gamification/drills/${file}`;let data;
+  try{data=JSON.parse(await fs.readFile(path,'utf8'));}catch(error){throw Error(`${path}: ${error.message}`);}
+  drills.push({file:path,data});
 }
 const drillSchema=JSON.parse(await fs.readFile('content/gamification/schema/drill.schema.json','utf8'));
 const data=await compileHandbook(source,{urlMap:loadUrlMap(),overviews,glossaryLevels,drills,drillSchema});

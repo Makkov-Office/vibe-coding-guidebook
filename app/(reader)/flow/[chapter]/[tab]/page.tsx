@@ -16,4 +16,4 @@ export default async function FlowChapterTabPage({params}:{params:Promise<{chapt
  // The «check» tab holds the drill of the chapter (P7-03); its last step leads to the next chapter.
  const drill=found.id==='check'?handbook.drills.find(item=>item.chapter===entry.chapter):undefined;
  const reading=handbook.chapters.filter(c=>/^ch-\d{2}$/.test(c.id)),after=reading[reading.findIndex(c=>c.id===entry.chapter)+1];
- return <ChapterTabPage chapterId={entry.chapter} tabId={found.id}>{drill&&<><DrillPlayer drill={drill} next={after?{href:after.href,label:after.title}:undefined}/><noscript><DrillStatic drill={drill}/></noscript></>}</ChapterTabPage>;}
+ return <ChapterTabPage chapterId={entry.chapter} tabId={found.id}>{drill&&<><DrillPlayer drill={drill} next={after?{href:after.href,label:after.title}:undefined}/><noscript><style>{'.drill:not(.drill-static){display:none}'}</style><DrillStatic drill={drill}/></noscript></>}</ChapterTabPage>;}

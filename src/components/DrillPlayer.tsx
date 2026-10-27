@@ -5,7 +5,8 @@ import {progressStore} from './progress-store.mjs';
 import type {Drill} from '../content/types';
 // Drill of a chapter (P7-03, brief 10.3): one card at a time, instant feedback with a link
 // to the chapter paragraph, a result with the next step. The best result goes to ProgressStore.
-// A drill counts as passed from 80% of the cards (brief 10.4).
+// A drill counts as passed from 80% of the cards (brief 10.4). A best result saved for another
+// number of cards is stale: it is neither shown nor compared.
 export const PASS_SHARE=0.8;
 type Phase='intro'|'card'|'result';
 export function DrillPlayer({drill,next}:{drill:Drill;next?:{href:string;label:string}}){
@@ -13,7 +14,7 @@ export function DrillPlayer({drill,next}:{drill:Drill;next?:{href:string;label:s
  const [phase,setPhase]=useState<Phase>('intro'),[index,setIndex]=useState(0),[chosen,setChosen]=useState<string|null>(null),[missed,setMissed]=useState<string[]>([]);
  const [best,setBest]=useState<number|null>(null),[ready,setReady]=useState(false),[saved,setSaved]=useState(true);
  const heading=useRef<HTMLHeadingElement>(null),actions=useRef<HTMLDivElement>(null);
- useEffect(()=>{const frame=requestAnimationFrame(()=>{setBest(progressStore.get().drills[drill.id]?.best??null);setReady(true);});return()=>cancelAnimationFrame(frame);},[drill.id]);
+ useEffect(()=>{const frame=requestAnimationFrame(()=>{const saved=progressStore.get().drills[drill.id];setBest(saved?.total===total?saved.best:null);setReady(true);});return()=>cancelAnimationFrame(frame);},[drill.id,total]);
  // Focus follows the step: the new card or result heading, the «Дальше» button after an answer.
  useEffect(()=>{if(ready&&phase!=='intro'&&chosen===null)heading.current?.focus();},[phase,index,chosen,ready]);
  useEffect(()=>{if(chosen!==null)actions.current?.querySelector('button')?.focus();},[chosen]);
@@ -23,7 +24,7 @@ export function DrillPlayer({drill,next}:{drill:Drill;next?:{href:string;label:s
  const advance=()=>{
   if(index<total-1){setIndex(index+1);setChosen(null);return;}
   const score=total-missed.length;
-  const ok=progressStore.set(({drills})=>{const previous=drills[drill.id]?.best??-1;return previous>=score?{}:{drills:{...drills,[drill.id]:{best:score,total}}};});
+  const ok=progressStore.set(({drills})=>{const stored=drills[drill.id],previous=stored?.total===total?stored.best:-1;return previous>=score?{}:{drills:{...drills,[drill.id]:{best:score,total}}};});
   setSaved(ok);setBest(value=>Math.max(value??0,score));setChosen(null);setPhase('result');
  };
  const label=(id:string)=>card.options.find(option=>option.id===id)?.label??id;

@@ -46,13 +46,13 @@ test('the drill is played card by card, with feedback, a result and a saved best
 });
 
 test('the drill works from the keyboard and a weaker run keeps the best result',async({page})=>{
- await page.addInitScript(id=>{if(sessionStorage.getItem('seeded'))return;sessionStorage.setItem('seeded','1');localStorage.setItem('mae-progress',JSON.stringify({version:2,completed:[],exercises:[],practice:{},drills:{[id]:{best:7,total:7}},reading:null}));},drill.id);
+ await page.addInitScript(({id,total})=>{if(sessionStorage.getItem('seeded'))return;sessionStorage.setItem('seeded','1');localStorage.setItem('mae-progress',JSON.stringify({version:2,completed:[],exercises:[],practice:{},drills:{[id]:{best:total,total}},reading:null}));},{id:drill.id,total});
  await ready(page,'/flow/08-preflight/check');
  const box=page.locator('section.drill');
  await expect(box).toContainText(`Лучший результат: ${total} из ${total}`);
  await box.getByRole('button',{name:'Пройти ещё раз'}).focus();await page.keyboard.press('Enter');
  for(let i=0;i<total;i++){
-  // Tab from the focused scenario to the first option; it is never the right one only by chance.
+  // Tab from the focused scenario to the first option and pick it, right or wrong.
   await page.keyboard.press('Tab');await expect(box.locator('.drill-option').first()).toBeFocused();await page.keyboard.press('Enter');
   await page.keyboard.press('Enter');
  }
@@ -61,10 +61,19 @@ test('the drill works from the keyboard and a weaker run keeps the best result',
  expect(stored.drills[drill.id]).toEqual({best:total,total});
 });
 
+test('a best result saved for another number of cards is not shown',async({page})=>{
+ await page.addInitScript(({id,total})=>{localStorage.setItem('mae-progress',JSON.stringify({version:2,completed:[],exercises:[],practice:{},drills:{[id]:{best:total+1,total:total+1}},reading:null}));},{id:drill.id,total});
+ await ready(page,'/flow/08-preflight/check');
+ const box=page.locator('section.drill');
+ await expect(box.getByRole('button',{name:'Начать'})).toBeEnabled();await expect(box.locator('.drill-best')).toHaveCount(0);
+});
+
 test('without JavaScript the drill is readable with its answers',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();
  await page.goto('/flow/08-preflight/check');
  const fallback=page.locator('.drill-static');
+ // The player needs JavaScript, so it is hidden: no dead «Начать» button above the answers.
+ await expect(page.locator('section.drill:not(.drill-static)')).toBeHidden();
  await expect(fallback.locator('li')).toHaveCount(total);
  await fallback.locator('summary').first().click();
  await expect(fallback.locator('details').first()).toContainText(drill.cards[0].explanation);
