@@ -80,22 +80,37 @@ export function createProgressStore(storage){
   /** @type {Set<(progress:Progress,meta?:{reward?:number})=>void>} */const listeners=new Set();
   const attempt=(action,fallback)=>{try{const target=storage();if(!target)throw Error('no storage');return action(target);}catch{unavailable=true;return fallback;}};
   // synced: the last write reached storage, so the stored record is at least as new as ours.
-  let synced=true;
-  const write=progress=>synced=attempt(target=>{target.setItem(PROGRESS_KEY,JSON.stringify(progress));return true;},false);
+  // persist: false when writing would lose data, so the record stays in memory only.
+  let synced=true,persist=true;
+  const write=progress=>{
+    if(!persist){synced=false;unavailable=true;return false;}
+    synced=attempt(target=>{target.setItem(PROGRESS_KEY,JSON.stringify(progress));return true;},false);
+    if(synced)unavailable=false;
+    return synced;
+  };
   // undefined: no record; null: a damaged one.
   const stored=()=>{
     const text=attempt(target=>target.getItem(PROGRESS_KEY),null);if(text==null)return undefined;
-    try{const value=JSON.parse(text);if(value?.version===PROGRESS_VERSION)return normalizeProgress(value);}catch{}
+    try{
+      const value=JSON.parse(text);
+      if(value?.version===PROGRESS_VERSION)return normalizeProgress(value);
+      // A newer version (this code after a rollback): use what this version knows, never overwrite it.
+      if(Number.isInteger(value?.version)&&value.version>PROGRESS_VERSION){persist=false;return normalizeProgress(value);}
+    }catch{}
     return null;
   };
   function load(){
     const record=stored();if(record)return record;
     if(record===null)damaged=true;
     // No v2 record yet (or a damaged one): migrate from v1 and keep the result.
+    // A migration that could not read every v1 key is never saved: the next
+    // page load migrates again instead of making the gap permanent.
+    const before=unavailable;unavailable=false;
     const keys=attempt(target=>target.keys(),[]);
     const migrated=migrateLegacy(key=>attempt(target=>target.getItem(key),null),keys);
+    const complete=!unavailable;unavailable=unavailable||before;
     damaged=damaged||migrated.damaged;
-    if(!unavailable)write(migrated.progress);
+    if(complete&&!before)write(migrated.progress);else persist=false;
     return migrated.progress;
   }
   // Another tab may have written since: start from the stored record, so a

@@ -12,19 +12,20 @@ const pagePath=(page:string)=>urlMap.pages.find(entry=>entry.chapter===page&&!('
 export function LearningProgress({chapter,compact=false}:{chapter:string;compact?:boolean}){
  const [value,setValue]=useState<LearningMarks>({completed:[],exercises:[]}),[ready,setReady]=useState(false),[message,setMessage]=useState(''),[resume,setResume]=useState<{page:string;y:number}|null>(null),[reward,setReward]=useState(0);
  const current=useRef(value),profile=learningProfile(value),home=chapter==='ch-00'&&!compact,isChapter=/^ch-(0[1-9]|1\d|2[0-2])$/.test(chapter),complete=value.completed.includes(chapter);
- const save=useCallback((next:LearningMarks,earned=0,practice?:Record<string,true>)=>{progressStore.set(()=>({...normalizeMarks(next),...(practice?{practice}:{})}),{reward:earned});},[]);
+ // Marks are changed on the stored record, so a mark made in another tab is kept.
+ const save=useCallback((change:(marks:LearningMarks)=>LearningMarks,earned=0,practice?:Record<string,true>)=>{progressStore.set(progress=>({...normalizeMarks(change(normalizeMarks(progress))),...(practice?{practice}:{})}),{reward:earned});},[]);
  useEffect(()=>{
   const frame=requestAnimationFrame(()=>{const progress=progressStore.get(),marks=normalizeMarks(progress);current.current=marks;setValue(marks);setResume(progress.reading);if(progressStore.damaged())setMessage('Сохранённый прогресс не удалось прочитать. Новые отметки доступны.');setReward(0);setReady(true);});
   return()=>cancelAnimationFrame(frame);
  },[chapter]);
  useEffect(()=>{
   const sync=(progress:LearningMarks,meta?:{reward?:number})=>{const marks=normalizeMarks(progress);current.current=marks;setValue(marks);if(meta)setReward(meta.reward??0);};
-  const change=(event:Event)=>{const input=event.target;if(!(input instanceof HTMLInputElement)||!/^exercise-[1-5]$/.test(input.dataset.exercise??''))return;const id=input.dataset.exercise!;if(current.current.exercises.includes(id)===input.checked)return;const exercises=current.current.exercises.filter(item=>item!==id);if(input.checked)exercises.push(id);save({...current.current,exercises},input.checked?50:0);};
+  const change=(event:Event)=>{const input=event.target;if(!(input instanceof HTMLInputElement)||!/^exercise-[1-5]$/.test(input.dataset.exercise??''))return;const id=input.dataset.exercise!;if(current.current.exercises.includes(id)===input.checked)return;save(marks=>{const exercises=marks.exercises.filter(item=>item!==id);if(input.checked)exercises.push(id);return {...marks,exercises};},input.checked?50:0);};
   const unsubscribe=progressStore.subscribe(sync);document.addEventListener('change',change);
   return()=>{unsubscribe();document.removeEventListener('change',change);};
  },[save]);
- function markChapter(){save({...current.current,completed:complete?current.current.completed.filter(id=>id!==chapter):[...current.current.completed,chapter]},complete?0:100);setMessage(complete?'Отметка главы отменена.':'Глава отмечена как изученная. +100 XP за шаг вперёд.');}
- function reset(){if(!window.confirm('Сбросить изученные главы, пять упражнений и XP? Операционные чеклисты сохранятся.'))return;const practice={...progressStore.get().practice};for(let i=1;i<=5;i++)delete practice[`exercise-${i}`];document.querySelectorAll<HTMLInputElement>('[data-exercise]').forEach(input=>{input.checked=false;delete practice[input.dataset.practice??''];});save({completed:[],exercises:[]},0,practice);setMessage('Учебный прогресс сброшен. Можно начать маршрут заново.');}
+ function markChapter(){save(marks=>({...marks,completed:complete?marks.completed.filter(id=>id!==chapter):[...marks.completed.filter(id=>id!==chapter),chapter]}),complete?0:100);setMessage(complete?'Отметка главы отменена.':'Глава отмечена как изученная. +100 XP за шаг вперёд.');}
+ function reset(){if(!window.confirm('Сбросить изученные главы, пять упражнений и XP? Операционные чеклисты сохранятся.'))return;const practice={...progressStore.get().practice};for(let i=1;i<=5;i++)delete practice[`exercise-${i}`];document.querySelectorAll<HTMLInputElement>('[data-exercise]').forEach(input=>{input.checked=false;delete practice[input.dataset.practice??''];});save(()=>({completed:[],exercises:[]}),0,practice);setMessage('Учебный прогресс сброшен. Можно начать маршрут заново.');}
  const nextPath=profile.nextChapter?`/chapters/${profile.nextChapter.slice(3)}`:'/chapters/22';
  return <section className={`learning-progress learning-profile ${home?'learning-profile-home':'learning-profile-compact'}`} aria-label="Учебный прогресс">
   <div className="learning-heading"><span><ProjectIcon name="compass"/> {home?'Учебный профиль':'Ваш маршрут'}</span><strong>{value.completed.length} из 22</strong></div>
