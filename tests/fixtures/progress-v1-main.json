@@ -1,0 +1,12 @@
+{
+  "source": "localStorage of a real session on the main build d395b40 (27.10.2026): chapters 01, 02, 08 marked, exercises 1 and 3, two checklist items in 22 (one unchecked again), chapter 08 scrolled",
+  "storage": {
+    "handbook-reading-v2": "{\"path\":\"/chapters/08\",\"y\":960,\"id\":\"ch-08\"}",
+    "practice:exercise-3": "1",
+    "practice:exercise-1": "1",
+    "practice:ch-22-b003-15": "1",
+    "handbook-learning-v2": "{\"completed\":[\"ch-01\",\"ch-02\",\"ch-08\"],\"exercises\":[\"exercise-1\",\"exercise-3\"]}",
+    "practice:ch-22-b003-16": "0"
+  },
+  "shown": { "completed": "3 из 22", "xp": 400, "exercises": "2 из 5" }
+}
