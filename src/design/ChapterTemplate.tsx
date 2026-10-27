@@ -22,6 +22,8 @@ export type ChapterTemplateProps={
   pageData?:Partial<PageData>;
   /** Место под мини-таймлайн DEMO-42 и мини-карту системы (бриф 9.3–9.4). */
   aside?:ReactNode;
+  /** Содержимое таба сверх текста и панелей (тренажёр таба «Проверь себя», P7-03): идёт после них, таб с ним не пустой. */
+  children?:ReactNode;
 };
 
 const handbook=generated as unknown as Handbook;
@@ -36,7 +38,7 @@ export function shortTitle(title:string){return title.replace(/^\d+\.\s*/,'').sp
 const lift=(html:string)=>html.replace(/<(\/?)h3\b/g,'<$1h2').replace(/<(\/?)h4\b/g,'<$1h3');
 const heading=(html:string)=>html.replace(/<a [^>]*class="permalink"[^>]*>#<\/a>/,'').replace(/^<h2/,'<h1').replace(/<\/h2>$/,'</h1>');
 
-export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,aside}:ChapterTemplateProps){
+export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,aside,children}:ChapterTemplateProps){
   const chapter=handbook.chapters.find(c=>c.id===chapterId);
   if(!chapter?.tabs||!chapter.heading)throw new Error(`ChapterTemplate: ${chapterId} has no tabs`);
   const tab=chapter.tabs.find(t=>t.id===tabId);
@@ -70,8 +72,9 @@ export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,a
       <div className="ct-body">
         {tab.outline.length>1&&<details className="ct-toc"><summary>На этой странице<span>{minutes[tabId]} мин</span></summary><nav aria-label="На этой странице"><ol>{tab.outline.map(item=><li key={item.id}><a href={`#${item.id}`}>{item.title}</a></li>)}</ol></nav></details>}
         {tab.html&&<div className="reader-prose ct-prose" dangerouslySetInnerHTML={{__html:lift(tab.html)}}/>}
-        {!tab.html&&!panels.length&&<div className="ct-empty bp-card bp-card--low" role="status"><h2>Таб «{label(tabId)}» готовится</h2><p>Его текст появится в следующих волнах редизайна. Остальной текст главы уже на месте.</p>{filled&&<ButtonLink variant="tonal" href={hrefs[filled.id]} icon="next">{label(filled.id)}</ButtonLink>}</div>}
+        {!tab.html&&!panels.length&&!children&&<div className="ct-empty bp-card bp-card--low" role="status"><h2>Таб «{label(tabId)}» готовится</h2><p>Его текст появится в следующих волнах редизайна. Остальной текст главы уже на месте.</p>{filled&&<ButtonLink variant="tonal" href={hrefs[filled.id]} icon="next">{label(filled.id)}</ButtonLink>}</div>}
         {panels.map(panel=><div id={`${panel.id}-panel`} key={panel.id}><InteractivePanel panel={panel}/></div>)}
+        {children}
         {aside&&<aside className="ct-slot" aria-label="Схема главы">{aside}</aside>}
       </div>
       {(before||after)&&<nav className="ct-pager" aria-label="Соседние страницы">
