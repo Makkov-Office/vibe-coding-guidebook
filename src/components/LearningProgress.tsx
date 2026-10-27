@@ -3,14 +3,12 @@ import {useCallback,useEffect,useRef,useState} from 'react';
 import Link from 'next/link';
 import {ProjectIcon} from './ProjectIcon';
 import {progressStore} from './progress-store.mjs';
-import urlMap from '../content/url-map.json';
+import {pageHref} from '../content/chapter-routes';
 import {learningGroups,learningLevels,learningProfile,maxLearningXp,normalizeMarks,type LearningMarks} from './learning-profile';
 import './learning-profile.css';
 
-// Address of a page id today (url-map `old`); P5 switches to `new` when the pages move.
-const pagePath=(page:string)=>urlMap.pages.find(entry=>entry.chapter===page&&!('alias' in entry))?.old??'/';
 export function LearningProgress({chapter,compact=false}:{chapter:string;compact?:boolean}){
- const [value,setValue]=useState<LearningMarks>({completed:[],exercises:[]}),[ready,setReady]=useState(false),[message,setMessage]=useState(''),[resume,setResume]=useState<{page:string;y:number}|null>(null),[reward,setReward]=useState(0);
+ const [value,setValue]=useState<LearningMarks>({completed:[],exercises:[]}),[ready,setReady]=useState(false),[message,setMessage]=useState(''),[resume,setResume]=useState<{page:string;tab?:string;y:number}|null>(null),[reward,setReward]=useState(0);
  const current=useRef(value),profile=learningProfile(value),home=chapter==='ch-00'&&!compact,isChapter=/^ch-(0[1-9]|1\d|2[0-2])$/.test(chapter),complete=value.completed.includes(chapter);
  // Marks are changed on the stored record, so a mark made in another tab is kept.
  const save=useCallback((change:(marks:LearningMarks)=>LearningMarks,earned=0,practice?:Record<string,true>)=>{progressStore.set(progress=>({...normalizeMarks(change(normalizeMarks(progress))),...(practice?{practice}:{})}),{reward:earned});},[]);
@@ -26,7 +24,7 @@ export function LearningProgress({chapter,compact=false}:{chapter:string;compact
  },[save]);
  function markChapter(){save(marks=>({...marks,completed:complete?marks.completed.filter(id=>id!==chapter):[...marks.completed.filter(id=>id!==chapter),chapter]}),complete?0:100);setMessage(complete?'Отметка главы отменена.':'Глава отмечена как изученная. +100 XP за шаг вперёд.');}
  function reset(){if(!window.confirm('Сбросить изученные главы, пять упражнений и XP? Операционные чеклисты сохранятся.'))return;const practice={...progressStore.get().practice};for(let i=1;i<=5;i++)delete practice[`exercise-${i}`];document.querySelectorAll<HTMLInputElement>('[data-exercise]').forEach(input=>{input.checked=false;delete practice[input.dataset.practice??''];});save(()=>({completed:[],exercises:[]}),0,practice);setMessage('Учебный прогресс сброшен. Можно начать маршрут заново.');}
- const nextPath=profile.nextChapter?`/chapters/${profile.nextChapter.slice(3)}`:'/chapters/22';
+ const nextPath=pageHref(profile.nextChapter??'ch-22');
  return <section className={`learning-progress learning-profile ${home?'learning-profile-home':'learning-profile-compact'}`} aria-label="Учебный прогресс">
   <div className="learning-heading"><span><ProjectIcon name="compass"/> {home?'Учебный профиль':'Ваш маршрут'}</span><strong>{value.completed.length} из 22</strong></div>
   <div className="profile-identity"><span className="profile-emblem" aria-hidden="true"><ProjectIcon name={profile.levelIndex<2?'compass':'maturity'}/></span><div><p className="profile-kicker">Уровень {profile.levelIndex+1} из 4</p><h2 className="profile-level">{profile.level.name}</h2>{home&&<p className="profile-welcome">{value.completed.length===22?'Брат, маршрут пройден. Памятка и примеры всегда под рукой.':value.completed.length===0?'Брат, начинаем с одной главы. Без гонки: свой темп тоже темп.':`Брат, уже ${value.completed.length} из 22. Следующий шаг — когда будет удобно.`}</p>}</div><span className="profile-xp"><ProjectIcon name="preflight"/><strong>{profile.xp}</strong> XP</span></div>
@@ -43,7 +41,7 @@ export function LearningProgress({chapter,compact=false}:{chapter:string;compact
    <p className="profile-rules">Глава +100 XP · упражнение +50 XP</p>
   </>}
   <div className="learning-actions">
-   {home&&resume&&<Link className="resume-button primary-action" href={`${pagePath(resume.page)}?resume=1`}>Продолжить чтение <ProjectIcon name="arrowRight"/></Link>}
+   {home&&resume&&<Link className="resume-button primary-action" href={`${pageHref(resume.page,resume.tab)}?resume=1`}>Продолжить чтение <ProjectIcon name="arrowRight"/></Link>}
    {home&&<Link className={`profile-next ${resume?'':'primary-action'}`} href={nextPath}>{profile.nextChapter?`Следующий шаг · глава ${profile.nextChapter.slice(3)}`:'Открыть операционную памятку'}<ProjectIcon name="arrowRight"/></Link>}
    {isChapter&&<button type="button" disabled={!ready} aria-pressed={complete} className={complete?'completion-button earned':'completion-button primary-action'} onClick={markChapter}><ProjectIcon name={complete?'check':'book'}/>{complete?'Глава изучена · отменить':'Глава изучена'}</button>}
    {home&&<button className="reset-learning" type="button" disabled={!ready} onClick={reset}><ProjectIcon name="reset"/> Сбросить прогресс</button>}

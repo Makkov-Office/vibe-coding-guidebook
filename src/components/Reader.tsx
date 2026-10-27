@@ -16,6 +16,7 @@ import {transitionTo} from '../design/motion';
 import {progressStore} from './progress-store.mjs';
 import type {Chapter,SearchEntry} from '../content/types';
 import {ReaderPageContext,type PageData} from './ReaderPageData';
+import {liveRoute} from '../content/chapter-routes';
 type NavigationChapter=Pick<Chapter,'id'|'number'|'title'|'path'>;
 const loadedSearch=new Map<string,Promise<(SearchEntry&{normalized:string})[]>>();
 function fetchSearch(url:string){let promise=loadedSearch.get(url);if(!promise){promise=fetch(url).then(r=>{if(!r.ok)throw new Error('Search unavailable');return r.json() as Promise<SearchEntry[]>;}).then((entries:SearchEntry[])=>entries.map(e=>({...e,normalized:norm(e.title+' '+e.text)})));loadedSearch.set(url,promise);promise.catch(()=>loadedSearch.delete(url));}return promise;}
@@ -27,10 +28,10 @@ type Hit={key:string;href:string;meta:string;title:string;text?:ReactNode;entry?
 const place=(chapter:string)=>toolIds.includes(chapter)?'Инструменты':chapter==='ch-resources'?'Материалы':chapter==='ch-00'?'Начало':chapter==='ch-23'?'Глоссарий':chapter.slice(3);
 function Mark({text,query}:{text:string;query:string}){const at=norm(text).indexOf(norm(query));if(at<0||!query)return <>{text.slice(0,180)}</>;const start=Math.max(0,at-65),end=Math.min(text.length,at+query.length+110);return <>{start>0?'…':''}{text.slice(start,at)}<mark>{text.slice(at,at+query.length)}</mark>{text.slice(at+query.length,end)}{end<text.length?'…':''}</>;}
 export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];assets:{search:string;anchors:string};children:ReactNode}){
- const pathname=usePathname(),chapterId=pathname==='/glossary'?'ch-23':pathname==='/resources'?'ch-resources':pathname==='/tools'?'ch-tools':pathname.startsWith('/tools/')?'ch-'+pathname.split('/').pop():pathname.startsWith('/chapters/')?'ch-'+pathname.split('/').pop():'ch-00';
+ const pathname=usePathname(),live=liveRoute(pathname),chapterId=live?live.chapterId:pathname==='/glossary'?'ch-23':pathname==='/resources'?'ch-resources':pathname==='/tools'?'ch-tools':pathname.startsWith('/tools/')?'ch-'+pathname.split('/').pop():pathname.startsWith('/chapters/')?'ch-'+pathname.split('/').pop():'ch-00';
  const [pageData,setPageData]=useState<PageData>({chapterId:'',outline:[],hasChecklists:false,terms:[],levels:null,blocks:[]}),[searchData,setSearchData]=useState<(SearchEntry&{normalized:string})[]|null>(null),[searchState,setSearchState]=useState<'idle'|'loading'|'ready'|'error'>('idle'),[pending,setPending]=useState(false);
  const searchDataRef=useRef(searchData);searchDataRef.current=searchData;
- const current=useRef({pageData,chapterId,pathname});current.current={pageData,chapterId,pathname};
+ const current=useRef({pageData,chapterId,pathname,tab:live?.tab});current.current={pageData,chapterId,pathname,tab:live?.tab};
  const hasChecklists=pageData.chapterId===chapterId&&pageData.hasChecklists;
  const router=useRouter();
  // Page transition (P3-05): client navigation inside a View Transition that waits for the new page to commit, see transitionTo.
@@ -68,7 +69,7 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
   const change=(event:Event)=>{const box=event.target as HTMLInputElement;if(!box.matches('[data-practice]'))return;const id=box.dataset.practice??'';if(!progressStore.set(({practice})=>{const next={...practice};if(box.checked)next[id]=true;else delete next[id];return {practice:next};}))setStatus('Хранилище недоступно: отметки сохраняются до перезагрузки вкладки.');};
   const updateProgress=()=>{const range=document.documentElement.scrollHeight-innerHeight,progress=range>0?Math.min(1,Math.max(0,scrollY/range)):1;if(readingProgress.current)readingProgress.current.style.transform='scaleX('+progress+')';};
   const size=new ResizeObserver(updateProgress);const column=document.querySelector('.reading-column');if(column)size.observe(column);window.addEventListener('resize',updateProgress);updateProgress();
-  let last=0;const save=()=>{updateProgress();const id=current.current.chapterId;if(['ch-00','ch-23','ch-resources',...toolIds].includes(id)||Date.now()-last<800)return;last=Date.now();progressStore.set(()=>({reading:{page:id,y:scrollY}}));};
+  let last=0;const save=()=>{updateProgress();const id=current.current.chapterId;if(['ch-00','ch-23','ch-resources',...toolIds].includes(id)||Date.now()-last<800)return;last=Date.now();const tab=current.current.tab;progressStore.set(()=>({reading:tab?{page:id,tab,y:scrollY}:{page:id,y:scrollY}}));};
   const hash=()=>{if(location.hash)reveal(decodeURIComponent(location.hash.slice(1)));};
   document.addEventListener('keydown',key);document.addEventListener('click',click,true);document.addEventListener('change',change);window.addEventListener('hashchange',hash);window.addEventListener('scroll',save,{passive:true});
   return()=>{size.disconnect();window.removeEventListener('resize',updateProgress);document.removeEventListener('keydown',key);document.removeEventListener('click',click,true);document.removeEventListener('change',change);window.removeEventListener('hashchange',hash);window.removeEventListener('scroll',save);if(highlight.current)clearTimeout(highlight.current);};
@@ -88,7 +89,7 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
   if(hash==='ch-24')setStatus('Раздел об истории подготовки удалён. Учебный материал доступен в главах.');
   if(stored?.path===pathname&&Number.isFinite(stored.y)&&params.has('return')){const reading=stored;const target=document.getElementById(reading.id);let node:HTMLElement|null=target;while(node){if(node instanceof HTMLDetailsElement)node.open=true;node=node.parentElement;}frame=requestAnimationFrame(()=>{frame=requestAnimationFrame(()=>{scrollTo({top:reading.y,behavior:'instant'});target?.focus({preventScroll:true});history.replaceState(history.state,'',pathname+location.hash);try{sessionStorage.removeItem('handbook-return');}catch{}});});}
   else if(hash){if(document.getElementById(hash))reveal(hash);else fetch(assets.anchors).then(r=>r.json() as Promise<Record<string,{id:string;path:string}>>).then(registry=>{if(disposed)return;const target=registry[hash]??registry[hash.slice(0,5)];if(target)router.replace(target.path+'#'+target.id);}).catch(()=>setStatus('Не удалось восстановить старую ссылку. Выберите главу в меню.'));}
-  if(params.has('resume')){const saved=progressStore.get().reading;if(saved?.page===chapterId)frame=requestAnimationFrame(()=>scrollTo({top:saved.y,behavior:'instant'}));history.replaceState(history.state,'',pathname);}
+  if(params.has('resume')){const saved=progressStore.get().reading;if(saved?.page===chapterId&&(live?saved.tab??'overview':saved.tab)===live?.tab)frame=requestAnimationFrame(()=>scrollTo({top:saved.y,behavior:'instant'}));history.replaceState(history.state,'',pathname);}
   return()=>{disposed=true;cancelAnimationFrame(frame);};
  // eslint-disable-next-line react-hooks/exhaustive-deps
  },[pageData,chapterId,pathname]);

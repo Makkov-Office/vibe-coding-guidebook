@@ -10,7 +10,7 @@ const started=(page:Page)=>page.evaluate(()=>(window as unknown as {__started:st
 const probe=(page:Page)=>page.evaluate(()=>{const a=document.createElement('a');a.href='/chapters/06#ch-06-6-2-definition-of-ready';a.id='motion-probe';a.textContent='6.2';const prose=document.querySelector('.reader-prose');prose?.insertBefore(a,prose.firstChild);});
 // Interactions that start animations when motion is on: hover, page change, search dialog, details.
 async function exercise(page:Page){
- await railNavigate(page,'/chapters/08');await expect(page.locator('main [data-chapter="ch-08"]')).toBeVisible();
+ await railNavigate(page,'/flow/08-preflight');await expect(page.locator('main [data-chapter="ch-08"]')).toBeVisible();
  await page.keyboard.press('Control+k');await expect(page.locator('.search-dialog')).toBeVisible();await page.keyboard.press('Escape');
  const details=page.locator('main details').first();if(await details.count())await details.locator('summary').click();
 }
@@ -44,7 +44,7 @@ test('page transition keeps keyboard focus and anchor scroll',async({page})=>{
  const next=page.locator('.pagination-next');await next.focus();await page.keyboard.press('Enter');
  const pseudo=await page.evaluate(()=>new Promise<string[]>(resolve=>requestAnimationFrame(()=>resolve(document.getAnimations().map(a=>(a.effect as KeyframeEffect|null)?.pseudoElement??'').filter(Boolean)))));
  expect(pseudo.filter(p=>/group\(page\)|old\(page\)/.test(p))).toEqual([]);
- await expect(page).toHaveURL(/\/chapters\/08$/);await expect(page.locator('main [data-chapter="ch-08"]')).toBeVisible();
+ await expect(page).toHaveURL(/\/flow\/08-preflight$/);await expect(page.locator('main [data-chapter="ch-08"]')).toBeVisible();
  await expect(page.locator('main#reader')).toBeFocused();
  if(supported)expect(await transitions(page)).toBe(1);
  // A link to a section of another chapter lands on that section.
