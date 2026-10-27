@@ -16,7 +16,7 @@
     "predev": "npm run content",
     "prebuild": "npm run content",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/content.test.mjs tests/guard-git.test.mjs tests/design-palette.test.mjs tests/design-tokens.test.mjs tests/agent-pack.test.mjs tests/url-map.test.mjs tests/icons.test.mjs tests/content-tabs.test.mjs tests/progress-store.test.mjs tests/glossary-levels.test.mjs tests/palette-lint.test.mjs tests/agent-delivery.test.mjs tests/home-content.test.mjs",
+    "test": "node --test tests/content.test.mjs tests/guard-git.test.mjs tests/design-palette.test.mjs tests/design-tokens.test.mjs tests/agent-pack.test.mjs tests/url-map.test.mjs tests/icons.test.mjs tests/content-tabs.test.mjs tests/progress-store.test.mjs tests/glossary-levels.test.mjs tests/palette-lint.test.mjs tests/agent-delivery.test.mjs tests/drills.test.mjs tests/home-content.test.mjs",
     "test:e2e": "playwright test",
     "doctor": "node scripts/doctor.mjs",
     "validate": "node scripts/validate.mjs",
