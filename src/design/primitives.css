@@ -2,7 +2,7 @@
    (проверяет tests/palette-lint.test.mjs). Спецификация — docs/design/visual-language.md,
    раздел «Примитивы и шаблоны». */
 
-:root{--dur-draw:900ms;--dur-run:6s;--dur-step:350ms}
+/* Длительности приёмов движения (--dur-draw, --dur-dot, --dur-step) — в app/tokens.css (P3-05). */
 
 /* Карточка: тон поверхности и граница 1 px; интерактивная меняет тон, не «подпрыгивает». */
 .bp-card{display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-5);border:var(--stroke-border) solid var(--color-outline-variant);border-radius:var(--radius-l);background:var(--color-surface);color:var(--color-on-surface);text-decoration:none;min-width:0}
@@ -111,7 +111,7 @@ a.bp-card:focus-visible{outline:2px solid var(--color-primary);outline-offset:2p
 @keyframes bp-appear{from{opacity:0;transform:translateY(var(--shift-appear))}}
 .bp-draw{stroke-dasharray:1;stroke-dashoffset:1;animation:bp-draw var(--dur-draw) var(--ease) forwards}
 @keyframes bp-draw{to{stroke-dashoffset:0}}
-.bp-run{offset-rotate:0deg;animation:bp-run var(--dur-run) var(--ease) infinite}
+.bp-run{offset-rotate:0deg;animation:bp-run var(--dur-dot) var(--ease) infinite}
 @keyframes bp-run{0%{offset-distance:0%}85%,100%{offset-distance:100%}}
 
 /* Reduced motion и пауза анимаций: итоговое состояние сразу (линии прорисованы, точка в конце, шаги горят). */
