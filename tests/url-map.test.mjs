@@ -2,10 +2,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { currentRoutes, loadUrlMap, redirectRoutes, resolveAnchors, staleAnchors, validateUrlMap } from '../scripts/url-map.mjs';
+import { fileURLToPath } from 'node:url';
+import { currentRoutes, loadUrlMap, mappedPaths, redirectRoutes, resolveAnchors, staleAnchors, validateUrlMap } from '../scripts/url-map.mjs';
 
 const generated = JSON.parse(fs.readFileSync(new URL('../src/content/generated.json', import.meta.url), 'utf8'));
-const map = loadUrlMap(new URL('..', import.meta.url).pathname);
+const root = fileURLToPath(new URL('../', import.meta.url));
+const map = loadUrlMap(root);
 const clone = () => structuredClone(map);
 const page = (copy, old) => copy.pages.find((entry) => entry.old === old);
 
@@ -19,9 +21,13 @@ test('url map is valid and covers every route and anchor', () => {
 });
 
 test('every static page of the app is in the map', () => {
-  const routes = new Set(map.pages.map((entry) => entry.old));
+  // Same set as the build check in vercel-output.mjs: a page may already live
+  // at its new address, a tab or a section root.
+  const routes = mappedPaths(map);
+  for (const known of ['/chapters/08', '/flow/08-preflight', '/flow/08-preflight/apply', '/flow', '/reference/glossary']) assert.ok(routes.has(known), known);
+  for (const unknown of ['/flow/08-preflight/specs', '/chapters/99', '/design-x']) assert.ok(!routes.has(unknown), unknown);
   const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((item) => item.isDirectory() ? walk(`${dir}/${item.name}`) : item.name === 'page.tsx' ? [dir] : []);
-  const app = new URL('../app', import.meta.url).pathname;
+  const app = fileURLToPath(new URL('../app', import.meta.url));
   for (const dir of walk(app)) {
     const route = `/${dir.slice(app.length + 1).split('/').filter((segment) => !segment.startsWith('(')).join('/')}`.replace(/\/$/, '') || '/';
     if (route.includes('[')) continue;

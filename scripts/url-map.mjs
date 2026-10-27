@@ -22,6 +22,15 @@ export function tabPath(map, entry, tabId) {
   return tab.segment ? `${entry.new}/${tab.segment}` : entry.new;
 }
 
+// Every address the map knows: section roots, old and new addresses and the
+// tabs of each chapter. A built page outside this set fails the build.
+export function mappedPaths(map) {
+  return new Set([
+    ...map.sections.map((section) => section.path),
+    ...map.pages.flatMap((entry) => [entry.old, entry.new, ...(entry.tabs ? map.tabs.map((tab) => tabPath(map, entry, tab.id)) : [])]),
+  ]);
+}
+
 // Every route the current build serves, from the compiled content: the intro
 // (`/`), each chapter's own path and the print page. Same list as
 // dist/server/vinext-prerender.json without /404.
