@@ -67,6 +67,22 @@ test('«Поиск» in the bottom bar opens search; «Главная» marks th
  await ready(page,'/');
  await expect(bar(page).getByRole('link',{name:'Главная'})).toHaveAttribute('aria-current','page');
  await bar(page).getByRole('button',{name:'Поиск'}).click();await expect(page.locator('.search-dialog')).toBeVisible();await expect(page.locator('#handbook-search')).toBeFocused();
+ // Closing search returns focus to the bar button that opened it, not to the header.
+ await page.keyboard.press('Escape');await expect(page.locator('.search-dialog')).toBeHidden();await expect(bar(page).getByRole('button',{name:'Поиск'})).toBeFocused();
+});
+
+test('widening the window past 1024 px closes the section menu',async({page})=>{
+ await ready(page,'/chapters/08');
+ await page.getByRole('button',{name:'Разделы',exact:true}).click();await expect(menu(page)).toBeVisible();
+ await page.setViewportSize({width:1280,height:800});await expect(menu(page)).toBeHidden();await expect(page.locator('.nav-rail')).toBeVisible();
+});
+
+test('without JavaScript there is no bar, the chapter list stays and nothing scrolls sideways',async({browser})=>{
+ const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:360,height:800}}),page=await context.newPage();
+ await page.goto('/chapters/08');
+ await expect(page.locator('.bottom-bar')).toBeHidden();await expect(page.locator('.sidebar a[href="/chapters/05"]')).toBeVisible();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await context.close();
 });
 
 test('axe: no serious or critical violations with the menu closed and open',async({page})=>{
