@@ -34,16 +34,17 @@ test('hover opens the menu after a short delay and leaving closes it',async({pag
  await expect(menu(page,'control')).toBeVisible();
  await item(page,'reliability').hover();await expect(menu(page,'reliability')).toBeVisible();await expect(menu(page,'control')).toBeHidden();
  await page.mouse.move(900,500);await expect(menu(page,'reliability')).toBeHidden();
- // A mouse click on the Agent Pack button keeps its menu open, also after the pointer leaves the rail.
- await item(page,'agents').click();await page.waitForTimeout(300);await expect(menu(page,'agents')).toBeVisible();
- await page.mouse.move(900,500);await page.waitForTimeout(400);await expect(menu(page,'agents')).toBeVisible();
- // Focus on another section does not keep a hovered menu open after the pointer leaves.
- await item(page,'control').hover();await expect(menu(page,'control')).toBeVisible();await expect(menu(page,'agents')).toBeHidden();
- await page.mouse.move(900,500);await expect(menu(page,'control')).toBeHidden();
- // Focus is still on the Agent Pack button: Enter toggles its disclosure.
- await expect(item(page,'agents')).toBeFocused();
- await page.keyboard.press('Enter');await expect(menu(page,'agents')).toBeVisible();
- await page.keyboard.press('Enter');await expect(menu(page,'agents')).toBeHidden();await expect(item(page,'agents')).toHaveAttribute('aria-expanded','false');
+ // Focus inside an open section keeps its menu open after the pointer leaves the rail.
+ await item(page,'control').focus();await expect(menu(page,'control')).toBeVisible();
+ await page.mouse.move(900,500);await page.waitForTimeout(400);await expect(menu(page,'control')).toBeVisible();
+ // A hovered section closes after the pointer leaves, focus stays where it was.
+ await item(page,'reliability').hover();await expect(menu(page,'reliability')).toBeVisible();await expect(menu(page,'control')).toBeHidden();
+ await page.mouse.move(900,500);await expect(menu(page,'reliability')).toBeHidden();await expect(item(page,'control')).toBeFocused();
+ // Agent Pack (P8-03) is a link like the other sections: its menu offers the page, the archive and llms.txt.
+ await item(page,'agents').hover();await expect(menu(page,'agents')).toBeVisible();
+ await expect(menu(page,'agents').locator('a')).toHaveText(['Что внутри и как подключить','Скачать Agent Pack (.zip)','llms.txt — карта для LLM']);
+ await expect(menu(page,'agents').locator('a[href="/agent-pack.zip"]')).toHaveAttribute('download','');
+ await item(page,'agents').click();await expect(page).toHaveURL(/\/agents$/);await expect(item(page,'agents')).toHaveAttribute('aria-current','true');
 });
 
 test('keyboard: focus opens, Tab enters the menu, arrows move, Esc returns focus to the rail',async({page})=>{
@@ -80,15 +81,16 @@ test('tap opens the menu first, a second tap follows the rail link',async({brows
  await expect(page).toHaveURL(/\/chapters\/03$/);await expect(page.locator('.mega-menu:visible')).toHaveCount(0);
  await item(page,'flow').tap();await expect(menu(page,'flow')).toBeVisible();
  await item(page,'flow').tap();await expect(page).toHaveURL(/\/chapters\/06$/);
- // Agent Pack has no page yet: its rail item is a button that opens the menu.
+ // Agent Pack: the first tap opens its menu, the second leads to /agents.
  await item(page,'agents').tap();await expect(menu(page,'agents')).toBeVisible();await expect(page).toHaveURL(/\/chapters\/06$/);
+ await item(page,'agents').tap();await expect(page).toHaveURL(/\/agents$/);
  await context.close();
 });
 
 test('every mega-menu link leads to an existing address from the URL map',async({page,request})=>{
  await ready(page,'/flow/08-preflight');
  const hrefs=await page.locator('.mega-menu a').evaluateAll(links=>links.map(a=>a.getAttribute('href')!));
- const mapped=new Set(urlMap.pages.flatMap(p=>[p.old,p.new])),extra=new Set(['/handbook.md','/print']);
+ const mapped=new Set(urlMap.pages.flatMap(p=>[p.old,p.new])),extra=new Set(['/handbook.md','/print','/agent-pack.zip','/llms.txt']);
  expect(hrefs.length).toBeGreaterThan(25);
  for(const href of new Set(hrefs)){
   expect(mapped.has(href)||extra.has(href),href).toBe(true);
@@ -120,7 +122,7 @@ test('below 1024 px the rail is hidden and the bottom bar stays; on a short scre
  await expect(page.locator('.nav-rail')).toBeVisible();await expect(page.locator('.bottom-bar')).toBeHidden();
  // A short desktop viewport: the rail scrolls, so the last section stays reachable and its menu opens.
  await page.setViewportSize({width:1024,height:600});await ready(page,'/flow/08-preflight');
- await item(page,'agents').click();await expect(menu(page,'agents')).toBeVisible();
+ await item(page,'agents').click();await expect(page).toHaveURL(/\/agents$/);
  const box=await item(page,'agents').boundingBox();expect(box!.y+box!.height).toBeLessThanOrEqual(600);
 });
 
