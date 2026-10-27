@@ -47,6 +47,9 @@ test('home: «Продолжить» for a returning reader, introduction at its
  await ready(page,'/start/00-how-to-read');
  await expect(page.locator('main .intro')).toBeVisible();await expect(page.locator('.learning-profile-home')).toBeVisible();
  await expect(page.locator('.rail-entry[data-section=start] .rail-item')).toHaveAttribute('aria-current',/page|true/);
+ // Из главы 01 «Предыдущий раздел» ведёт на вводную главу, а не на Главную.
+ await ready(page,'/chapters/01');
+ await expect(page.locator('.pagination-previous')).toHaveAttribute('href','/start/00-how-to-read');
  // Старая ссылка /#ch-00-… приводит на новый адрес с якорем.
  await page.goto('/#ch-00-b1002');
  await expect(page).toHaveURL(/\/start\/00-how-to-read#ch-00-b1002$/);
