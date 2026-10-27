@@ -8,6 +8,7 @@ import "../src/design/product-logos.css";
 import "../src/design/primitives.css";
 // Глобально, не в компоненте: <link> из компонента поднимается в <head>, и vinext пропускает фокус main#reader после навигации.
 import "../src/design/chapter-template.css";
+import "../src/components/drill.css";
 import {brandTitle} from "../src/design/brand";
 
 export const metadata: Metadata = {
