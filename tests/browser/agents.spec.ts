@@ -22,6 +22,8 @@ test('«Скопировать для агента» copies the page Markdown fr
  await context.grantPermissions(['clipboard-read','clipboard-write']);
  await ready(page,'/chapters/08');
  const button=page.getByRole('button',{name:'Скопировать для агента'});
+ // The live region is in the accessibility tree before the first message, so screen readers announce it.
+ expect(await page.locator('.agent-copy [role=status]').evaluate(e=>getComputedStyle(e).display)).not.toBe('none');
  await button.focus();await page.keyboard.press('Enter');
  await expect(page.locator('.agent-copy [role=status]')).toHaveText(/скопирован/);
  const expected=await (await request.get('/chapters/08.md')).text();

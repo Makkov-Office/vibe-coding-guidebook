@@ -86,6 +86,12 @@ test('split covers every chapter heading and fails closed on an unknown one',()=
   assert.match(pages[1].markdown,/## not a chapter/);
   assert.throws(()=>splitPages('## 00. Intro\n\n## Unknown\n',chapters),/not a chapter/);
   assert.throws(()=>splitPages('## 00. Intro\n',chapters),/no Markdown for ch-01/);
+  assert.throws(()=>splitPages('## 00. Intro\n\n## 01. A\n\n## 01. A\n',chapters),/appears twice/);
+  // A ## inside a quote, a list or a fence with an info string after the closing one is not a page.
+  const nested=splitPages('## 00. Intro\n\n> ## quoted\n\n- item\n\n  ```\n  ## in list code\n  ```\n\n````md\n```js\n## inner\n```\n````\n\n## 01. A\n\nSee [codex](/tools/codex) and [web](https://x.dev/a).\n',chapters);
+  assert.deepEqual(nested.map(p=>p.id),['ch-00','ch-01']);
+  assert.match(nested[1].markdown,new RegExp(`\\]\\(${SITE_ORIGIN}/tools/codex\\)`));
+  assert.match(nested[1].markdown,/\]\(https:\/\/x\.dev\/a\)/);
 });
 
 test('the pack points agents to the handbook, so [Hnn.m] resolves outside this repository',()=>{

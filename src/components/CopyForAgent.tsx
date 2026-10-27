@@ -12,8 +12,10 @@ export function CopyForAgent({href}:{href:string}){
   setStatus('');
   const text=()=>fetch(href).then(response=>{if(!response.ok)throw Error(`${href}: ${response.status}`);return response.text();});
   try{
-   if(typeof ClipboardItem!=='undefined'&&navigator.clipboard?.write)await navigator.clipboard.write([new ClipboardItem({'text/plain':text().then(t=>new Blob([t],{type:'text/plain'}))})]);
-   else await navigator.clipboard.writeText(await text());
+   const body=text();body.catch(()=>{});
+   // ClipboardItem with a promise is not everywhere: if it fails, plain writeText with the same text.
+   try{if(typeof ClipboardItem==='undefined'||!navigator.clipboard?.write)throw Error('no ClipboardItem');await navigator.clipboard.write([new ClipboardItem({'text/plain':body.then(t=>new Blob([t],{type:'text/plain'}))})]);}
+   catch{await navigator.clipboard.writeText(await body);}
    setStatus('Markdown страницы скопирован. Вставьте его в чат агента.');
   }catch{setStatus('Скопировать не получилось. Откройте Markdown по ссылке и скопируйте вручную.');}
  }

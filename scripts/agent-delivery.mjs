@@ -8,6 +8,7 @@
 // The public/ outputs are build artifacts (.gitignore); agent-pack.json is committed like generated.json.
 import fs from 'node:fs';
 import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {unified} from 'unified';
 import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
@@ -20,25 +21,25 @@ import {loadUrlMap} from './url-map.mjs';
 export const SITE_ORIGIN='https://vibe-coding-guidebook-ivory.vercel.app';
 const PACK='agent-pack',ZIP='/agent-pack.zip';
 
-/** Markdown of every page: the handbook split at its chapter headings (## outside code fences). */
+/** Markdown of every page: the handbook split at its chapter headings, the top-level `##` of the
+ *  CommonMark tree (so a `##` inside code, a quote or a list never starts a page). */
 export function splitPages(source,chapters){
-  const lines=source.split('\n'),starts=[];let fence=null;
-  lines.forEach((line,index)=>{
-    const marker=line.match(/^\s*(`{3,}|~{3,})/);
-    if(marker){if(!fence)fence=marker[1];else if(marker[1][0]===fence[0]&&marker[1].length>=fence.length)fence=null;return;}
-    if(!fence&&/^## /.test(line))starts.push(index);
-  });
-  const byTitle=new Map(chapters.map(c=>[c.title,c]));
+  const lines=source.split('\n');
+  const starts=unified().use(remarkParse).use(remarkGfm).parse(source).children.filter(node=>node.type==='heading'&&node.depth===2).map(node=>node.position.start.line-1);
+  const byTitle=new Map(chapters.map(c=>[c.title,c])),seen=new Set();
   const pages=[];
   starts.forEach((start,i)=>{
-    const title=lines[start].slice(3).trim();
+    const title=lines[start].replace(/^##\s+/,'').trim();
     // The introduction (ch-00, at "/") also carries the handbook title above it.
     const chapter=/^00\. /.test(title)?{id:'ch-00',title,path:'/'}:byTitle.get(title);
     if(!chapter)throw Error(`agent-delivery: heading "${title}" is not a chapter of generated.json`);
+    if(seen.has(chapter.id))throw Error(`agent-delivery: chapter ${chapter.id} appears twice`);
+    seen.add(chapter.id);
     const from=i===0?0:start,body=lines.slice(from,starts[i+1]??lines.length);
     // The rule and HTML anchor before the next heading belong to the next chapter.
     while(body.length&&/^(---|<a id="[^"]+"><\/a>|\s*)$/.test(body.at(-1)))body.pop();
-    pages.push({id:chapter.id,title:chapter.title,path:chapter.path,file:mdPath(chapter.path),markdown:`${body.join('\n')}\n`});
+    // Site links become absolute, so the text still leads somewhere once pasted into an agent.
+    pages.push({id:chapter.id,title:chapter.title,path:chapter.path,file:mdPath(chapter.path),markdown:`${body.join('\n').replace(/\]\(\/(?!\/)/g,`](${SITE_ORIGIN}/`)}\n`});
   });
   const missing=chapters.filter(c=>!pages.some(p=>p.id===c.id));
   if(missing.length)throw Error(`agent-delivery: no Markdown for ${missing.map(c=>c.id).join(', ')}`);
@@ -52,8 +53,10 @@ export function llmsText(pages,urlMap,pack){
   const sectionOf=new Map(urlMap.pages.filter(e=>e.chapter).map(e=>[e.chapter,e.section]));
   const brand=fs.readFileSync('src/design/brand.ts','utf8').match(/brandTitle='([^']+)'/)?.[1];
   if(!brand)throw Error('agent-delivery: brandTitle not found in src/design/brand.ts');
-  const out=[`# ${brand}`,'',
-    '> Русскоязычное руководство по инженерной работе с AI-агентами: тикет, preflight, контекст, независимое review, human gates, безопасность и восстановление после ошибок.','',
+  // The summary is the handbook's own lead quote (content/handbook.md), not text written here.
+  const summary=fs.readFileSync('content/handbook.md','utf8').match(/^> (.+)$/m)?.[1];
+  if(!summary)throw Error('agent-delivery: no lead quote in content/handbook.md');
+  const out=[`# ${brand}`,'',`> ${summary}`,'',
     `Каждая страница есть в Markdown: адрес страницы + \`.md\`, вводная глава — \`/index.md\`. Ссылки вида \`[H08.2]\` в Agent Pack ведут на главу 08, раздел 8.2.`,'',
     '## Agent Pack','',
     `- [Agent Pack (.zip)](${url(ZIP)}): ${pack.files.length} файлов — AGENTS.md, CLAUDE.md, skills, JSON Schema, hooks для Claude Code`,
@@ -137,4 +140,4 @@ async function main(){
   fs.writeFileSync('public/llms-full.txt',`${llms.split('\n## ')[0].trim()}\n\n${fs.readFileSync('content/handbook.md','utf8')}`);
   console.log(JSON.stringify({pages:pages.length,packFiles:files.length,zipBytes:archive.length}));
 }
-if(import.meta.url===`file://${process.argv[1]}`)await main();
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))await main();
