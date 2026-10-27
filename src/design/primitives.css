@@ -1,0 +1,125 @@
+/* Примитивы «Чертежа» (P2-04): только токены app/tokens.css, без цветовых литералов
+   (проверяет tests/palette-lint.test.mjs). Спецификация — docs/design/visual-language.md,
+   раздел «Примитивы и шаблоны». */
+
+/* Длительности приёмов движения (--dur-draw, --dur-dot, --dur-step) — в app/tokens.css (P3-05). */
+
+/* Карточка: тон поверхности и граница 1 px; интерактивная меняет тон, не «подпрыгивает». */
+.bp-card{display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-5);border:var(--stroke-border) solid var(--color-outline-variant);border-radius:var(--radius-l);background:var(--color-surface);color:var(--color-on-surface);text-decoration:none;min-width:0}
+.bp-card>:is(.bp-pill,.bp-anno,.bp-game,.bp-dots){align-self:flex-start}
+.bp-card--low{background:var(--color-surface-container-low)}
+.bp-card h3{margin:0;font:600 var(--type-h3)/1.3 var(--font-text);letter-spacing:var(--tracking-heading)}
+.bp-card p{margin:0;color:var(--color-on-surface-variant);font-size:var(--type-small);line-height:1.5}
+a.bp-card{transition:background-color var(--dur-1) var(--ease),border-color var(--dur-1) var(--ease)}
+a.bp-card:hover{background:var(--color-surface-container-low);border-color:var(--color-outline-variant-strong)}
+a.bp-card:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+
+/* Тональная пилюля: смысл + подпись + иконка роли (раздел 4). */
+.bp-pill{display:inline-flex;align-items:center;gap:var(--space-2);min-height:28px;padding:var(--space-1) var(--space-3);border:var(--stroke-border) solid transparent;border-radius:var(--radius-full);font:500 var(--type-label)/1.3 var(--font-text);white-space:nowrap}
+.bp-pill .project-icon{width:var(--icon-size-s);height:var(--icon-size-s)}
+.bp-pill--path{background:var(--color-primary-container);color:var(--color-on-primary-container)}
+.bp-pill--agent{background:var(--color-agent-accent);color:var(--color-on-agent-container)}
+.bp-pill--practice{background:var(--color-practice-accent);color:var(--color-on-practice-container)}
+.bp-pill--human{background:var(--color-human-accent);color:var(--color-on-human-container)}
+/* В тёмной теме цвет модуля — линия и граница, фон — *-container (раздел 4). */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .bp-pill--agent{background:var(--color-agent-container);border-color:var(--color-agent-accent)}
+  :root:not([data-theme="light"]) .bp-pill--practice{background:var(--color-practice-container);border-color:var(--color-practice-accent)}
+  :root:not([data-theme="light"]) .bp-pill--human{background:var(--color-human-container);border-color:var(--color-human-accent)}
+}
+:root[data-theme="dark"] .bp-pill--agent{background:var(--color-agent-container);border-color:var(--color-agent-accent)}
+:root[data-theme="dark"] .bp-pill--practice{background:var(--color-practice-container);border-color:var(--color-practice-accent)}
+:root[data-theme="dark"] .bp-pill--human{background:var(--color-human-container);border-color:var(--color-human-accent)}
+
+/* Чип-фильтр: кнопка aria-pressed, касание 44 px. */
+.bp-chip{display:inline-flex;align-items:center;gap:var(--space-2);min-height:var(--touch-target);padding:0 var(--space-4);border:var(--stroke-border) solid var(--color-outline);border-radius:var(--radius-full);background:var(--color-surface);color:var(--color-on-surface);font:500 var(--type-small)/1 var(--font-text);cursor:pointer;transition:background-color var(--dur-1) var(--ease)}
+.bp-chip:hover{background:var(--color-surface-container-low)}
+.bp-chip[aria-pressed="true"]{background:var(--color-primary-container);border-color:var(--color-primary);color:var(--color-on-primary-container)}
+.bp-chip:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+
+/* Кнопки: заливка градиентом действия / тональная / текстовая. */
+.bp-button{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);min-height:var(--touch-target);padding:0 var(--space-5);border:0;border-radius:var(--radius-full);font:600 var(--type-small)/1 var(--font-text);text-decoration:none;cursor:pointer;transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
+.bp-button:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+.bp-button--fill{background:var(--color-action-gradient);color:var(--color-on-action-gradient)}
+.bp-button--fill:hover{background:var(--color-primary);color:var(--color-on-primary)}
+.bp-button--tonal{background:var(--color-primary-container);color:var(--color-on-primary-container)}
+.bp-button--tonal:hover{background:var(--color-surface-container-high);color:var(--color-on-surface)}
+.bp-button--text{background:transparent;color:var(--color-primary);padding:0 var(--space-3)}
+.bp-button--text:hover{background:var(--color-surface-container)}
+.bp-button .project-icon{transition:transform var(--dur-1) var(--ease)}
+.bp-button:hover .project-icon{transform:translateX(2px)}
+
+/* Линия шага: пройденные загораются по одному слева направо (приём «Смена шага»). */
+.bp-steps{display:flex;gap:var(--space-2);margin:0;padding:0;list-style:none;counter-reset:bp-step}
+.bp-steps li{flex:1 1 0;min-width:0;display:grid;align-content:start;gap:var(--space-2);font:500 var(--type-label)/1.3 var(--font-text);color:var(--color-on-surface-variant);overflow-wrap:anywhere;counter-increment:bp-step}
+.bp-steps li::before{content:"";height:4px;border-radius:var(--radius-full);background:var(--color-outline-variant-strong)}
+.bp-steps li[data-state="done"]::before,.bp-steps li[data-state="current"]::before{background:var(--color-primary)}
+.bp-steps li[data-state="current"]{color:var(--color-on-surface);font-weight:600}
+.bp-steps--animate li[data-state="done"]::before,.bp-steps--animate li[data-state="current"]::before{animation:bp-step-on var(--dur-step) var(--ease) both;animation-delay:calc(var(--i,0) * var(--dur-step))}
+/* Узкий экран: подпись видна только у текущего шага, остальные — для скринридера. */
+@media (max-width:480px){
+  .bp-steps li[data-state="current"]{flex:0 1 auto;max-width:50%}
+  .bp-steps li:not([data-state="current"]) .bp-step-label{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+}
+@keyframes bp-step-on{from{background:var(--color-outline-variant-strong)}to{background:var(--color-primary)}}
+
+/* Точки прогресса: текущая шире и в градиенте действия. */
+.bp-dots{display:inline-flex;align-items:center;gap:6px}
+.bp-dots i{width:8px;height:8px;border-radius:var(--radius-full);background:var(--color-outline-variant-strong);transition:width var(--dur-2) var(--ease)}
+.bp-dots i[data-state="done"]{background:var(--color-primary)}
+.bp-dots i[data-state="current"]{width:26px;background:var(--color-action-gradient)}
+
+/* Аннотация «чертежа»: моноширинная подпись в пунктирной рамке. */
+.bp-anno{display:inline-block;padding:1px var(--space-2);border:var(--stroke-border) dashed var(--color-primary);border-radius:var(--radius-xs);background:var(--color-surface);color:var(--color-primary);font:500 var(--type-label)/1.5 var(--font-mono);font-stretch:var(--font-mono-stretch);max-width:100%;overflow-wrap:anywhere}
+
+/* Игровая метка Pixelify: до трёх слов, смысл «Практика». */
+.bp-game{display:inline-flex;align-items:center;gap:var(--space-1);padding:2px var(--space-2);border-radius:var(--radius-xs);background:var(--color-practice-container);color:var(--color-on-practice-container);font:500 var(--type-small)/1.3 var(--font-game);letter-spacing:.02em}
+
+/* Баннер с паттерном «+» и фирменной рамкой (только hero главной и «Начать»). */
+.bp-banner{position:relative;overflow:hidden;display:grid;gap:var(--space-4);padding:var(--space-10) var(--space-8);border:var(--stroke-border) solid transparent;border-radius:var(--radius-xl);background:linear-gradient(var(--color-surface),var(--color-surface)) padding-box,var(--color-brand-frame-gradient) border-box;color:var(--color-on-surface)}
+.bp-banner>*{position:relative}
+.bp-banner>.bp-anno{justify-self:start}
+.bp-banner .bp-plus{position:absolute;inset:0;width:100%;height:100%}
+.bp-plus-line{stroke:var(--color-pattern-plus);stroke-width:1;fill:none}
+.bp-banner h2{margin:0;max-width:16ch;font:500 var(--type-hero)/1.05 var(--font-display);letter-spacing:var(--tracking-display)}
+.bp-banner p{margin:0;max-width:52ch;color:var(--color-on-surface-variant)}
+@media (max-width:600px){.bp-banner{padding:var(--space-8) var(--space-5)}}
+
+/* Шаблоны SVG «Чертёж»: линии 1.5 px, узлы, стрелки, моно-подписи; цвета — через CSS-переменные. */
+.bp-svg-frame{overflow-x:auto;border-radius:var(--radius-m)}
+.bp-svg-frame:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+.bp-svg{display:block;width:100%;min-width:var(--bp-min-width,0);height:auto;overflow:visible;color:var(--color-on-surface)}
+.bp-line{fill:none;stroke:var(--color-outline);stroke-width:var(--stroke-line);stroke-linecap:round;stroke-linejoin:round}
+.bp-line--dashed{stroke-dasharray:4 4}
+.bp-arrowhead{fill:var(--color-outline)}
+.bp-node rect{fill:var(--color-surface);stroke:var(--color-on-surface);stroke-width:var(--stroke-line)}
+.bp-node--agent rect{fill:var(--color-agent-container);stroke:var(--color-on-agent-container)}
+.bp-node--practice rect{fill:var(--color-practice-container);stroke:var(--color-on-practice-container)}
+.bp-node--human rect{fill:var(--color-human-container);stroke:var(--color-on-human-container)}
+.bp-node--path rect{fill:var(--color-primary-container);stroke:var(--color-primary)}
+.bp-node text{fill:var(--color-on-surface);font:600 13px var(--font-text)}
+.bp-node--agent text{fill:var(--color-on-agent-container)}
+.bp-node--practice text{fill:var(--color-on-practice-container)}
+.bp-node--human text{fill:var(--color-on-human-container)}
+.bp-node--path text{fill:var(--color-on-primary-container)}
+.bp-node .bp-sub{font:500 10.5px var(--font-mono);font-stretch:var(--font-mono-stretch)}
+.bp-label{fill:var(--color-on-surface-variant);font:500 10.5px var(--font-mono);font-stretch:var(--font-mono-stretch)}
+.bp-run{fill:var(--color-primary)}
+
+/* Движение: четыре приёма раздела 7. */
+.bp-appear{animation:bp-appear var(--dur-2) var(--ease) both}
+@keyframes bp-appear{from{opacity:0;transform:translateY(var(--shift-appear))}}
+.bp-draw{stroke-dasharray:1;stroke-dashoffset:1;animation:bp-draw var(--dur-draw) var(--ease) forwards}
+@keyframes bp-draw{to{stroke-dashoffset:0}}
+.bp-run{offset-rotate:0deg;animation:bp-run var(--dur-dot) var(--ease) infinite}
+@keyframes bp-run{0%{offset-distance:0%}85%,100%{offset-distance:100%}}
+
+/* Reduced motion и пауза анимаций: итоговое состояние сразу (линии прорисованы, точка в конце, шаги горят). */
+@media (prefers-reduced-motion:reduce){
+  .bp-appear,.bp-draw,.bp-run,.bp-steps--animate li::before{animation:none!important}
+  .bp-draw{stroke-dashoffset:0}
+  .bp-run{offset-distance:100%}
+}
+:root[data-motion="off"] .bp-appear,:root[data-motion="off"] .bp-draw,:root[data-motion="off"] .bp-run,:root[data-motion="off"] .bp-steps--animate li::before{animation:none!important}
+:root[data-motion="off"] .bp-draw{stroke-dashoffset:0}
+:root[data-motion="off"] .bp-run{offset-distance:100%}

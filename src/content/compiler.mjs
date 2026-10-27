@@ -216,7 +216,7 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
     .replace(/<span class="route-icon" data-chapter="([^"]+)"><\/span>/g,(_,id)=>`<span class="route-icon">${chapterMarkup(id)}</span>`)
     .replace(/<span class="route-arrow"><\/span>/g,`<span class="route-arrow">${iconMarkup('arrowRight')}</span>`);
   // One top-level block of a chapter or of its overview layer, after its id is set.
-  const transform=(node,{chapter,id,title,tab,permalink=true})=>{
+  const transform=(node,{chapter,id,title,tab,permalink=true,example=false})=>{
     const push=entry=>search.push(tab?{...entry,tab}:entry);
     if(node.tagName==='pre') {
       const code=node.children.find(n=>n.tagName==='code');const raw=code?.children.map(n=>n.value??'').join('')??'';
@@ -242,7 +242,9 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
           block.children.push(el('p',{className:['code-terms']},[txt('Термины в примере: '),...refs.flatMap((term,i)=>[...(i?[txt(' · ')]:[]),el('a',{href:`#${term}`,className:['term-link']},[txt(terms.find(t=>t.id===term).label)])])]));
           audit.exceptions.push(...refs.map(term=>({block:id,term,reason:'executable source retained; adjacent term link'})));
         }
-        node.tagName='details';node.properties.className=['deep-dive'];node.children=[el('summary',{},[txt(`Открыть ${language==='text'?'промпт / контракт':'учебный пример'}`)]),block];
+        // An overview example is the point of its section: shown open, not as a deep dive.
+        if(example){node.tagName='div';node.properties.className=['overview-example'];node.children=[block];}
+        else {node.tagName='details';node.properties.className=['deep-dive'];node.children=[el('summary',{},[txt(`Открыть ${language==='text'?'промпт / контракт':'учебный пример'}`)]),block];}
       }
       push({id,chapter,title:title||'Ориентация',type:language==='mermaid'?'схема':'пример',text:raw});
       return;
@@ -385,7 +387,7 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
       const id=node.tagName==='h2'?`${chapter}-overview-${slug(toText(node))}`:`${chapter}-overview-b${String(++block).padStart(3,'0')}`;
       if(usedIds.has(id))throw Error(`content/overview/${number}.md: id ${id} is already used`);
       node.properties.id=id;usedIds.add(id);
-      transform(node,{chapter,id,title:meta.title,tab:'overview',permalink:false});
+      transform(node,{chapter,id,title:meta.title,tab:'overview',permalink:false,example:true});
     }
     decorateProductLinks(hast);
     const overview=compiled.tabs.find(item=>item.id==='overview');
@@ -423,18 +425,30 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
   if(ids.length!==new Set(ids).size) throw Error(`Duplicate rendered IDs: ${[...new Set(ids.filter((id,i)=>ids.indexOf(id)!==i))].join(', ')}`);
   // Overview ids live only in the overview tab: link targets, not legacy anchors.
   const overviewHtml=chapters.filter(c=>c.overview).map(c=>[c,c.tabs.find(tab=>tab.id==='overview').html]);
-  const overviewIds=new Map(overviewHtml.flatMap(([c,fragment])=>[...fragment.matchAll(/ id="([^"]+)"/g)].filter(m=>m[1].startsWith(`${c.id}-overview-`)).map(m=>[m[1],c.path])));
+  const overviewIds=new Map(overviewHtml.flatMap(([c,fragment])=>[...fragment.matchAll(/ id="([^"]+)"/g)].filter(m=>m[1].startsWith(`${c.id}-overview-`)).map(m=>[m[1],c.id])));
   // Markdown percent-encodes a Cyrillic fragment; ids are compared decoded.
   const decode=id=>{try{return decodeURIComponent(id);}catch{return id;}};
   for(const [,href] of [html,...overviewHtml.map(([,fragment])=>fragment)].join('').matchAll(/href="#([^"]+)"/g)){const target=decode(href);if(!ids.includes(target)&&!overviewIds.has(target)) throw Error(`Missing anchor ${target}`);}
   audit.unexplainedGaps=audit.ambiguous.length+renderedGaps.length;
-  const anchors=Object.fromEntries(ids.map(id=>[id,{id,path:id.startsWith('term-')?'/glossary':chapterPath(id.match(/ch-(?:\d{2}|resources|tools|codex|claude-code)/)?.[0]??'ch-00')}]));
-  for(const panel of panels)anchors[`${panel.id}-panel`]={id:`${panel.id}-panel`,path:chapterPath(panel.chapter)};
-  const targets={...anchors,...Object.fromEntries([...overviewIds].map(([id,path])=>[id,{id,path}]))};
+  // A live chapter (url-map `live`: its tab pages are built) is read at its tab
+  // addresses: anchors, links and search go to the tab that holds the id.
+  const tabAddress=(entry,tab)=>{const segment=urlMap.tabs.find(item=>item.id===tab).segment;return segment?`${entry.new}/${segment}`:entry.new;};
+  const live=new Map([...tabbed].filter(([,entry])=>entry.live));const liveIds=new Map();
+  for(const chapter of chapters){
+    const entry=live.get(chapter.id);if(!entry)continue;
+    for(const [,id] of chapter.heading.matchAll(/ id="([^"]+)"/g))liveIds.set(id,tabAddress(entry,'overview'));
+    for(const tab of chapter.tabs){for(const [,id] of tab.html.matchAll(/ id="([^"]+)"/g))liveIds.set(id,tabAddress(entry,tab.id));for(const panel of tab.panels)liveIds.set(`${panel}-panel`,tabAddress(entry,tab.id));}
+  }
+  const pathOf=(id,chapter)=>{if(!live.has(chapter))return chapterPath(chapter);if(!liveIds.has(id))throw Error(`${chapter}: ${id} is in no tab`);return liveIds.get(id);};
+  const chapterHref=chapter=>live.get(chapter)?.new??chapterPath(chapter);
+  for(const chapter of chapters)chapter.href=chapterHref(chapter.id);
+  const anchors=Object.fromEntries(ids.map(id=>[id,{id,path:id.startsWith('term-')?'/glossary':pathOf(id,id.match(/ch-(?:\d{2}|resources|tools|codex|claude-code)/)?.[0]??'ch-00')}]));
+  for(const panel of panels)anchors[`${panel.id}-panel`]={id:`${panel.id}-panel`,path:pathOf(`${panel.id}-panel`,panel.chapter)};
+  const targets={...anchors,...Object.fromEntries([...overviewIds].map(([id,chapter])=>[id,{id,path:pathOf(id,chapter)}]))};
   const routeLinks=fragment=>fragment.replace(/href="#([^"]+)"/g,(_,id)=>`href="${targets[decode(id)]?.path??'/'}#${id}"`);
   intro=routeLinks(intro);for(const chapter of chapters){chapter.html=routeLinks(chapter.html);if(chapter.tabs){chapter.heading=routeLinks(chapter.heading);for(const tab of chapter.tabs)tab.html=routeLinks(tab.html);}}
-  for(const entry of search)entry.path=chapterPath(entry.chapter);
-  for(const panel of panels){for(const choice of panel.choices){choice.html=routeLinks(choice.html);choice.titleHtml=routeLinks(choice.titleHtml??'');if(choice.evidenceHtml)choice.evidenceHtml=routeLinks(choice.evidenceHtml);if(choice.ownerHtml)choice.ownerHtml=routeLinks(choice.ownerHtml);if(choice.chapter)choice.path=chapterPath(choice.chapter);}for(const scenario of panel.scenarios??[])scenario.html=routeLinks(scenario.html);}
+  for(const entry of search)entry.path=live.has(entry.chapter)?tabAddress(live.get(entry.chapter),entry.tab):chapterPath(entry.chapter);
+  for(const panel of panels){for(const choice of panel.choices){choice.html=routeLinks(choice.html);choice.titleHtml=routeLinks(choice.titleHtml??'');if(choice.evidenceHtml)choice.evidenceHtml=routeLinks(choice.evidenceHtml);if(choice.ownerHtml)choice.ownerHtml=routeLinks(choice.ownerHtml);if(choice.chapter)choice.path=chapterHref(choice.chapter);}for(const scenario of panel.scenarios??[])scenario.html=routeLinks(scenario.html);}
   for(const key of ['heading','description','subtitle'])presentation[key]=routeLinks(presentation[key]);presentation.timeline=presentation.timeline.map(routeLinks);
   const finalHtml=intro+chapters.map(c=>`<section data-chapter="${c.id}">${c.html}</section>`).join('');
   if(/ai-artefacts|AI Artefacts|chatgpt-conversation:|PR #\d|TICKET-\d/.test(JSON.stringify({finalHtml,search,panels,presentation})))throw Error('Private provenance in publication');
