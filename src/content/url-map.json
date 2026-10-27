@@ -49,7 +49,7 @@
       "ch-07-7-2-что-означают-фразы-агентов": "apply",
       "lifecycle-panel": "check"
     } },
-    { "old": "/chapters/08", "new": "/flow/08-preflight", "section": "flow", "chapter": "ch-08", "tabs": true, "lead": "how-it-works", "anchors": {
+    { "old": "/chapters/08", "new": "/flow/08-preflight", "section": "flow", "chapter": "ch-08", "tabs": true, "live": true, "lead": "how-it-works", "anchors": {
       "ch-08-8-1-последовательность": "apply",
       "ch-08-8-2-отчет-preflight": "apply",
       "ch-08-8-3-fail-closed": "how-it-works"
