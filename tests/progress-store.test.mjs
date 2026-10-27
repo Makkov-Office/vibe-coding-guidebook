@@ -69,7 +69,7 @@ test('damaged data does not throw; the readable parts are kept', () => {
   assert.equal(recovered.damaged(), true);
   // Wrong types and unknown ids are dropped, not stored.
   assert.deepEqual(normalizeProgress({ version: 2, completed: ['ch-01', 'ch-01', 'ch-23', 7, '/chapters/02'], exercises: ['exercise-9', 'exercise-2'], practice: { 'ch-22-b003-15': true, 'x y': true, 'ch-22-b003-16': '1' }, reading: { page: 'ch-08', tab: 'nope', y: -5 } }),
-    { version: 2, completed: ['ch-01'], exercises: ['exercise-2'], practice: { 'ch-22-b003-15': true }, reading: { page: 'ch-08', y: 0 } });
+    { version: 2, completed: ['ch-01'], exercises: ['exercise-2'], practice: { 'ch-22-b003-15': true }, drills: {}, reading: { page: 'ch-08', y: 0 } });
   for (const value of [null, 'text', 42, [], { version: 2, reading: 'ch-08' }]) assert.doesNotThrow(() => normalizeProgress(value));
 });
 
@@ -109,7 +109,7 @@ test('set keeps the other fields and notifies; unsubscribe stops it', () => {
   off();
   progressStore.set(({ practice }) => ({ practice: { ...practice, 'ch-22-b003-15': true } }));
   assert.equal(calls, 2);
-  assert.deepEqual(JSON.parse(store.data.get(PROGRESS_KEY)), { version: 2, completed: ['ch-01'], exercises: [], practice: { 'ch-22-b003-15': true }, reading: { page: 'ch-01', tab: 'apply', y: 13 } });
+  assert.deepEqual(JSON.parse(store.data.get(PROGRESS_KEY)), { version: 2, completed: ['ch-01'], exercises: [], practice: { 'ch-22-b003-15': true }, drills: {}, reading: { page: 'ch-01', tab: 'apply', y: 13 } });
 });
 
 test('page and tab ids are the stable ids of the url map', () => {
@@ -178,4 +178,15 @@ test('a refused write keeps the newer record in memory; a later write clears the
 test('a newer reading position wins over the oldest format', () => {
   const entries = { [LEGACY_KEYS.reading]: JSON.stringify({ path: '/chapters/08', y: 960, id: 'ch-08' }), [LEGACY_KEYS.position]: JSON.stringify({ id: 'ch-02', y: 50 }) };
   assert.deepEqual(migrateLegacy(key => entries[key] ?? null, Object.keys(entries)).progress.reading, { page: 'ch-08', y: 960 });
+});
+
+test('drill results (P7-03): best of total per drill id, anything else is dropped', () => {
+  assert.deepEqual(normalizeProgress({ drills: { 'preflight-dispatcher': { best: 5, total: 7 }, 'x y': { best: 1, total: 2 }, over: { best: 9, total: 7 }, half: { best: 1.5, total: 7 }, big: { best: 1, total: 9 }, none: null, list: [1] } }).drills,
+    { 'preflight-dispatcher': { best: 5, total: 7 } });
+  for (const value of [[], 'x', null, 7]) assert.deepEqual(normalizeProgress({ drills: value }).drills, {});
+  const store = memory();
+  const progressStore = createProgressStore(store.storage);
+  progressStore.set(() => ({ drills: { 'preflight-dispatcher': { best: 6, total: 7 } } }));
+  progressStore.set(() => ({ completed: ['ch-08'] }));
+  assert.deepEqual(JSON.parse(store.data.get(PROGRESS_KEY)).drills, { 'preflight-dispatcher': { best: 6, total: 7 } });
 });

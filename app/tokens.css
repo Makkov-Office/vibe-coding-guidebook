@@ -115,7 +115,7 @@
   --shadow-2:0 1px 2px rgb(16 16 16 / .06),0 12px 32px rgb(16 16 16 / .10);
 }
 
-/* Тёмная тема: системная настройка или явный [data-theme="dark"] (переключатель — P3-04). */
+/* Тёмная тема: системная настройка или явный [data-theme="dark"] (переключатель — P3-04, `src/components/UiControls.tsx`). */
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
@@ -199,7 +199,7 @@
   --signature-filter:none;
 }
 
-/* Движение выключено: системная настройка или data-motion="off" на <html> (кнопка паузы — P3-04). */
+/* Движение выключено: системная настройка или data-motion="off" на <html> (кнопка паузы — P3-04, `src/components/UiControls.tsx`). */
 @media (prefers-reduced-motion:reduce){
   :root{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--dur-draw:0ms;--dur-dot:0ms;--dur-step:0ms;--shift-appear:0px}
 }

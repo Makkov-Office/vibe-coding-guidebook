@@ -14,10 +14,11 @@ const CHAPTER=/^ch-(0[1-9]|1\d|2[0-2])$/;
 const PAGE=/^ch-(0[1-9]|1\d|2[0-3])$/;
 const EXERCISE=/^exercise-[1-5]$/;
 const PRACTICE=/^[\p{L}\p{N}_-]{1,120}$/u;
+const DRILL=/^[a-z0-9]+(-[a-z0-9]+)*$/;
 export const TABS=['overview','how-it-works','apply','check'];
 
 const unique=(list,pattern)=>[...new Set((Array.isArray(list)?list:[]).filter(id=>typeof id==='string'&&pattern.test(id)))];
-const empty=()=>({version:PROGRESS_VERSION,completed:[],exercises:[],practice:{},reading:null});
+const empty=()=>({version:PROGRESS_VERSION,completed:[],exercises:[],practice:{},drills:{},reading:null});
 
 /** @param {unknown} value */
 function normalizeReading(value){
@@ -31,7 +32,8 @@ function normalizeReading(value){
 
 /**
  * @typedef {{page:string,tab?:string,y:number}} Reading
- * @typedef {{version:number,completed:string[],exercises:string[],practice:Record<string,true>,reading:Reading|null}} Progress
+ * @typedef {{best:number,total:number}} DrillResult  best correct answers of a drill (P7-03) out of total cards
+ * @typedef {{version:number,completed:string[],exercises:string[],practice:Record<string,true>,drills:Record<string,DrillResult>,reading:Reading|null}} Progress
  * @param {unknown} value
  * @returns {Progress}
  */
@@ -39,7 +41,12 @@ export function normalizeProgress(value){
   const source=value&&typeof value==='object'?/** @type {Record<string,any>} */(value):{};
   const practice={};
   if(source.practice&&typeof source.practice==='object')for(const [id,done] of Object.entries(source.practice))if(done===true&&PRACTICE.test(id))practice[id]=true;
-  return {version:PROGRESS_VERSION,completed:unique(source.completed,CHAPTER),exercises:unique(source.exercises,EXERCISE),practice,reading:normalizeReading(source.reading)};
+  const drills={};
+  if(source.drills&&typeof source.drills==='object'&&!Array.isArray(source.drills))for(const [id,result] of Object.entries(source.drills)){
+    const {best,total}=result&&typeof result==='object'?result:{};
+    if(DRILL.test(id)&&Number.isInteger(total)&&total>=1&&total<=8&&Number.isInteger(best)&&best>=0&&best<=total)drills[id]={best,total};
+  }
+  return {version:PROGRESS_VERSION,completed:unique(source.completed,CHAPTER),exercises:unique(source.exercises,EXERCISE),practice,drills,reading:normalizeReading(source.reading)};
 }
 
 /** Same marks as learning-profile normalizeMarks: chapters 01–22 and exercises 1–5. */
