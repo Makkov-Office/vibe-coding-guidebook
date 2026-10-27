@@ -3,7 +3,7 @@ import {createHash} from 'node:crypto';
 const data=JSON.parse(await fs.readFile('src/content/generated.json','utf8'));
 const diagrams=JSON.parse(await fs.readFile('src/content/diagram-assets.json','utf8'));
 function images(html){return html.replace(/<figure[^>]*data-diagram="([^"]+)"[^>]*>[\s\S]*?<\/figure>/g,(all,id)=>{const asset=diagrams[id];if(!asset?.src)return all.replace('<details class="diagram-source">','<p class="diagram-diagnostic">Схема доступна в текстовом формате.</p><details open class="diagram-source">');return all.replace('class="mermaid-figure','class="mermaid-figure diagram-ready').replace(/(<div class="diagram-render"[^>]*>)(<\/div>)/,`$1<img src="${asset.src}" alt="" loading="lazy" decoding="async"/>$2`);});}
-data.html=images(data.html);data.intro=images(data.intro);for(const chapter of data.chapters)chapter.html=images(chapter.html);
+data.html=images(data.html);data.intro=images(data.intro);for(const chapter of data.chapters){chapter.html=images(chapter.html);for(const tab of chapter.tabs??[])tab.html=images(tab.html);}
 await fs.writeFile('src/content/generated.json',JSON.stringify(data));
 await fs.mkdir('public/data',{recursive:true});
 const manifest={};

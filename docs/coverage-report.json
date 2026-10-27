@@ -3227,6 +3227,11 @@
   ],
   "ambiguous": [],
   "unexplainedGaps": 0,
+  "tabs": {
+    "chapters": 21,
+    "blocks": 268,
+    "overviews": 0
+  },
   "renderedLinked": 2976,
   "renderedGaps": []
 }
