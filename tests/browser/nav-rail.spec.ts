@@ -118,6 +118,8 @@ test('axe: no serious or critical violations with the menu closed and open',asyn
   await ready(page,path);
   for(const open of [false,true]){
    if(open){await item(page,'flow').focus();await expect(menu(page,'flow')).toBeVisible();}
+   // Contrast is measured on the settled UI: the menu fades in («Появление»), mid-fade colours are not final.
+   await page.evaluate(()=>Promise.all(document.getAnimations().filter(a=>Number.isFinite(Number(a.effect?.getComputedTiming().endTime))).map(a=>a.finished.catch(()=>undefined))));
    await page.addScriptTag({path:'node_modules/axe-core/axe.min.js'});
    const violations=await page.evaluate(async()=>{const result=await(window as unknown as {axe:{run:(context:unknown,options:object)=>Promise<{violations:{id:string;impact:string}[]}>}}).axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}});return result.violations.filter(v=>v.impact==='serious'||v.impact==='critical').map(v=>v.id);});
    expect(violations,`${path} open=${open}`).toEqual([]);
