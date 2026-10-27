@@ -51,6 +51,8 @@
   --space-10:40px;
   --space-12:48px;
   --touch-target:44px;
+  --rail-width:96px;
+  --mega-width:320px;
   --stroke-line:1.5px;
   --stroke-border:1px;
   /* Иконки Tabler: размер из токена, контур 1.5 px задаёт src/design/icons.mjs. */
