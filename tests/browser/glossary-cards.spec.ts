@@ -7,8 +7,8 @@ test('a term card shows its level and copies a link to the term',async({page,con
  await context.grantPermissions(['clipboard-read','clipboard-write']);
  await ready(page,'/glossary');
  const card=page.locator('#term-agent');
- await expect(card.locator('.term-level')).toHaveText('Базовое');
- await expect(page.locator('#term-preflight .term-level')).toHaveText('Профессиональное');
+ await expect(card.locator('.term-level')).toHaveText('Уровень: Базовое');
+ await expect(page.locator('#term-preflight .term-level')).toHaveText('Уровень: Профессиональное');
  const copy=card.getByRole('button',{name:'Скопировать ссылку на термин «Agent»'});
  await copy.focus();await expect(copy).toBeFocused();await page.keyboard.press('Enter');
  await expect(page.locator('.term-copy-status')).toHaveText('Ссылка на термин «Agent» скопирована.');
@@ -25,4 +25,16 @@ test('the note on the source format is not shown and the cards fit narrow screen
  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
  const box=await page.locator('#term-agent .term-copy').boundingBox();
  expect(box!.width).toBeGreaterThanOrEqual(44);expect(box!.height).toBeGreaterThanOrEqual(44);
+});
+
+test('without clipboard access the address is shown under the card',async({page})=>{
+ await page.addInitScript(()=>{Object.defineProperty(navigator,'clipboard',{value:{writeText:()=>Promise.reject(new Error('denied'))}});});
+ await ready(page,'/glossary');
+ const card=page.locator('#term-agent');
+ await expect(card.locator('.term-copy-fallback')).toBeHidden();
+ await card.getByRole('button',{name:'Скопировать ссылку на термин «Agent»'}).click();
+ const fallback=card.locator('.term-copy-fallback');
+ await expect(fallback).toBeVisible();await expect(fallback).toContainText('Не удалось скопировать ссылку. Адрес термина:');
+ await expect(fallback.locator('code')).toHaveText(/\/glossary#term-agent$/);
+ await expect(page.locator('.term-copy-status')).toContainText('Не удалось скопировать ссылку.');
 });

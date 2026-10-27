@@ -257,7 +257,7 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
         const cells=row.children.filter(n=>n.tagName==='td');const anchor=cells[0]?.children.find(n=>n.tagName==='a');const term=terms.find(t=>t.id===anchor?.properties.id);if(!term) continue;
         cells[0].children=cells[0].children.filter(n=>n!==anchor);
         // The level is shown on the card too (P6-07b); the copy-link button joins it in the browser.
-        const meta=term.level?[el('p',{className:['term-meta']},[el('span',{className:['term-level'],'data-level':term.level},[txt(levels.names[term.level])])])]:[];
+        const meta=term.level?[el('p',{className:['term-meta']},[el('span',{className:['term-level'],'data-level':term.level},[el('span',{className:['sr-only']},[txt('Уровень: ')]),txt(levels.names[term.level])])])]:[];
         const card=el('article',{id:term.id,tabIndex:-1,className:['term-definition'],'data-topic':term.topic,'data-term':term.id,'data-level':term.level},[el('h4',{},cells[0].children),...meta,el('p',{},cells[1].children)]);
         if(termProduct(term.id))card.children[0].children.unshift(productImage(termProduct(term.id)));
         decorateProductLinks(card);

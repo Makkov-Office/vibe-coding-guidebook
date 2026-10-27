@@ -21,13 +21,19 @@ export function GlossaryEnhancer(){
    button.type='button';button.className='term-copy';
    button.setAttribute('aria-label',`Скопировать ссылку на термин «${name}»`);
    button.innerHTML=icon.current!.innerHTML;
+   // Without clipboard access the address is shown under the card, selectable, for copying by hand.
+   const fallback=Object.assign(document.createElement('p'),{className:'term-copy-fallback',hidden:true});
+   card.appendChild(fallback);
    const copy=async()=>{
     const url=`${location.origin}${location.pathname}#${card.id}`;
-    try{await navigator.clipboard.writeText(url);announce(`Ссылка на термин «${name}» скопирована.`);}
-    catch{announce(`Не удалось скопировать. Адрес термина: ${url}`);}
+    try{await navigator.clipboard.writeText(url);fallback.hidden=true;announce(`Ссылка на термин «${name}» скопирована.`);}
+    catch{
+     fallback.replaceChildren('Не удалось скопировать ссылку. Адрес термина: ',Object.assign(document.createElement('code'),{textContent:url}));
+     fallback.hidden=false;announce(`Не удалось скопировать ссылку. Адрес термина: ${url}`);
+    }
    };
    button.addEventListener('click',copy);meta.appendChild(button);
-   cleanup.push(()=>{button.removeEventListener('click',copy);button.remove();if(added)meta.remove();});
+   cleanup.push(()=>{button.removeEventListener('click',copy);button.remove();fallback.remove();if(added)meta.remove();});
   }
   return()=>cleanup.forEach(fn=>fn());
  },[]);

@@ -38,10 +38,10 @@ test('levels change no definition, alias, anchor or search entry', async () => {
   const before = cards(glossary(base)), after = cards(glossary(leveled));
   assert.deepEqual(Object.keys(after).sort(), Object.keys(before).sort());
   // A level adds data-level and the visible level label (P6-07b), nothing else.
-  for (const [id, card] of Object.entries(after)) assert.equal(card.replace(/ data-level="(basic|professional)"/, '').replace(/<p class="term-meta"><span class="term-level" data-level="(basic|professional)">[^<]+<\/span><\/p>/, ''), before[id], id);
+  for (const [id, card] of Object.entries(after)) assert.equal(card.replace(/ data-level="(basic|professional)"/, '').replace(/<p class="term-meta"><span class="term-level" data-level="(basic|professional)"><span class="sr-only">Уровень: <\/span>[^<]+<\/span><\/p>/, ''), before[id], id);
   for (const term of leveled.terms) {
     assert.match(after[term.id], new RegExp(`data-level="${term.level}"`));
-    assert.ok(after[term.id].includes(`<span class="term-level" data-level="${term.level}">${leveled.levels[term.level]}</span>`), term.id);
+    assert.ok(after[term.id].includes(`<span class="term-level" data-level="${term.level}"><span class="sr-only">Уровень: </span>${leveled.levels[term.level]}</span>`), term.id);
   }
   // Every other chapter is unchanged.
   assert.deepEqual(leveled.chapters.filter(c => c.id !== 'ch-23'), base.chapters.filter(c => c.id !== 'ch-23'));
