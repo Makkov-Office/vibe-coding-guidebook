@@ -1,10 +1,10 @@
 # ADR 0001: Один primary author на тикет, работа только в task-ветках
 
-Status: Accepted — 22.10.2026, решение founder, вместе с merge PR #1 (https://github.com/Makkov-Office/vibe-coding-guidebook/pull/1)
+Status: Accepted — 22.10.2026, решение founder, вместе с merge PR #1 (https://github.com/Makkov-Office/vibe-coding-guidebook/pull/1). Изменён 27.10.2026 (решение founder): правило merge заменено делегированием оркестратору — ADR-0003, Decision 6; бриф v1.3, раздел 14.
 
 Context: Проект разрабатывается агентами в облачных сессиях, часть работы идёт параллельно. Параллельные правки в одном checkout скрывают владение и портят evidence.
 
-Decision: Каждый тикет имеет одного primary author, одну ветку `p<фаза>-<номер>-<slug>` и один PR. Прямые коммиты и push в `main` запрещены и блокируются `.claude/settings.json` и `.claude/hooks/guard-git.sh`. Merge — только по явному решению founder.
+Decision: Каждый тикет имеет одного primary author, одну ветку `p<фаза>-<номер>-<slug>` и один PR. Прямые коммиты и push в `main` запрещены и блокируются `.claude/settings.json` и `.claude/hooks/guard-git.sh`. Merge — после independent review READY на HEAD и зелёного CI; делает оркестратор по делегированию founder (решения 22.10.2026 и 26.10.2026), автор тикета останавливается перед merge. До изменения 27.10.2026: только по явному решению founder.
 
 Alternatives: общий checkout; работа последовательно в main; независимые клоны.
 
