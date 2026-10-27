@@ -38,7 +38,8 @@ type ViewTransitionDocument = Document & { startViewTransition?: (update: () => 
  * Page transition: always runs `navigate`; inside a View Transition when the browser supports it
  * and motion is on, otherwise directly. `navigate` may return a promise that settles when the new
  * page renders: the transition waits for it at most one long duration, so a slow route never
- * freezes the old page behind the transition. Returns whether a transition started.
+ * freezes the old page behind the transition; a page that is late is shown without the fade.
+ * Returns whether a transition started.
  */
 export function transitionTo(navigate: () => Promise<void> | void): boolean {
   const doc = document as ViewTransitionDocument;
@@ -47,9 +48,15 @@ export function transitionTo(navigate: () => Promise<void> | void): boolean {
     return false;
   }
   const limit = motionDuration('--dur-3');
-  const transition = doc.startViewTransition(() =>
-    Promise.race([Promise.resolve(navigate()), new Promise<void>(resolve => setTimeout(resolve, limit))]),
-  ) as { ready?: Promise<unknown>; finished?: Promise<unknown> } | undefined;
+  type Transition = { ready?: Promise<unknown>; finished?: Promise<unknown>; skipTransition?: () => void };
+  const transition = doc.startViewTransition(async () => {
+    const late = await Promise.race([
+      Promise.resolve(navigate()).then(() => false),
+      new Promise<boolean>(resolve => setTimeout(() => resolve(true), limit)),
+    ]);
+    // The new page is not there yet: skip the fade instead of fading the old page back in.
+    if (late) transition?.skipTransition?.();
+  }) as Transition | undefined;
   // A skipped transition (hidden tab, a second navigation) rejects `ready`; the page still updates.
   transition?.ready?.catch(() => {});
   transition?.finished?.catch(() => {});

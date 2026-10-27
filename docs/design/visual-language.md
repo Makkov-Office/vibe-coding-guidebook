@@ -174,7 +174,7 @@ Reduced motion: при `prefers-reduced-motion: reduce` все длительн�
 | Прорисовка линии | `.motion-draw` | класс на `<svg>`, у каждой рисуемой линии `pathLength="1"` |
 | Бег точки | `.motion-dot` | класс на точке, путь в `--motion-path: path('…')` |
 | Смена шага | `.motion-steps` | класс на списке, у шага `style="--step: N"` (номер с нуля) |
-| Переход между страницами | View Transitions API, меняется `.reading-column` | `transitionTo(navigate, committed)` из `src/design/motion.ts`; без поддержки браузера или с выключенным движением переход мгновенный |
+| Переход между страницами | View Transitions API, меняется `.reading-column` | `transitionTo(navigate)` из `src/design/motion.ts`: `navigate` может вернуть промис, который выполняется, когда новая страница отрисована; переход ждёт его не дольше `--dur-3`, а если страница не успела, показывает её без появления. Без поддержки браузера или с выключенным движением переход мгновенный |
 
 Hover и нажатие — `transition: <свойство> var(--dur-1) var(--ease)`, меню и подсказки — `var(--dur-2)`. Скрипт берёт длительность через `motionDuration('--dur-…')`: при выключенном движении она равна 0.
 
