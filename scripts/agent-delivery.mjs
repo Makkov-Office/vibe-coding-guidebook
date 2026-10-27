@@ -117,7 +117,8 @@ export function packFiles(root=PACK){
 
 async function main(){
   const generated=JSON.parse(fs.readFileSync('src/content/generated.json','utf8'));
-  const chapters=generated.chapters.map(({id,title,path})=>({id,title,path}));
+  // A live chapter (P5-02b) has its new address in href; its Markdown follows it.
+  const chapters=generated.chapters.map(({id,title,path,href})=>({id,title,path:href??path}));
   const pages=splitPages(fs.readFileSync('content/handbook.md','utf8'),chapters);
   // A page's Markdown also stays at its old address from the URL map, so links like
   // /chapters/08.md in the pack keep working after the page moves (P5).

@@ -20,16 +20,18 @@ test('/agents offers the archive, llms.txt and the pack description',async({page
 
 test('«Скопировать для агента» copies the page Markdown from the keyboard and announces it',async({page,context,request})=>{
  await context.grantPermissions(['clipboard-read','clipboard-write']);
- await ready(page,'/chapters/08');
+ await ready(page,'/flow/08-preflight');
  const button=page.getByRole('button',{name:'Скопировать для агента'});
  // The live region is in the accessibility tree before the first message, so screen readers announce it.
  expect(await page.locator('.agent-copy [role=status]').evaluate(e=>getComputedStyle(e).display)).not.toBe('none');
  await button.focus();await page.keyboard.press('Enter');
  await expect(page.locator('.agent-copy [role=status]')).toHaveText(/скопирован/);
- const expected=await (await request.get('/chapters/08.md')).text();
+ const expected=await (await request.get('/flow/08-preflight.md')).text();
+ // The address the pack used before the move still serves the same Markdown.
+ expect(await (await request.get('/chapters/08.md')).text()).toBe(expected);
  expect(expected).toMatch(/^## 08\. Preflight/);
  expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe(expected);
- await expect(page.getByRole('link',{name:'Markdown страницы'})).toHaveAttribute('href','/chapters/08.md');
+ await expect(page.getByRole('link',{name:'Markdown страницы'})).toHaveAttribute('href','/flow/08-preflight.md');
  // The introduction and the tool reviews have the button too.
  for(const [path,md] of [['/','/index.md'],['/tools/claude-code','/tools/claude-code.md'],['/glossary','/glossary.md']]){
   await ready(page,path);await expect(page.locator('.agent-copy a')).toHaveAttribute('href',md);

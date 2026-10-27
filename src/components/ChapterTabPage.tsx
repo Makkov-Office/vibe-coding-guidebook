@@ -4,6 +4,8 @@ import {ReaderPageData} from './ReaderPageData';
 import {InteractivePanel} from './InteractivePanel';
 import {LearningProgress} from './LearningProgress';
 import {ProjectIcon} from './ProjectIcon';
+import {CopyForAgent} from './CopyForAgent';
+import agentPack from '../content/agent-pack.json';
 import {chapterTabs,chapterTabHrefs} from '../content/chapter-routes';
 import type {TabId} from '../content/types';
 // One tab of a live chapter (P5-02b): the chapter heading, the tab's HTML and panels.
@@ -11,6 +13,8 @@ import type {TabId} from '../content/types';
 export function ChapterTabPage({chapterId,tabId}:{chapterId:string;tabId:TabId}){
  const chapter=handbook.chapters.find(c=>c.id===chapterId)!,tab=chapter.tabs!.find(t=>t.id===tabId)!,hrefs=chapterTabHrefs(chapterId);
  const heading=chapter.heading!.replace('<h2','<h1').replace('</h2>','</h1>'),html=tab.html.replace(/<(\/?)h3\b/g,'<$1h2').replace(/<(\/?)h4\b/g,'<$1h3');
+ // The whole chapter in Markdown, the same on every tab (P8-03).
+ const markdown=(agentPack.markdown as Record<string,string>)[chapterId];
  const panels=handbook.panels.filter(p=>p.chapter===chapterId&&tab.panels.includes(p.id));
  const blocks=handbook.blocks.filter(b=>tab.html.includes(` id="${b.id}"`));
  const required=new Set([...JSON.stringify([chapter.heading,tab.html,panels]).matchAll(/term-[a-z0-9-]+/g)].map(m=>m[0]));for(const block of blocks)for(const term of block.terms)required.add(term);
@@ -19,6 +23,7 @@ export function ChapterTabPage({chapterId,tabId}:{chapterId:string;tabId:TabId})
  const previous=at>0?{href:hrefs[chapterTabs[at-1].id],label:chapterTabs[at-1].label}:index>0?{href:reading[index-1].href,label:reading[index-1].title}:null;
  const next=at<chapterTabs.length-1?{href:hrefs[chapterTabs[at+1].id],label:chapterTabs[at+1].label}:index<reading.length-1?{href:reading[index+1].href,label:reading[index+1].title}:null;
  return <><ReaderPageData value={metadata}/><main id="reader" tabIndex={-1}><section className="chapter chapter-tabbed" data-chapter={chapterId} data-tab={tabId}>
+  {markdown&&<CopyForAgent href={markdown}/>}
   <div className="reader-prose" dangerouslySetInnerHTML={{__html:heading}}/>
   <nav className="chapter-tabs-stub" aria-label="Разделы главы"><ul>{chapterTabs.map(t=><li key={t.id}><Link href={hrefs[t.id]} aria-current={t.id===tabId?'page':undefined}>{t.label}</Link></li>)}</ul></nav>
   {html?<div className="reader-prose" dangerouslySetInnerHTML={{__html:html}}/>:<p className="tab-empty">Раздел «{chapterTabs[at].label}» этой главы появится позже.</p>}
