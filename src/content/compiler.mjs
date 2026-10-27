@@ -438,22 +438,24 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
   audit.unexplainedGaps=audit.ambiguous.length+renderedGaps.length;
   // A live chapter (url-map `live`: its tab pages are built) is read at its tab
   // addresses: anchors, links and search go to the tab that holds the id.
+  // A live page without tabs (glossary, cheat sheet) is read at its new address.
   const tabAddress=(entry,tab)=>{const segment=urlMap.tabs.find(item=>item.id===tab).segment;return segment?`${entry.new}/${segment}`:entry.new;};
   const live=new Map([...tabbed].filter(([,entry])=>entry.live));const liveIds=new Map();
+  const moved=new Map((urlMap?.pages??[]).filter(entry=>entry.live&&entry.chapter&&!entry.tabs).map(entry=>[entry.chapter,entry]));
   for(const chapter of chapters){
     const entry=live.get(chapter.id);if(!entry)continue;
     for(const [,id] of chapter.heading.matchAll(/ id="([^"]+)"/g))liveIds.set(id,tabAddress(entry,'overview'));
     for(const tab of chapter.tabs){for(const [,id] of tab.html.matchAll(/ id="([^"]+)"/g))liveIds.set(id,tabAddress(entry,tab.id));for(const panel of tab.panels)liveIds.set(`${panel}-panel`,tabAddress(entry,tab.id));}
   }
-  const pathOf=(id,chapter)=>{if(!live.has(chapter))return chapterPath(chapter);if(!liveIds.has(id))throw Error(`${chapter}: ${id} is in no tab`);return liveIds.get(id);};
-  const chapterHref=chapter=>live.get(chapter)?.new??chapterPath(chapter);
+  const pathOf=(id,chapter)=>{if(moved.has(chapter))return moved.get(chapter).new;if(!live.has(chapter))return chapterPath(chapter);if(!liveIds.has(id))throw Error(`${chapter}: ${id} is in no tab`);return liveIds.get(id);};
+  const chapterHref=chapter=>(live.get(chapter)??moved.get(chapter))?.new??chapterPath(chapter);
   for(const chapter of chapters)chapter.href=chapterHref(chapter.id);
-  const anchors=Object.fromEntries(ids.map(id=>[id,{id,path:id.startsWith('term-')?'/glossary':pathOf(id,id.match(/ch-(?:\d{2}|resources|tools|codex|claude-code)/)?.[0]??'ch-00')}]));
+  const anchors=Object.fromEntries(ids.map(id=>[id,{id,path:id.startsWith('term-')?pathOf(id,'ch-23'):pathOf(id,id.match(/ch-(?:\d{2}|resources|tools|codex|claude-code)/)?.[0]??'ch-00')}]));
   for(const panel of panels)anchors[`${panel.id}-panel`]={id:`${panel.id}-panel`,path:pathOf(`${panel.id}-panel`,panel.chapter)};
   const targets={...anchors,...Object.fromEntries([...overviewIds].map(([id,chapter])=>[id,{id,path:pathOf(id,chapter)}]))};
   const routeLinks=fragment=>fragment.replace(/href="#([^"]+)"/g,(_,id)=>`href="${targets[decode(id)]?.path??'/'}#${id}"`);
   intro=routeLinks(intro);for(const chapter of chapters){chapter.html=routeLinks(chapter.html);if(chapter.tabs){chapter.heading=routeLinks(chapter.heading);for(const tab of chapter.tabs)tab.html=routeLinks(tab.html);}}
-  for(const entry of search)entry.path=live.has(entry.chapter)?tabAddress(live.get(entry.chapter),entry.tab):chapterPath(entry.chapter);
+  for(const entry of search)entry.path=live.has(entry.chapter)?tabAddress(live.get(entry.chapter),entry.tab):chapterHref(entry.chapter);
   for(const panel of panels){for(const choice of panel.choices){choice.html=routeLinks(choice.html);choice.titleHtml=routeLinks(choice.titleHtml??'');if(choice.evidenceHtml)choice.evidenceHtml=routeLinks(choice.evidenceHtml);if(choice.ownerHtml)choice.ownerHtml=routeLinks(choice.ownerHtml);if(choice.chapter)choice.path=chapterHref(choice.chapter);}for(const scenario of panel.scenarios??[])scenario.html=routeLinks(scenario.html);}
   for(const key of ['heading','description','subtitle'])presentation[key]=routeLinks(presentation[key]);presentation.timeline=presentation.timeline.map(routeLinks);
   const finalHtml=intro+chapters.map(c=>`<section data-chapter="${c.id}">${c.html}</section>`).join('');

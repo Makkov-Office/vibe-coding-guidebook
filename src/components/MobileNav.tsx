@@ -7,6 +7,7 @@ import {useEffect,useMemo,useRef,useState} from 'react';
 import {navSections,currentSection,completable,type NavChapter} from '../design/nav-sections';
 import {RoleIcon,PageLink,Progress,useCompleted} from './NavRail';
 import {UiControls} from './UiControls';
+import {pageHref} from '../content/chapter-routes';
 import '../design/mobile-nav.css';
 
 export function MobileNav({chapters,pathname,ready,onSearch}:{chapters:NavChapter[];pathname:string;ready:boolean;onSearch:(opener:HTMLElement)=>void}){
@@ -15,7 +16,7 @@ export function MobileNav({chapters,pathname,ready,onSearch}:{chapters:NavChapte
  const [open,setOpen]=useState(false),[expanded,setExpanded]=useState<string[]>([]);
  // «Продолжить» leads to the first chapter not yet completed, in reading order.
  const next=chapters.filter(c=>completable(c.id)).sort((a,b)=>a.id<b.id?-1:1).find(c=>!completed.includes(c.id));
- const continueHref=next?.path??'/glossary';
+ const continueHref=next?.path??pageHref('ch-23');
  const show=()=>{window.dispatchEvent(new Event('context-close'));setExpanded(active&&active!=='home'?[active]:[]);dialog.current?.showModal();setOpen(true);};
  // A link closes the menu for the route change: focus goes to the new page, not back to «Разделы».
  const leave=()=>{navigating.current=true;dialog.current?.close();};
