@@ -1,14 +1,14 @@
 import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
 // Mobile navigation (P3-02): bottom bar and the full-screen section menu below 1024 px.
-const urlMap=JSON.parse(fs.readFileSync('src/content/url-map.json','utf8')) as {pages:{old:string;new:string}[]};
+const urlMap=JSON.parse(fs.readFileSync('src/content/url-map.json','utf8')) as {pages:{old:string;new:string;chapter?:string}[]};
 async function ready(page:Page,path:string,width=360){await page.setViewportSize({width,height:800});await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.getByRole('button',{name:'Разделы',exact:true})).toBeEnabled();}
 const bar=(page:Page)=>page.getByRole('navigation',{name:'Навигация'}),menu=(page:Page)=>page.locator('#section-menu');
 const section=(page:Page,label:string)=>menu(page).getByRole('button',{name:label,exact:true});
 
 test('below 1024 px the bottom bar replaces the rail, without horizontal scroll',async({page})=>{
  for(const width of [320,360,768,1023]){
-  await ready(page,'/chapters/08',width);
+  await ready(page,'/flow/08-preflight',width);
   await expect(bar(page)).toBeVisible();await expect(page.locator('.nav-rail')).toBeHidden();
   await expect(bar(page).locator('a,button')).toHaveText(['Главная','Разделы','Поиск','Продолжить']);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
@@ -21,12 +21,12 @@ test('below 1024 px the bottom bar replaces the rail, without horizontal scroll'
 });
 
 test('the section menu opens with the current section expanded and closes with Esc and the close button',async({page})=>{
- await ready(page,'/chapters/08');
+ await ready(page,'/flow/08-preflight');
  const trigger=page.getByRole('button',{name:'Разделы',exact:true});
  await trigger.click();await expect(menu(page)).toBeVisible();await expect(trigger).toHaveAttribute('aria-expanded','true');
  await expect(menu(page).locator('.section-row')).toHaveText(['Главная','Начать','Основы','Процесс','Контроль','Надёжность','Практика','Инструменты','Agent Pack']);
  await expect(section(page,'Процесс')).toHaveAttribute('aria-expanded','true');await expect(section(page,'Процесс')).toHaveAttribute('aria-current','true');
- await expect(menu(page).locator('.mega-item[aria-current=page]')).toHaveAttribute('href','/chapters/08');
+ await expect(menu(page).locator('.mega-item[aria-current=page]')).toHaveAttribute('href','/flow/08-preflight');
  await expect(section(page,'Основы')).toHaveAttribute('aria-expanded','false');
  await section(page,'Основы').click();await expect(menu(page).locator('#section-base')).toBeVisible();
  await section(page,'Основы').press('Enter');await expect(menu(page).locator('#section-base')).toBeHidden();
@@ -49,7 +49,7 @@ for(const via of ['click','Enter'] as const)test(`choosing a chapter by ${via} c
 
 test('every menu link leads to an existing address, and progress and «Продолжить» follow completion',async({page,request})=>{
  await page.addInitScript(()=>localStorage.setItem('handbook-learning-v2',JSON.stringify({completed:['ch-01','ch-02','ch-06'],exercises:[]})));
- await ready(page,'/chapters/08');
+ await ready(page,'/flow/08-preflight');
  await expect(bar(page).getByRole('link',{name:'Продолжить'})).toHaveAttribute('href','/chapters/03');
  await page.getByRole('button',{name:'Разделы',exact:true}).click();
  for(const label of ['Начать','Основы','Контроль','Надёжность','Практика','Инструменты','Agent Pack'])await section(page,label).click();
@@ -60,7 +60,8 @@ test('every menu link leads to an existing address, and progress and «Прод�
   expect(mapped.has(href)||extra.has(href),href).toBe(true);
   expect((await request.get(href,{maxRedirects:0})).status(),href).toBe(200);
  }
- for(let i=1;i<=22;i++)expect(hrefs).toContain(`/chapters/${String(i).padStart(2,'0')}`);
+ // Every chapter is in the menu; a chapter that moved (P5) at its new address.
+ for(let i=1;i<=22;i++){const id=`ch-${String(i).padStart(2,'0')}`,paths=urlMap.pages.filter(p=>p.chapter===id).flatMap(p=>[p.old,p.new]);expect(hrefs.some(href=>paths.includes(href)),id).toBe(true);}
 });
 
 test('«Поиск» in the bottom bar opens search; «Главная» marks the home page',async({page})=>{
@@ -72,21 +73,21 @@ test('«Поиск» in the bottom bar opens search; «Главная» marks th
 });
 
 test('widening the window past 1024 px closes the section menu',async({page})=>{
- await ready(page,'/chapters/08');
+ await ready(page,'/flow/08-preflight');
  await page.getByRole('button',{name:'Разделы',exact:true}).click();await expect(menu(page)).toBeVisible();
  await page.setViewportSize({width:1280,height:800});await expect(menu(page)).toBeHidden();await expect(page.locator('.nav-rail')).toBeVisible();
 });
 
 test('without JavaScript there is no bar, the chapter list stays and nothing scrolls sideways',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:360,height:800}}),page=await context.newPage();
- await page.goto('/chapters/08');
+ await page.goto('/flow/08-preflight');
  await expect(page.locator('.bottom-bar')).toBeHidden();await expect(page.locator('.sidebar a[href="/chapters/05"]')).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await context.close();
 });
 
 test('axe: no serious or critical violations with the menu closed and open',async({page})=>{
- for(const path of ['/','/chapters/08']){
+ for(const path of ['/','/flow/08-preflight']){
   await ready(page,path);
   for(const open of [false,true]){
    if(open){await page.getByRole('button',{name:'Разделы',exact:true}).click();await expect(menu(page)).toBeVisible();}
