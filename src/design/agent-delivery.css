@@ -1,0 +1,20 @@
+/* Agent delivery (P8-03): «Скопировать для агента» and the /agents page. Agent role colours
+   (docs/design/visual-language.md, «Цветовые роли»: «Агент»). */
+.agent-copy{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:var(--space-2) var(--space-4);margin:0 0 var(--space-5)}
+.agent-copy-button{display:inline-flex;align-items:center;gap:var(--space-2);background:var(--color-agent-container);color:var(--color-on-agent-container);border-color:var(--color-agent-accent);border-radius:var(--radius-full);font-size:var(--type-small);font-weight:600}
+.agent-copy-button:hover{background:var(--color-agent-accent);color:var(--color-on-agent-container)}
+.agent-copy a{font-size:var(--type-small);display:inline-flex;align-items:center;min-height:var(--touch-target)}
+.agent-copy-status{flex-basis:100%;margin:0;text-align:end;font-size:var(--type-small);color:var(--color-on-surface-variant)}
+/* The live region stays in the accessibility tree while empty, or its first message is not announced. */
+.agent-copy-status:empty{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.agents-page h1{font-family:var(--font-display);font-size:clamp(2rem,3.3vw,3rem);font-weight:500;letter-spacing:-.02em;line-height:1.17;margin-bottom:var(--space-4)}
+.agents-download{display:grid;gap:var(--space-3);margin:var(--space-5) 0 var(--space-6);padding:var(--space-5);border:var(--stroke-border) solid var(--color-agent-accent);border-radius:var(--radius-l);background:var(--color-agent-container);color:var(--color-on-agent-container)}
+.agents-download p{margin:0;font-size:var(--type-small)}
+.agents-download .primary-action{justify-self:start}
+.agents-links{display:flex;flex-wrap:wrap;gap:var(--space-2) var(--space-4)}
+.agents-links a{color:var(--color-on-agent-container);font-size:var(--type-small);display:inline-flex;align-items:center;min-height:var(--touch-target)}
+.agents-files ul{columns:2 16rem;padding:0;list-style:none;font:var(--type-mono) var(--font-mono)}
+.agents-files li{break-inside:avoid;display:flex;justify-content:space-between;gap:var(--space-3);padding:var(--space-1) 0;border-bottom:var(--stroke-border) solid var(--color-outline-variant)}
+.agents-files li span:last-child{color:var(--color-on-surface-variant);white-space:nowrap}
+.agents-page td code{overflow-wrap:normal;white-space:nowrap}
+@media print{.agent-copy{display:none}}

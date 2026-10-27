@@ -22,6 +22,8 @@ export type ChapterTemplateProps={
   pageData?:Partial<PageData>;
   /** Место под мини-таймлайн DEMO-42 и мини-карту системы (бриф 9.3–9.4). */
   aside?:ReactNode;
+  /** Действия под hero, например «Скопировать для агента» (P8-03). */
+  tools?:ReactNode;
   /** Содержимое таба сверх текста и панелей (тренажёр таба «Проверь себя», P7-03): идёт после них, таб с ним не пустой. */
   children?:ReactNode;
 };
@@ -38,7 +40,7 @@ export function shortTitle(title:string){return title.replace(/^\d+\.\s*/,'').sp
 const lift=(html:string)=>html.replace(/<(\/?)h3\b/g,'<$1h2').replace(/<(\/?)h4\b/g,'<$1h3');
 const heading=(html:string)=>html.replace(/<a [^>]*class="permalink"[^>]*>#<\/a>/,'').replace(/^<h2/,'<h1').replace(/<\/h2>$/,'</h1>');
 
-export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,aside,children}:ChapterTemplateProps){
+export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,aside,tools,children}:ChapterTemplateProps){
   const chapter=handbook.chapters.find(c=>c.id===chapterId);
   if(!chapter?.tabs||!chapter.heading)throw new Error(`ChapterTemplate: ${chapterId} has no tabs`);
   const tab=chapter.tabs.find(t=>t.id===tabId);
@@ -67,6 +69,7 @@ export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,a
           {meta?.level&&<li><RoleIcon role="level"/>{meta.level}</li>}
           {meta?.template&&<li><RoleIcon role="template"/>{meta.template}</li>}
         </ul>
+        {tools}
       </header>
       <ChapterTabBar title={shortTitle(chapter.title)} current={tabId} tabs={tabs.map(t=>({id:t.id,label:t.label,href:hrefs[t.id],minutes:minutes[t.id]}))}/>
       <div className="ct-body">
