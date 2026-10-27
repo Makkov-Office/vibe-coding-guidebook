@@ -30,6 +30,8 @@ function Mark({text,query}:{text:string;query:string}){const at=norm(text).index
 export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];assets:{search:string;anchors:string};children:ReactNode}){
  const pathname=usePathname(),live=liveRoute(pathname),chapterId=live?live.chapterId:pathname==='/agents'?'agents':pathname==='/glossary'?'ch-23':pathname==='/resources'?'ch-resources':pathname==='/tools'?'ch-tools':pathname.startsWith('/tools/')?'ch-'+pathname.split('/').pop():pathname.startsWith('/chapters/')?'ch-'+pathname.split('/').pop():pathname.startsWith('/design/chapters/')?'ch-'+pathname.split('/')[3]:'ch-00';
  const [pageData,setPageData]=useState<PageData>({chapterId:'',outline:[],hasChecklists:false,terms:[],levels:null,blocks:[]}),[searchData,setSearchData]=useState<(SearchEntry&{normalized:string})[]|null>(null),[searchState,setSearchState]=useState<'idle'|'loading'|'ready'|'error'>('idle'),[pending,setPending]=useState(false);
+ // The page's address for «Недавние»: a chapter tab counts as its chapter (P5-02b).
+ const here=live?pageHref(live.chapterId):pathname;
  const searchDataRef=useRef(searchData);searchDataRef.current=searchData;
  const current=useRef({pageData,chapterId,pathname,tab:live?.tab});current.current={pageData,chapterId,pathname,tab:live?.tab};
  const hasChecklists=pageData.chapterId===chapterId&&pageData.hasChecklists;
@@ -49,8 +51,8 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
  const pages=useMemo(()=>{const titles=new Map(chapters.map(c=>[c.path,c.id==='ch-23'?'Глоссарий':c.title]));const agents=navSections(chapters).find(s=>s.id==='agents')?.href;if(agents)titles.set(agents,'Agent Pack');return titles;},[chapters]);
  const [recent,setRecent]=useState<string[]>([]);
  const suggestions=useMemo(()=>{const fixed=[['/glossary','Глоссарий','Все термины руководства'],['/chapters/22','Операционная памятка','Короткие правила на каждый день'],...(pages.has('/agents')?[['/agents','Agent Pack','Правила руководства для твоего агента']]:[])].filter(([href])=>pages.has(href));
-  const visited=recent.filter(href=>pages.has(href)&&href!==pathname);
-  return [{id:'suggested',label:'Подсказки',hits:fixed.map(([href,title,text]):Hit=>({key:`suggested-${href}`,href,meta:'Подсказка',title,text}))},{id:'recent',label:'Недавние страницы',hits:visited.map((href):Hit=>({key:`recent-${href}`,href,meta:'Недавно открыта',title:pages.get(href)!}))}].filter(group=>group.hits.length);},[pages,recent,pathname]);
+  const visited=recent.filter(href=>pages.has(href)&&href!==here);
+  return [{id:'suggested',label:'Подсказки',hits:fixed.map(([href,title,text]):Hit=>({key:`suggested-${href}`,href,meta:'Подсказка',title,text}))},{id:'recent',label:'Недавние страницы',hits:visited.map((href):Hit=>({key:`recent-${href}`,href,meta:'Недавно открыта',title:pages.get(href)!}))}].filter(group=>group.hits.length);},[pages,recent,here]);
  const resultGroups=normalizedQuery?found.groups.map(group=>({id:group.id,label:group.label,hits:group.entries.map((entry):Hit=>{const heading=entry.type==='заголовок';return {key:entry.id,href:`${entry.path}#${entry.id}`,meta:[place(entry.chapter),entry.type,entry.level].filter(Boolean).join(' · '),title:headline(entry),text:heading?(entry.text===entry.title?undefined:entry.title):<Mark text={entry.text} query={query}/>,entry};})})):suggestions;
  const results=resultGroups.flatMap(group=>group.hits);
  // Closing search returns focus to the header search button, or to the bottom-bar button that opened it (P3-02).
@@ -78,7 +80,10 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
  },[assets.search]);
  // close() on an already closed dialog fires no close event, so the flag is set only when it will be reset by onClose.
  // A chapter tab counts as a visit to its chapter (P5-02b).
- useEffect(()=>{const route=liveRoute(pathname),page=route?pageHref(route.chapterId):pathname;if(pages.has(page))rememberPage(page);},[pages,pathname]);
+ useEffect(()=>{if(pages.has(here))rememberPage(here);},[pages,here]);
+ // After a client navigation that leaves focus nowhere (a closed menu took the focused link with it), the new page takes it.
+ const shownPath=useRef(pathname);
+ useEffect(()=>{if(shownPath.current===pathname)return;shownPath.current=pathname;const frame=requestAnimationFrame(()=>{if(!location.hash&&(document.activeElement===document.body||!document.activeElement))document.querySelector<HTMLElement>('main#reader')?.focus({preventScroll:true});});return()=>cancelAnimationFrame(frame);},[pathname]);
  useEffect(()=>{setStatus('');setReturnTo(null);window.dispatchEvent(new Event('context-close'));if(searchRef.current?.open){searchNavigating.current=true;searchRef.current.close();}},[pathname]);
  useEffect(()=>{
   if(pageData.chapterId!==chapterId)return;setPending(false);committed.current?.();committed.current=null;let disposed=false,frame=0;
