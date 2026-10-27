@@ -75,6 +75,8 @@ test('without storage the choice still applies for the page',async({page})=>{
 
 test('axe: no serious or critical violations in both themes, rail and mobile menu, label in name',async({page})=>{
  const check=async(context:string,label:string)=>{
+  // Contrast is measured on the final frame: the menu opens with a fade (motion.css).
+  await page.waitForFunction(()=>document.getAnimations().every(a=>a.playState!=='running'||!Number.isFinite(Number(a.effect?.getComputedTiming().endTime))));
   await page.addScriptTag({path:'node_modules/axe-core/axe.min.js'});
   const violations=await page.evaluate(async selector=>{const result=await(window as unknown as {axe:{run:(context:unknown,options:object)=>Promise<{violations:{id:string;impact:string}[]}>}}).axe.run(selector,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']},rules:{'label-content-name-mismatch':{enabled:true}}});return result.violations.filter(v=>v.impact==='serious'||v.impact==='critical').map(v=>v.id);},context);
   expect(violations,label).toEqual([]);
