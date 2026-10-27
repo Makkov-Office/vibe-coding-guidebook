@@ -259,7 +259,7 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
         visit(card,'element',n=>{if(n.tagName==='a'&&/^https?:/.test(n.properties.href??'')){n.properties.target='_blank';n.properties.rel=['noopener','noreferrer'];n.properties['aria-label']=`${toText(n)} — открывается в новой вкладке`;n.children.push(structuredClone(externalIcon));}});
         term.definitionHtml=stringify(el('p',{},cells[1].children));
         node.children.push(card);usedIds.add(term.id);
-        search.push({id:term.id,chapter,title:term.label,type:'термин',text:`${term.label} ${term.aliases.join(' ')} ${term.definition}`});
+        search.push({id:term.id,chapter,title:term.label,type:'термин',text:`${term.label} ${term.aliases.join(' ')} ${term.definition}`,...(term.level?{level:levels.names[term.level].trim()}:{})});
       }
       // Basic terms of a collapsed topic (Git) go to a closed group at the end of the topic.
       const summary=levels?.collapsed.get(levels.number(terms.find(t=>t.id===node.children[0]?.properties.id)?.topic??''));

@@ -46,7 +46,7 @@ export function useCompleted(){
  return completed;
 }
 
-export function NavRail({chapters,pathname}:{chapters:NavChapter[];pathname:string}){
+export function NavRail({chapters,pathname,ready,onSearch}:{chapters:NavChapter[];pathname:string;ready:boolean;onSearch:(opener:HTMLElement)=>void}){
  const router=useRouter(),sections=useMemo(()=>navSections(chapters),[chapters]);
  const active=currentSection(sections,pathname);
  // Open menu and roving focus belong to a page: both reset when the route or section changes.
@@ -94,6 +94,8 @@ export function NavRail({chapters,pathname}:{chapters:NavChapter[];pathname:stri
  // Leaving the rail closes the menu unless focus sits in the open section (its rail item or panel).
  const leave=()=>{const entry=open?items.current.get(open)?.closest('.rail-entry'):null;if(!entry?.contains(document.activeElement))schedule(null,closeDelay);};
  return <nav className="nav-rail" aria-label="Разделы руководства" onMouseLeave={leave} onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node|null))setOpen(null);}}>
+  {/* Search at the top of the rail (P3-03); the dialog returns focus here when it closes. */}
+  <button type="button" className="rail-search" disabled={!ready} aria-keyshortcuts="Control+K Meta+K /" onClick={event=>onSearch(event.currentTarget)}><span className="rail-indicator"><RoleIcon role="search"/></span><span className="rail-label">Поиск</span></button>
   <ul className="rail-list">{sections.map(s=>{
    const expanded=open===s.id,current=active===s.id,menu=hasMenu(s);
    const common={ref:(node:HTMLElement|null)=>{if(node)items.current.set(s.id,node);else items.current.delete(s.id);},className:'rail-item',tabIndex:focusable===s.id?0:-1,

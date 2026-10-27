@@ -9,7 +9,7 @@ const menu=(page:Page,id:string)=>page.locator(`#mega-${id}`);
 test('rail shows nine sections and marks the current one',async({page})=>{
  await ready(page,'/chapters/08');
  await expect(page.locator('.rail-item')).toHaveText(['Главная','Начать','Основы','Процесс','Контроль','Надёжность','Практика','Инструменты','Agent Pack']);
- await expect(item(page,'flow')).toHaveAttribute('aria-current','true');await expect(page.locator('[aria-current=page]:visible')).toHaveCount(0);
+ await expect(item(page,'flow')).toHaveAttribute('aria-current','true');await expect(page.locator('.nav-rail [aria-current=page]:visible')).toHaveCount(0);
  await expect(page.locator('.rail-item[tabindex="0"]')).toHaveCount(1);
  await expect(menu(page,'flow').locator('.mega-item[aria-current=page]')).toHaveAttribute('href','/chapters/08');
  await expect(page.locator('.mega-menu:visible')).toHaveCount(0);
