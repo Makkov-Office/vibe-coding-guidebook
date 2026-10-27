@@ -103,7 +103,7 @@ test('an overview may link to its own sections', async () => {
   const linked = fixture.replace('Начать правки до проверки.', 'Начать правки до проверки, см. [Правило](#ch-08-overview-правило).');
   const { chapters, anchors } = await compileHandbook(source, { urlMap, overviews: { '08': linked } });
   const chapter = chapters.find(item => item.id === 'ch-08');
-  assert.ok(chapter.tabs.find(tab => tab.id === 'overview').html.includes(`href="${chapter.path}#${encodeURIComponent('ch-08-overview-правило')}"`));
+  assert.ok(chapter.tabs.find(tab => tab.id === 'overview').html.includes(`href="${chapter.href}#${encodeURIComponent('ch-08-overview-правило')}"`));
   assert.equal(anchors['ch-08-overview-правило'], undefined);
   const missing = fixture.replace('Начать правки до проверки.', 'См. [нет](#ch-08-overview-нет).');
   await assert.rejects(() => compileHandbook(source, { urlMap, overviews: { '08': missing } }), /Missing anchor ch-08-overview-нет/);
@@ -168,6 +168,47 @@ test('without the map the compiler output has no tabs (old callers)', async () =
   const plain = await compileHandbook(source);
   assert.ok(plain.chapters.every(chapter => chapter.tabs === undefined));
   assert.ok(plain.search.every(entry => entry.tab === undefined));
-  const full = await data();
-  assert.equal(plain.html, full.html);
+  // The map changes no text: with no chapter live, not even a link.
+  const unlive = structuredClone(urlMap);
+  for (const entry of unlive.pages) delete entry.live;
+  assert.equal(plain.html, (await compileHandbook(source, { urlMap: unlive, overviews: { '08': fixture } })).html);
+});
+
+test('a live chapter is read at its tab addresses: anchors, links and search', async () => {
+  const { chapters, anchors, search } = await data();
+  const chapter = chapters.find(item => item.id === 'ch-08');
+  const tabPath = { overview: '/flow/08-preflight', 'how-it-works': '/flow/08-preflight/how-it-works', apply: '/flow/08-preflight/apply', check: '/flow/08-preflight/check' };
+  assert.equal(chapter.path, '/chapters/08');
+  assert.equal(chapter.href, '/flow/08-preflight');
+  assert.ok(chapters.filter(item => item.id !== 'ch-08').every(item => item.href === item.path));
+  // Every id of the chapter is registered at the tab that holds it, the heading at the overview.
+  const holder = new Map([...ids(chapter.heading).map(id => [id, 'overview']), ...chapter.tabs.flatMap(tab => ids(tab.html).map(id => [id, tab.id]))]);
+  for (const id of ids(chapter.html)) assert.equal(anchors[id].path, tabPath[holder.get(id)], id);
+  assert.equal(anchors['ch-08'].path, tabPath.overview);
+  assert.equal(anchors['ch-08-8-2-отчет-preflight'].path, tabPath.apply);
+  assert.equal(anchors['ch-08-8-3-fail-closed'].path, tabPath['how-it-works']);
+  // Links to the chapter, from it and from other chapters, go to the tab of their target.
+  const all = [...chapters.map(item => item.html), ...chapters.flatMap(item => item.tabs?.map(tab => tab.html) ?? [])].join('');
+  const links = [...all.matchAll(/href="([^"#]*)#(ch-08[^"]*)"/g)];
+  assert.ok(links.length > 3);
+  for (const [, path, target] of links) {
+    const id = decodeURIComponent(target);
+    assert.equal(path, id.startsWith('ch-08-overview-') ? tabPath.overview : tabPath[holder.get(id)], id);
+  }
+  assert.ok(!all.includes('href="/chapters/08'));
+  // Search: every entry of the chapter opens its tab, the overview layer included.
+  const entries = search.filter(entry => entry.chapter === 'ch-08');
+  assert.ok(entries.some(entry => entry.id.startsWith('ch-08-overview-')));
+  for (const entry of entries) assert.equal(entry.path, tabPath[entry.tab], entry.id);
+});
+
+test('an overview example is shown open, not as a deep dive', async () => {
+  const { chapters } = await data();
+  const overview = chapters.find(item => item.id === 'ch-08').tabs.find(tab => tab.id === 'overview').html;
+  const example = overview.match(/<div id="ch-08-overview-b\d{3}" class="overview-example">[\s\S]*?<\/pre><\/div><\/div>/);
+  assert.ok(example, 'overview example');
+  assert.doesNotMatch(example[0], /<details|<summary/);
+  assert.match(example[0], /data-copy="ch-08-overview-b\d{3}"/);
+  // The chapter text keeps its deep dives.
+  assert.match(chapters.find(item => item.id === 'ch-08').tabs.find(tab => tab.id === 'apply').html, /<details[^>]*class="deep-dive"/);
 });

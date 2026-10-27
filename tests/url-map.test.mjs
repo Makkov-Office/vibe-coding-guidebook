@@ -63,14 +63,32 @@ test('redirects only to pages that exist in the build, one hop', () => {
 
 test('a redirect is refused while the anchor registry still points to the old address', () => {
   const built = new Set([...currentRoutes(generated), '/flow/08-preflight']);
-  assert.equal(staleAnchors(map, generated, new Set(currentRoutes(generated))).length, 0);
-  const stale = staleAnchors(map, generated, built);
-  assert.equal(stale.length, Object.values(generated.anchors).filter((anchor) => anchor.path === '/chapters/08').length);
-  const moved = structuredClone(generated);
+  // The registry as it was before chapter 08 went live.
+  const before = structuredClone(generated);
+  for (const anchor of Object.values(before.anchors)) if (anchor.path.startsWith('/flow/08-preflight')) anchor.path = '/chapters/08';
+  assert.equal(staleAnchors(map, before, new Set(currentRoutes(generated))).length, 0);
+  const stale = staleAnchors(map, before, built);
+  assert.ok(stale.length > 50);
+  assert.equal(stale.length, Object.values(generated.anchors).filter((anchor) => anchor.path.startsWith('/flow/08-preflight')).length);
+  const moved = structuredClone(before);
   for (const [id, target] of Object.entries(resolveAnchors(map, generated))) moved.anchors[id] = { id, path: target.path };
   assert.deepEqual(staleAnchors(map, moved, built), []);
   // `/` stays Главная, but once the intro page exists its anchors must follow it.
   assert.equal(staleAnchors(map, generated, new Set(['/start/00-how-to-read'])).length, Object.values(generated.anchors).filter((anchor) => anchor.path === '/').length);
+});
+
+test('a live chapter: its registry is the resolved one, its old address redirects', () => {
+  const live = map.pages.filter((entry) => entry.live);
+  assert.deepEqual(live.map((entry) => entry.chapter), ['ch-08']);
+  const resolved = resolveAnchors(map, generated);
+  const own = Object.values(generated.anchors).filter((anchor) => anchor.path.startsWith('/flow/08-preflight'));
+  assert.ok(own.length > 50);
+  for (const anchor of own) assert.equal(resolved[anchor.id].path, anchor.path, anchor.id);
+  assert.ok(!Object.values(generated.anchors).some((anchor) => anchor.path === '/chapters/08'));
+  // The build serves the tabs instead of the old address: no stale anchor, one 308.
+  const built = new Set([...currentRoutes(generated).filter((route) => route !== '/chapters/08'), '/flow/08-preflight', '/flow/08-preflight/how-it-works', '/flow/08-preflight/apply', '/flow/08-preflight/check']);
+  assert.deepEqual(staleAnchors(map, generated, built), []);
+  assert.deepEqual(redirectRoutes(map, built).map((route) => [route.src, route.headers.Location]), [['^/chapters/08/?$', '/flow/08-preflight']]);
 });
 
 test('broken entries fail the check', () => {
@@ -90,6 +108,8 @@ test('broken entries fail the check', () => {
     ['moved onto a section root', (copy) => { page(copy, '/chapters/06').new = '/flow'; }, /section landing page/],
     ['service page moves', (copy) => { page(copy, '/chapters/22').new = '/flow/22-x'; page(copy, '/chapters/22').section = 'service'; }, /service page keeps its address/],
     ['tabs without anchors', (copy) => { delete page(copy, '/chapters/01').anchors; }, /tabs need an anchors object/],
+    ['live without tabs', (copy) => { page(copy, '/glossary').live = true; }, /live is only true/],
+    ['live false', (copy) => { page(copy, '/chapters/08').live = false; }, /live is only true/],
     ['eight sections', (copy) => { copy.sections = copy.sections.filter((section) => section.id !== 'agents'); }, /9 sections/],
   ];
   for (const [name, breakIt, expected] of cases) {

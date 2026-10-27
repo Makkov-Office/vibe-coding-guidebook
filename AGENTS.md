@@ -12,7 +12,7 @@ Entrypoint для любого агента в этом репозитории. 
 4. Тикет, над которым работаешь; `docs/adr/` — принятые решения.
 
 ## Роли
-- **Founder (Makkov):** цель, приоритеты, merge, production, хостинг, имя/домен, изменения учебного текста и UI. Исключение: упрощённые учебные тексты редизайна (P5-04, P6) founder не вычитывает — их принимает агент-редактор; спорный смысл — founder (бриф, раздел 9.5).
+- **Founder (Makkov):** цель, приоритеты, production, хостинг, имя/домен, изменения учебного текста и UI, 4 контрольные точки редизайна. Merge делегирован оркестратору (бриф, раздел 14; ADR-0003). Упрощённые учебные тексты редизайна (P5-04, P6-01…P6-05, P6-07) founder не вычитывает — их принимает агент-редактор; спорный смысл — founder. Новый учебный текст P6-06 по-прежнему требует founder approval (бриф, раздел 9.5).
 - **Primary author:** один тикет, одна ветка, один PR.
 - **Independent reviewer:** отдельная чистая сессия, read-only, verdict привязан к HEAD SHA.
 - **Агент-редактор:** отдельная чистая сессия, не автор PR; сверяет упрощённый текст с оригиналом — определения, MUST-правила, термины, ссылки; verdict привязан к HEAD SHA.
@@ -24,7 +24,7 @@ Entrypoint для любого агента в этом репозитории. 
 - Preflight до первых правок (глава 08.2): тикет, base SHA, ветка, risk, Docs Impact, коллизии. FAIL / BLOCKED / INCOMPLETE ≠ PASS.
 - Evidence привязано к SHA; после нового push старые проверки и review не считаются.
 - Fail closed: недоступные данные не считаются пустыми.
-- Остановиться перед merge и прислать пакет решения founder.
+- Автор тикета, helper и reviewer не мержат. Merge делает оркестратор (сессия, которая ведёт волну или поток по поручению координатора проекта) после independent review READY на HEAD и зелёного CI (`validate` и `e2e`); для PR с учебным текстом — плюс READY агента-редактора на том же HEAD (бриф, раздел 9.5). Gate founder остаются за founder — полный список в брифе, раздел 14 (production, хостинг, домен, зависимости, auto-merge, P6-06, спорный смысл текста, контрольные точки); ADR-0003.
 - Учебный текст, определения, обзоры, подписи — только в `content/handbook.md` и `content/overview/NN.md` (слой «Обзор» глав, P5-01, формат в README); уровень терминов глоссария — `content/glossary-levels.json` (P6-07); другие файлы в `content/` компилятор не читает. Сгенерированные файлы (`src/content/generated.json`, `public/handbook.md`, `public/data/*`, `public/diagrams/*`, `docs/coverage-report.json`, `src/content/agent-pack.json`; в `.gitignore` — `public/agent-pack.zip`, `public/llms*.txt` и `.md` страниц) не править руками — только `npm run content`.
 - MUST NOT трогать `.openai/hosting.json` и публикацию на ChatGPT Sites.
 - Vercel: production из `main` (каждый merge — production-деплой на `vibe-coding-guidebook-ivory.vercel.app`, решение founder 23.10.2026, P1-16), preview на каждый PR. MUST NOT делать promote или rollback вручную, привязывать свой домен или alias, ослаблять Deployment Protection — только решением founder (ADR-0002).
