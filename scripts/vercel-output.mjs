@@ -22,7 +22,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { loadUrlMap, mappedPaths, redirectRoutes, staleAnchors } from "./url-map.mjs";
+import { loadUrlMap, mappedPaths, redirectRoutes, staleAnchors, tabPath } from "./url-map.mjs";
 
 function fail(message) {
   console.error(`vercel-output: FAIL ${message}`);
@@ -159,6 +159,8 @@ for (const page of pages) if (!mapped.has(page.urlPath)) fail(`page ${page.urlPa
 const legacyRedirects = redirectRoutes(urlMap, builtPaths);
 const stale = staleAnchors(urlMap, JSON.parse(fs.readFileSync(path.join(root, "src/content/generated.json"), "utf8")), builtPaths);
 if (stale.length > 0) fail(`anchor registry points to ${stale.length} redirected old addresses (first: ${stale[0]}); build it from resolveAnchors`);
+// A `live` chapter has its anchors registered at the tab addresses: every one of them must be built.
+for (const entry of urlMap.pages.filter((item) => item.live)) for (const tab of urlMap.tabs) if (!builtPaths.has(tabPath(urlMap, entry, tab.id))) fail(`${entry.old} is live, but ${tabPath(urlMap, entry, tab.id)} is not built`);
 
 // 3. Cloudflare _headers → routes. Only the plain form is supported:
 //    an unindented URL pattern (optional trailing *) and indented headers.

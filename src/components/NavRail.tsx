@@ -7,7 +7,7 @@ import {useRouter} from 'next/navigation';
 import {useEffect,useMemo,useRef,useState,type KeyboardEvent,type PointerEvent} from 'react';
 import {iconProps,iconRoles} from '../design/icons.mjs';
 import {appear} from '../design/motion';
-import {navSections,currentSection,type NavChapter,type NavPage,type NavSection} from '../design/nav-sections';
+import {navSections,currentSection,type NavChapter,type NavPage,type NavSection,onPage} from '../design/nav-sections';
 import {progressStore} from './progress-store.mjs';
 import '../design/nav-rail.css';
 
@@ -27,7 +27,7 @@ function Ring({state}:{state:'done'|'current'|'todo'}){
 
 export function PageLink({page,pathname,completed,onNavigate}:{page:NavPage;pathname:string;completed:string[];onNavigate:()=>void}){
  const router=useRouter(),warm=()=>router.prefetch(page.href);
- const current=page.href===pathname,done=completed.includes(page.chapter);
+ const current=onPage(page.href,pathname),done=completed.includes(page.chapter);
  const state=done?'done':current?'current':'todo';
  return <li><Link className="mega-item" href={page.href} prefetch={false} onMouseEnter={warm} onFocus={warm} aria-current={current?'page':undefined} onClick={onNavigate}>
   <span className="mega-number">{page.number||'·'}</span><span className="mega-title">{page.title}</span>
