@@ -1,14 +1,14 @@
 import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
 // Search ⌘K and breadcrumbs (P3-03): rail button, bottom bar, shortcuts, grouped results, suggestions.
-const data=JSON.parse(fs.readFileSync('src/content/generated.json','utf8')) as {chapters:{id:string;path:string;title:string}[]};
+const data=JSON.parse(fs.readFileSync('src/content/generated.json','utf8')) as {chapters:{id:string;path:string;href?:string;title:string}[]};
 async function ready(page:Page,path:string,width=1440){await page.setViewportSize({width,height:900});await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
 const dialog=(page:Page)=>page.locator('.search-dialog'),input=(page:Page)=>page.locator('#handbook-search');
 const railSearch=(page:Page)=>page.locator('.nav-rail').getByRole('button',{name:'Поиск',exact:true});
 const group=(page:Page,label:string)=>page.locator('#search-results').getByRole('group',{name:label});
 
 test('the rail button, Ctrl+K, Meta+K and «/» open search; Esc returns focus',async({page})=>{
- await ready(page,'/chapters/08');
+ await ready(page,'/flow/08-preflight');
  await railSearch(page).click();await expect(dialog(page)).toBeVisible();await expect(input(page)).toBeFocused();
  await page.keyboard.press('Escape');await expect(dialog(page)).toBeHidden();await expect(railSearch(page)).toBeFocused();
  for(const keys of ['Control+k','Meta+k','/']){
@@ -55,7 +55,7 @@ test('an empty query suggests the glossary, the memo and pages opened recently',
 
 test('when the index fails to load, suggestions stay and the error sits outside the listbox',async({page})=>{
  await page.route('**/data/search-*.json',route=>route.abort());
- await ready(page,'/chapters/08');await page.keyboard.press('Control+k');
+ await ready(page,'/flow/08-preflight');await page.keyboard.press('Control+k');
  await expect(page.locator('.search-dialog [role=status]',{hasText:'Поиск не загрузился.'})).toBeVisible();
  await expect(page.locator('#search-results [role=status]')).toHaveCount(0);
  await expect(group(page,'Подсказки').getByRole('option').first()).toHaveText(/Глоссарий/);
@@ -67,7 +67,7 @@ test('when the index fails to load, suggestions stay and the error sits outside 
 });
 
 test('on a phone the bottom bar opens search and a result navigates',async({page})=>{
- await ready(page,'/chapters/08',360);
+ await ready(page,'/flow/08-preflight',360);
  await page.getByRole('navigation',{name:'Навигация'}).getByRole('button',{name:'Поиск'}).click();
  await expect(dialog(page)).toBeVisible();await input(page).fill('preflight');
  await expect(group(page,'Страницы и разделы').getByRole('option').first()).toBeVisible();
@@ -78,7 +78,8 @@ test('on a phone the bottom bar opens search and a result navigates',async({page
 test('breadcrumbs on every page lead to existing addresses; none on the home page',async({page,request})=>{
  await ready(page,'/');await expect(page.getByRole('navigation',{name:'Хлебные крошки'})).toHaveCount(0);
  const checked=new Set<string>();
- for(const chapter of data.chapters){
+ // A chapter that moved (P5) is opened at its new address.
+ for(const chapter of data.chapters.map(c=>({...c,path:c.href??c.path}))){
   await ready(page,chapter.path);
   const crumbs=page.getByRole('navigation',{name:'Хлебные крошки'});
   await expect(crumbs,chapter.path).toBeVisible();
@@ -90,11 +91,17 @@ test('breadcrumbs on every page lead to existing addresses; none on the home pag
    expect((await request.get(href)).status(),href).toBe(200);
   }
  }
+ // A chapter tab (P5-02b): the chapter is a link, the tab is the current crumb.
+ await ready(page,'/flow/08-preflight/apply');
+ const crumbs=page.getByRole('navigation',{name:'Хлебные крошки'});
+ await expect(crumbs.locator('li')).toHaveCount(4);
+ await expect(crumbs.locator('li').nth(2).locator('a')).toHaveAttribute('href','/flow/08-preflight');
+ await expect(crumbs.locator('[aria-current=page]')).toHaveCount(1);await expect(crumbs.locator('li').last().locator('[aria-current=page]')).toHaveCount(1);
 });
 
 test('axe: no serious or critical violations with search open, in results and suggestions',async({page})=>{
  for(const scheme of ['light','dark'] as const){
-  await page.emulateMedia({colorScheme:scheme});await ready(page,'/chapters/08');
+  await page.emulateMedia({colorScheme:scheme});await ready(page,'/flow/08-preflight');
   await page.addScriptTag({path:'node_modules/axe-core/axe.min.js'});
   for(const query of ['','review']){
    await page.keyboard.press('Control+k');await input(page).fill(query);
