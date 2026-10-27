@@ -1,11 +1,16 @@
 import {test,expect,type Page} from '@playwright/test';
 // P5-02: шаблон страницы главы на служебных образцах /design/chapters/07 и /08.
 async function open(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('main.ct')).toBeVisible();await page.locator('.ct-live').waitFor({state:'attached'});}
+// axe проверяет устоявшийся вид: конечные анимации (переход страницы P3-05) должны закончиться.
+async function settled(page:Page){await page.evaluate(()=>Promise.all(document.getAnimations().filter(a=>Number.isFinite(Number(a.effect?.getComputedTiming().endTime))).map(a=>a.finished.catch(()=>undefined))));}
 const errorsOf=(page:Page)=>{const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});return errors;};
 
 test('chapter template: hero, tabs, on this page, neighbours and empty tab',async({page})=>{
  const errors=errorsOf(page);
+ // ≥ 1360 px оглавление таба показывает правая колонка Reader, блок в тексте скрыт.
  await open(page,'/design/chapters/08/apply');
+ await expect(page.locator('.ct-toc')).toBeHidden();await expect(page.locator('.local-outline a')).toHaveText(['8.1. Последовательность','8.2. Отчёт preflight']);
+ await page.setViewportSize({width:1024,height:900});
  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content',/noindex/);
  await expect(page.getByRole('heading',{level:1})).toHaveText('08. Preflight: начать правильно');
  await expect(page.locator('.ct-chips li')).toHaveText([/\d+ мин/,'2 · Инженер','Отчёт preflight']);
@@ -32,13 +37,16 @@ test('chapter template: hero, tabs, on this page, neighbours and empty tab',asyn
  expect(errors).toEqual([]);
 });
 
-test('chapter template: sticky tab bar condenses into a pill',async({page})=>{
- await open(page,'/design/chapters/08/apply');
- const bar=page.locator('.ct-tabs');await expect(bar).not.toHaveAttribute('data-stuck');await expect(page.locator('.ct-tabs-pill')).toBeHidden();
- await page.mouse.wheel(0,1200);
- await expect(bar).toHaveAttribute('data-stuck','true');await expect(page.locator('.ct-tabs-pill')).toHaveText('Preflight');
- expect(Math.round((await bar.boundingBox())!.y)).toBe(68);
- await page.mouse.wheel(0,-5000);await expect(bar).not.toHaveAttribute('data-stuck');
+test('chapter template: sticky tab bar condenses into a pill right under the header',async({page})=>{
+ for(const width of [1440,360]){
+  await page.setViewportSize({width,height:900});await open(page,'/design/chapters/08/apply');
+  const bar=page.locator('.ct-tabs');await expect(bar).not.toHaveAttribute('data-stuck');await expect(page.locator('.ct-tabs-pill')).toBeHidden();
+  await page.mouse.wheel(0,1200);
+  await expect(bar).toHaveAttribute('data-stuck','true');await expect(page.locator('.ct-tabs-pill')).toHaveText('Preflight');
+  // Между шапкой и полосой нет щели, через которую виден текст.
+  const header=(await page.locator('.topbar').boundingBox())!;expect(Math.abs((await bar.boundingBox())!.y-(header.y+header.height)),`${width}`).toBeLessThanOrEqual(1);
+  await page.mouse.wheel(0,-5000);await expect(bar).not.toHaveAttribute('data-stuck');
+ }
 });
 
 test('chapter template: copy link, keyboard and clipboard refusal',async({page})=>{
@@ -47,9 +55,12 @@ test('chapter template: copy link, keyboard and clipboard refusal',async({page})
  const copy=page.getByRole('button',{name:'Скопировать ссылку на раздел «8.1. Последовательность»'});
  await expect(page.locator('.ct-prose .permalink')).toHaveCount(0);
  await copy.focus();await expect(copy).toHaveCSS('outline-style','solid');await page.keyboard.press('Enter');
- await expect(page.locator('.ct-live')).toHaveText('Ссылка на раздел скопирована.');
+ await expect(page.locator('.ct-live')).toHaveText('Ссылка на раздел «8.1. Последовательность» скопирована.');
  const id=await page.locator('.ct-prose h2').first().getAttribute('id');
- expect(await page.evaluate(()=>(window as unknown as {copied:string}).copied)).toBe(`${new URL(page.url()).origin}/design/chapters/08/apply#${id}`);
+ expect(await page.evaluate(()=>(window as unknown as {copied:string}).copied)).toBe(`${new URL(page.url()).origin}/design/chapters/08/apply#${encodeURIComponent(id!)}`);
+ // Второе копирование того же раздела снова объявляется.
+ await page.evaluate(()=>{(window as unknown as {seen:string[]}).seen=[];new MutationObserver(()=>(window as unknown as {seen:string[]}).seen.push(document.querySelector('.ct-live')!.textContent!)).observe(document.querySelector('.ct-live')!,{childList:true,characterData:true,subtree:true});});
+ await copy.click();await expect.poll(()=>page.evaluate(()=>(window as unknown as {seen:string[]}).seen.filter(Boolean).length)).toBeGreaterThan(0);
  await page.evaluate(()=>{(window as unknown as {deny:boolean}).deny=true;});await copy.click();
  await expect(page.locator('.ct-live')).toContainText('Не удалось скопировать. Адрес раздела:');
  // С клавиатуры по табам: фокус видим, переход меняет текущий таб.
@@ -68,11 +79,19 @@ test('chapter template: widths, table cards, reduced motion and axe',async({page
   // На узком экране текущий таб виден в прокручиваемой полосе.
   const current=await page.locator('.ct-tabs a[aria-current="page"]').boundingBox();expect(current!.x).toBeGreaterThanOrEqual(0);expect(current!.x+current!.width).toBeLessThanOrEqual(width);
  }
+ // Переход по табу без перезагрузки: новый текущий таб тоже в зоне видимости.
+ await page.setViewportSize({width:320,height:900});await open(page,'/design/chapters/07');
+ await page.getByRole('navigation',{name:'Соседние страницы'}).getByRole('link',{name:/Как устроено/}).click();await page.getByRole('navigation',{name:'Соседние страницы'}).getByRole('link',{name:/Как применять/}).click();
+ await expect(page).toHaveURL(/\/07\/apply$/);
+ await expect.poll(async()=>{const b=(await page.locator('.ct-tabs a[aria-current="page"]').boundingBox())!;return b.x>=0&&b.x+b.width<=320;}).toBe(true);
+ // data-motion="off" (P3-05) выключает переход так же, как reduced motion.
+ await page.evaluate(()=>document.documentElement.setAttribute('data-motion','off'));await expect(page.locator('.ct-tabs')).toHaveCSS('transition-duration','0s');await page.evaluate(()=>document.documentElement.removeAttribute('data-motion'));
  await page.emulateMedia({reducedMotion:'reduce'});await expect(page.locator('.ct-tabs')).toHaveCSS('transition-duration','0s');
- for(const theme of ['light','dark']){
+ for(const [width,theme] of [[320,'light'],[320,'dark'],[1440,'light'],[1440,'dark']] as const){
+  await page.setViewportSize({width,height:900});
   await page.evaluate(t=>document.documentElement.setAttribute('data-theme',t),theme);
-  await page.addScriptTag({path:'node_modules/axe-core/axe.min.js'});
+  await settled(page);await page.addScriptTag({path:'node_modules/axe-core/axe.min.js'});
   const violations=await page.evaluate(async()=>{const result=await(window as unknown as {axe:{run:(context:string,options:object)=>Promise<{violations:{id:string}[]}>}}).axe.run('main.ct',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}});return result.violations.map(v=>v.id);});
-  expect(violations,theme).toEqual([]);
+  expect(violations,`${width} ${theme}`).toEqual([]);
  }
 });

@@ -3,6 +3,9 @@
 
 .ct{--ct-sticky-top:68px;display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-6);min-width:0}
 
+/* Высота шапки .topbar (app/globals.css): 68 px, уже 768 px — 60 px. */
+@media (max-width:767px){.ct{--ct-sticky-top:60px}}
+
 /* Hero: номер главы, название, чипы. */
 .ct-hero{display:grid;gap:var(--space-3);padding-top:var(--space-6)}
 .ct-hero>.bp-anno{justify-self:start}
@@ -33,7 +36,8 @@
 
 /* Тело таба. */
 .ct-body{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-6);min-width:0}
-.ct-prose h2,.ct-prose h3{scroll-margin-top:calc(var(--ct-sticky-top) + 72px)}
+/* html уже даёт scroll-padding-top 120 px под шапку; сверху добавляется место под прилипшую полосу. */
+.ct-prose h2,.ct-prose h3{scroll-margin-top:32px}
 
 /* «На этой странице» в колонке текста: там, где нет правой колонки Reader (local-outline). */
 .ct-toc{border:var(--stroke-border) solid var(--color-outline-variant);border-radius:var(--radius-l);background:var(--color-surface)}
@@ -45,8 +49,8 @@
 .ct-toc a:hover{background:var(--color-surface-container-low)}
 .ct-toc a[aria-current="location"],.local-outline a[aria-current="location"]{color:var(--color-primary);font-weight:600}
 .ct-toc a:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
-@media (min-width:1351px){.reading-shell:has(.local-outline) .ct-toc{display:none}}
-.local-outline nav::before{content:"На этой странице";display:block;margin-bottom:var(--space-2);color:var(--color-on-surface);font:600 var(--type-label)/1.3 var(--font-text)}
+@media (min-width:1360px){.reading-shell:has(.local-outline) .ct-toc{display:none}}
+.reading-shell:has(.ct) .local-outline nav::before{content:"На этой странице";display:block;margin-bottom:var(--space-2);color:var(--color-on-surface);font:600 var(--type-label)/1.3 var(--font-text)}
 
 /* Copy link у заголовка. */
 .ct-copy{display:inline-flex;align-items:center;justify-content:center;width:var(--touch-target);height:var(--touch-target);margin-inline-start:var(--space-1);vertical-align:middle;border:0;border-radius:var(--radius-full);background:transparent;color:var(--color-on-surface-variant);cursor:pointer;opacity:.6;transition:opacity var(--dur-1) var(--ease),background-color var(--dur-1) var(--ease)}

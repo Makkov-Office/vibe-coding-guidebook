@@ -11,6 +11,9 @@ export function ChapterEnhancer(){
     const main=icon.current?.closest('main');const prose=main?.querySelector('.ct-prose');
     if(!main||!prose)return;
     const cleanup:(()=>void)[]=[];
+    // Тот же текст подряд live region не объявит: сначала очистить, затем показать.
+    let timer=0;const announce=(text:string)=>{setStatus('');clearTimeout(timer);timer=window.setTimeout(()=>setStatus(text),50);};
+    cleanup.push(()=>clearTimeout(timer));
     // 1. Copy link: кнопка вместо старого «#»; адрес — текущая страница с якорем заголовка.
     for(const h of prose.querySelectorAll<HTMLElement>('h2[id],h3[id]')){
       h.querySelector('.permalink')?.remove();
@@ -19,9 +22,11 @@ export function ChapterEnhancer(){
       button.setAttribute('aria-label',`Скопировать ссылку на раздел «${h.textContent?.trim()}»`);
       button.innerHTML=icon.current!.innerHTML;
       const copy=async()=>{
-        const url=`${location.origin}${location.pathname}#${h.id}`;
-        try{await navigator.clipboard.writeText(url);setStatus('Ссылка на раздел скопирована.');}
-        catch{setStatus(`Не удалось скопировать. Адрес раздела: ${url}`);}
+        const url=`${location.origin}${location.pathname}#${encodeURIComponent(h.id)}`;
+        // Имя раздела в сообщении: повторное копирование другого раздела снова объявляется.
+        const name=h.textContent?.trim();
+        try{await navigator.clipboard.writeText(url);announce(`Ссылка на раздел «${name}» скопирована.`);}
+        catch{announce(`Не удалось скопировать. Адрес раздела: ${url}`);}
       };
       button.addEventListener('click',copy);h.appendChild(button);
       cleanup.push(()=>{button.removeEventListener('click',copy);button.remove();});

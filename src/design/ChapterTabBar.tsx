@@ -15,7 +15,9 @@ export function ChapterTabBar({title,current,tabs}:{title:string;current:TabId;t
     // Текущий таб виден и на узком экране, где полоса прокручивается.
     const list=node.querySelector('ul'),active=node.querySelector<HTMLElement>('[aria-current="page"]');
     if(list&&active&&list.scrollWidth>list.clientWidth)list.scrollLeft=active.offsetLeft-list.offsetLeft-list.clientWidth/2+active.offsetWidth/2;
-    if(typeof IntersectionObserver==='undefined')return;
+  },[current]);
+  useEffect(()=>{
+    const node=bar.current;if(!node||typeof IntersectionObserver==='undefined')return;
     // Полоса прилипла, когда её верх упёрся в нижний край шапки: тогда она на пиксель заходит под границу root.
     const top=parseFloat(getComputedStyle(node).top)||0;
     const observer=new IntersectionObserver(([entry])=>setStuck(entry.intersectionRatio<1&&entry.boundingClientRect.top<=top+1),{rootMargin:`-${top+1}px 0px 0px 0px`,threshold:[1]});
