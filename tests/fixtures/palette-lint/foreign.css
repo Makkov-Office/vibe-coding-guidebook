@@ -1,0 +1,9 @@
+/* Фикстура линтера палитры: чужие цвета, линтер обязан упасть. */
+.a{color:#ff0000}
+.b{background:rgb(0 0 0 / .5)}
+.c{border-color:red}
+.d{border:1px solid darkred;box-shadow:0 0 0 2px black}
+.e{background:linear-gradient(var(--color-surface),white)}
+.f{color:Canvas}
+@media (forced-colors:active){.g{outline-color:Highlight}}
+.ok{color:var(--color-on-surface);fill:currentColor;background:transparent;white-space:nowrap;animation:bp-run 6s}
