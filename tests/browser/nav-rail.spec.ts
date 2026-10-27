@@ -1,22 +1,32 @@
 import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
 // Navigation rail and mega-menu (P3-01): hover, focus, tap, keyboard, addresses and accessibility.
-const urlMap=JSON.parse(fs.readFileSync('src/content/url-map.json','utf8')) as {pages:{old:string;new:string}[]};
+const urlMap=JSON.parse(fs.readFileSync('src/content/url-map.json','utf8')) as {pages:{old:string;new:string;chapter?:string}[]};
 async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
 const item=(page:Page,id:string)=>page.locator(`.rail-entry[data-section=${id}] .rail-item`);
 const menu=(page:Page,id:string)=>page.locator(`#mega-${id}`);
 
 test('rail shows nine sections and marks the current one',async({page})=>{
- await ready(page,'/chapters/08');
+ await ready(page,'/flow/08-preflight');
  await expect(page.locator('.rail-item')).toHaveText(['Главная','Начать','Основы','Процесс','Контроль','Надёжность','Практика','Инструменты','Agent Pack']);
- await expect(item(page,'flow')).toHaveAttribute('aria-current','true');await expect(page.locator('[aria-current=page]:visible')).toHaveCount(0);
+ await expect(item(page,'flow')).toHaveAttribute('aria-current','true');await expect(page.locator('.nav-rail [aria-current=page]:visible')).toHaveCount(0);
  await expect(page.locator('.rail-item[tabindex="0"]')).toHaveCount(1);
- await expect(menu(page,'flow').locator('.mega-item[aria-current=page]')).toHaveAttribute('href','/chapters/08');
+ await expect(menu(page,'flow').locator('.mega-item[aria-current=page]')).toHaveAttribute('href','/flow/08-preflight');
  await expect(page.locator('.mega-menu:visible')).toHaveCount(0);
 });
 
+test('a chapter tab marks its section and its chapter in the menu',async({page})=>{
+ await ready(page,'/flow/08-preflight/apply');
+ await expect(item(page,'flow')).toHaveAttribute('aria-current','true');
+ await expect(menu(page,'flow').locator('.mega-item[aria-current=page]')).toHaveAttribute('href','/flow/08-preflight');
+ // A page under another page's address is not its tab: only /tools/codex is current.
+ await ready(page,'/tools/codex');
+ await expect(menu(page,'tools').locator('.mega-item[aria-current=page]')).toHaveCount(1);
+ await expect(menu(page,'tools').locator('.mega-item[aria-current=page]')).toHaveAttribute('href','/tools/codex');
+});
+
 test('hover opens the menu after a short delay and leaving closes it',async({page})=>{
- await ready(page,'/chapters/08');
+ await ready(page,'/flow/08-preflight');
  await item(page,'control').hover();
  await expect(menu(page,'control')).toBeVisible();await expect(item(page,'control')).toHaveAttribute('aria-expanded','true');
  // Moving from the rail into the menu keeps it open.
@@ -37,7 +47,7 @@ test('hover opens the menu after a short delay and leaving closes it',async({pag
 });
 
 test('keyboard: focus opens, Tab enters the menu, arrows move, Esc returns focus to the rail',async({page})=>{
- await ready(page,'/chapters/08');
+ await ready(page,'/flow/08-preflight');
  await item(page,'flow').focus();
  await expect(menu(page,'flow')).toBeVisible();
  await page.keyboard.press('Tab');
@@ -63,9 +73,9 @@ test('keyboard: focus opens, Tab enters the menu, arrows move, Esc returns focus
 test('tap opens the menu first, a second tap follows the rail link',async({browser})=>{
  const context=await browser.newContext({hasTouch:true,viewport:{width:1280,height:900},baseURL:test.info().project.use.baseURL});
  const page=await context.newPage();
- await ready(page,'/chapters/08');
+ await ready(page,'/flow/08-preflight');
  await item(page,'base').tap();
- await expect(menu(page,'base')).toBeVisible();await expect(page).toHaveURL(/\/chapters\/08$/);
+ await expect(menu(page,'base')).toBeVisible();await expect(page).toHaveURL(/\/flow\/08-preflight$/);
  await menu(page,'base').locator('.mega-item[href="/chapters/03"]').tap();
  await expect(page).toHaveURL(/\/chapters\/03$/);await expect(page.locator('.mega-menu:visible')).toHaveCount(0);
  await item(page,'flow').tap();await expect(menu(page,'flow')).toBeVisible();
@@ -76,7 +86,7 @@ test('tap opens the menu first, a second tap follows the rail link',async({brows
 });
 
 test('every mega-menu link leads to an existing address from the URL map',async({page,request})=>{
- await ready(page,'/chapters/08');
+ await ready(page,'/flow/08-preflight');
  const hrefs=await page.locator('.mega-menu a').evaluateAll(links=>links.map(a=>a.getAttribute('href')!));
  const mapped=new Set(urlMap.pages.flatMap(p=>[p.old,p.new])),extra=new Set(['/handbook.md','/print']);
  expect(hrefs.length).toBeGreaterThan(25);
@@ -85,15 +95,16 @@ test('every mega-menu link leads to an existing address from the URL map',async(
   expect((await request.get(href,{maxRedirects:0})).status(),href).toBe(200);
  }
  // Every chapter of the URL map is reachable from the rail.
- for(let i=1;i<=22;i++)expect(hrefs).toContain(`/chapters/${String(i).padStart(2,'0')}`);
+ // A chapter that moved (P5) is listed at its new address.
+ for(let i=1;i<=22;i++){const id=`ch-${String(i).padStart(2,'0')}`,paths=urlMap.pages.filter(p=>p.chapter===id).flatMap(p=>[p.old,p.new]);expect(hrefs.some(href=>paths.includes(href)),id).toBe(true);}
 });
 
 test('progress in the menu follows chapter completion',async({page})=>{
  await page.addInitScript(()=>localStorage.setItem('handbook-learning-v2',JSON.stringify({completed:['ch-06','ch-07','ch-22'],exercises:[]})));
- await ready(page,'/chapters/08');
+ await ready(page,'/flow/08-preflight');
  await item(page,'flow').hover();
  await expect(menu(page,'flow').locator('.mega-progress')).toContainText('2 из 6 пройдено');
- await expect(menu(page,'flow').locator('.mega-progress a')).toHaveAttribute('href','/chapters/08');
+ await expect(menu(page,'flow').locator('.mega-progress a')).toHaveAttribute('href','/flow/08-preflight');
  await expect(menu(page,'flow').locator('.nav-ring-done')).toHaveCount(2);
  // The reference group (cheat sheet 22) counts toward «Практика».
  await item(page,'practice').hover();await expect(menu(page,'practice').locator('.mega-progress')).toContainText('1 из 3 пройдено');
@@ -101,20 +112,20 @@ test('progress in the menu follows chapter completion',async({page})=>{
 
 test('below 1024 px the rail is hidden and the bottom bar stays; on a short screen the rail scrolls',async({page})=>{
  for(const width of [320,360,768,1023]){
-  await page.setViewportSize({width,height:900});await ready(page,'/chapters/08');
+  await page.setViewportSize({width,height:900});await ready(page,'/flow/08-preflight');
   await expect(page.locator('.nav-rail')).toBeHidden();await expect(page.locator('.bottom-bar')).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  }
- await page.setViewportSize({width:1024,height:900});await ready(page,'/chapters/08');
+ await page.setViewportSize({width:1024,height:900});await ready(page,'/flow/08-preflight');
  await expect(page.locator('.nav-rail')).toBeVisible();await expect(page.locator('.bottom-bar')).toBeHidden();
  // A short desktop viewport: the rail scrolls, so the last section stays reachable and its menu opens.
- await page.setViewportSize({width:1024,height:600});await ready(page,'/chapters/08');
+ await page.setViewportSize({width:1024,height:600});await ready(page,'/flow/08-preflight');
  await item(page,'agents').click();await expect(menu(page,'agents')).toBeVisible();
  const box=await item(page,'agents').boundingBox();expect(box!.y+box!.height).toBeLessThanOrEqual(600);
 });
 
 test('axe: no serious or critical violations with the menu closed and open',async({page})=>{
- for(const path of ['/','/chapters/08']){
+ for(const path of ['/','/flow/08-preflight']){
   await ready(page,path);
   for(const open of [false,true]){
    if(open){await item(page,'flow').focus();await expect(menu(page,'flow')).toBeVisible();}

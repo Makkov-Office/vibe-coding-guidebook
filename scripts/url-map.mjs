@@ -7,7 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const PATH = /^\/(?:[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*)?$/;
-const PAGE_KEYS = new Set(["old", "new", "section", "chapter", "keep", "alias", "tabs", "lead", "anchors"]);
+const PAGE_KEYS = new Set(["old", "new", "section", "chapter", "keep", "alias", "tabs", "lead", "anchors", "live"]);
 
 export function loadUrlMap(root = process.cwd()) {
   return JSON.parse(fs.readFileSync(path.join(root, "src/content/url-map.json"), "utf8"));
@@ -45,6 +45,8 @@ export function currentRoutes(generated) {
 // that cannot be placed, so nothing is silently sent to a wrong page.
 export function resolveAnchors(map, generated) {
   const byOld = new Map(map.pages.filter((entry) => !entry.alias).map((entry) => [entry.old, entry]));
+  // A live chapter (its new pages are built) is already registered at its tab addresses.
+  for (const entry of map.pages) if (entry.live) for (const tab of map.tabs) byOld.set(tabPath(map, entry, tab.id), entry);
   const chapters = new Map(generated.chapters.map((chapter) => [chapter.id, chapter]));
   const sectionOf = new Map();
   for (const entry of map.pages) {
@@ -53,9 +55,11 @@ export function resolveAnchors(map, generated) {
     if (!chapter) throw new Error(`url-map: ${entry.old}: chapter ${entry.chapter} is not in generated.json`);
     const headings = new Set(chapter.outline.map((item) => item.id));
     let current = entry.lead;
+    // The chapter heading (hero of every tab) belongs to the overview.
+    const hero = new Set([...(chapter.heading ?? "").matchAll(/ id="([^"]+)"/g)].map((match) => match[1]));
     for (const [, id] of chapter.html.matchAll(/ id="([^"]+)"/g)) {
       if (headings.has(id)) current = (entry.anchors ?? {})[id];
-      sectionOf.set(id, current);
+      sectionOf.set(id, hero.has(id) ? "overview" : current);
     }
   }
   const resolved = {};
@@ -93,6 +97,7 @@ export function validateUrlMap(map, generated) {
     // (outside the rail) does not move.
     if (entry.new === "/" || (section && entry.new === section.path && entry.old !== entry.new)) errors.push(`${name}: ${entry.new} is a section landing page`);
     if (section?.id === "service" && entry.old !== entry.new) errors.push(`${name}: a service page keeps its address`);
+    if (entry.live !== undefined && (entry.live !== true || !entry.tabs || !redirects(entry))) errors.push(`${name}: live is only true, on a chapter with tabs that moves`);
     if (entry.tabs) {
       if (!tabIds.has(entry.lead)) errors.push(`${name}: lead tab ${entry.lead} is unknown`);
       if (typeof entry.anchors !== "object" || entry.anchors === null) errors.push(`${name}: tabs need an anchors object`);
