@@ -16,7 +16,7 @@
 .ct-chips .project-icon{width:var(--icon-size-s);height:var(--icon-size-s)}
 
 /* Полоса табов: прилипает под шапкой; в прилипшем виде — пилюля с именем главы и плотные табы. */
-.ct-tabs{position:sticky;top:var(--ct-sticky-top);z-index:5;display:flex;align-items:center;gap:var(--space-3);margin-inline:calc(-1 * var(--space-2));padding:var(--space-2);border-bottom:var(--stroke-border) solid var(--color-outline-variant);background:var(--color-background);transition:padding var(--dur-2) var(--ease)}
+.ct-tabs{position:sticky;top:var(--ct-sticky-top);z-index:5;display:flex;align-items:center;gap:var(--space-3);margin-inline:calc(-1 * var(--space-2));padding:var(--space-2);border-bottom:var(--stroke-border) solid var(--color-outline-variant);background:var(--color-background);transition:box-shadow var(--dur-2) var(--ease)}
 .ct-tabs ul{display:flex;flex:1 1 auto;min-width:0;gap:var(--space-1);margin:0;padding:0;list-style:none;overflow-x:auto;scrollbar-width:none}
 .ct-tabs a{display:inline-flex;align-items:center;gap:var(--space-2);min-height:var(--touch-target);min-width:var(--touch-target);padding:0 var(--space-4);border-radius:var(--radius-full);color:var(--color-on-surface-variant);font:500 var(--type-small)/1 var(--font-text);text-decoration:none;white-space:nowrap;transition:background-color var(--dur-1) var(--ease)}
 .ct-tabs a:hover{background:var(--color-surface-container-low);color:var(--color-on-surface)}
@@ -24,7 +24,8 @@
 .ct-tabs a:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
 .ct-tab-minutes{color:inherit;font:500 var(--type-label)/1 var(--font-mono);font-stretch:var(--font-mono-stretch)}
 .ct-tabs-pill{display:none;flex:none;min-width:0;padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);background:var(--color-surface-container);color:var(--color-on-surface);font:600 var(--type-label)/1.3 var(--font-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:12rem}
-.ct-tabs[data-stuck]{padding-block:var(--space-1)}
+/* Высота полосы в обоих состояниях одна: иначе scroll anchoring сдвигает страницу (восстановление позиции чтения). */
+.ct-tabs[data-stuck]{box-shadow:var(--shadow-1)}
 .ct-tabs[data-stuck] .ct-tabs-pill{display:inline-block}
 .ct-tabs[data-stuck] .ct-tab-minutes{display:none}
 @media (max-width:600px){

@@ -30,8 +30,9 @@ test('chapter template: hero, tabs, on this page, neighbours and empty tab',asyn
  // Пустой таб: понятное состояние и путь к заполненному табу, на краю — соседняя глава.
  await expect(page.locator('.ct-empty')).toContainText('Таб «Проверь себя» готовится');
  await expect(pager.getByRole('link')).toHaveText([/Предыдущий таб\s*Как применять/,/Следующая глава\s*09\./]);
- await open(page,'/design/chapters/08');await expect(page.locator('.ct-empty').getByRole('link')).toHaveAttribute('href','/design/chapters/08/how-it-works');
- await expect(pager.getByRole('link').first()).toHaveText(/Предыдущая глава\s*07\./);
+ // Обзор 08 заполнен (#71); пустой обзор — у 07: ссылка на следующий заполненный таб.
+ await open(page,'/design/chapters/08');await expect(page.locator('.ct-empty')).toHaveCount(0);await expect(pager.getByRole('link').first()).toHaveText(/Предыдущая глава\s*07\./);
+ await open(page,'/design/chapters/07');await expect(page.locator('.ct-empty').getByRole('link')).toHaveAttribute('href','/design/chapters/07/how-it-works');
  // Таб без текста, но с интерактивной панелью — без «готовится».
  await open(page,'/design/chapters/07/check');await expect(page.locator('.ct-empty')).toHaveCount(0);await expect(page.locator('#lifecycle-panel')).toBeVisible();
  expect(errors).toEqual([]);
