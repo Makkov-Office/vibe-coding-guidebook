@@ -35,7 +35,7 @@ export function HomePage(){
             {home.path.steps.map((step,i)=><BpNode key={step.label} x={at[i][0]} y={at[i][1]} w={124} meaning={meaning[i]} label={step.label} sub={step.sub}/>)}
             <BpRunDot d={run}/>
           </Blueprint>
-          <figcaption>{home.path.title}</figcaption>
+          <figcaption>{home.path.title}<span className="sr-only"> {home.path.steps.map(step=>`${step.label}: ${step.sub}`).join(' → ')}</span></figcaption>
         </figure>
       </PlusBanner>
     </div>

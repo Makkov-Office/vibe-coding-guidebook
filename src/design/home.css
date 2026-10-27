@@ -33,7 +33,7 @@ div.home-card .home-card-icon{color:var(--color-on-surface-variant)}
 .home-resume .home-lead{margin:0}
 .home-resume-place{margin:0;font-weight:600}
 
-/* Подвал главной: три группы ссылок; подпись «by Makkov» и Open Source — общий подвал Reader. */
+/* Подвал главной («Ссылки руководства»): три группы ссылок; подпись «by Makkov» и Open Source — общий подвал Reader. */
 .home-footer{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:var(--space-6);padding-top:var(--space-8);border-top:var(--stroke-border) solid var(--color-outline-variant)}
 .home-footer h2{font:600 var(--type-label)/1.4 var(--font-mono);font-stretch:var(--font-mono-stretch);letter-spacing:.04em;text-transform:uppercase;color:var(--color-on-surface-variant)}
 .home-footer ul{display:grid;margin:var(--space-2) 0 0;padding:0;list-style:none}

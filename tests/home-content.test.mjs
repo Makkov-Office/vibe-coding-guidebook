@@ -17,7 +17,7 @@ test('content/home.md compiles into generated.home', () => {
   const home = parseHome(source, rail);
   assert.deepEqual(generated.home, home);
   assert.equal(home.title, 'Mastering Agentic Engineering');
-  assert.equal(home.subtitle, 'Полный цикл разработки с AI-агентами — от вайбкодинга до top-tier SDLC.');
+  assert.equal(home.subtitle, 'Полный цикл разработки с AI-агентами — от вайбкодинга до top-tier SDLC');
   assert.deepEqual(home.actions.map(action => action.label), ['Начать изучение', 'Определить уровень']);
   assert.equal(home.path.steps.length, 8);
   assert.deepEqual(home.sections.cards.map(card => card.label), rail);

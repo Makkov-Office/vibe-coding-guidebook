@@ -105,7 +105,7 @@ export function parseOverview(number,text){
   return {meta,body};
 }
 
-const HOME_SECTIONS=['Первый экран','Путь задачи','Разделы','Продолжить','Следующие шаги','Подвал'];
+const HOME_SECTIONS=['Первый экран','Путь задачи','Разделы','Продолжить','Следующие шаги','Ссылки руководства'];
 // Главная (P4-01): content/home.md. Plain text and links in a fixed order of
 // sections; the cards follow the rail sections of url-map (without Главная).
 // Throws with the broken rule; the result goes to generated.json as `home`.
@@ -140,10 +140,10 @@ export function parseHome(text,railLabels){
   const groups=[];
   for(const node of footer.nodes){
     if(node.type==='heading'&&node.depth===3)groups.push({heading:plain(node),links:[]});
-    else if(node.type==='list'&&groups.length&&!groups.at(-1).links.length)groups.at(-1).links=items(footer,node).map(item=>{const target=link(item,footer);if(!target||target.rest)fail('«Подвал»: every item is just a link');return {label:target.label,href:target.href};});
-    else fail('«Подвал» is ### groups, each with one list of links');
+    else if(node.type==='list'&&groups.length&&!groups.at(-1).links.length)groups.at(-1).links=items(footer,node).map(item=>{const target=link(item,footer);if(!target||target.rest)fail('«Ссылки руководства»: every item is just a link');return {label:target.label,href:target.href};});
+    else fail('«Ссылки руководства» is ### groups, each with one list of links');
   }
-  if(groups.length!==3||groups.some(group=>!group.links.length))fail('«Подвал» needs 3 groups of links');
+  if(groups.length!==3||groups.some(group=>!group.links.length))fail('«Ссылки руководства» needs 3 groups of links');
   return {title:plain(h1),subtitle:plain(lead),lead:paragraph(hero),actions:actions.map(({label,href})=>({label,href})),path:{title:paragraph(path),steps},sections:{heading:cards.title,lead:paragraph(cards),cards:cardList},resume:{heading:resume.title,lead:paragraph(resume),action:button[0]},next:{heading:next.title,items:steps2},footer:{heading:footer.title,groups}};
 }
 

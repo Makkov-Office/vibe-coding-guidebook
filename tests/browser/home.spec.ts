@@ -10,7 +10,7 @@ test('home: hero, task path, 8 sections, next steps and footer; every link answe
  const errors=errorsOf(page);
  await ready(page,'/');
  await expect(page.getByRole('heading',{level:1})).toHaveText('Mastering Agentic Engineering');
- await expect(page.locator('.home-subtitle')).toHaveText('Полный цикл разработки с AI-агентами — от вайбкодинга до top-tier SDLC.');
+ await expect(page.locator('.home-subtitle')).toHaveText('Полный цикл разработки с AI-агентами — от вайбкодинга до top-tier SDLC');
  const actions=page.locator('.home-actions a');
  await expect(actions).toHaveText(['Начать изучение','Определить уровень']);
  await expect(actions.first()).toHaveAttribute('href','/start/00-how-to-read');
