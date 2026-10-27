@@ -24,8 +24,16 @@ test('hover opens the menu after a short delay and leaving closes it',async({pag
  await expect(menu(page,'control')).toBeVisible();
  await item(page,'reliability').hover();await expect(menu(page,'reliability')).toBeVisible();await expect(menu(page,'control')).toBeHidden();
  await page.mouse.move(900,500);await expect(menu(page,'reliability')).toBeHidden();
- // A mouse click on the Agent Pack button keeps its menu open.
+ // A mouse click on the Agent Pack button keeps its menu open, also after the pointer leaves the rail.
  await item(page,'agents').click();await page.waitForTimeout(300);await expect(menu(page,'agents')).toBeVisible();
+ await page.mouse.move(900,500);await page.waitForTimeout(400);await expect(menu(page,'agents')).toBeVisible();
+ // Focus on another section does not keep a hovered menu open after the pointer leaves.
+ await item(page,'control').hover();await expect(menu(page,'control')).toBeVisible();await expect(menu(page,'agents')).toBeHidden();
+ await page.mouse.move(900,500);await expect(menu(page,'control')).toBeHidden();
+ // Focus is still on the Agent Pack button: Enter toggles its disclosure.
+ await expect(item(page,'agents')).toBeFocused();
+ await page.keyboard.press('Enter');await expect(menu(page,'agents')).toBeVisible();
+ await page.keyboard.press('Enter');await expect(menu(page,'agents')).toBeHidden();await expect(item(page,'agents')).toHaveAttribute('aria-expanded','false');
 });
 
 test('keyboard: focus opens, Tab enters the menu, arrows move, Esc returns focus to the rail',async({page})=>{

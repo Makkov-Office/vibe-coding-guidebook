@@ -43,7 +43,7 @@ export function NavRail({chapters,pathname}:{chapters:NavChapter[];pathname:stri
  // Open menu and roving focus belong to a page: both reset when the route or section changes.
  const [openState,setOpenState]=useState<{path:string;id:string|null}>({path:pathname,id:null}),[completed,setCompleted]=useState<string[]>([]);
  const open=openState.path===pathname?openState.id:null,setOpen=(id:string|null)=>setOpenState({path:pathname,id});
- const timer=useRef<ReturnType<typeof setTimeout>|null>(null),touch=useRef(false),wasOpen=useRef(false),returning=useRef(false);
+ const timer=useRef<ReturnType<typeof setTimeout>|null>(null),touch=useRef(false),returning=useRef(false);
  const items=useRef(new Map<string,HTMLElement>()),panels=useRef(new Map<string,HTMLDivElement>());
  // Roving tabindex: one rail item is in the tab order, arrows move between the others.
  const [roving,setRoving]=useState<{active:string|null;id:string}|null>(null);
@@ -69,7 +69,7 @@ export function NavRail({chapters,pathname}:{chapters:NavChapter[];pathname:stri
   else if(event.key==='End')next=ids[ids.length-1];
   else if(event.key==='ArrowRight'&&hasMenu(s)){event.preventDefault();show(s.id);requestAnimationFrame(()=>panels.current.get(s.id)?.querySelector<HTMLElement>('a')?.focus());return;}
   else if(event.key==='Escape'&&open){event.preventDefault();close(true);return;}
-  else if((event.key==='Enter'||event.key===' ')&&!s.href){event.preventDefault();show(s.id);return;}
+  else if((event.key==='Enter'||event.key===' ')&&!s.href){event.preventDefault();if(open===s.id)close();else show(s.id);return;}
   if(!next)return;
   event.preventDefault();setFocusable(next);items.current.get(next)?.focus();
  }
@@ -82,10 +82,14 @@ export function NavRail({chapters,pathname}:{chapters:NavChapter[];pathname:stri
  }
  // A tap on a closed section opens its menu; the next tap follows the link. data-tap-open tells
  // the reader's link handler (Reader.tsx) to leave this click to the rail.
- // Focus arrives before click and opens the menu, so the click decides by the state at pointerdown.
- const pointerDown=(event:PointerEvent<HTMLElement>,s:NavSection)=>{wasOpen.current=open===s.id;touch.current=event.pointerType!=='mouse'&&hasMenu(s)&&!wasOpen.current;event.currentTarget.toggleAttribute('data-tap-open',touch.current);};
- const resetTap=(event:{currentTarget:HTMLElement})=>{touch.current=false;wasOpen.current=false;event.currentTarget.removeAttribute('data-tap-open');};
- return <nav className="nav-rail" aria-label="Разделы руководства" onMouseLeave={event=>{if(!event.currentTarget.contains(document.activeElement))schedule(null,closeDelay);}} onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node|null))setOpen(null);}}>
+ // Focus arrives before click and opens the menu, so the tap decides by the state at pointerdown.
+ // A pointer on the Agent Pack button only opens (hover may have opened it a moment earlier); Enter
+ // and Space toggle it, Esc and a click outside close it.
+ const pointerDown=(event:PointerEvent<HTMLElement>,s:NavSection)=>{touch.current=event.pointerType!=='mouse'&&hasMenu(s)&&open!==s.id;event.currentTarget.toggleAttribute('data-tap-open',touch.current);};
+ const resetTap=(event:{currentTarget:HTMLElement})=>{touch.current=false;event.currentTarget.removeAttribute('data-tap-open');};
+ // Leaving the rail closes the menu unless focus sits in the open section (its rail item or panel).
+ const leave=()=>{const entry=open?items.current.get(open)?.closest('.rail-entry'):null;if(!entry?.contains(document.activeElement))schedule(null,closeDelay);};
+ return <nav className="nav-rail" aria-label="Разделы руководства" onMouseLeave={leave} onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node|null))setOpen(null);}}>
   <ul className="rail-list">{sections.map(s=>{
    const expanded=open===s.id,current=active===s.id,menu=hasMenu(s);
    const common={ref:(node:HTMLElement|null)=>{if(node)items.current.set(s.id,node);else items.current.delete(s.id);},className:'rail-item',tabIndex:focusable===s.id?0:-1,
