@@ -60,7 +60,7 @@ test('llms.txt follows the llmstxt.org format and every link resolves',()=>{
     const local=item[2].slice(SITE_ORIGIN.length);
     assert.ok(local==='/agents'||fs.existsSync(`public${local}`),`${local} exists`);
   }
-  for(const chapter of generated.chapters)assert.ok(text.includes(`${SITE_ORIGIN}${mdPath(chapter.path)})`),`${chapter.id} listed`);
+  for(const chapter of generated.chapters)assert.ok(text.includes(`${SITE_ORIGIN}${mdPath(chapter.href??chapter.path)})`),`${chapter.id} listed`);
   assert.ok(text.includes(`${SITE_ORIGIN}/index.md)`),'introduction listed');
   const full=fs.readFileSync('public/llms-full.txt','utf8');
   assert.ok(full.startsWith(lines[0])&&full.endsWith(fs.readFileSync('content/handbook.md','utf8')),'llms-full.txt is the header plus the whole handbook');
@@ -70,11 +70,12 @@ test('every page has its Markdown, at the current and the old address',()=>{
   const map=JSON.parse(fs.readFileSync('src/content/url-map.json','utf8'));
   for(const chapter of [...generated.chapters,{id:'ch-00',path:'/'}]){
     const file=pack.markdown[chapter.id];
-    assert.equal(file,mdPath(chapter.path),chapter.id);
+    assert.equal(file,mdPath(chapter.href??chapter.path),chapter.id);
     assert.ok(fs.existsSync(`public${file}`),file);
     for(const entry of map.pages.filter(e=>e.chapter===chapter.id&&!e.alias))assert.ok(fs.existsSync(`public${mdPath(entry.old)}`),`${entry.old}.md`);
   }
-  const chapter08=fs.readFileSync('public/chapters/08.md','utf8');
+  const chapter08=fs.readFileSync('public/flow/08-preflight.md','utf8');
+  assert.equal(fs.readFileSync('public/chapters/08.md','utf8'),chapter08,'the old address serves the same text');
   assert.match(chapter08,/^## 08\. /);assert.ok(!/\n## 09\./.test(chapter08),'chapter 08 stops before 09');
 });
 
