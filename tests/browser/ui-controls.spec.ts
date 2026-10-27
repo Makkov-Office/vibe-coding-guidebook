@@ -9,7 +9,7 @@ const canvas=(page:Page)=>page.evaluate(()=>getComputedStyle(document.body).back
 
 test('theme cycles system → opposite → same as system → system and survives a reload without a flash',async({page})=>{
  await page.setViewportSize({width:1440,height:900});await page.emulateMedia({colorScheme:'light'});
- await ready(page,'/chapters/08');
+ await ready(page,'/flow/08-preflight');
  const light=await canvas(page);
  // The visible label is in the name; the first click always changes the page.
  await expect(theme(page)).toHaveAccessibleName('Тема: Авто (как в системе). Переключить на «Тёмная»');await expect(theme(page)).toContainText('Авто');expect(await html(page,'data-theme')).toBeNull();
@@ -19,7 +19,7 @@ test('theme cycles system → opposite → same as system → system and survive
  // Client navigation keeps the choice.
  await page.locator('.nav-rail .rail-item[href="/"]').first().click();await expect(page).toHaveURL(/\/$/);expect(await html(page,'data-theme')).toBe('dark');
  // The stored theme is painted before any script of the app runs: the server HTML has no data-theme.
- await page.goto('/chapters/08',{waitUntil:'commit'});await page.waitForSelector('body',{state:'attached'});
+ await page.goto('/flow/08-preflight',{waitUntil:'commit'});await page.waitForSelector('body',{state:'attached'});
  expect(await html(page,'data-theme')).toBe('dark');expect(await canvas(page)).toBe(dark);
  await page.waitForSelector('html.js-enabled');await expect(theme(page)).toHaveAccessibleName(/^Тема: Тёмная/);
  await theme(page).click();await expect(theme(page)).toHaveAccessibleName(/^Тема: Светлая/);expect(await html(page,'data-theme')).toBe('light');
@@ -30,7 +30,7 @@ test('theme cycles system → opposite → same as system → system and survive
 
 test('the animation switch sets data-motion, is shared with the mobile menu and respects reduced motion',async({page})=>{
  await page.setViewportSize({width:1440,height:900});
- await ready(page,'/chapters/08');
+ await ready(page,'/flow/08-preflight');
  await expect(motion(page)).toHaveAttribute('aria-pressed','true');
  await motion(page).click();await expect(motion(page)).toHaveAttribute('aria-pressed','false');expect(await html(page,'data-motion')).toBe('off');
  await ready(page,'/chapters/02');expect(await html(page,'data-motion')).toBe('off');await expect(motion(page)).toHaveAttribute('aria-pressed','false');
@@ -53,7 +53,7 @@ test('the animation switch sets data-motion, is shared with the mobile menu and 
 
 test('on a 1366×768 and a 1024×600 screen both controls stay in view',async({page})=>{
  for(const [width,height] of [[1366,768],[1024,600]]){
-  await page.setViewportSize({width,height});await ready(page,'/chapters/08');
+  await page.setViewportSize({width,height});await ready(page,'/flow/08-preflight');
   for(const button of [theme(page),motion(page)]){const box=(await button.boundingBox())!;expect(box.y+box.height,`${width}×${height}`).toBeLessThanOrEqual(height);}
  }
 });
@@ -71,7 +71,7 @@ test('keyboard focus in the rail is never hidden under the pinned controls',asyn
 });
 
 test('another tab changing the choice updates this one',async({page,context})=>{
- await page.setViewportSize({width:1440,height:900});await ready(page,'/chapters/08');
+ await page.setViewportSize({width:1440,height:900});await ready(page,'/flow/08-preflight');
  const other=await context.newPage();await other.setViewportSize({width:1440,height:900});await ready(other,'/chapters/02');
  await motion(other).click();expect(await html(other,'data-motion')).toBe('off');
  await expect(motion(page)).toHaveAttribute('aria-pressed','false');expect(await html(page,'data-motion')).toBe('off');
@@ -94,7 +94,7 @@ test('axe: no serious or critical violations in both themes, rail and mobile men
   expect(violations,label).toEqual([]);
  };
  for(const scheme of ['light','dark'] as const){
-  await page.emulateMedia({colorScheme:scheme});await page.setViewportSize({width:1440,height:900});await ready(page,'/chapters/08');
+  await page.emulateMedia({colorScheme:scheme});await page.setViewportSize({width:1440,height:900});await ready(page,'/flow/08-preflight');
   await check('.nav-rail',`rail ${scheme}`);
   // An explicit theme against the opposite system theme.
   await theme(page).click();await check('.nav-rail',`rail ${scheme} → ${await html(page,'data-theme')}`);await theme(page).click();await theme(page).click();
