@@ -19,11 +19,14 @@ const description:Record<string,string>={
  reliability:'Безопасность, ошибки и восстановление',
  practice:'Внедрение системы, зрелость и справочник',
  tools:'Claude Code, Codex и полезные материалы',
- agents:'Правила руководства для твоего агента. Раздел готовится.',
+ agents:'Правила руководства для твоего агента: архив, llms.txt и Markdown каждой страницы.',
 };
 // Sections outside the rail are shown inside a rail section's menu.
 const hosted:Record<string,{host:string;label:string}>={reference:{host:'practice',label:'Справочник'}};
-const extraLinks:Record<string,NavLink[]>={tools:[{label:'Скачать Markdown',href:'/handbook.md',download:true},{label:'Версия для печати',href:'/print'}]};
+const extraLinks:Record<string,NavLink[]>={
+ tools:[{label:'Скачать Markdown',href:'/handbook.md',download:true},{label:'Версия для печати',href:'/print'}],
+ agents:[{label:'Что внутри и как подключить',href:'/agents'},{label:'Скачать Agent Pack (.zip)',href:'/agent-pack.zip',download:true},{label:'llms.txt — карта для LLM',href:'/llms.txt'}],
+};
 
 export const completable=(id:string)=>/^ch-(0[1-9]|1\d|2[0-2])$/.test(id);
 
@@ -44,7 +47,8 @@ export function navSections(list:NavChapter[]):NavSection[]{
  return urlMap.sections.filter(section=>section.rail).map(section=>{
   const own=section.id==='home'?[]:pages(section.id,chapters);
   const groups=Object.entries(hosted).filter(([,h])=>h.host===section.id).map(([id,h])=>({label:h.label,pages:pages(id,chapters)}));
-  const href=section.id==='home'?'/':own[0]?.href??null;
+  // A section without chapters (Agent Pack) leads to its own page from the URL map.
+  const href=section.id==='home'?'/':own[0]?.href??urlMap.pages.find(page=>page.section===section.id&&!page.chapter)?.new??null;
   return {id:section.id,label:section.label,icon:icon[section.id],href,description:description[section.id]??'',pages:own,groups,links:extraLinks[section.id]??[]};
  });
 }
@@ -52,5 +56,5 @@ export function navSections(list:NavChapter[]):NavSection[]{
 /** The rail section of a pathname: home for "/", otherwise the section that lists the page. */
 export function currentSection(sections:NavSection[],pathname:string):string|null{
  if(pathname==='/')return 'home';
- return sections.find(s=>[...s.pages,...s.groups.flatMap(g=>g.pages)].some(p=>p.href===pathname))?.id??null;
+ return sections.find(s=>s.href===pathname)?.id??sections.find(s=>[...s.pages,...s.groups.flatMap(g=>g.pages)].some(p=>p.href===pathname))?.id??null;
 }

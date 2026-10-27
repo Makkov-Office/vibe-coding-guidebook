@@ -6,7 +6,7 @@ import {ProjectIcon} from './ProjectIcon';
 import '../design/agent-delivery.css';
 
 const kb=(bytes:number)=>`${Math.max(1,Math.round(bytes/1024))} КБ`;
-export const agentsPageData={chapterId:'agents',outline:[],hasChecklists:false,terms:[],blocks:[]};
+export const agentsPageData={chapterId:'agents',outline:[],hasChecklists:false,terms:[],levels:null,blocks:[]};
 
 export function AgentsPage(){
  return <><ReaderPageData value={agentsPageData}/><main id="reader" tabIndex={-1}><section className="chapter agents-page" data-chapter="agents">
