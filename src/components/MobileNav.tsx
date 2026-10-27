@@ -20,13 +20,14 @@ export function MobileNav({chapters,pathname,ready,onSearch}:{chapters:NavChapte
  // A link closes the menu for the route change: focus goes to the new page, not back to «Разделы».
  const leave=()=>{navigating.current=true;dialog.current?.close();};
  // A link in the menu: the new page takes focus, also where the router does not move it (/agents).
- const focusPage=useRef(false),go=()=>{focusPage.current=true;leave();};
+ // A link to the page already open changes no address: no flag that would outlive it.
+ const focusPage=useRef(false),go=(e?:{currentTarget:EventTarget})=>{const link=e?.currentTarget;focusPage.current=!(link instanceof HTMLAnchorElement&&link.pathname===location.pathname);leave();};
  // The menu belongs to the narrow layout: widening the window to the rail closes it.
  useEffect(()=>{const wide=matchMedia('(min-width:1024px)'),fit=()=>{if(wide.matches&&dialog.current?.open)dialog.current.close();};wide.addEventListener('change',fit);return()=>wide.removeEventListener('change',fit);},[]);
  // Any route change (search, back button, a link in the text) closes the menu the same way.
  useEffect(()=>{
   if(dialog.current?.open)leave();
-  if(!focusPage.current)return;focusPage.current=false;
+  if(!focusPage.current)return;focusPage.current=false;if(location.hash)return;
   const frame=requestAnimationFrame(()=>{const main=document.querySelector<HTMLElement>('main#reader');if(main&&!main.contains(document.activeElement))main.focus({preventScroll:true});});
   return()=>cancelAnimationFrame(frame);
  },[pathname]);

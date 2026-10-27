@@ -133,10 +133,13 @@ test('on a phone the breadcrumbs of a chapter tab stay on one line',async({page}
  for(const width of [320,360]){
   await ready(page,'/flow/08-preflight/apply',width);
   const crumbs=page.getByRole('navigation',{name:'Хлебные крошки'});
-  // One line: every crumb shares the vertical middle of the first.
-  const middles=await crumbs.locator('li').evaluateAll(items=>items.map(li=>{const r=li.getBoundingClientRect();return (r.top+r.bottom)/2;}));
+  // One line: every shown crumb shares the vertical middle of the first.
+  const middles=await crumbs.locator('li').evaluateAll(items=>items.filter(li=>li.getClientRects().length).map(li=>{const r=li.getBoundingClientRect();return (r.top+r.bottom)/2;}));
   for(const middle of middles)expect(Math.abs(middle-middles[0]),`${width}`).toBeLessThan(2);
   await expect(crumbs.locator('[aria-current=page]')).toBeInViewport();
+  // The chapter crumb stays a usable link: wide enough to read and to tap (WCAG 2.5.8).
+  const chapter=await crumbs.locator('.crumb-page a').boundingBox();
+  expect(chapter!.width,`${width}`).toBeGreaterThanOrEqual(44);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  }
 });
