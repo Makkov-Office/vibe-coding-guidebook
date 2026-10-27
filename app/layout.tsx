@@ -9,6 +9,7 @@ import "../src/design/primitives.css";
 // Глобально, не в компоненте: <link> из компонента поднимается в <head>, и vinext пропускает фокус main#reader после навигации.
 import "../src/design/chapter-template.css";
 import "../src/components/drill.css";
+import "../src/design/glossary.css";
 import {brandTitle} from "../src/design/brand";
 import {uiPrefsScript} from "../src/design/ui-prefs.mjs";
 
