@@ -2,27 +2,29 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import Link from 'next/link';
 import {ProjectIcon} from './ProjectIcon';
-import {readLocal,writeLocal,removeLocal,localUnavailable} from './localState';
+import {progressStore} from './progress-store.mjs';
+import urlMap from '../content/url-map.json';
 import {learningGroups,learningLevels,learningProfile,maxLearningXp,normalizeMarks,type LearningMarks} from './learning-profile';
 import './learning-profile.css';
 
-const learningKey='handbook-learning-v2',changeEvent='handbook-learning-change';
+// Address of a page id today (url-map `old`); P5 switches to `new` when the pages move.
+const pagePath=(page:string)=>urlMap.pages.find(entry=>entry.chapter===page&&!('alias' in entry))?.old??'/';
 export function LearningProgress({chapter,compact=false}:{chapter:string;compact?:boolean}){
- const [value,setValue]=useState<LearningMarks>({completed:[],exercises:[]}),[ready,setReady]=useState(false),[message,setMessage]=useState(''),[resume,setResume]=useState<{path:string;y:number}|null>(null),[reward,setReward]=useState(0);
+ const [value,setValue]=useState<LearningMarks>({completed:[],exercises:[]}),[ready,setReady]=useState(false),[message,setMessage]=useState(''),[resume,setResume]=useState<{page:string;y:number}|null>(null),[reward,setReward]=useState(0);
  const current=useRef(value),profile=learningProfile(value),home=chapter==='ch-00'&&!compact,isChapter=/^ch-(0[1-9]|1\d|2[0-2])$/.test(chapter),complete=value.completed.includes(chapter);
- const save=useCallback((next:LearningMarks,earned=0)=>{const marks=normalizeMarks(next);current.current=marks;writeLocal(learningKey,JSON.stringify(marks));setValue(marks);setReward(earned);window.dispatchEvent(new CustomEvent(changeEvent,{detail:{...marks,reward:earned}}));},[]);
+ const save=useCallback((next:LearningMarks,earned=0,practice?:Record<string,true>)=>{progressStore.set(()=>({...normalizeMarks(next),...(practice?{practice}:{})}),{reward:earned});},[]);
  useEffect(()=>{
-  const frame=requestAnimationFrame(()=>{try{const marks=normalizeMarks(JSON.parse(readLocal(learningKey)??'null'));current.current=marks;setValue(marks);let reading=JSON.parse(readLocal('handbook-reading-v2')??'null');if(!reading){const old=JSON.parse(readLocal('handbook-progress')??'null');if(old?.id&&typeof old.y==='number')reading={path:old.id==='ch-23'?'/glossary':`/chapters/${old.id.slice(3)}`,y:0};}setResume(reading);}catch{setMessage('Сохранённый прогресс не удалось прочитать. Новые отметки доступны.');}setReward(0);setReady(true);});
+  const frame=requestAnimationFrame(()=>{const progress=progressStore.get(),marks=normalizeMarks(progress);current.current=marks;setValue(marks);setResume(progress.reading);if(progressStore.damaged())setMessage('Сохранённый прогресс не удалось прочитать. Новые отметки доступны.');setReward(0);setReady(true);});
   return()=>cancelAnimationFrame(frame);
  },[chapter]);
  useEffect(()=>{
-  const sync=(event:Event)=>{const detail=(event as CustomEvent<LearningMarks&{reward?:number}>).detail;if(!detail)return;const marks=normalizeMarks(detail);current.current=marks;setValue(marks);setReward(detail.reward??0);};
+  const sync=(progress:LearningMarks,meta?:{reward?:number})=>{const marks=normalizeMarks(progress);current.current=marks;setValue(marks);if(meta)setReward(meta.reward??0);};
   const change=(event:Event)=>{const input=event.target;if(!(input instanceof HTMLInputElement)||!/^exercise-[1-5]$/.test(input.dataset.exercise??''))return;const id=input.dataset.exercise!;if(current.current.exercises.includes(id)===input.checked)return;const exercises=current.current.exercises.filter(item=>item!==id);if(input.checked)exercises.push(id);save({...current.current,exercises},input.checked?50:0);};
-  window.addEventListener(changeEvent,sync);document.addEventListener('change',change);
-  return()=>{window.removeEventListener(changeEvent,sync);document.removeEventListener('change',change);};
+  const unsubscribe=progressStore.subscribe(sync);document.addEventListener('change',change);
+  return()=>{unsubscribe();document.removeEventListener('change',change);};
  },[save]);
  function markChapter(){save({...current.current,completed:complete?current.current.completed.filter(id=>id!==chapter):[...current.current.completed,chapter]},complete?0:100);setMessage(complete?'Отметка главы отменена.':'Глава отмечена как изученная. +100 XP за шаг вперёд.');}
- function reset(){if(!window.confirm('Сбросить изученные главы, пять упражнений и XP? Операционные чеклисты сохранятся.'))return;save({completed:[],exercises:[]});for(let i=1;i<=5;i++)removeLocal(`practice:exercise-${i}`);document.querySelectorAll<HTMLInputElement>('[data-exercise]').forEach(input=>{input.checked=false;removeLocal(`practice:${input.dataset.practice}`);});setMessage('Учебный прогресс сброшен. Можно начать маршрут заново.');}
+ function reset(){if(!window.confirm('Сбросить изученные главы, пять упражнений и XP? Операционные чеклисты сохранятся.'))return;const practice={...progressStore.get().practice};for(let i=1;i<=5;i++)delete practice[`exercise-${i}`];document.querySelectorAll<HTMLInputElement>('[data-exercise]').forEach(input=>{input.checked=false;delete practice[input.dataset.practice??''];});save({completed:[],exercises:[]},0,practice);setMessage('Учебный прогресс сброшен. Можно начать маршрут заново.');}
  const nextPath=profile.nextChapter?`/chapters/${profile.nextChapter.slice(3)}`:'/chapters/22';
  return <section className={`learning-progress learning-profile ${home?'learning-profile-home':'learning-profile-compact'}`} aria-label="Учебный прогресс">
   <div className="learning-heading"><span><ProjectIcon name="compass"/> {home?'Учебный профиль':'Ваш маршрут'}</span><strong>{value.completed.length} из 22</strong></div>
@@ -40,12 +42,12 @@ export function LearningProgress({chapter,compact=false}:{chapter:string;compact
    <p className="profile-rules">Глава +100 XP · упражнение +50 XP</p>
   </>}
   <div className="learning-actions">
-   {home&&resume&&<Link className="resume-button primary-action" href={`${resume.path}?resume=1`}>Продолжить чтение <ProjectIcon name="arrowRight"/></Link>}
+   {home&&resume&&<Link className="resume-button primary-action" href={`${pagePath(resume.page)}?resume=1`}>Продолжить чтение <ProjectIcon name="arrowRight"/></Link>}
    {home&&<Link className={`profile-next ${resume?'':'primary-action'}`} href={nextPath}>{profile.nextChapter?`Следующий шаг · глава ${profile.nextChapter.slice(3)}`:'Открыть операционную памятку'}<ProjectIcon name="arrowRight"/></Link>}
    {isChapter&&<button type="button" disabled={!ready} aria-pressed={complete} className={complete?'completion-button earned':'completion-button primary-action'} onClick={markChapter}><ProjectIcon name={complete?'check':'book'}/>{complete?'Глава изучена · отменить':'Глава изучена'}</button>}
    {home&&<button className="reset-learning" type="button" disabled={!ready} onClick={reset}><ProjectIcon name="reset"/> Сбросить прогресс</button>}
   </div>
   {reward>0&&<p className="profile-reward" key={`${profile.xp}-${reward}`}><ProjectIcon name="check"/> +{reward} XP · Ещё один шаг в копилку.</p>}
-  <p role="status">{message}{ready&&localUnavailable()&&<> Хранилище недоступно: отметки сохраняются до перезагрузки вкладки.</>}</p>
+  <p role="status">{message}{ready&&progressStore.unavailable()&&<> Хранилище недоступно: отметки сохраняются до перезагрузки вкладки.</>}</p>
  </section>;
 }
