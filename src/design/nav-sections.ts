@@ -53,8 +53,10 @@ export function navSections(list:NavChapter[]):NavSection[]{
  });
 }
 
-/** A page or one of its tabs (P5: /flow/08-preflight/apply belongs to /flow/08-preflight). */
-export const onPage=(href:string,pathname:string)=>pathname===href||href!=='/'&&pathname.startsWith(href+'/');
+/** A page or one of its tabs (P5: /flow/08-preflight/apply belongs to /flow/08-preflight). Only tab
+ *  segments of url-map count: /tools/codex is its own page, not a tab of /tools. */
+const tabSegments=urlMap.tabs.map(tab=>tab.segment).filter(Boolean);
+export const onPage=(href:string,pathname:string)=>pathname===href||href!=='/'&&tabSegments.some(segment=>pathname===`${href}/${segment}`);
 
 /** The rail section of a pathname: home for "/", otherwise the section that lists the page. */
 export function currentSection(sections:NavSection[],pathname:string):string|null{

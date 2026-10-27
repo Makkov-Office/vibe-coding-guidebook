@@ -19,6 +19,10 @@ test('a chapter tab marks its section and its chapter in the menu',async({page})
  await ready(page,'/flow/08-preflight/apply');
  await expect(item(page,'flow')).toHaveAttribute('aria-current','true');
  await expect(menu(page,'flow').locator('.mega-item[aria-current=page]')).toHaveAttribute('href','/flow/08-preflight');
+ // A page under another page's address is not its tab: only /tools/codex is current.
+ await ready(page,'/tools/codex');
+ await expect(menu(page,'tools').locator('.mega-item[aria-current=page]')).toHaveCount(1);
+ await expect(menu(page,'tools').locator('.mega-item[aria-current=page]')).toHaveAttribute('href','/tools/codex');
 });
 
 test('hover opens the menu after a short delay and leaving closes it',async({page})=>{
