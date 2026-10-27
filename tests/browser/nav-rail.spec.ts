@@ -139,3 +139,12 @@ test('axe: no serious or critical violations with the menu closed and open',asyn
   }
  }
 });
+
+test('a link in the Agent Pack menu leaves focus on the new page (P3-06)',async({page})=>{
+ await ready(page,'/chapters/01');
+ await item(page,'agents').hover();await expect(menu(page,'agents')).toBeVisible();
+ await menu(page,'agents').locator('a[href="/agents"]').click();
+ await expect(page).toHaveURL(/\/agents$/);
+ await page.waitForTimeout(800);
+ await expect(page.locator('main#reader')).toBeFocused();
+});

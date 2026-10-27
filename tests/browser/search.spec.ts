@@ -120,3 +120,26 @@ test('axe: no serious or critical violations with search open, in results and su
   expect(violations,scheme).toEqual([]);
  }
 });
+
+// Polish of the test slice (P3-06).
+test('on a chapter tab the chapter itself is not among recent pages',async({page})=>{
+ await ready(page,'/flow/08-preflight');await ready(page,'/chapters/05');await ready(page,'/flow/08-preflight/check');
+ await page.keyboard.press('Control+k');
+ const recent=group(page,'Недавние страницы').getByRole('option');
+ await expect(recent).toHaveCount(1);await expect(recent).toHaveAttribute('href','/chapters/05');
+});
+
+test('on a phone the breadcrumbs of a chapter tab stay on one line',async({page})=>{
+ for(const width of [320,360]){
+  await ready(page,'/flow/08-preflight/apply',width);
+  const crumbs=page.getByRole('navigation',{name:'Хлебные крошки'});
+  // One line: every shown crumb shares the vertical middle of the first.
+  const middles=await crumbs.locator('li').evaluateAll(items=>items.filter(li=>li.getClientRects().length).map(li=>{const r=li.getBoundingClientRect();return (r.top+r.bottom)/2;}));
+  for(const middle of middles)expect(Math.abs(middle-middles[0]),`${width}`).toBeLessThan(2);
+  await expect(crumbs.locator('[aria-current=page]')).toBeInViewport();
+  // The chapter crumb stays a usable link: wide enough to read and to tap (WCAG 2.5.8).
+  const chapter=await crumbs.locator('.crumb-page a').boundingBox();
+  expect(chapter!.width,`${width}`).toBeGreaterThanOrEqual(44);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ }
+});
