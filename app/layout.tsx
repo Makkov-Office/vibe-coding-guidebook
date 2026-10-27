@@ -8,6 +8,7 @@ import "../src/design/product-logos.css";
 import "../src/design/primitives.css";
 import "../src/components/drill.css";
 import {brandTitle} from "../src/design/brand";
+import {uiPrefsScript} from "../src/design/ui-prefs.mjs";
 
 export const metadata: Metadata = {
   title: brandTitle,
@@ -24,8 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
+    // The inline script applies the stored theme and animation choice before the first paint (P3-04);
+    // it changes attributes of <html>, hence suppressHydrationWarning.
+    <html lang="ru" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{__html:uiPrefsScript}} />
         <link rel="preload" href="/fonts/geist-cyrillic-400-600.woff2" as="font" type="font/woff2" crossOrigin="" />
         <link rel="preload" href="/fonts/geist-latin-400-600.woff2" as="font" type="font/woff2" crossOrigin="" />
       </head>

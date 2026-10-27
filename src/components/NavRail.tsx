@@ -5,20 +5,17 @@
 import Link from 'next/link';
 import {useRouter} from 'next/navigation';
 import {useEffect,useMemo,useRef,useState,type KeyboardEvent,type PointerEvent} from 'react';
-import {iconProps,iconRoles} from '../design/icons.mjs';
 import {appear} from '../design/motion';
 import {navSections,currentSection,type NavChapter,type NavPage,type NavSection,onPage} from '../design/nav-sections';
 import {progressStore} from './progress-store.mjs';
+import {RoleIcon} from './RoleIcon';
+import {UiControls} from './UiControls';
 import '../design/nav-rail.css';
 
 // Hover intent: open after the pointer rests, close after it has left both rail and menu.
 const openDelay=90,closeDelay=180;
 
-export function RoleIcon({role,filled=false}:{role:keyof typeof iconRoles;filled?:boolean}){
- const entry=iconRoles[role] as {icon:typeof iconRoles.home.icon;filled?:typeof iconRoles.home.icon};
- const Icon=filled&&entry.filled?entry.filled:entry.icon;
- return <Icon {...iconProps}/>;
-}
+export {RoleIcon};
 
 function Ring({state}:{state:'done'|'current'|'todo'}){
  const c=2*Math.PI*7;
@@ -113,6 +110,7 @@ export function NavRail({chapters,pathname}:{chapters:NavChapter[];pathname:stri
     </div>}
    </li>;
   })}</ul>
+  <UiControls className="rail-controls"/>
  </nav>;
 }
 
