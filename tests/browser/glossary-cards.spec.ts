@@ -5,7 +5,7 @@ async function ready(page:import('@playwright/test').Page,path:string){await pag
 test('a term card shows its level and copies a link to the term',async({page,context,browserName})=>{
  test.skip(browserName!=='chromium','clipboard permissions are Chromium-only');
  await context.grantPermissions(['clipboard-read','clipboard-write']);
- await ready(page,'/glossary');
+ await ready(page,'/reference/glossary');
  const card=page.locator('#term-agent');
  await expect(card.locator('.term-level')).toHaveText('Уровень: Базовое');
  await expect(page.locator('#term-preflight .term-level')).toHaveText('Уровень: Профессиональное');
@@ -19,7 +19,7 @@ test('a term card shows its level and copies a link to the term',async({page,con
 
 test('the note on the source format is not shown and the cards fit narrow screens',async({page})=>{
  await page.setViewportSize({width:320,height:800});
- await ready(page,'/glossary');
+ await ready(page,'/reference/glossary');
  await expect(page.locator('.glossary-service-note')).toBeHidden();
  await expect(page.locator('main')).not.toContainText('Служебный формат',{useInnerText:true});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
@@ -29,7 +29,7 @@ test('the note on the source format is not shown and the cards fit narrow screen
 
 test('without clipboard access the address is shown under the card',async({page})=>{
  await page.addInitScript(()=>{Object.defineProperty(navigator,'clipboard',{value:{writeText:()=>Promise.reject(new Error('denied'))}});});
- await ready(page,'/glossary');
+ await ready(page,'/reference/glossary');
  const card=page.locator('#term-agent');
  await expect(card.locator('.term-copy-fallback')).toBeHidden();
  await card.getByRole('button',{name:'Скопировать ссылку на термин «Agent»'}).click();

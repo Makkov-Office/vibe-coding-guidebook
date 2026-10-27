@@ -209,7 +209,7 @@ const behaviours = {
   async spa(site) {
     const { page, documents, context } = await open(site, widths[0]);
     const result = [];
-    for (const [start, target] of [["/", "/chapters/01"], ["/chapters/01", "/glossary"], ["/glossary", "/chapters/22"]]) {
+    for (const [start, target] of [["/", "/chapters/01"], ["/chapters/01", "/reference/glossary"], ["/reference/glossary", "/reference/22-cheatsheet"]]) {
       await go(page, site, start);
       await page.evaluate(() => { window.__spaMarker = "kept"; });
       const before = documents();

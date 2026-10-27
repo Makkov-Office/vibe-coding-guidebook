@@ -22,6 +22,9 @@ export function tabPath(map, entry, tabId) {
   return tab.segment ? `${entry.new}/${tab.segment}` : entry.new;
 }
 
+// Addresses a `live` entry is served at: the tabs of a chapter with tabs, otherwise its new page.
+export const livePaths = (map, entry) => entry.tabs ? map.tabs.map((tab) => tabPath(map, entry, tab.id)) : [entry.new];
+
 // Every address the map knows: section roots, old and new addresses and the
 // tabs of each chapter. A built page outside this set fails the build.
 export function mappedPaths(map) {
@@ -45,8 +48,8 @@ export function currentRoutes(generated) {
 // that cannot be placed, so nothing is silently sent to a wrong page.
 export function resolveAnchors(map, generated) {
   const byOld = new Map(map.pages.filter((entry) => !entry.alias).map((entry) => [entry.old, entry]));
-  // A live chapter (its new pages are built) is already registered at its tab addresses.
-  for (const entry of map.pages) if (entry.live) for (const tab of map.tabs) byOld.set(tabPath(map, entry, tab.id), entry);
+  // A live page (its new page is built) is already registered at its new address, a chapter with tabs at its tab addresses.
+  for (const entry of map.pages) if (entry.live) for (const address of livePaths(map, entry)) byOld.set(address, entry);
   const chapters = new Map(generated.chapters.map((chapter) => [chapter.id, chapter]));
   const sectionOf = new Map();
   for (const entry of map.pages) {
@@ -97,7 +100,7 @@ export function validateUrlMap(map, generated) {
     // (outside the rail) does not move.
     if (entry.new === "/" || (section && entry.new === section.path && entry.old !== entry.new)) errors.push(`${name}: ${entry.new} is a section landing page`);
     if (section?.id === "service" && entry.old !== entry.new) errors.push(`${name}: a service page keeps its address`);
-    if (entry.live !== undefined && (entry.live !== true || !entry.tabs || !redirects(entry))) errors.push(`${name}: live is only true, on a chapter with tabs that moves`);
+    if (entry.live !== undefined && (entry.live !== true || !entry.chapter || !redirects(entry))) errors.push(`${name}: live is only true, on a chapter page that moves`);
     if (entry.tabs) {
       if (!tabIds.has(entry.lead)) errors.push(`${name}: lead tab ${entry.lead} is unknown`);
       if (typeof entry.anchors !== "object" || entry.anchors === null) errors.push(`${name}: tabs need an anchors object`);

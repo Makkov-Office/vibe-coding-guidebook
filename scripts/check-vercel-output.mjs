@@ -270,7 +270,7 @@ for (const target of pages) {
 
 for (const target of pages) {
   // Start from a page that links to the target; the rail links every page.
-  const start = target.urlPath === "/" ? "/glossary" : target.urlPath === "/chapters/01" ? "/chapters/02" : "/";
+  const start = target.urlPath === "/" ? "/reference/glossary" : target.urlPath === "/chapters/01" ? "/chapters/02" : "/";
   await page.goto(origin + start);
   await settle();
   const link = page.locator(`a[href="${target.urlPath}"]`).filter({ visible: true }).first();

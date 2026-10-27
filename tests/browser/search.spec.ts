@@ -16,7 +16,7 @@ test('the rail button, Ctrl+K, Meta+K and «/» open search; Esc returns focus',
   await page.keyboard.press('Escape');await expect(page.locator('.search-trigger')).toBeFocused();
  }
  // «/» while typing stays a character.
- await ready(page,'/glossary');const filter=page.getByLabel('Термин',{exact:true});await filter.click();await page.keyboard.type('a/b');
+ await ready(page,'/reference/glossary');const filter=page.getByLabel('Термин',{exact:true});await filter.click();await page.keyboard.type('a/b');
  await expect(filter).toHaveValue('a/b');await expect(dialog(page)).toBeHidden();
  // The header «Глоссарий» is only where there is no rail.
  await expect(page.locator('.header-glossary')).toBeHidden();
@@ -32,7 +32,7 @@ test('results are grouped; a term shows its level and opens the glossary on #ter
  const order=['Страницы и разделы','Термины глоссария','Памятка','Текст и примеры'];
  expect(labels.length).toBeGreaterThan(1);expect(labels).toEqual(order.filter(label=>labels.includes(label)));
  const term=group(page,'Термины глоссария').getByRole('option').first();
- await expect(term).toHaveAttribute('href','/glossary#term-harness');await expect(term.locator('.result-meta')).toContainText('Профессиональное');
+ await expect(term).toHaveAttribute('href','/reference/glossary#term-harness');await expect(term.locator('.result-meta')).toContainText('Профессиональное');
  await expect(page.locator('.search-count')).toHaveText(/\d+\+? результатов/);
  // Arrow down to the first term, Enter.
  const options=page.locator('#search-results [role=option]'),target=await term.getAttribute('id');
@@ -50,7 +50,7 @@ test('an empty query suggests the glossary, the memo and pages opened recently',
  const recent=group(page,'Недавние страницы').getByRole('option');
  await expect(recent).toHaveCount(1);await expect(recent).toHaveAttribute('href','/chapters/03');
  await page.keyboard.press('ArrowDown');await page.keyboard.press('Enter');
- await expect(page).toHaveURL(/\/chapters\/22$/);await expect(page.locator('main#reader')).toBeFocused();
+ await expect(page).toHaveURL(/\/reference\/22-cheatsheet$/);await expect(page.locator('main#reader')).toBeFocused();
  // A chapter tab is remembered as its chapter.
  await ready(page,'/flow/08-preflight/check');await ready(page,'/chapters/05');await page.keyboard.press('Control+k');
  await expect(group(page,'Недавние страницы').getByRole('option').first()).toHaveAttribute('href','/flow/08-preflight');

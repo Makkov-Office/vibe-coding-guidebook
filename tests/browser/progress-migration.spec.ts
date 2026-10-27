@@ -24,7 +24,7 @@ test('progress saved by the previous version is shown after the update, once mig
  await expect(page.getByRole('button',{name:/Глава изучена · отменить/})).toHaveAttribute('aria-pressed','true');
  await ready(page,'/chapters/20');const exercises=page.locator('[data-exercise]');
  await expect(exercises.nth(0)).toBeChecked();await expect(exercises.nth(1)).not.toBeChecked();await expect(exercises.nth(2)).toBeChecked();
- await ready(page,'/chapters/22');
+ await ready(page,'/reference/22-cheatsheet');
  await expect(page.locator('[data-practice="ch-22-b003-15"]')).toBeChecked();await expect(page.locator('[data-practice="ch-22-b003-16"]')).not.toBeChecked();
 });
 
@@ -33,5 +33,5 @@ test('damaged saved progress does not break the page',async({page})=>{
  await ready(page,'/');
  await expect(page.locator('.learning-heading strong')).toHaveText('0 из 22');
  await expect(page.locator('.learning-progress')).toContainText('Сохранённый прогресс не удалось прочитать');
- await ready(page,'/chapters/22');await expect(page.locator('[data-practice="ch-22-b003-15"]')).toBeChecked();
+ await ready(page,'/reference/22-cheatsheet');await expect(page.locator('[data-practice="ch-22-b003-15"]')).toBeChecked();
 });

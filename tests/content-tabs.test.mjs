@@ -86,7 +86,7 @@ test('an overview compiles through the same pipeline and opens the chapter', asy
   const overview = chapter.tabs.find(tab => tab.id === 'overview').html;
   assert.match(overview, /^<h2 id="ch-08-overview-зачем">Зачем<\/h2>/);
   assert.ok(overview.includes('id="ch-08-overview-правило"'));
-  assert.match(overview, /<a [^>]*href="\/glossary#term-[^"]+"[^>]*class="term-link"/);
+  assert.match(overview, /<a [^>]*href="\/reference\/glossary#term-[^"]+"[^>]*class="term-link"/);
   assert.ok(overview.includes('class="code-shell"'));
   assert.ok(!overview.includes('class="permalink"'));
   assert.ok(search.some(entry => entry.id.startsWith('ch-08-overview-') && entry.tab === 'overview' && entry.text.includes('preflight')));
@@ -180,7 +180,9 @@ test('a live chapter is read at its tab addresses: anchors, links and search', a
   const tabPath = { overview: '/flow/08-preflight', 'how-it-works': '/flow/08-preflight/how-it-works', apply: '/flow/08-preflight/apply', check: '/flow/08-preflight/check' };
   assert.equal(chapter.path, '/chapters/08');
   assert.equal(chapter.href, '/flow/08-preflight');
-  assert.ok(chapters.filter(item => item.id !== 'ch-08').every(item => item.href === item.path));
+  // Pages without tabs that moved (P2-05b) are read at their new address; the rest stay where they are.
+  const moved = { 'ch-22': '/reference/22-cheatsheet', 'ch-23': '/reference/glossary' };
+  assert.ok(chapters.filter(item => item.id !== 'ch-08').every(item => item.href === (moved[item.id] ?? item.path)));
   // Every id of the chapter is registered at the tab that holds it, the heading at the overview.
   const holder = new Map([...ids(chapter.heading).map(id => [id, 'overview']), ...chapter.tabs.flatMap(tab => ids(tab.html).map(id => [id, tab.id]))]);
   for (const id of ids(chapter.html)) assert.equal(anchors[id].path, tabPath[holder.get(id)], id);
