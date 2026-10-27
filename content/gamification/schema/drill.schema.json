@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vibe-coding-guidebook-ivory.vercel.app/schema/drill.schema.json",
+  "title": "Тренажёр главы",
+  "description": "Тренажёр (бриф 10.3): 5–8 карточек-сценариев с одним правильным ответом, объяснением и ссылкой на абзац главы. Проверяется компилятором (src/content/drills.mjs), fail closed.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "chapter", "title", "minutes", "intro", "cards"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "chapter": { "type": "string", "pattern": "^ch-(0[1-9]|1[0-9]|2[0-2])$" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "minutes": { "type": "integer", "minimum": 2, "maximum": 5 },
+    "intro": { "type": "string", "minLength": 1, "maxLength": 300 },
+    "cards": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "scenario", "question", "options", "answer", "explanation", "anchor", "difficulty"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+          "scenario": { "type": "string", "minLength": 1, "maxLength": 400 },
+          "question": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "options": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "label"],
+              "properties": {
+                "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+                "label": { "type": "string", "minLength": 1, "maxLength": 120 }
+              }
+            }
+          },
+          "answer": { "type": "string" },
+          "explanation": { "type": "string", "minLength": 1, "maxLength": 400 },
+          "anchor": { "type": "string", "pattern": "^ch-" },
+          "difficulty": { "type": "integer", "minimum": 1, "maximum": 3 }
+        }
+      }
+    }
+  }
+}

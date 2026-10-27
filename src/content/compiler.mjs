@@ -17,6 +17,7 @@ import identities from './block-identities.json' with {type:'json'};
 import practiceIdentities from './practice-identities.json' with {type:'json'};
 import toolMedia from './tool-media.json' with {type:'json'};
 import {termProduct,chapterProduct,linkedProduct} from '../design/product-logos.mjs';
+import {compileDrills} from './drills.mjs';
 const iconMarkup=name=>renderToStaticMarkup(createElement(icons[name],iconProps));
 
 const el = (tagName, properties={}, children=[]) => ({type:'element',tagName,properties,children});
@@ -140,7 +141,7 @@ export function parseGlossaryLevels(value,terms,topics){
 
 // urlMap: src/content/url-map.json (tabs of each chapter); overviews: { '08': markdown of content/overview/08.md };
 // glossaryLevels: content/glossary-levels.json (without it terms carry no level).
-export async function compileHandbook(source, {urlMap, overviews={}, glossaryLevels}={}) {
+export async function compileHandbook(source, {urlMap, overviews={}, glossaryLevels, drills:drillInputs=[], drillSchema}={}) {
   if(/Конец учебного руководства|Codex implementation prompt|## 17\. README и handoff/.test(source)) throw Error('Implementation appendix in reader source');
   const tree=unified().use(remarkParse).use(remarkGfm).parse(source);
   const terms=[]; const topics=[]; let topic=''; let inGlossary=false;
@@ -453,6 +454,9 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
   const finalHtml=intro+chapters.map(c=>`<section data-chapter="${c.id}">${c.html}</section>`).join('');
   if(/ai-artefacts|AI Artefacts|chatgpt-conversation:|PR #\d|TICKET-\d/.test(JSON.stringify({finalHtml,search,panels,presentation})))throw Error('Private provenance in publication');
   for(const fragment of [finalHtml,...chapters.flatMap(c=>c.tabs?[c.heading,...c.tabs.map(tab=>tab.html)]:[]),...panels.flatMap(p=>p.choices.map(c=>c.html))])for(const [,path,target]of fragment.matchAll(/href="([^"#]*)#([^"]+)"/g))if(!targets[decode(target)]||targets[decode(target)].path!==path)throw Error(`Invalid route target: ${path}#${target}`);
+  // Drills (P7-03): every card links to a paragraph of its chapter, at the tab that holds it.
+  if(drillInputs.length&&!drillSchema)throw Error('Drills need content/gamification/schema/drill.schema.json');
+  const drills=compileDrills(drillInputs,drillSchema??{},id=>targets[id]?.path);
   const levelNames=levels?Object.fromEntries(LEVELS.map(level=>[level,levels.names[level].trim()])):null;
-  return {html:finalHtml,intro,chapters,terms,topics,levels:levelNames,search,diagrams,blocks,panels,presentation,anchors,audit};
+  return {html:finalHtml,intro,chapters,terms,topics,levels:levelNames,search,diagrams,blocks,panels,presentation,anchors,drills,audit};
 }
