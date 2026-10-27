@@ -131,6 +131,14 @@
     { "old": "/resources", "new": "/tools/resources", "section": "tools", "chapter": "ch-resources" },
     { "old": "/agents", "new": "/agents", "section": "agents" },
     { "old": "/print", "new": "/print", "section": "service" },
-    { "old": "/design", "new": "/design", "section": "service" }
+    { "old": "/design", "new": "/design", "section": "service" },
+    { "old": "/design/chapters/07", "new": "/design/chapters/07", "section": "service" },
+    { "old": "/design/chapters/07/how-it-works", "new": "/design/chapters/07/how-it-works", "section": "service" },
+    { "old": "/design/chapters/07/apply", "new": "/design/chapters/07/apply", "section": "service" },
+    { "old": "/design/chapters/07/check", "new": "/design/chapters/07/check", "section": "service" },
+    { "old": "/design/chapters/08", "new": "/design/chapters/08", "section": "service" },
+    { "old": "/design/chapters/08/how-it-works", "new": "/design/chapters/08/how-it-works", "section": "service" },
+    { "old": "/design/chapters/08/apply", "new": "/design/chapters/08/apply", "section": "service" },
+    { "old": "/design/chapters/08/check", "new": "/design/chapters/08/check", "section": "service" }
   ]
 }

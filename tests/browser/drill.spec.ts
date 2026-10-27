@@ -12,7 +12,7 @@ test('the drill is played card by card, with feedback, a result and a saved best
  await ready(page,'/flow/08-preflight/check');
  const box=page.locator('section.drill');
  await expect(box.getByRole('heading',{level:2})).toHaveText(drill.title);
- await expect(page.locator('.tab-empty')).toHaveCount(0);
+ await expect(page.locator('.ct-empty')).toHaveCount(0);
  await box.getByRole('button',{name:'Начать'}).click();
  for(const [i,card] of drill.cards.entries()){
   const heading=box.getByRole('heading',{level:2});
