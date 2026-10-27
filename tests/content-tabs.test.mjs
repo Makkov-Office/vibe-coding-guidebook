@@ -73,6 +73,29 @@ test('an overview compiles through the same pipeline and opens the chapter', asy
   assert.ok(chapters.filter(item => item.tabs && item.id !== 'ch-08').every(item => item.overview === null && item.tabs[0].html === ''));
 });
 
+test('an overview may link to its own sections', async () => {
+  const linked = fixture.replace('Начать правки до проверки.', 'Начать правки до проверки, см. [Правило](#ch-08-overview-правило).');
+  const { chapters, anchors } = await compileHandbook(source, { urlMap, overviews: { '08': linked } });
+  const chapter = chapters.find(item => item.id === 'ch-08');
+  assert.ok(chapter.tabs.find(tab => tab.id === 'overview').html.includes(`href="${chapter.path}#${encodeURIComponent('ch-08-overview-правило')}"`));
+  assert.equal(anchors['ch-08-overview-правило'], undefined);
+  const missing = fixture.replace('Начать правки до проверки.', 'См. [нет](#ch-08-overview-нет).');
+  await assert.rejects(() => compileHandbook(source, { urlMap, overviews: { '08': missing } }), /Missing anchor ch-08-overview-нет/);
+});
+
+test('reader assets put the static diagrams into the tabs too', () => {
+  const generated = JSON.parse(fs.readFileSync(`${root}src/content/generated.json`, 'utf8'));
+  let figures = 0;
+  for (const chapter of generated.chapters.filter(item => item.tabs)) for (const tab of chapter.tabs) {
+    for (const [figure] of tab.html.matchAll(/<figure[^>]*data-diagram="[^"]+"[^>]*>/g)) {
+      figures++;
+      assert.ok(chapter.html.includes(figure), `${chapter.id}/${tab.id}: ${figure}`);
+    }
+  }
+  assert.ok(figures > 0);
+  assert.equal(figures, generated.chapters.filter(item => item.tabs).reduce((sum, item) => sum + [...item.html.matchAll(/data-diagram="/g)].length, 0));
+});
+
 test('an overview that breaks the template fails the build', async () => {
   const swap = (from, to) => fixture.replace(from, to);
   const words = Array.from({ length: 340 }, () => 'слово').join(' ');

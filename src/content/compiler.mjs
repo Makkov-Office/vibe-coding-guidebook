@@ -365,17 +365,23 @@ export async function compileHandbook(source, {urlMap, overviews={}}={}) {
   audit.renderedLinked=renderedLinked;audit.renderedGaps=renderedGaps;
   const ids=[...html.matchAll(/ id="([^"]+)"/g)].map(m=>m[1]);
   if(ids.length!==new Set(ids).size) throw Error(`Duplicate rendered IDs: ${[...new Set(ids.filter((id,i)=>ids.indexOf(id)!==i))].join(', ')}`);
-  for(const [,target] of html.matchAll(/href="#([^"]+)"/g)) if(!ids.includes(target)) throw Error(`Missing anchor ${target}`);
+  // Overview ids live only in the overview tab: link targets, not legacy anchors.
+  const overviewHtml=chapters.filter(c=>c.overview).map(c=>[c,c.tabs.find(tab=>tab.id==='overview').html]);
+  const overviewIds=new Map(overviewHtml.flatMap(([c,fragment])=>[...fragment.matchAll(/ id="([^"]+)"/g)].filter(m=>m[1].startsWith(`${c.id}-overview-`)).map(m=>[m[1],c.path])));
+  // Markdown percent-encodes a Cyrillic fragment; ids are compared decoded.
+  const decode=id=>{try{return decodeURIComponent(id);}catch{return id;}};
+  for(const [,href] of [html,...overviewHtml.map(([,fragment])=>fragment)].join('').matchAll(/href="#([^"]+)"/g)){const target=decode(href);if(!ids.includes(target)&&!overviewIds.has(target)) throw Error(`Missing anchor ${target}`);}
   audit.unexplainedGaps=audit.ambiguous.length+renderedGaps.length;
   const anchors=Object.fromEntries(ids.map(id=>[id,{id,path:id.startsWith('term-')?'/glossary':chapterPath(id.match(/ch-(?:\d{2}|resources|tools|codex|claude-code)/)?.[0]??'ch-00')}]));
   for(const panel of panels)anchors[`${panel.id}-panel`]={id:`${panel.id}-panel`,path:chapterPath(panel.chapter)};
-  const routeLinks=fragment=>fragment.replace(/href="#([^"]+)"/g,(_,id)=>`href="${anchors[id]?.path??'/'}#${id}"`);
+  const targets={...anchors,...Object.fromEntries([...overviewIds].map(([id,path])=>[id,{id,path}]))};
+  const routeLinks=fragment=>fragment.replace(/href="#([^"]+)"/g,(_,id)=>`href="${targets[decode(id)]?.path??'/'}#${id}"`);
   intro=routeLinks(intro);for(const chapter of chapters){chapter.html=routeLinks(chapter.html);if(chapter.tabs){chapter.heading=routeLinks(chapter.heading);for(const tab of chapter.tabs)tab.html=routeLinks(tab.html);}}
   for(const entry of search)entry.path=chapterPath(entry.chapter);
   for(const panel of panels){for(const choice of panel.choices){choice.html=routeLinks(choice.html);choice.titleHtml=routeLinks(choice.titleHtml??'');if(choice.evidenceHtml)choice.evidenceHtml=routeLinks(choice.evidenceHtml);if(choice.ownerHtml)choice.ownerHtml=routeLinks(choice.ownerHtml);if(choice.chapter)choice.path=chapterPath(choice.chapter);}for(const scenario of panel.scenarios??[])scenario.html=routeLinks(scenario.html);}
   for(const key of ['heading','description','subtitle'])presentation[key]=routeLinks(presentation[key]);presentation.timeline=presentation.timeline.map(routeLinks);
   const finalHtml=intro+chapters.map(c=>`<section data-chapter="${c.id}">${c.html}</section>`).join('');
   if(/ai-artefacts|AI Artefacts|chatgpt-conversation:|PR #\d|TICKET-\d/.test(JSON.stringify({finalHtml,search,panels,presentation})))throw Error('Private provenance in publication');
-  for(const fragment of [finalHtml,...chapters.flatMap(c=>c.tabs?[c.heading,...c.tabs.map(tab=>tab.html)]:[]),...panels.flatMap(p=>p.choices.map(c=>c.html))])for(const [,path,target]of fragment.matchAll(/href="([^"#]*)#([^"]+)"/g))if(!anchors[target]||anchors[target].path!==path)throw Error(`Invalid route target: ${path}#${target}`);
+  for(const fragment of [finalHtml,...chapters.flatMap(c=>c.tabs?[c.heading,...c.tabs.map(tab=>tab.html)]:[]),...panels.flatMap(p=>p.choices.map(c=>c.html))])for(const [,path,target]of fragment.matchAll(/href="([^"#]*)#([^"]+)"/g))if(!targets[decode(target)]||targets[decode(target)].path!==path)throw Error(`Invalid route target: ${path}#${target}`);
   return {html:finalHtml,intro,chapters,terms,topics,search,diagrams,blocks,panels,presentation,anchors,audit};
 }
