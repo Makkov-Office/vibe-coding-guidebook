@@ -6,6 +6,7 @@ import Link from 'next/link';
 import {useEffect,useMemo,useRef,useState} from 'react';
 import {navSections,currentSection,completable,type NavChapter} from '../design/nav-sections';
 import {RoleIcon,PageLink,Progress,useCompleted} from './NavRail';
+import {UiControls} from './UiControls';
 import '../design/mobile-nav.css';
 
 export function MobileNav({chapters,pathname,ready,onSearch}:{chapters:NavChapter[];pathname:string;ready:boolean;onSearch:()=>void}){
@@ -45,6 +46,7 @@ export function MobileNav({chapters,pathname,ready,onSearch}:{chapters:NavChapte
      </div>
     </li>;
    })}</ul></nav>
+   <UiControls className="menu-controls"/>
   </dialog>
  </>;
 }
