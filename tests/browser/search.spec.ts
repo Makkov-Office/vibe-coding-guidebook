@@ -109,6 +109,8 @@ test('axe: no serious or critical violations with search open, in results and su
   for(const query of ['','review']){
    await page.keyboard.press('Control+k');await input(page).fill(query);
    await expect(page.locator('#search-results [role=option]').first()).toBeVisible();
+   // Contrast is measured once the dialog and result transitions have finished, not mid-fade.
+   await page.waitForFunction(()=>document.getAnimations().every(a=>a.playState!=='running'||!Number.isFinite(Number(a.effect?.getComputedTiming().endTime))));
    const violations=await page.evaluate(async()=>{const result=await(window as unknown as {axe:{run:(context:unknown,options:object)=>Promise<{violations:{id:string;impact:string}[]}>}}).axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}});return result.violations.filter(v=>v.impact==='serious'||v.impact==='critical').map(v=>v.id);});
    expect(violations,`${scheme} «${query}»`).toEqual([]);
    await page.keyboard.press('Escape');
