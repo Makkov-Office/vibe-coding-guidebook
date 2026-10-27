@@ -1,5 +1,5 @@
 import {
-  IconArrowRight, IconArrowLeft, IconArrowUp, IconArrowDown, IconArrowUpRight,
+  IconArrowRight, IconArrowLeft, IconArrowUp, IconArrowDown, IconArrowUpRight, IconClock, IconTemplate,
   IconChevronRight, IconChevronDown, IconSearch, IconMenu2, IconX, IconBook2, IconDownload,
   IconRotateClockwise, IconCompass, IconTopologyStar3, IconRobot,
   IconTerminal2, IconUsers, IconChecklist, IconRoute, IconPlaneDeparture,
@@ -45,7 +45,7 @@ export const chapterIcons={
   'ch-21':'maturity','ch-22':'notes','ch-23':'glossary','ch-24':'sources','ch-resources':'sources','ch-tools':'setup','ch-codex':'terminal','ch-claude-code':'context',
 };
 
-// Словарь ролей: 34 смысла интерфейса → иконка Tabler; filled — для активного пункта rail
+// Словарь ролей: 38 смыслов интерфейса → иконка Tabler; filled — для активного пункта rail
 // (docs/design/visual-language.md, раздел «Иконки»).
 export const iconRoles={
   // Rail: 9 разделов.
@@ -75,6 +75,11 @@ export const iconRoles={
   copy:{group:'ui',icon:IconCopy},
   externalLink:{group:'ui',icon:IconExternalLink},
   anchorLink:{group:'ui',icon:IconLink},
+  // Шаблон главы (P5-02): время чтения, шаблон, соседние страницы.
+  readingTime:{group:'ui',icon:IconClock},
+  template:{group:'ui',icon:IconTemplate},
+  previous:{group:'ui',icon:IconArrowLeft},
+  next:{group:'ui',icon:IconArrowRight},
   // Цвета-смыслы.
   agent:{group:'meaning',icon:IconSparkles},
   practiceMeaning:{group:'meaning',icon:IconBarbell},
