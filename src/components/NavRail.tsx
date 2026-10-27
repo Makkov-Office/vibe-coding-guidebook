@@ -43,7 +43,7 @@ export function NavRail({chapters,pathname}:{chapters:NavChapter[];pathname:stri
  // Open menu and roving focus belong to a page: both reset when the route or section changes.
  const [openState,setOpenState]=useState<{path:string;id:string|null}>({path:pathname,id:null}),[completed,setCompleted]=useState<string[]>([]);
  const open=openState.path===pathname?openState.id:null,setOpen=(id:string|null)=>setOpenState({path:pathname,id});
- const timer=useRef<ReturnType<typeof setTimeout>|null>(null),touch=useRef(false),returning=useRef(false);
+ const timer=useRef<ReturnType<typeof setTimeout>|null>(null),touch=useRef(false),wasOpen=useRef(false),returning=useRef(false);
  const items=useRef(new Map<string,HTMLElement>()),panels=useRef(new Map<string,HTMLDivElement>());
  // Roving tabindex: one rail item is in the tab order, arrows move between the others.
  const [roving,setRoving]=useState<{active:string|null;id:string}|null>(null);
@@ -82,18 +82,20 @@ export function NavRail({chapters,pathname}:{chapters:NavChapter[];pathname:stri
  }
  // A tap on a closed section opens its menu; the next tap follows the link. data-tap-open tells
  // the reader's link handler (Reader.tsx) to leave this click to the rail.
- const pointerDown=(event:PointerEvent<HTMLElement>,s:NavSection)=>{touch.current=event.pointerType!=='mouse'&&hasMenu(s)&&open!==s.id;event.currentTarget.toggleAttribute('data-tap-open',touch.current);};
- return <nav className="nav-rail" aria-label="Разделы руководства" onMouseLeave={()=>schedule(null,closeDelay)} onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node|null))setOpen(null);}}>
+ // Focus arrives before click and opens the menu, so the click decides by the state at pointerdown.
+ const pointerDown=(event:PointerEvent<HTMLElement>,s:NavSection)=>{wasOpen.current=open===s.id;touch.current=event.pointerType!=='mouse'&&hasMenu(s)&&!wasOpen.current;event.currentTarget.toggleAttribute('data-tap-open',touch.current);};
+ const resetTap=(event:{currentTarget:HTMLElement})=>{touch.current=false;wasOpen.current=false;event.currentTarget.removeAttribute('data-tap-open');};
+ return <nav className="nav-rail" aria-label="Разделы руководства" onMouseLeave={event=>{if(!event.currentTarget.contains(document.activeElement))schedule(null,closeDelay);}} onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node|null))setOpen(null);}}>
   <ul className="rail-list">{sections.map(s=>{
    const expanded=open===s.id,current=active===s.id,menu=hasMenu(s);
    const common={ref:(node:HTMLElement|null)=>{if(node)items.current.set(s.id,node);else items.current.delete(s.id);},className:'rail-item',tabIndex:focusable===s.id?0:-1,
     'aria-expanded':menu?expanded:undefined,'aria-controls':menu?`mega-${s.id}`:undefined,
-    onFocus:()=>{setFocusable(s.id);if(s.href)router.prefetch(s.href);if(returning.current)return;if(menu)show(s.id);else setOpen(null);},onKeyDown:(e:KeyboardEvent<HTMLElement>)=>railKey(e,s),
+    onPointerCancel:resetTap,onFocus:()=>{setFocusable(s.id);if(s.href)router.prefetch(s.href);if(returning.current)return;if(menu)show(s.id);else setOpen(null);},onKeyDown:(e:KeyboardEvent<HTMLElement>)=>{resetTap(e);railKey(e,s);},
     onPointerDown:(e:PointerEvent<HTMLElement>)=>pointerDown(e,s)};
    const body=<><span className="rail-indicator"><RoleIcon role={s.icon} filled={current}/></span><span className="rail-label">{s.label}</span></>;
    return <li key={s.id} className="rail-entry" data-section={s.id} onMouseEnter={()=>{if(s.href)router.prefetch(s.href);schedule(menu?s.id:null,openDelay);}}>
-    {s.href?<Link {...common} href={s.href} prefetch={false} aria-current={current?'page':undefined} onClick={event=>{event.currentTarget.removeAttribute('data-tap-open');if(touch.current){touch.current=false;event.preventDefault();show(s.id);return;}setOpen(null);}}>{body}</Link>
-     :<button {...common} type="button" onClick={()=>{touch.current=false;if(expanded)setOpen(null);else show(s.id);}}>{body}</button>}
+    {s.href?<Link {...common} href={s.href} prefetch={false} aria-current={current?'true':undefined} onClick={event=>{event.currentTarget.removeAttribute('data-tap-open');if(touch.current){touch.current=false;event.preventDefault();show(s.id);return;}setOpen(null);}}>{body}</Link>
+     :<button {...common} type="button" aria-current={current?'true':undefined} onClick={event=>{resetTap(event);show(s.id);}}>{body}</button>}
     {menu&&<div id={`mega-${s.id}`} className="mega-menu" hidden={!expanded} ref={node=>{if(node)panels.current.set(s.id,node);else panels.current.delete(s.id);}} onMouseEnter={()=>show(s.id)} onKeyDown={e=>menuKey(e,s)}>
      <div className="mega-head"><p className="mega-heading">{s.label}</p><p className="mega-description">{s.description}</p></div>
      {s.pages.length>0&&<ul className="mega-list">{s.pages.map(p=><PageLink key={p.chapter} page={p} pathname={pathname} completed={completed} onNavigate={()=>setOpen(null)}/>)}</ul>}
@@ -107,7 +109,7 @@ export function NavRail({chapters,pathname}:{chapters:NavChapter[];pathname:stri
 }
 
 function Progress({section,completed,onNavigate}:{section:NavSection;completed:string[];onNavigate:()=>void}){
- const pages=section.pages.filter(p=>p.completable);
+ const pages=[...section.pages,...section.groups.flatMap(g=>g.pages)].filter(p=>p.completable);
  if(!pages.length)return null;
  const done=pages.filter(p=>completed.includes(p.chapter)).length,next=pages.find(p=>!completed.includes(p.chapter));
  return <div className="mega-progress"><p><strong>{done} из {pages.length} пройдено</strong></p>

@@ -9,7 +9,7 @@ const menu=(page:Page,id:string)=>page.locator(`#mega-${id}`);
 test('rail shows nine sections and marks the current one',async({page})=>{
  await ready(page,'/chapters/08');
  await expect(page.locator('.rail-item')).toHaveText(['Главная','Начать','Основы','Процесс','Контроль','Надёжность','Практика','Инструменты','Agent Pack']);
- await expect(item(page,'flow')).toHaveAttribute('aria-current','page');
+ await expect(item(page,'flow')).toHaveAttribute('aria-current','true');await expect(page.locator('[aria-current=page]:visible')).toHaveCount(0);
  await expect(page.locator('.rail-item[tabindex="0"]')).toHaveCount(1);
  await expect(menu(page,'flow').locator('.mega-item[aria-current=page]')).toHaveAttribute('href','/chapters/08');
  await expect(page.locator('.mega-menu:visible')).toHaveCount(0);
@@ -24,6 +24,8 @@ test('hover opens the menu after a short delay and leaving closes it',async({pag
  await expect(menu(page,'control')).toBeVisible();
  await item(page,'reliability').hover();await expect(menu(page,'reliability')).toBeVisible();await expect(menu(page,'control')).toBeHidden();
  await page.mouse.move(900,500);await expect(menu(page,'reliability')).toBeHidden();
+ // A mouse click on the Agent Pack button keeps its menu open.
+ await item(page,'agents').click();await page.waitForTimeout(300);await expect(menu(page,'agents')).toBeVisible();
 });
 
 test('keyboard: focus opens, Tab enters the menu, arrows move, Esc returns focus to the rail',async({page})=>{
@@ -47,6 +49,7 @@ test('keyboard: focus opens, Tab enters the menu, arrows move, Esc returns focus
  await expect(menu(page,'start').locator('.mega-item').nth(1)).toHaveAttribute('href','/chapters/01');
  await page.keyboard.press('ArrowDown');await page.keyboard.press('Enter');
  await expect(page).toHaveURL(/\/chapters\/01$/);await expect(page.locator('.mega-menu:visible')).toHaveCount(0);
+ await expect(page.locator('main#reader')).toBeFocused();
 });
 
 test('tap opens the menu first, a second tap follows the rail link',async({browser})=>{
@@ -59,6 +62,8 @@ test('tap opens the menu first, a second tap follows the rail link',async({brows
  await expect(page).toHaveURL(/\/chapters\/03$/);await expect(page.locator('.mega-menu:visible')).toHaveCount(0);
  await item(page,'flow').tap();await expect(menu(page,'flow')).toBeVisible();
  await item(page,'flow').tap();await expect(page).toHaveURL(/\/chapters\/06$/);
+ // Agent Pack has no page yet: its rail item is a button that opens the menu.
+ await item(page,'agents').tap();await expect(menu(page,'agents')).toBeVisible();await expect(page).toHaveURL(/\/chapters\/06$/);
  await context.close();
 });
 
@@ -76,12 +81,14 @@ test('every mega-menu link leads to an existing address from the URL map',async(
 });
 
 test('progress in the menu follows chapter completion',async({page})=>{
- await page.addInitScript(()=>localStorage.setItem('handbook-learning-v2',JSON.stringify({completed:['ch-06','ch-07'],exercises:[]})));
+ await page.addInitScript(()=>localStorage.setItem('handbook-learning-v2',JSON.stringify({completed:['ch-06','ch-07','ch-22'],exercises:[]})));
  await ready(page,'/chapters/08');
  await item(page,'flow').hover();
  await expect(menu(page,'flow').locator('.mega-progress')).toContainText('2 из 6 пройдено');
  await expect(menu(page,'flow').locator('.mega-progress a')).toHaveAttribute('href','/chapters/08');
  await expect(menu(page,'flow').locator('.nav-ring-done')).toHaveCount(2);
+ // The reference group (cheat sheet 22) counts toward «Практика».
+ await item(page,'practice').hover();await expect(menu(page,'practice').locator('.mega-progress')).toContainText('1 из 3 пройдено');
 });
 
 test('below 1024 px the rail is hidden and the menu button stays',async({page})=>{
