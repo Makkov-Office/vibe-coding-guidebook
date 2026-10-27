@@ -2,7 +2,8 @@
    rail заменяет боковое меню; уже 1024 px остаётся кнопка меню и drawer (до P3-02). */
 .nav-rail{display:none}
 @media(min-width:1024px){
-  .nav-rail{display:block;position:fixed;left:0;top:68px;bottom:0;z-index:15;width:var(--rail-width);padding:var(--space-3) 0 var(--space-4);background:var(--color-rail);border-right:var(--stroke-border) solid var(--color-outline-variant)}
+  /* On a short viewport the nine items do not fit: the rail scrolls (the menus are fixed, not clipped). */
+  .nav-rail{display:block;position:fixed;left:0;top:68px;bottom:0;z-index:15;width:var(--rail-width);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:var(--space-3) 0 var(--space-4);background:var(--color-rail);border-right:var(--stroke-border) solid var(--color-outline-variant)}
 }
 .rail-list{display:grid;gap:var(--space-1);margin:0;padding:0;list-style:none;justify-items:center}
 .rail-entry{width:100%;display:flex;justify-content:center}

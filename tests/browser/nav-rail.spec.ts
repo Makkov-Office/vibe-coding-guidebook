@@ -99,7 +99,7 @@ test('progress in the menu follows chapter completion',async({page})=>{
  await item(page,'practice').hover();await expect(menu(page,'practice').locator('.mega-progress')).toContainText('1 из 3 пройдено');
 });
 
-test('below 1024 px the rail is hidden and the menu button stays',async({page})=>{
+test('below 1024 px the rail is hidden and the menu button stays; on a short screen the rail scrolls',async({page})=>{
  for(const width of [320,360,768,1023]){
   await page.setViewportSize({width,height:900});await ready(page,'/chapters/08');
   await expect(page.locator('.nav-rail')).toBeHidden();await expect(page.locator('.menu-trigger')).toBeVisible();
@@ -107,6 +107,10 @@ test('below 1024 px the rail is hidden and the menu button stays',async({page})=
  }
  await page.setViewportSize({width:1024,height:900});await ready(page,'/chapters/08');
  await expect(page.locator('.nav-rail')).toBeVisible();await expect(page.locator('.menu-trigger')).toBeHidden();
+ // A short desktop viewport: the rail scrolls, so the last section stays reachable and its menu opens.
+ await page.setViewportSize({width:1024,height:600});await ready(page,'/chapters/08');
+ await item(page,'agents').click();await expect(menu(page,'agents')).toBeVisible();
+ const box=await item(page,'agents').boundingBox();expect(box!.y+box!.height).toBeLessThanOrEqual(600);
 });
 
 test('axe: no serious or critical violations with the menu closed and open',async({page})=>{
