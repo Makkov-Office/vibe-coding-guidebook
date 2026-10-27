@@ -58,6 +58,18 @@ test('on a 1366×768 and a 1024×600 screen both controls stay in view',async({p
  }
 });
 
+test('keyboard focus in the rail is never hidden under the pinned controls',async({page})=>{
+ await page.setViewportSize({width:1024,height:600});await ready(page,'/');
+ const panel=(await page.locator('.rail-controls').boundingBox())!;
+ await page.locator('.nav-rail .rail-item').first().focus();
+ const count=await page.locator('.nav-rail .rail-item').count();
+ for(let i=1;i<count;i++){
+  await page.keyboard.press('ArrowDown');
+  const box=(await page.locator('.nav-rail .rail-item:focus').boundingBox())!;
+  expect(box.y+box.height,`item ${i}`).toBeLessThanOrEqual(panel.y+1);
+ }
+});
+
 test('another tab changing the choice updates this one',async({page,context})=>{
  await page.setViewportSize({width:1440,height:900});await ready(page,'/chapters/08');
  const other=await context.newPage();await other.setViewportSize({width:1440,height:900});await ready(other,'/chapters/02');
