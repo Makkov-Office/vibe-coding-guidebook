@@ -44,16 +44,39 @@ test('every block of a tabbed chapter lands in exactly one tab, nothing is cut',
   for (const id of ['ch-00', 'ch-22', 'ch-23', 'ch-tools', 'ch-codex', 'ch-resources']) assert.equal(chapters.find(item => item.id === id)?.tabs, undefined, id);
 });
 
+test('each block sits in the tab of the heading above it, in order', async () => {
+  const { chapters } = await data();
+  for (const chapter of chapters.filter(item => item.tabs)) {
+    // Expected split, walked independently over the full chapter HTML.
+    const entry = urlMap.pages.find(page => page.chapter === chapter.id);
+    const headings = new Set(chapter.outline.map(line => line.id));
+    const expected = new Map(chapter.tabs.map(tab => [tab.id, []]));
+    let tab = entry.lead;
+    const hero = new Set(ids(chapter.heading));
+    for (const id of ids(chapter.html)) {
+      if (hero.has(id)) continue;
+      if (headings.has(id)) tab = entry.anchors[id];
+      expected.get(tab).push(id);
+    }
+    for (const item of chapter.tabs) assert.deepEqual(ids(item.html).filter(id => !id.includes(`${chapter.id}-overview-`)), expected.get(item.id), `${chapter.id}/${item.id}`);
+  }
+  const first = chapters.find(item => item.id === 'ch-01');
+  const lead = ids(first.html).find(id => !ids(first.heading).includes(id));
+  assert.equal(lead, 'ch-01-b002');
+  assert.ok(first.tabs.find(item => item.id === urlMap.pages.find(page => page.chapter === 'ch-01').lead).html.includes(`id="${lead}"`));
+});
+
 test('search entries of tabbed chapters carry their tab', async () => {
   const { chapters, search } = await data();
   const tabbed = new Set(chapters.filter(chapter => chapter.tabs).map(chapter => chapter.id));
-  const entries = search.filter(entry => tabbed.has(entry.chapter) && entry.id !== entry.chapter);
+  const entries = search.filter(entry => tabbed.has(entry.chapter));
   assert.ok(entries.length > 200);
   for (const entry of entries) assert.ok(['overview', 'how-it-works', 'apply', 'check'].includes(entry.tab), entry.id);
   const anchors = Object.fromEntries(urlMap.pages.filter(page => page.tabs).flatMap(page => Object.entries(page.anchors)));
   for (const entry of entries.filter(item => item.type === 'заголовок')) if (anchors[entry.id]) assert.equal(entry.tab, anchors[entry.id], entry.id);
   assert.ok(search.filter(entry => !tabbed.has(entry.chapter)).every(entry => entry.tab === undefined));
   assert.equal(search.find(entry => entry.id === 'ch-08-8-3-fail-closed').tab, 'how-it-works');
+  assert.equal(search.find(entry => entry.id === 'ch-08').tab, 'overview');
 });
 
 test('an overview compiles through the same pipeline and opens the chapter', async () => {
@@ -67,6 +90,9 @@ test('an overview compiles through the same pipeline and opens the chapter', asy
   assert.ok(overview.includes('class="code-shell"'));
   assert.ok(!overview.includes('class="permalink"'));
   assert.ok(search.some(entry => entry.id.startsWith('ch-08-overview-') && entry.tab === 'overview' && entry.text.includes('preflight')));
+  // The first paragraph (Зачем) is its own block with a glossary link and a search entry.
+  assert.match(overview, /<p id="ch-08-overview-b001">(?:(?!<\/p>)[\s\S])*class="term-link"/);
+  assert.ok(search.some(entry => entry.id === 'ch-08-overview-b001' && entry.tab === 'overview'));
   assert.equal(audit.tabs.overviews, 1);
   assert.equal(audit.unexplainedGaps, 0);
   assert.equal(chapters.filter(item => item.overview).length, 1);
@@ -109,16 +135,24 @@ test('an overview that breaks the template fails the build', async () => {
     ['section renamed', swap('## Частая ошибка', '## Ошибки'), /sections must be exactly/],
     ['section order', swap('## Зачем', '## Правило').replace('## Правило\n>', '## Зачем\n>'), /sections must be exactly/],
     ['deeper heading', swap('Начать правки до проверки.', '### Подробнее\nНачать правки.'), /only ## sections/],
-    ['rule without quote', swap('> Агент начинает', 'Агент начинает'), /needs the rule as a quote/],
+    ['rule without quote', swap('> Агент начинает', 'Агент начинает'), /needs the rule as one quote/],
     ['four steps', swap('3. Записать base SHA.', '3. Записать base SHA.\n4. Ещё шаг.'), /one numbered list of 3 items/],
     ['bullets', swap('1. Открыть', '- Открыть').replace('2. Проверить', '- Проверить').replace('3. Записать', '- Записать'), /one numbered list of 3 items/],
     ['raw HTML', swap('Начать правки до проверки.', '<details>Начать</details>'), /raw HTML/],
     ['too long', swap('Начать правки до проверки.', words), /words, at most 350/],
     ['two tables', swap('Начать правки до проверки.', '| a |\n|---|\n| b |\n\n| c |\n|---|\n| d |'), /2 tables/],
+    ['empty section', swap('Начать правки до проверки.', ''), /«Частая ошибка» is empty/],
+    ['empty rule', swap('> Агент начинает работу с preflight.', '>'), /«Правило» (is empty|needs the rule as one quote)/],
+    ['two rules', swap('> Агент начинает работу с preflight.', '> Агент начинает работу с preflight.\n\n> Ещё правило.'), /needs the rule as one quote/],
+    ['text beside steps', swap('1. Открыть', 'Шаги:\n\n1. Открыть'), /one numbered list of 3 items/],
+    ['repeated key', swap('minutes: 3', 'minutes: 3\nminutes: 5'), /key minutes is repeated/],
+    ['single quotes', swap('title: "Тестовый обзор главы 08"', "title: 'Тестовый обзор главы 08'"), /frontmatter line/],
+    ['open quote', swap('title: "Тестовый обзор главы 08"', 'title: "Тестовый обзор главы 08'), /frontmatter line/],
     ['two diagrams', swap('Начать правки до проверки.', '```mermaid\nA-->B\n```\n\n```mermaid\nC-->D\n```'), /2 diagrams/],
   ];
   for (const [name, broken, expected] of cases) assert.throws(() => parseOverview('08', broken), expected, name);
   assert.doesNotThrow(() => parseOverview('08', fixture));
+  assert.deepEqual(parseOverview('08', `\uFEFF${fixture.replace(/\n/g, '\r\n')}`).meta, parseOverview('08', fixture).meta);
   await assert.rejects(() => compileHandbook(source, { urlMap, overviews: { 22: fixture.replace('"08"', '"22"') } }), /not a chapter with tabs/);
 });
 

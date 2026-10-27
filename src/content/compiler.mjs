@@ -74,8 +74,14 @@ const OVERVIEW_SECTIONS=['Зачем','Правило','Как это выгля
 // and Markdown tree; throws with the file name and the broken rule.
 export function parseOverview(number,text){
   const fail=message=>{throw Error(`content/overview/${number}.md: ${message}`);};
+  text=text.replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n');
   const frontmatter=text.match(/^---\n([\s\S]*?)\n---\n/);if(!frontmatter)fail('frontmatter is missing');
-  const meta=Object.fromEntries(frontmatter[1].split('\n').map(line=>line.match(/^([a-z_]+):\s*"?(.*?)"?\s*$/)??fail(`frontmatter line «${line}»`)).map(m=>[m[1],m[2]]));
+  const meta={};
+  for(const line of frontmatter[1].split('\n')){
+    // A value is bare or in balanced double quotes; a key appears once.
+    const m=line.match(/^([a-z_]+):\s*(?:"([^"]*)"|([^"'\s](?:[^"]*[^"\s])?))\s*$/)??fail(`frontmatter line «${line}»`);
+    if(m[1] in meta)fail(`frontmatter key ${m[1]} is repeated`);meta[m[1]]=m[2]??m[3];
+  }
   if(Object.keys(meta).sort().join()!==OVERVIEW_KEYS.join())fail(`frontmatter needs exactly ${OVERVIEW_KEYS.join(', ')}`);
   if(meta.chapter!==number)fail(`chapter ${meta.chapter} does not match the file name`);
   if(!meta.title.trim())fail('title is empty');
@@ -86,9 +92,11 @@ export function parseOverview(number,text){
   visit(body,'html',()=>fail('raw HTML and disclosures are not allowed'));
   const sections=[];for(const node of body.children){if(node.type==='heading')sections.push({title:toString(node),nodes:[]});else if(!sections.length)fail('text before the first section');else sections.at(-1).nodes.push(node);}
   if(sections.map(section=>section.title).join('|')!==OVERVIEW_SECTIONS.join('|'))fail(`sections must be exactly: ${OVERVIEW_SECTIONS.join(' / ')}`);
-  if(!sections[1].nodes.some(node=>node.type==='blockquote'))fail('«Правило» needs the rule as a quote');
-  const steps=sections[3].nodes.filter(node=>node.type==='list');
-  if(steps.length!==1||!steps[0].ordered||steps[0].children.length!==3)fail('«Три вещи, которые нужно сделать» needs one numbered list of 3 items');
+  for(const section of sections)if(!section.nodes.some(node=>toString(node).trim()))fail(`«${section.title}» is empty`);
+  const rules=sections[1].nodes.filter(node=>node.type==='blockquote');
+  if(rules.length!==1||!toString(rules[0]).trim())fail('«Правило» needs the rule as one quote');
+  const steps=sections[3].nodes;
+  if(steps.length!==1||steps[0].type!=='list'||!steps[0].ordered||steps[0].children.length!==3||steps[0].children.some(item=>!toString(item).trim()))fail('«Три вещи, которые нужно сделать» needs one numbered list of 3 items');
   let words=0;visit(body,node=>{if(typeof node.value==='string'&&node.type!=='html')words+=node.value.split(/\s+/).filter(word=>/[\p{L}\p{N}]/u.test(word)).length;});if(words>350)fail(`${words} words, at most 350`);
   let count=0;visit(body,'table',()=>{count++;});if(count>1)fail(`${count} tables, at most 1`);
   count=0;visit(body,'code',node=>{if(node.lang==='mermaid')count++;});if(count>1)fail(`${count} diagrams, at most 1`);
@@ -274,7 +282,7 @@ export async function compileHandbook(source, {urlMap, overviews={}}={}) {
       node.properties.id=id;usedIds.add(id);
       if(entry&&node.tagName==='h3'){tab=entry.anchors[id];if(!tab)throw Error(`${chapter}: heading ${id} has no tab in src/content/url-map.json`);}
       if(entry)tabOf.set(node,node.tagName==='h2'?'heading':tab);
-      transform(node,{chapter,id,title,tab:entry&&node.tagName!=='h2'?tab:undefined});
+      transform(node,{chapter,id,title,tab:entry&&(node.tagName==='h2'?'overview':tab)});
     }
     counters[chapter]=counter;
     const root={type:'root',children:[]};const containers=[root];
