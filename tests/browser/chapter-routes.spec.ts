@@ -44,7 +44,7 @@ test('the old address and its anchors land on the tab that holds them',async({pa
 test('search opens the tab of the result',async({page})=>{
  await ready(page,'/glossary');
  await page.keyboard.press('Control+k');await page.getByLabel('Термин, фраза или текст примера').fill('Fail closed');
- const result=page.locator('.search-results>a[href="/flow/08-preflight/how-it-works#ch-08-8-3-fail-closed"]');await expect(result).toBeVisible();await result.click();
+ const result=page.locator('.search-results [role=option][href="/flow/08-preflight/how-it-works#ch-08-8-3-fail-closed"]');await expect(result).toBeVisible();await result.click();
  await expect(page).toHaveURL(/\/flow\/08-preflight\/how-it-works#ch-08-8-3-fail-closed$/);await expect(page.locator('#ch-08-8-3-fail-closed')).toBeFocused();
 });
 

@@ -31,7 +31,10 @@ test('every term has exactly one level, and generated.json carries it', async ()
 test('levels change no definition, alias, anchor or search entry', async () => {
   const leveled = await data(), base = await without();
   assert.deepEqual(leveled.terms.map(term => Object.fromEntries(Object.entries(term).filter(([key]) => key !== 'level'))), base.terms);
-  assert.deepEqual(leveled.search, base.search);
+  // Search entries of terms carry the level label (P3-03); everything else in them is unchanged.
+  assert.deepEqual(leveled.search.map(entry => Object.fromEntries(Object.entries(entry).filter(([key]) => key !== 'level'))), base.search);
+  const levelOf = new Map(leveled.terms.map(term => [term.id, leveled.levels[term.level]]));
+  for (const entry of leveled.search) assert.equal(entry.level, entry.type === 'термин' ? levelOf.get(entry.id) : undefined, entry.id);
   assert.deepEqual(Object.keys(leveled.anchors).sort(), Object.keys(base.anchors).sort());
   assert.equal(base.levels, null);
   assert.ok(base.terms.every(term => !('level' in term)));
