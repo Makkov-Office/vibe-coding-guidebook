@@ -31,6 +31,11 @@ test('allowed files are explicit and really carry literals', () => {
   assert.equal(NAMED_COLORS.size, 148 + 19);
   assert.deepEqual(findColors('@media (forced-colors:active){a{color:Highlight;fill:red}}', 'x.css').map((h) => h.match), ['fill:red']);
   assert.deepEqual(findColors('a{color:var(--color-x, red);font:600 13px var(--font-text)}', 'x.css').map((h) => h.match), ['color:red']);
+  // Вложенные правила не прячут декларации родителя; имена keyframes и grid-area — не цвета.
+  assert.deepEqual(findColors('.n{color:red;&:hover{color:var(--color-primary)}}', 'x.css').map((h) => h.match), ['color:red']);
+  assert.deepEqual(findColors('.n{&:hover{fill:white} border:1px solid black}', 'x.css').map((h) => h.match), ['fill:white', 'border:black']);
+  assert.deepEqual(findColors('a{animation:highlight 1s;grid-area:field;view-transition-name:mark;transition:color 1s}', 'x.css'), []);
+  assert.deepEqual(findColors('{colorHint:"red team",boxShadow:"0 0 1px black"}', 'x.tsx').map((h) => h.match), ['boxShadow:black']);
   assert.throws(() => lint([]), /no files/);
   assert.throws(() => listFiles('/nonexistent'), /missing/);
 });

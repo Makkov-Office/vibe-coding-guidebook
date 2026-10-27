@@ -102,6 +102,8 @@ export function DesignShowcase(){
       <div key={run} className="ds-stack">
         <Card className="bp-appear">
           <Blueprint viewBox="0 0 620 144" title="Путь задачи: агент делает, практика проверяет, человек решает">
+            {/* Точка рисуется первой: внутри узлов она уходит под них, а не бежит по подписям. */}
+            <BpRunDot d={taskPath}/>
             <BpNode x={20} y={32} meaning="agent" label="Агент" sub="делает правки"/>
             <BpArrow d="M168 60 H 236" draw/>
             <BpNode x={236} y={32} meaning="practice" label="Практика" sub="тесты, evidence"/>
@@ -109,7 +111,6 @@ export function DesignShowcase(){
             <BpNode x={452} y={32} meaning="human" label="Человек" sub="merge, gate"/>
             <BpArrow d="M526 92 V 108 H 94 V 92" dashed/>
             <BpLabel x={236} y={134}>новый цикл · review</BpLabel>
-            <BpRunDot d={taskPath}/>
           </Blueprint>
         </Card>
         <Card><StepLine label="Смена шага" steps={steps} current={4} animate/></Card>

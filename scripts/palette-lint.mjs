@@ -34,7 +34,8 @@ highlight highlighttext linktext mark marktext selecteditem selecteditemtext vis
 // Свойства и атрибуты, где значение — цвет или содержит цвет (CSS, SVG, JSX, объекты style в JS).
 const COLOR_ATTR = /(?<![-\w])(fill|stroke|stop-?color|flood-?color|lighting-?color|color)\s*=\s*\{?\s*(["'`])([^"'`]*)\2/gi;
 const STYLE_ATTR = /(?<![-\w])style\s*=\s*(["'])([^"']*)\1/gi;
-const JS_COLOR_KEY = /(?<![-\w$])(["']?)([a-z]*(?:color|background|border|outline|shadow|fill|stroke|caret|accent|decoration)[a-z]*)\1\s*:\s*(["'`])([^"'`]*)\3/gi;
+// Ключи объектов style в JS, которые принимают цвет (camelCase и kebab-case).
+const JS_COLOR_KEY = /(?<![-\w$])(["']?)((?:color|fill|stroke|background(?:-?color|-?image)?|border(?:-?(?:top|right|bottom|left|block|inline))?(?:-?color)?|outline(?:-?color)?|(?:box|text)-?shadow|(?:caret|accent|stop|flood|lighting|column-?rule|text-?decoration)-?color))\1\s*:\s*(["'`])([^"'`]*)\3/gi;
 
 function stripComments(text, file) {
   if (file.endsWith('.css')) return text.replace(/\/\*[\s\S]*?\*\//g, '');
@@ -48,11 +49,23 @@ function namedIn(value) {
   return [...clean.matchAll(/(?<![-\w#.])([a-z]+)(?![-\w(])/gi)].map((m) => m[1].toLowerCase()).filter((w) => NAMED_COLORS.has(w));
 }
 
-/** Декларации CSS «свойство: значение» внутри блоков без вложенных скобок (и в атрибуте style). */
+// Свойства, которые не принимают цвет: слово-цвет в них — имя (keyframes, grid-area, view-transition), а не цвет.
+const NOT_COLOR_PROP = /^(?:animation(?:-name)?|transition(?:-property)?|will-change|grid(?:-[a-z-]+)?|[a-z-]*-name|font-family|content|counter-[a-z]+|list-style-type|quotes)$/i;
+
+/** Декларации CSS «свойство: значение» на любом уровне вложенности (вложенные правила, @media, атрибут style). */
 function* declarations(css, offset = 0) {
-  for (const block of css.matchAll(/\{([^{}]*)\}/g)) {
-    const base = offset + block.index + 1;
-    for (const d of block[1].matchAll(/([-\w]+)\s*:\s*([^;]+)/g)) yield { prop: d[1], value: d[2], index: base + d.index };
+  let depth = 0, start = 0;
+  for (let i = 0; i <= css.length; i++) {
+    const c = css[i];
+    if (c !== '{' && c !== '}' && i < css.length) continue;
+    if (depth > 0) {
+      // Перед «{» после последней «;» стоит селектор вложенного правила, а не декларация.
+      let body = css.slice(start, i);
+      if (c === '{') body = body.slice(0, Math.max(0, body.lastIndexOf(';')));
+      for (const d of body.matchAll(/([-\w]+)\s*:\s*([^;]+)/g)) if (!NOT_COLOR_PROP.test(d[1])) yield { prop: d[1], value: d[2], index: offset + start + d.index };
+    }
+    depth = Math.max(0, depth + (c === '{' ? 1 : -1));
+    start = i + 1;
   }
 }
 
