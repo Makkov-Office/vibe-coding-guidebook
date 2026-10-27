@@ -16,7 +16,7 @@ import {transitionTo} from '../design/motion';
 import {progressStore} from './progress-store.mjs';
 import type {Chapter,SearchEntry} from '../content/types';
 import {ReaderPageContext,type PageData} from './ReaderPageData';
-import {liveRoute} from '../content/chapter-routes';
+import {liveRoute,pageHref} from '../content/chapter-routes';
 type NavigationChapter=Pick<Chapter,'id'|'number'|'title'|'path'>;
 const loadedSearch=new Map<string,Promise<(SearchEntry&{normalized:string})[]>>();
 function fetchSearch(url:string){let promise=loadedSearch.get(url);if(!promise){promise=fetch(url).then(r=>{if(!r.ok)throw new Error('Search unavailable');return r.json() as Promise<SearchEntry[]>;}).then((entries:SearchEntry[])=>entries.map(e=>({...e,normalized:norm(e.title+' '+e.text)})));loadedSearch.set(url,promise);promise.catch(()=>loadedSearch.delete(url));}return promise;}
@@ -77,7 +77,8 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
  // eslint-disable-next-line react-hooks/exhaustive-deps
  },[assets.search]);
  // close() on an already closed dialog fires no close event, so the flag is set only when it will be reset by onClose.
- useEffect(()=>{if(pages.has(pathname))rememberPage(pathname);},[pages,pathname]);
+ // A chapter tab counts as a visit to its chapter (P5-02b).
+ useEffect(()=>{const route=liveRoute(pathname),page=route?pageHref(route.chapterId):pathname;if(pages.has(page))rememberPage(page);},[pages,pathname]);
  useEffect(()=>{setStatus('');setReturnTo(null);window.dispatchEvent(new Event('context-close'));if(searchRef.current?.open){searchNavigating.current=true;searchRef.current.close();}},[pathname]);
  useEffect(()=>{
   if(pageData.chapterId!==chapterId)return;setPending(false);committed.current?.();committed.current=null;let disposed=false,frame=0;

@@ -51,6 +51,9 @@ test('an empty query suggests the glossary, the memo and pages opened recently',
  await expect(recent).toHaveCount(1);await expect(recent).toHaveAttribute('href','/chapters/03');
  await page.keyboard.press('ArrowDown');await page.keyboard.press('Enter');
  await expect(page).toHaveURL(/\/chapters\/22$/);await expect(page.locator('main#reader')).toBeFocused();
+ // A chapter tab is remembered as its chapter.
+ await ready(page,'/flow/08-preflight/check');await ready(page,'/chapters/05');await page.keyboard.press('Control+k');
+ await expect(group(page,'Недавние страницы').getByRole('option').first()).toHaveAttribute('href','/flow/08-preflight');
 });
 
 test('when the index fails to load, suggestions stay and the error sits outside the listbox',async({page})=>{
