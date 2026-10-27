@@ -120,3 +120,21 @@ test('page and tab ids are the stable ids of the url map', () => {
   assert.equal(normalizeProgress({ reading: { page: 'ch-00', y: 0 } }).reading, null);
   assert.equal(normalizeProgress({ reading: { page: '/chapters/08', y: 0 } }).reading, null);
 });
+
+test('two tabs: a write in one never drops what the other saved', () => {
+  const shared = memory(fixture.storage);
+  const tabA = createProgressStore(shared.storage), tabB = createProgressStore(shared.storage);
+  tabA.get(); tabB.get();
+  tabA.set(({ completed }) => ({ completed: [...completed, 'ch-12'] }), { reward: 100 });
+  // Tab B only scrolls: its write must keep chapter 12 from tab A.
+  tabB.set(() => ({ reading: { page: 'ch-03', y: 10 } }));
+  const record = JSON.parse(shared.data.get(PROGRESS_KEY));
+  assert.ok(record.completed.includes('ch-12'));
+  assert.deepEqual(record.reading, { page: 'ch-03', y: 10 });
+  assert.ok(tabB.get().completed.includes('ch-12'));
+  // After a refused write the tab keeps its own newer record in memory.
+  const refusing = memory(fixture.storage, { refuse: ['setItem'] });
+  const tab = createProgressStore(refusing.storage);
+  tab.set(({ completed }) => ({ completed: [...completed, 'ch-20'] }));
+  assert.ok(tab.get().completed.includes('ch-20'));
+});

@@ -63,7 +63,7 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
  useEffect(()=>{
   if(pageData.chapterId!==chapterId)return;setPending(false);committed.current?.();committed.current=null;let disposed=false,frame=0;
   document.querySelectorAll<HTMLButtonElement>('[data-copy],[data-example]').forEach(button=>button.disabled=false);
-  document.querySelectorAll<HTMLInputElement>('[data-practice]').forEach(box=>box.checked=progressStore.get().practice[box.dataset.practice??'']===true);
+  const {practice}=progressStore.get();document.querySelectorAll<HTMLInputElement>('[data-practice]').forEach(box=>box.checked=practice[box.dataset.practice??'']===true);
   let stored:{path:string;y:number;id:string}|null=null;try{stored=JSON.parse(sessionStorage.getItem('handbook-return')??'null');}catch{}
   if(chapterId==='ch-23'&&stored)setReturnTo(stored);
   const params=new URLSearchParams(location.search),hash=decodeURIComponent(location.hash.slice(1));

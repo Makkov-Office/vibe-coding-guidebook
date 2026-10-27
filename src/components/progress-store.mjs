@@ -79,13 +79,18 @@ export function createProgressStore(storage){
   /** @type {Progress|null} */let state=null;let unavailable=false,damaged=false;
   /** @type {Set<(progress:Progress,meta?:{reward?:number})=>void>} */const listeners=new Set();
   const attempt=(action,fallback)=>{try{const target=storage();if(!target)throw Error('no storage');return action(target);}catch{unavailable=true;return fallback;}};
-  const write=progress=>attempt(target=>{target.setItem(PROGRESS_KEY,JSON.stringify(progress));return true;},false);
+  // synced: the last write reached storage, so the stored record is at least as new as ours.
+  let synced=true;
+  const write=progress=>synced=attempt(target=>{target.setItem(PROGRESS_KEY,JSON.stringify(progress));return true;},false);
+  // undefined: no record; null: a damaged one.
+  const stored=()=>{
+    const text=attempt(target=>target.getItem(PROGRESS_KEY),null);if(text==null)return undefined;
+    try{const value=JSON.parse(text);if(value?.version===PROGRESS_VERSION)return normalizeProgress(value);}catch{}
+    return null;
+  };
   function load(){
-    const text=attempt(target=>target.getItem(PROGRESS_KEY),null);
-    if(text!=null){
-      try{const stored=JSON.parse(text);if(stored?.version===PROGRESS_VERSION)return normalizeProgress(stored);}catch{}
-      damaged=true;
-    }
+    const record=stored();if(record)return record;
+    if(record===null)damaged=true;
     // No v2 record yet (or a damaged one): migrate from v1 and keep the result.
     const keys=attempt(target=>target.keys(),[]);
     const migrated=migrateLegacy(key=>attempt(target=>target.getItem(key),null),keys);
@@ -93,8 +98,11 @@ export function createProgressStore(storage){
     if(!unavailable)write(migrated.progress);
     return migrated.progress;
   }
+  // Another tab may have written since: start from the stored record, so a
+  // write here (even a scroll position) never drops that tab's marks. After
+  // a refused write the record in memory is the newer one.
   /** @returns {Progress} */
-  const get=()=>state??=load();
+  const get=()=>{if(!state)return state=load();if(synced){const record=stored();if(record)state=record;}return state;};
   return {
     get,
     /**
