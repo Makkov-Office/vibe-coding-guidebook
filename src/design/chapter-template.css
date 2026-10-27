@@ -87,3 +87,4 @@
 
 /* Reduced motion и пауза: сжатие полосы без анимации (общий выключатель — app/motion.css). */
 @media (prefers-reduced-motion:reduce){.ct-tabs{transition:none}}
+@media print{.ct-tabs,.ct-pager,.ct-copy,.ct-toc{display:none!important}}
