@@ -1,0 +1,41 @@
+/* Мобильная навигация (P3-02, docs/design/visual-language.md, «Навигация»). Уже 1024 px вместо rail —
+   нижняя панель из четырёх пунктов; «Разделы» открывает полноэкранное меню с теми же разделами. */
+:root{--bottom-bar:64px}
+.bottom-bar{display:none}
+@media(max-width:1023px){
+  html.js-enabled .bottom-bar{position:fixed;inset:auto 0 0;z-index:16;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));min-height:calc(var(--bottom-bar) + env(safe-area-inset-bottom));padding:var(--space-1) var(--space-1) env(safe-area-inset-bottom);background:var(--color-rail);border-top:var(--stroke-border) solid var(--color-outline-variant)}
+  /* Текст и плавающие кнопки не уходят под панель. */
+  html.js-enabled .reading-shell{padding-bottom:calc(var(--bottom-bar) + env(safe-area-inset-bottom))}
+  html.js-enabled .return-reading{bottom:calc(var(--bottom-bar) + env(safe-area-inset-bottom) + var(--space-3))}
+}
+.bottom-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-1);min-width:0;min-height:var(--bottom-bar);padding:var(--space-1) 0;border:0;background:none;color:var(--color-on-surface-variant);font:600 var(--type-label) var(--font-text);text-align:center;text-decoration:none;cursor:pointer}
+.bottom-item:disabled{opacity:.6;cursor:default}
+.bottom-indicator{display:grid;place-items:center;width:56px;height:32px;border-radius:var(--radius-full);transition:background-color var(--dur-1) var(--ease)}
+.bottom-item:hover:not(:disabled) .bottom-indicator,.bottom-item[aria-expanded=true] .bottom-indicator{background:color-mix(in srgb,var(--color-on-surface) 8%,transparent)}
+.bottom-item[aria-current=page],.bottom-item-current{color:var(--color-on-surface)}
+.bottom-item[aria-current=page] .bottom-indicator{background:var(--color-primary-container);color:var(--color-on-primary-container)}
+.bottom-item:focus-visible{outline:none}
+.bottom-item:focus-visible .bottom-indicator{outline:2px solid var(--color-primary);outline-offset:2px}
+
+/* Полноэкранное меню: modal dialog во весь экран, разделы раскрываются на месте. */
+.section-menu{position:fixed;inset:0;width:100%;max-width:none;height:100dvh;max-height:none;margin:0;padding:0 var(--space-4) calc(var(--space-6) + env(safe-area-inset-bottom));border:0;border-radius:0;background:var(--color-surface);color:var(--color-on-surface);overflow-y:auto;overscroll-behavior:contain}
+.section-menu::backdrop{background:var(--scrim)}
+.section-menu[open]{animation:motion-appear var(--dur-2) var(--ease) backwards}
+.section-menu-header{position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);padding:var(--space-3) 0;background:var(--color-surface)}
+.section-menu-header h2{margin:0;font:500 var(--type-h3)/1.25 var(--font-display);letter-spacing:var(--tracking-heading)}
+.section-menu-close{display:grid;place-items:center;width:var(--touch-target);height:var(--touch-target);border:0;border-radius:var(--radius-full);background:none;color:var(--color-on-surface)}
+.section-menu-close:hover{background:color-mix(in srgb,var(--color-on-surface) 8%,transparent)}
+.section-menu-close:focus-visible,.section-row:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
+.section-list{display:grid;gap:var(--space-1);margin:0;padding:0;list-style:none}
+.section-row{display:grid;grid-template-columns:56px minmax(0,1fr) 20px;align-items:center;gap:var(--space-2);width:100%;min-height:56px;padding:var(--space-1) var(--space-2);border:0;border-radius:var(--radius-full);background:none;color:var(--color-on-surface);font:600 var(--type-body) var(--font-text);text-align:left;text-decoration:none;cursor:pointer}
+.section-row:hover{background:color-mix(in srgb,var(--color-on-surface) 6%,transparent)}
+.section-icon{display:grid;place-items:center;width:56px;height:32px;border-radius:var(--radius-full);color:var(--color-on-surface-variant)}
+.section-row[aria-current=true] .section-icon{background:var(--color-primary-container);color:var(--color-on-primary-container)}
+.section-chevron{width:8px;height:8px;justify-self:center;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform var(--dur-1) var(--ease)}
+.section-row[aria-expanded=true] .section-chevron{transform:rotate(-135deg)}
+.section-panel{display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-1) 0 var(--space-3) var(--space-3)}
+.section-panel[hidden]{display:none}
+.section-panel .mega-description{padding:0 var(--space-3)}
+.section-panel .mega-progress{margin-top:0}
+@media(forced-colors:active){.bottom-item[aria-current=page] .bottom-indicator,.section-row[aria-current=true] .section-icon{outline:2px solid Highlight}}
+@media print{.bottom-bar,.section-menu{display:none!important}}
