@@ -25,7 +25,7 @@ Entrypoint для любого агента в этом репозитории. 
 - Evidence привязано к SHA; после нового push старые проверки и review не считаются.
 - Fail closed: недоступные данные не считаются пустыми.
 - Остановиться перед merge и прислать пакет решения founder.
-- Учебный текст, определения, обзоры, подписи — только в `content/handbook.md`. Сгенерированные файлы (`src/content/generated.json`, `public/handbook.md`, `public/data/*`, `public/diagrams/*`, `docs/coverage-report.json`) не править руками — только `npm run content`.
+- Учебный текст, определения, обзоры инструментов, подписи — только в `content/`: `content/handbook.md`, слой «Обзор» глав — `content/overview/NN.md` (P5-01, формат в README). Сгенерированные файлы (`src/content/generated.json`, `public/handbook.md`, `public/data/*`, `public/diagrams/*`, `docs/coverage-report.json`) не править руками — только `npm run content`.
 - MUST NOT трогать `.openai/hosting.json` и публикацию на ChatGPT Sites.
 - Vercel: production из `main` (каждый merge — production-деплой на `vibe-coding-guidebook-ivory.vercel.app`, решение founder 23.10.2026, P1-16), preview на каждый PR. MUST NOT делать promote или rollback вручную, привязывать свой домен или alias, ослаблять Deployment Protection — только решением founder (ADR-0002).
 - MUST NOT выдумывать изображения, логотипы и факты об инструментах; факты — из официальных источников с датой проверки.
