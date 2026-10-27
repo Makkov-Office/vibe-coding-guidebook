@@ -20,7 +20,7 @@ export function Breadcrumbs({chapters,pathname}:{chapters:NavChapter[];pathname:
  return <nav className="breadcrumbs" aria-label="Хлебные крошки"><ol>
   <li><Link href="/">Главная</Link></li>
   <li>{sectionIsPage?<span aria-current="page">{section.label}</span>:section.href&&section.href!==pathname?<Link href={section.href}>{section.label}</Link>:<span>{section.label}</span>}</li>
-  {page&&<li>{tab?<Link href={page.href}>{page.number?`${page.number}. `:''}{page.title}</Link>:<span aria-current="page">{page.number?`${page.number}. `:''}{page.title}</span>}</li>}
+  {page&&<li className="crumb-page">{tab?<Link href={page.href}>{page.number?`${page.number}. `:''}{page.title}</Link>:<span aria-current="page">{page.number?`${page.number}. `:''}{page.title}</span>}</li>}
   {page&&tab&&<li><span aria-current="page">{tab.label}</span></li>}
  </ol></nav>;
 }

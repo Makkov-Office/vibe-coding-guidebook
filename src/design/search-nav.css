@@ -10,6 +10,8 @@
 .breadcrumbs a:hover{color:var(--color-on-surface);text-decoration-color:currentColor}
 .breadcrumbs a:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px;border-radius:var(--radius-xs)}
 .breadcrumbs [aria-current=page]{color:var(--color-on-surface);font-weight:600;overflow-wrap:anywhere}
+/* Narrow screens: one line; the chapter crumb gives way (ellipsis), its full title is the H1 below. */
+@media(max-width:599px){.breadcrumbs ol{flex-wrap:nowrap}.breadcrumbs li{flex-shrink:0}.breadcrumbs li.crumb-page{flex-shrink:1}.breadcrumbs .crumb-page>a{line-height:var(--touch-target)}.breadcrumbs .crumb-page>*{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
 @media print{.breadcrumbs{display:none}}
 
 /* Поиск вверху rail; «Глоссарий» в шапке нужен только там, где rail нет. */

@@ -98,3 +98,22 @@ test('axe: no serious or critical violations with the menu closed and open',asyn
   }
  }
 });
+
+// Polish of the test slice (P3-06): Agent Pack from the menu, «Продолжить» on a chapter tab.
+test('Agent Pack from the menu: one link to /agents, and the new page takes focus',async({page})=>{
+ await ready(page,'/chapters/01');
+ await page.getByRole('button',{name:'Разделы',exact:true}).click();await section(page,'Agent Pack').click();
+ const panel=menu(page).locator('#section-agents');
+ await expect(panel.locator('a[href="/agents"]')).toHaveCount(1);await expect(panel.getByRole('link',{name:'Открыть раздел'})).toHaveCount(0);
+ await panel.locator('a[href="/agents"]').click();
+ await expect(page).toHaveURL(/\/agents$/);await expect(menu(page)).toBeHidden();
+ await page.waitForTimeout(800);
+ await expect(page.locator('main#reader')).toBeFocused();
+});
+
+test('«Продолжить» is the current item on any tab of the chapter it leads to',async({page})=>{
+ await page.addInitScript(()=>localStorage.setItem('handbook-learning-v2',JSON.stringify({completed:['ch-01','ch-02','ch-03','ch-04','ch-05','ch-06','ch-07'],exercises:[]})));
+ await ready(page,'/flow/08-preflight/apply');
+ const next=bar(page).getByRole('link',{name:'Продолжить'});
+ await expect(next).toHaveAttribute('href','/flow/08-preflight');await expect(next).toHaveAttribute('aria-current','page');
+});
