@@ -32,8 +32,8 @@ test('«Скопировать для агента» copies the page Markdown fr
  expect(expected).toMatch(/^## 08\. Preflight/);
  expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe(expected);
  await expect(page.getByRole('link',{name:'Markdown страницы'})).toHaveAttribute('href','/flow/08-preflight.md');
- // The introduction and the tool reviews have the button too.
- for(const [path,md] of [['/','/index.md'],['/tools/claude-code','/tools/claude-code.md'],['/glossary','/glossary.md']]){
+ // Every tab of the chapter, the introduction and the tool reviews have the button too.
+ for(const [path,md] of [['/flow/08-preflight/apply','/flow/08-preflight.md'],['/flow/08-preflight/check','/flow/08-preflight.md'],['/','/index.md'],['/tools/claude-code','/tools/claude-code.md'],['/glossary','/glossary.md']]){
   await ready(page,path);await expect(page.locator('.agent-copy a')).toHaveAttribute('href',md);
  }
 });

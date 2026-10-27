@@ -57,7 +57,7 @@ export function llmsText(pages,urlMap,pack){
   const summary=fs.readFileSync('content/handbook.md','utf8').split(/^## /m)[0].match(/^> (.+)$/m)?.[1];
   if(!summary)throw Error('agent-delivery: no lead quote in content/handbook.md');
   const out=[`# ${brand}`,'',`> ${summary}`,'',
-    `Каждая страница есть в Markdown: адрес страницы + \`.md\`, вводная глава — \`/index.md\`. Ссылки вида \`[H08.2]\` в Agent Pack ведут на главу 08, раздел 8.2.`,'',
+    `Каждая страница есть в Markdown: адрес страницы + \`.md\` (у глав с табами — адрес главы + \`.md\`, один файл на всю главу), вводная глава — \`/index.md\`. Ссылки вида \`[H08.2]\` в Agent Pack ведут на главу 08, раздел 8.2.`,'',
     '## Agent Pack','',
     `- [Agent Pack (.zip)](${url(ZIP)}): ${pack.files.length} файлов — AGENTS.md, CLAUDE.md, skills, JSON Schema, hooks для Claude Code`,
     `- [Agent Pack: что внутри и как подключить](${url('/agents')})`,''];
