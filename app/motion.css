@@ -1,0 +1,39 @@
+/* Движение (docs/design/visual-language.md, раздел 7): только токены из tokens.css.
+   Четыре приёма; без анимации каждый элемент уже в итоговом состоянии, поэтому
+   reduced motion и data-motion="off" просто снимают анимации. */
+
+/* 1. Появление: прозрачность и сдвиг на --shift-appear. */
+.motion-appear{animation:motion-appear var(--dur-3) var(--ease) backwards}
+.motion-appear-fast{animation:motion-appear var(--dur-2) var(--ease) backwards}
+.motion-appear-x{animation:motion-appear-x var(--dur-3) var(--ease) backwards}
+@keyframes motion-appear{from{opacity:0;transform:translateY(var(--shift-appear))}}
+@keyframes motion-appear-x{from{opacity:0;transform:translateX(var(--shift-appear))}}
+
+/* 2. Прорисовка линии: у линии pathLength="1"; один раз, когда схема появилась. */
+.motion-draw [pathLength]{stroke-dasharray:1;animation:motion-draw var(--dur-draw) var(--ease) backwards}
+@keyframes motion-draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+
+/* 3. Бег точки: одна точка на схеме идёт по --motion-path, в конце пауза. */
+.motion-dot{offset-path:var(--motion-path);offset-rotate:0deg;offset-distance:100%;animation:motion-dot var(--dur-dot) var(--ease) infinite}
+@keyframes motion-dot{0%{offset-distance:0%}80%,100%{offset-distance:100%}}
+
+/* 4. Смена шага: дочерние шаги загораются по одному; --step — номер шага с нуля. */
+.motion-steps>*{animation:motion-step var(--dur-step) var(--ease) backwards;animation-delay:calc(var(--step,0) * var(--dur-step))}
+@keyframes motion-step{from{opacity:.3}}
+
+/* Переход между страницами: View Transitions API, меняется только колонка чтения.
+   Колонка выше экрана, и старая страница бывает прокручена далеко вниз: геометрию группы не
+   анимируем (иначе снимок пролетит через экран), старый снимок убираем сразу, новый появляется. */
+.reading-column{view-transition-name:page}
+::view-transition-group(root),::view-transition-old(root),::view-transition-new(root){animation:none}
+::view-transition-group(page){animation:none}
+::view-transition-old(page){display:none}
+::view-transition-new(page){animation:motion-appear var(--dur-3) var(--ease) both}
+
+/* Выключатель: системная настройка или data-motion="off" на <html>. */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
+}
+:root[data-motion=off] *,:root[data-motion=off] *::before,:root[data-motion=off] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+:root[data-motion=off]::view-transition-group(*),:root[data-motion=off]::view-transition-old(*),:root[data-motion=off]::view-transition-new(*){animation:none!important}
