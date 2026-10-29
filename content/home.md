@@ -68,3 +68,11 @@ Open source · by Makkov
 - [llms.txt](/llms.txt)
 - [Всё руководство в Markdown](/handbook.md)
 - [GitHub](https://github.com/Makkov-Office/vibe-coding-guidebook)
+
+## Подписи
+
+- Глава: глава {n}
+- Главы: главы {from}–{to}
+- Страницы: {n} страница | {n} страницы | {n} страниц
+- Таб: {tab} · таб {n} из {total}
+- Тренажёр: тренажёр · {minutes} мин

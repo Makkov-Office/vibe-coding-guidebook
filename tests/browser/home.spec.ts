@@ -20,7 +20,7 @@ test('home: hero, task path, 8 sections, next steps and footer; every link answe
  await expect(page.locator('.home-path .hi-o')).toHaveCount(7);
  await expect(page.locator('.home-path .hi-accent')).toHaveText(home.path.steps.at(-1).label);
  await expect(page.locator('.home-path :is(.bp-run,.bp-node,.motion-dot)')).toHaveCount(0);
- await expect(page.locator('.home-path figcaption')).toContainText(home.path.steps.map((step:{label:string;sub:string})=>`${step.label}: ${step.sub}`).join(' → '));
+ await expect(page.locator('#home-path-steps')).toContainText(home.path.steps.map((step:{label:string;sub:string})=>`${step.label}: ${step.sub}`).join(' → '));
  await expect(page.locator('.home-cards h3')).toHaveText(['Начать','Основы','Процесс','Контроль','Надёжность','Практика','Инструменты','Agent Pack']);
  await expect(page.locator('.home-cards a.home-card')).toHaveCount(8);
  await expect(page.locator('.home-cards a.home-card').last()).toHaveAttribute('href','/agents');
@@ -48,13 +48,28 @@ test('home: «Продолжить» for a returning reader, introduction at its
  const resume=page.locator('.home-resume');
  await expect(resume.getByRole('heading',{level:2})).toHaveText('Продолжить');
  await expect(resume.locator('.home-resume-eyebrow').first()).toHaveText('Процесс · глава 08');
- await expect(resume.locator('.home-resume-place')).toHaveText('Preflight: начать правильно · Как применять');
+ await expect(resume.locator('.home-resume-place')).toHaveText('Preflight: начать правильно');
+ await expect(resume.locator('.home-resume-tab')).toHaveText('Как применять · таб 3 из 4');
  await expect(resume.locator('.resume-button')).toHaveAttribute('href','/flow/08-preflight/apply?resume=1');
- // Рядом тренажёр главы 08 (P7-03).
+ // Рядом тренажёр этой же главы 08 (P7-03).
  await expect(resume.locator('.home-drill')).toHaveAttribute('href','/flow/08-preflight/check');
+ // axe для вернувшегося читателя: «Продолжить» и карточка тренажёра в обеих темах.
+ for(const theme of ['light','dark']){
+  await page.evaluate(t=>document.documentElement.setAttribute('data-theme',t),theme);
+  await settled(page);await page.addScriptTag({path:'node_modules/axe-core/axe.min.js'});
+  const violations=await page.evaluate(async()=>{const result=await(window as unknown as {axe:{run:(context:string,options:object)=>Promise<{violations:{id:string}[]}>}}).axe.run('.home-resume',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}});return result.violations.map(v=>v.id);});
+  expect(violations,`resume ${theme}`).toEqual([]);
+ }
+ await page.evaluate(()=>document.documentElement.removeAttribute('data-theme'));
  // Главная не записывает позицию чтения.
  await page.evaluate(()=>scrollTo(0,400));await page.waitForTimeout(900);
  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('mae-progress')??'null')?.reading?.page)).toBe('ch-08');
+ // У главы без тренажёра карточки тренажёра нет, «Продолжить» во всю ширину.
+ await page.evaluate(()=>localStorage.setItem('mae-progress',JSON.stringify({version:2,completed:[],exercises:[],practice:{},drills:{},reading:{page:'ch-01',y:0}})));
+ await ready(page,'/');
+ await expect(resume.locator('.home-resume-place')).toHaveText('От vibe coding к инженерной системе');
+ await expect(resume.locator('.home-drill')).toHaveCount(0);
+ await expect(resume.locator('.home-resume-grid')).toHaveClass(/home-resume-grid--single/);
  // Вводная глава: учебный профиль и прежний текст.
  await ready(page,'/start/00-how-to-read');
  await expect(page.locator('main .intro')).toBeVisible();await expect(page.locator('.learning-profile-home')).toBeVisible();
@@ -71,6 +86,8 @@ test('home: «Продолжить» for a returning reader, introduction at its
 test('home: widths, keyboard, reduced motion and axe',async({page})=>{
  for(const width of [320,360,768,1024,1440]){
   await page.setViewportSize({width,height:900});await ready(page,'/');
+  // Шаги пути доступны скринридеру и тогда, когда узко и схема скрыта.
+  expect(await page.locator('#home-path-steps').evaluate(e=>e.checkVisibility()&&e.textContent!.includes('Deploy')),`${width}: path steps`).toBe(true);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth),`${width}: no page scroll`).toBe(true);
   const small=await page.evaluate(()=>[...document.querySelectorAll('main a, main button')].filter(e=>{const r=e.getBoundingClientRect();return r.width&&(r.height<44||r.width<44);}).map(e=>e.textContent));
   expect(small,`${width}: 44 px`).toEqual([]);

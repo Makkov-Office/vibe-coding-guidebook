@@ -4,7 +4,7 @@
 .home{--home-vis:var(--color-surface-container-low);container-type:inline-size;display:grid;gap:var(--space-10);padding-block:var(--space-2) var(--space-12)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .home{--home-vis:var(--color-surface-container)}}
 :root[data-theme="dark"] .home{--home-vis:var(--color-surface-container)}
-.home h2{margin:0;font:600 1.75rem/1.2 var(--font-text);letter-spacing:var(--tracking-heading)}
+.home h2{margin:0;font:600 var(--type-block)/1.2 var(--font-text);letter-spacing:var(--tracking-heading)}
 .home-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:var(--space-2) var(--space-6)}
 .home-lead{margin:0;color:var(--color-on-surface-variant);font-size:var(--type-small)}
 .home-block>h2,.home-head{margin-bottom:var(--space-4);padding-inline:var(--space-2)}
@@ -23,6 +23,7 @@
 .home-hero__visual{margin:0;display:grid;place-items:center;padding:var(--space-4);border:var(--stroke-border) solid var(--color-outline-variant);background:var(--home-vis)}
 .home-hero__visual .hi{max-width:560px}
 @container (min-width:800px){.home-hero{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);min-height:400px}}
+/* Узко схема уходит; шаги пути остаются для скринридера в #home-path-steps внутри текстовой карточки. */
 @container (max-width:520px){.home-hero__text{padding:var(--space-8) var(--space-6) var(--space-6)}.home-hero__visual{display:none}}
 
 /* Иллюстрации «Чертежа»: заливки — токены, контур 1.25 px, моно-подписи. */
@@ -66,7 +67,7 @@ a.home-card:is(:hover,:focus-visible) .hi-ln[pathLength]{animation:home-draw var
 
 /* «Продолжить»: позиция чтения (тональная) и тренажёр главы (практика). */
 .home-resume-grid{display:grid;gap:var(--space-2)}
-@container (min-width:800px){.home-resume-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}}
+@container (min-width:800px){.home-resume-grid:not(.home-resume-grid--single){grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}}
 .home-resume-card{display:grid;gap:var(--space-4) var(--space-5);align-items:center;padding:22px var(--space-6);border:var(--stroke-border) solid var(--color-primary-line);border-radius:var(--radius-l);background:var(--color-primary-container);color:var(--color-on-primary-container)}
 @container (min-width:560px){.home-resume-card{grid-template-columns:minmax(0,1fr) auto}}
 .home-resume-text{display:grid;gap:var(--space-1);min-width:0}
