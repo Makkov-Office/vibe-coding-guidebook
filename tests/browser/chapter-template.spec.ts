@@ -53,7 +53,8 @@ test('chapter template: banner of two cards, full-width tabs condense into a flo
   const wide=(await row.boundingBox())!,column=(await page.locator('main .ct').boundingBox())!;expect(Math.abs(wide.width-column.width),`${width}`).toBeLessThanOrEqual(1);
   await expect(page.locator('.ct-tabs a[aria-current="page"]')).not.toHaveCSS('background-color','rgba(0, 0, 0, 0)');
   const height=(await bar.boundingBox())!.height;
-  await page.mouse.wheel(0,1200);
+  // Курсор над текстом: в углу окна — rail, колесо прокрутило бы его.
+  await page.mouse.move(width-24,450);await page.mouse.wheel(0,1200);
   await expect(bar).toHaveAttribute('data-stuck','true');
   // Прилипшая полоса — плавающая пилюля по центру с тенью; высота полосы та же (без сдвига страницы).
   await expect.poll(async()=>(await row.boundingBox())!.width,`${width}`).toBeLessThanOrEqual(Math.min(820,width));
@@ -121,7 +122,7 @@ test('chapter template: widths, table cards, reduced motion and axe',async({page
  await expect(page.locator('.ct-tabs-row')).not.toHaveCSS('transition-duration','0s');
  await page.emulateMedia({reducedMotion:'reduce'});await expect(page.locator('.ct-tabs-row')).toHaveCSS('transition-duration','0s');
  // Сжатие без анимации: после прокрутки пилюля сразу в итоговом виде.
- await page.setViewportSize({width:1440,height:900});await page.mouse.wheel(0,1500);await expect(page.locator('.ct-tabs')).toHaveAttribute('data-stuck','true');
+ await page.setViewportSize({width:1440,height:900});await page.mouse.move(1416,450);await page.mouse.wheel(0,1500);await expect(page.locator('.ct-tabs')).toHaveAttribute('data-stuck','true');
  expect((await page.locator('.ct-tabs-row').boundingBox())!.width).toBeLessThanOrEqual(820);await page.mouse.wheel(0,-5000);
  for(const [width,theme] of [[320,'light'],[320,'dark'],[1440,'light'],[1440,'dark']] as const){
   await page.setViewportSize({width,height:900});
