@@ -1,9 +1,8 @@
 import {test,expect,type Page} from '@playwright/test';
-// Rail controls (P3-04): theme in three states and the animation switch, stored and applied before paint.
+// Rail controls (P3-04): theme in three states, stored and applied before paint (the animation switch was removed in P3-09).
 async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 const controls=(page:Page)=>page.locator('.rail-controls');
 const theme=(page:Page)=>controls(page).getByRole('button',{name:/^Тема:/});
-const motion=(page:Page)=>controls(page).getByRole('button',{name:'Анимации'});
 const html=(page:Page,name:string)=>page.evaluate(attr=>document.documentElement.getAttribute(attr),name);
 const canvas=(page:Page)=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor);
 
@@ -28,33 +27,33 @@ test('theme cycles system → opposite → same as system → system and survive
  await page.emulateMedia({colorScheme:'dark'});expect(await canvas(page)).toBe(dark);
 });
 
-test('the animation switch sets data-motion, is shared with the mobile menu and respects reduced motion',async({page})=>{
+// The animation switch was removed (founder 29.10.2026, P3-09): nothing in the rail or the mobile menu,
+// an old stored «off» neither turns animation off nor stays in the record, reduced motion still holds.
+test('no animation switch: an old stored «off» is ignored and cleared, reduced motion still holds',async({page})=>{
+ await page.addInitScript(key=>{if(!sessionStorage.getItem('seeded')){sessionStorage.setItem('seeded','1');localStorage.setItem(key,JSON.stringify({theme:'dark',motion:'off'}));}},'mae-ui');
  await page.setViewportSize({width:1440,height:900});
  await ready(page,'/flow/08-preflight');
- await expect(motion(page)).toHaveAttribute('aria-pressed','true');
- await motion(page).click();await expect(motion(page)).toHaveAttribute('aria-pressed','false');expect(await html(page,'data-motion')).toBe('off');
- await ready(page,'/chapters/02');expect(await html(page,'data-motion')).toBe('off');await expect(motion(page)).toHaveAttribute('aria-pressed','false');
- // The mobile «Разделы» menu shows the same choice.
+ await expect(page.getByRole('button',{name:/Анимаци/})).toHaveCount(0);
+ await expect(controls(page).getByRole('button')).toHaveCount(1);
+ // The theme from the same record survives; the motion key does not.
+ expect(await html(page,'data-theme')).toBe('dark');expect(await html(page,'data-motion')).toBeNull();
+ await expect.poll(()=>page.evaluate(()=>localStorage.getItem('mae-ui'))).toBe('{"theme":"dark"}');
+ // Hovering a rail item runs its transition: animation is on.
+ await page.locator('.nav-rail .rail-item').nth(2).hover();
+ await expect(page.locator('.nav-rail .rail-item').nth(2).locator('.rail-trace path').first()).toHaveCSS('transition-duration',/^0\.24s/);
  await page.setViewportSize({width:360,height:800});
  await page.getByRole('button',{name:'Разделы',exact:true}).click();
- const menuMotion=page.locator('.menu-controls').getByRole('button',{name:'Анимации'});
- await expect(menuMotion).toHaveAttribute('aria-pressed','false');
- await menuMotion.click();await expect(menuMotion).toHaveAttribute('aria-pressed','true');expect(await html(page,'data-motion')).toBeNull();
+ await expect(page.locator('.menu-controls').getByRole('button')).toHaveCount(1);
  await page.keyboard.press('Escape');
- // With the system's reduced motion, animations stay off and the switch says so.
+ // The system's reduced motion still turns every transition off.
  await page.setViewportSize({width:1440,height:900});await page.emulateMedia({reducedMotion:'reduce'});
- await expect(motion(page)).toHaveAttribute('aria-disabled','true');await expect(motion(page)).toHaveAttribute('aria-pressed','false');
- await expect(motion(page)).toHaveAccessibleDescription(/уменьшение движения/);
- await motion(page).focus();await page.keyboard.press('Enter');await expect(motion(page)).toHaveAttribute('aria-pressed','false');expect(await html(page,'data-motion')).toBeNull();
- // No animation runs: the switch only reports what the system decided.
- await page.locator('.nav-rail .rail-item').nth(2).hover();
- expect(await page.evaluate(()=>document.getAnimations().filter(a=>a.playState==='running').length)).toBe(0);
+ await expect(page.locator('.nav-rail .rail-item').nth(2).locator('.rail-trace path').first()).toHaveCSS('transition-duration','0s');
 });
 
-test('on a 1366×768 and a 1024×600 screen both controls stay in view',async({page})=>{
+test('on a 1366×768 and a 1024×600 screen the theme control stays in view',async({page})=>{
  for(const [width,height] of [[1366,768],[1024,600]]){
   await page.setViewportSize({width,height});await ready(page,'/flow/08-preflight');
-  for(const button of [theme(page),motion(page)]){const box=(await button.boundingBox())!;expect(box.y+box.height,`${width}×${height}`).toBeLessThanOrEqual(height);}
+  for(const button of [theme(page)]){const box=(await button.boundingBox())!;expect(box.y+box.height,`${width}×${height}`).toBeLessThanOrEqual(height);}
  }
 });
 
@@ -71,12 +70,12 @@ test('keyboard focus in the rail is never hidden under the pinned controls',asyn
 });
 
 test('another tab changing the choice updates this one',async({page,context})=>{
- await page.setViewportSize({width:1440,height:900});await ready(page,'/flow/08-preflight');
- const other=await context.newPage();await other.setViewportSize({width:1440,height:900});await ready(other,'/chapters/02');
- await motion(other).click();expect(await html(other,'data-motion')).toBe('off');
- await expect(motion(page)).toHaveAttribute('aria-pressed','false');expect(await html(page,'data-motion')).toBe('off');
- // A stale copy would write motion back on.
- await theme(page).click();await other.reload();await other.waitForSelector('html.js-enabled');expect(await html(other,'data-motion')).toBe('off');
+ await page.setViewportSize({width:1440,height:900});await page.emulateMedia({colorScheme:'light'});await ready(page,'/flow/08-preflight');
+ const other=await context.newPage();await other.setViewportSize({width:1440,height:900});await other.emulateMedia({colorScheme:'light'});await ready(other,'/chapters/02');
+ await theme(other).click();expect(await html(other,'data-theme')).toBe('dark');
+ await expect(theme(page)).toHaveAccessibleName(/^Тема: Тёмная/);expect(await html(page,'data-theme')).toBe('dark');
+ // A stale copy would write the old theme back.
+ await theme(page).click();expect(await html(page,'data-theme')).toBe('light');await other.reload();await other.waitForSelector('html.js-enabled');expect(await html(other,'data-theme')).toBe('light');
 });
 
 test('without storage the choice still applies for the page',async({page})=>{
