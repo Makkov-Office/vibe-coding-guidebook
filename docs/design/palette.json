@@ -77,7 +77,7 @@
       "outline-variant-strong": "#373D46",
       "primary": "#F2B08C",
       "on-primary": "#111318",
-      "primary-container": "#36302E",
+      "primary-container": "#2B313A",
       "on-primary-container": "#F8D8C5",
       "action": "#EFAB85",
       "action-hover": "#F5BE9F",
@@ -96,7 +96,7 @@
       "success": "#8FD9A8",
       "warning": "#F5C26B",
       "pattern-plus": "#2F343C",
-      "primary-line": "#4A4240"
+      "primary-line": "#3E444E"
     }
   },
   "pairs": [
@@ -124,11 +124,5 @@
   "forbidden": [
     { "fg": "primary", "bg": "surface-container-high", "theme": "light", "reason": "правило P2-02 (тогда 4.43:1 < 4.5) сохраняется: нажатая ссылка и активный пункт используют primary-container, а не surface-container-high" }
   ],
-  "decorative": ["outline-variant", "outline-variant-strong", "agent-accent", "practice-accent", "human-accent", "pattern-plus", "primary-line"],
-  "aliases": {
-    "$comment": "Устаревшие имена токенов (P2-07): указывают на плоские роли, пока ветки P4-06/P5-05 не переведены на новые имена. Новый код их не использует.",
-    "action-gradient": "action",
-    "on-action-gradient": "on-action",
-    "brand-frame-gradient": "outline-variant"
-  }
+  "decorative": ["outline-variant", "outline-variant-strong", "agent-accent", "practice-accent", "human-accent", "pattern-plus", "primary-line"]
 }

@@ -28,12 +28,6 @@ function expected(theme) {
   for (const [role, value] of Object.entries(palette.themes[theme])) {
     map.set(role, Array.isArray(value) ? `linear-gradient(120deg,${value.join(',')})` : value);
   }
-  // Устаревшие имена (P2-07): псевдонимы плоских ролей, только var(--color-<роль>).
-  for (const [alias, role] of Object.entries(palette.aliases ?? {})) {
-    if (alias.startsWith('$')) continue;
-    assert.ok(Object.hasOwn(palette.themes[theme], role), `alias ${alias}: unknown role ${role}`);
-    map.set(alias, `var(--color-${role})`);
-  }
   return map;
 }
 
@@ -114,7 +108,9 @@ test('reduced motion and data-motion="off" zero every duration token', () => {
 // Плоский стиль (P2-07, решение founder 29.10.2026): ни градиентов, ни теней — в светлой и тёмной теме.
 // Разрешены только две техники с linear-gradient, которые не видны как градиент: жёсткая полоса фона rail
 // (globals.css) и нулевые стопы. Тени: только none; токены --shadow-* остаются со значением none.
-test('flat style: no gradient roles, no shadows, no visible gradients in stylesheets', () => {
+test('flat style: no gradient roles, no shadows, no visible gradients, no hover lift in stylesheets', () => {
+  assert.equal(palette.aliases, undefined, 'palette.json: псевдонимы *-gradient удалены (P2-07)');
+  assert.doesNotMatch(tokens, /--color-[\w-]*gradient/);
   for (const theme of Object.values(palette.themes)) {
     for (const [role, value] of Object.entries(theme)) {
       assert.ok(!Array.isArray(value) && !/gradient\(/.test(value), `palette role ${role} is a gradient`);
@@ -129,6 +125,10 @@ test('flat style: no gradient roles, no shadows, no visible gradients in stylesh
       if (value !== 'none' && !/^var\(--shadow-[\w-]+\)$/.test(value)) offenders.push(`${file}: ${match[0]}`);
     }
     for (const match of css.matchAll(/drop-shadow\(|(?:radial|conic|repeating-linear)-gradient\(/g)) offenders.push(`${file}: ${match[0]}`);
+    // Hover меняет цвет, а не поднимает карточку: translateY на :hover запрещён.
+    for (const [, selector, body] of css.matchAll(/([^{}]*:hover[^{}]*)\{([^{}]*)\}/g)) {
+      if (/translateY\(/.test(body)) offenders.push(`${file}: translateY on ${selector.trim().slice(0, 80)}`);
+    }
     for (const match of css.matchAll(/linear-gradient\(/g)) {
       const line = css.slice(css.lastIndexOf('\n', match.index) + 1, css.indexOf('\n', match.index));
       if (file === 'app/globals.css' && /body:has\(\.nav-rail\)\{background-image:linear-gradient\(to right,var\(--color-rail\)/.test(line)) continue;

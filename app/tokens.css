@@ -75,8 +75,7 @@
   --dur-dot:6s;
   --dur-step:350ms;
 
-  /* Цвет — светлая тема (palette.json → themes.light). Плоский стиль P2-07: без градиентов, один тёплый акцент `action`;
-     имена *-gradient — устаревшие псевдонимы (palette.json → aliases), новый код их не использует. */
+  /* Цвет — светлая тема (palette.json → themes.light). Плоский стиль P2-07: без градиентов и теней, один тёплый акцент `action`. */
   color-scheme:light;
   --color-background:#F6F7F9;
   --color-rail:#EEF0F3;
@@ -111,9 +110,6 @@
   --color-warning:#7A4F00;
   --color-pattern-plus:#CED3DA;
   --color-primary-line:#F3CBB5;
-  --color-action-gradient:var(--color-action);
-  --color-on-action-gradient:var(--color-on-action);
-  --color-brand-frame-gradient:var(--color-outline-variant);
   --scrim:rgb(17 19 24 / .45);
   /* Не цвета палитры: затемнение под диалогом, чернила печати и светлая плашка под тёмные логотипы продуктов. */
   --print-ink:#111318;
@@ -142,7 +138,7 @@
     --color-outline-variant-strong:#373D46;
     --color-primary:#F2B08C;
     --color-on-primary:#111318;
-    --color-primary-container:#36302E;
+    --color-primary-container:#2B313A;
     --color-on-primary-container:#F8D8C5;
     --color-action:#EFAB85;
     --color-action-hover:#F5BE9F;
@@ -161,10 +157,7 @@
     --color-success:#8FD9A8;
     --color-warning:#F5C26B;
     --color-pattern-plus:#2F343C;
-    --color-primary-line:#4A4240;
-    --color-action-gradient:var(--color-action);
-    --color-on-action-gradient:var(--color-on-action);
-    --color-brand-frame-gradient:var(--color-outline-variant);
+    --color-primary-line:#3E444E;
     --scrim:rgb(0 0 0 / .6);
     --shadow-1:none;
     --shadow-2:none;
@@ -186,7 +179,7 @@
   --color-outline-variant-strong:#373D46;
   --color-primary:#F2B08C;
   --color-on-primary:#111318;
-  --color-primary-container:#36302E;
+  --color-primary-container:#2B313A;
   --color-on-primary-container:#F8D8C5;
   --color-action:#EFAB85;
   --color-action-hover:#F5BE9F;
@@ -205,17 +198,14 @@
   --color-success:#8FD9A8;
   --color-warning:#F5C26B;
   --color-pattern-plus:#2F343C;
-  --color-primary-line:#4A4240;
-  --color-action-gradient:var(--color-action);
-  --color-on-action-gradient:var(--color-on-action);
-  --color-brand-frame-gradient:var(--color-outline-variant);
+  --color-primary-line:#3E444E;
   --scrim:rgb(0 0 0 / .6);
   --shadow-1:none;
   --shadow-2:none;
   --signature-filter:none;
 }
 
-/* Движение выключено: системная настройка или data-motion="off" на <html> (кнопка паузы — P3-04, `src/components/UiControls.tsx`). */
+/* Движение выключено: системная настройка prefers-reduced-motion или data-motion="off" на <html> (кнопки «Анимации» в rail больше нет, P3-09). */
 @media (prefers-reduced-motion:reduce){
   :root{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--dur-draw:0ms;--dur-dot:0ms;--dur-step:0ms;--shift-appear:0px}
 }

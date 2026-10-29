@@ -748,10 +748,10 @@
     "fg": "on-primary-container",
     "fgHex": "#F8D8C5",
     "bg": "primary-container",
-    "bgHex": "#36302E",
+    "bgHex": "#2B313A",
     "kind": "text",
     "use": "тональная кнопка, текущий шаг",
-    "ratio": 9.64,
+    "ratio": 9.74,
     "threshold": 4.5,
     "status": "PASS"
   },
