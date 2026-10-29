@@ -15,9 +15,11 @@ test('home: hero, task path, 8 sections, next steps and footer; every link answe
  await expect(actions).toHaveText(['Начать изучение','Определить уровень']);
  await expect(actions.first()).toHaveAttribute('href','/start/00-how-to-read');
  await expect(page.locator('.home-eyebrow')).toHaveText(home.eyebrow);
- // Справа одна спокойная схема: 8 шагов пути, один акцент, без бегущей точки и цветных блоков.
+ // Справа одна спокойная схема (P4-07): путь задачи — четыре карточки (человек, агент, проверка, решение)
+ // с подписями шагов из контента, один акцент на последнем шаге, без бегущей точки.
  await expect(page.getByRole('img',{name:home.path.title})).toBeVisible();
- await expect(page.locator('.home-path .hi-o')).toHaveCount(7);
+ await expect(page.locator('.home-path .hh-card')).toHaveCount(4);
+ for(const step of home.path.steps)await expect(page.locator('.home-path svg')).toContainText(step.label);
  await expect(page.locator('.home-path .hi-accent')).toHaveText(home.path.steps.at(-1).label);
  await expect(page.locator('.home-path :is(.bp-run,.bp-node,.motion-dot)')).toHaveCount(0);
  await expect(page.locator('#home-path-steps')).toContainText(home.path.steps.map((step:{label:string;sub:string})=>`${step.label}: ${step.sub}`).join(' → '));
