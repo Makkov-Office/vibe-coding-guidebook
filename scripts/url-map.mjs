@@ -50,6 +50,8 @@ export function resolveAnchors(map, generated) {
   const byOld = new Map(map.pages.filter((entry) => !entry.alias).map((entry) => [entry.old, entry]));
   // A live page (its new page is built) is already registered at its new address, a chapter with tabs at its tab addresses.
   for (const entry of map.pages) if (entry.live) for (const address of livePaths(map, entry)) byOld.set(address, entry);
+  // A kept old address (`/` → Главная) has given its content to the new page: the registry uses the new address (P4-01).
+  for (const entry of map.pages) if (entry.keep) byOld.set(entry.new, entry);
   const chapters = new Map(generated.chapters.map((chapter) => [chapter.id, chapter]));
   const sectionOf = new Map();
   for (const entry of map.pages) {

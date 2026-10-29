@@ -57,8 +57,9 @@ test('redirects only to pages that exist in the build, one hop', () => {
   assert.ok(routes.every((route) => route.status === 308));
   const regex = new RegExp(routes[0].src);
   assert.ok(regex.test('/chapters/08') && regex.test('/chapters/08/') && !regex.test('/chapters/081'));
-  // `/` keeps serving Главная: its content moves, the address does not redirect.
-  assert.ok(!redirectRoutes(map, new Set(['/start/00-how-to-read'])).length);
+  // `/` keeps serving Главная: its content moves, the address does not redirect;
+  // only the alias /chapters/00 leads to the introduction (P4-01).
+  assert.deepEqual(redirectRoutes(map, new Set(['/start/00-how-to-read'])).map((route) => [route.src, route.headers.Location]), [['^/chapters/00/?$', '/start/00-how-to-read']]);
 });
 
 test('a redirect is refused while the anchor registry still points to the old address', () => {

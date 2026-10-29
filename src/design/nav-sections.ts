@@ -42,8 +42,8 @@ function pages(section:string,chapters:Map<string,NavChapter>):NavPage[]{
 
 export function navSections(list:NavChapter[]):NavSection[]{
  const chapters=new Map(list.map(chapter=>[chapter.id,chapter]));
- // The introduction (ch-00) lives at "/" and is not in the chapter list.
- if(!chapters.has('ch-00'))chapters.set('ch-00',{id:'ch-00',number:'00',title:'Как читать руководство',path:'/'});
+ // The introduction (ch-00) is not in the chapter list; its page is /start/00-how-to-read (P4-01).
+ if(!chapters.has('ch-00'))chapters.set('ch-00',{id:'ch-00',number:'00',title:'Как читать руководство',path:'/start/00-how-to-read'});
  return urlMap.sections.filter(section=>section.rail).map(section=>{
   const own=section.id==='home'?[]:pages(section.id,chapters);
   const groups=Object.entries(hosted).filter(([,h])=>h.host===section.id).map(([id,h])=>({label:h.label,pages:pages(id,chapters)}));

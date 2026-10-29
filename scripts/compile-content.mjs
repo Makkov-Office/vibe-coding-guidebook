@@ -11,6 +11,8 @@ for(const file of overviewFiles.sort()){
 }
 // Level of each glossary term (P6-07); the file is required.
 const glossaryLevels=JSON.parse(await fs.readFile('content/glossary-levels.json','utf8'));
+// Главная (P4-01); the file is required.
+const home=await fs.readFile('content/home.md','utf8');
 // Drills of the chapters (P7-03): content/gamification/drills/*.json against the schema.
 const drillFiles=(await fs.readdir('content/gamification/drills')).sort();
 const drills=[];
@@ -21,7 +23,7 @@ for(const file of drillFiles){
   drills.push({file:path,data});
 }
 const drillSchema=JSON.parse(await fs.readFile('content/gamification/schema/drill.schema.json','utf8'));
-const data=await compileHandbook(source,{urlMap:loadUrlMap(),overviews,glossaryLevels,drills,drillSchema});
+const data=await compileHandbook(source,{urlMap:loadUrlMap(),overviews,glossaryLevels,drills,drillSchema,home});
 await fs.writeFile('src/content/generated.json',JSON.stringify(data));
 await fs.writeFile('public/handbook.md',source);
 await fs.writeFile('docs/coverage-report.json',JSON.stringify(data.audit,null,2));
