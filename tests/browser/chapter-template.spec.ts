@@ -38,19 +38,48 @@ test('chapter template: hero, tabs, on this page, neighbours and empty tab',asyn
  expect(errors).toEqual([]);
 });
 
-test('chapter template: sticky tab bar condenses into a pill right under the header',async({page})=>{
+test('chapter template: banner of two cards, full-width tabs condense into a floating pill',async({page})=>{
+ // P5-05: баннер — текстовая карточка и визуал; ≤ 600 px визуал скрыт, ≤ 840 px карточки в столбик.
+ await page.setViewportSize({width:1440,height:900});await open(page,'/design/chapters/08/apply');
+ const banner=page.locator('.ct-banner');await expect(banner.locator('.ct-kicker')).toHaveText('Процесс · Глава 08');
+ await expect(banner.getByRole('img',{name:/Чек-лист preflight/})).toBeVisible();
+ const [text,visual]=[(await banner.locator('.ct-banner-text').boundingBox())!,(await banner.locator('.ct-banner-visual').boundingBox())!];
+ expect(Math.abs(text.y-visual.y)).toBeLessThanOrEqual(1);expect(visual.x).toBeGreaterThan(text.x+text.width);
  for(const width of [1440,360]){
   await page.setViewportSize({width,height:900});await open(page,'/design/chapters/08/apply');
-  const bar=page.locator('.ct-tabs');await expect(bar).not.toHaveAttribute('data-stuck');await expect(page.locator('.ct-tabs-pill')).toBeHidden();
-  await page.mouse.wheel(0,1200);
-  await expect(bar).toHaveAttribute('data-stuck','true');await expect(page.locator('.ct-tabs-pill')).toHaveText('Preflight');
-  // Между шапкой и полосой нет щели, через которую виден текст.
-  const header=(await page.locator('.topbar').boundingBox())!;expect(Math.abs((await bar.boundingBox())!.y-(header.y+header.height)),`${width}`).toBeLessThanOrEqual(1);
+  if(width===360)await expect(page.locator('.ct-banner-visual')).toBeHidden();
+  const bar=page.locator('.ct-tabs'),row=page.locator('.ct-tabs-row');await expect(bar).not.toHaveAttribute('data-stuck');
+  // Полоса на всю ширину колонки, активный таб — тональная пилюля.
+  const wide=(await row.boundingBox())!,column=(await page.locator('main .ct').boundingBox())!;expect(Math.abs(wide.width-column.width),`${width}`).toBeLessThanOrEqual(1);
+  await expect(page.locator('.ct-tabs a[aria-current="page"]')).not.toHaveCSS('background-color','rgba(0, 0, 0, 0)');
+  const height=(await bar.boundingBox())!.height;
+  // Курсор над текстом: в углу окна — rail, колесо прокрутило бы его.
+  await page.mouse.move(width-24,450);await page.mouse.wheel(0,1200);
+  await expect(bar).toHaveAttribute('data-stuck','true');
+  // Прилипшая полоса — плавающая пилюля по центру с тенью; высота полосы та же (без сдвига страницы).
+  await expect.poll(async()=>(await row.boundingBox())!.width,`${width}`).toBeLessThanOrEqual(Math.min(820,width));
+  await expect(row).not.toHaveCSS('box-shadow','none');
+  const pill=(await row.boundingBox())!;expect(Math.abs(pill.x+pill.width/2-(column.x+column.width/2)),`${width}: centered`).toBeLessThanOrEqual(2);
+  expect((await bar.boundingBox())!.height).toBe(height);
+  if(width===1440)await expect(page.locator('.ct-tabs-pill')).toHaveText('08 · Preflight');
+  else await expect(page.locator('.ct-tabs-pill')).toBeHidden();
+  // Под шапкой (если она есть) без зазора больше полосы: пилюля сразу под её нижним краем.
+  const header=await page.locator('.topbar').boundingBox();const top=header?header.y+header.height:0;
+  expect((await bar.boundingBox())!.y-top,`${width}`).toBeLessThanOrEqual(1);
   await page.mouse.wheel(0,-5000);await expect(bar).not.toHaveAttribute('data-stuck');
  }
  // Служебные образцы не перезаписывают позицию чтения настоящей главы.
  await page.waitForTimeout(900);await page.mouse.wheel(0,600);await page.waitForTimeout(300);
  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('mae-progress')??'{}').reading??null)).toBeNull();
+});
+
+test('chapter template: other chapters get the calm generic banner visual',async({page})=>{
+ await page.setViewportSize({width:1024,height:900});await open(page,'/design/chapters/07/how-it-works');
+ await expect(page.locator('.ct-banner .ct-kicker')).toHaveText('Процесс · Глава 07');
+ await expect(page.locator('.ct-banner').getByRole('img',{name:/Глава 07: четыре таба/})).toBeVisible();
+ // 840 px и уже — карточки в столбик.
+ await page.setViewportSize({width:768,height:900});
+ const [text,visual]=[(await page.locator('.ct-banner-text').boundingBox())!,(await page.locator('.ct-banner-visual').boundingBox())!];expect(visual.y).toBeGreaterThan(text.y+text.height-1);
 });
 
 test('chapter template: copy link, keyboard and clipboard refusal',async({page})=>{
@@ -89,8 +118,12 @@ test('chapter template: widths, table cards, reduced motion and axe',async({page
  await expect(page).toHaveURL(/\/07\/apply$/);
  await expect.poll(async()=>{const b=(await page.locator('.ct-tabs a[aria-current="page"]').boundingBox())!;return b.x>=0&&b.x+b.width<=320;}).toBe(true);
  // data-motion="off" (P3-05) выключает переход так же, как reduced motion.
- await page.evaluate(()=>document.documentElement.setAttribute('data-motion','off'));await expect(page.locator('.ct-tabs')).toHaveCSS('transition-duration','0s');await page.evaluate(()=>document.documentElement.removeAttribute('data-motion'));
- await page.emulateMedia({reducedMotion:'reduce'});await expect(page.locator('.ct-tabs')).toHaveCSS('transition-duration','0s');
+ await page.evaluate(()=>document.documentElement.setAttribute('data-motion','off'));await expect(page.locator('.ct-tabs-row')).toHaveCSS('transition-duration','0s');await page.evaluate(()=>document.documentElement.removeAttribute('data-motion'));
+ await expect(page.locator('.ct-tabs-row')).not.toHaveCSS('transition-duration','0s');
+ await page.emulateMedia({reducedMotion:'reduce'});await expect(page.locator('.ct-tabs-row')).toHaveCSS('transition-duration','0s');
+ // Сжатие без анимации: после прокрутки пилюля сразу в итоговом виде.
+ await page.setViewportSize({width:1440,height:900});await page.mouse.move(1416,450);await page.mouse.wheel(0,1500);await expect(page.locator('.ct-tabs')).toHaveAttribute('data-stuck','true');
+ expect((await page.locator('.ct-tabs-row').boundingBox())!.width).toBeLessThanOrEqual(820);await page.mouse.wheel(0,-5000);
  for(const [width,theme] of [[320,'light'],[320,'dark'],[1440,'light'],[1440,'dark']] as const){
   await page.setViewportSize({width,height:900});
   await page.evaluate(t=>document.documentElement.setAttribute('data-theme',t),theme);
