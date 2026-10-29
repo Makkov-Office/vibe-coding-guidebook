@@ -21,9 +21,11 @@
 .home-hero h1{max-width:11ch}
 .home-actions{margin-top:var(--space-2)}
 .home-actions .bp-button{min-height:48px;padding-inline:var(--space-6);font-size:var(--type-body)}
-.home-hero__visual .hi{max-width:560px}
+/* Визуал hero (P4-07): схема заполняет карточку без полей и режется её краями (viewBox с запасом, slice). */
+.home .home-path{position:relative;padding:0}
+.home-path .hi-hero{position:absolute;inset:0;width:100%;height:100%;overflow:hidden}
 /* Узко схема уходит (page-hero.css, ≤ 600 px); шаги пути остаются для скринридера в #home-path-steps внутри текстовой карточки. */
-@media (max-width:839px){.home .home-hero{min-height:0}}
+@media (max-width:839px){.home .home-hero{min-height:0}.home .home-path{min-height:0;aspect-ratio:800/420}}
 
 /* Иллюстрации «Чертежа»: заливки — токены, контур 1.25 px, моно-подписи. */
 .hi{display:block;width:100%;height:auto;overflow:visible}
@@ -39,8 +41,29 @@
 .hi-t{fill:var(--color-on-surface);font:500 10.5px var(--font-mono);font-stretch:var(--font-mono-stretch)}
 .hi-tick{fill:none;stroke:var(--color-on-primary);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .hi-tick2{fill:none;stroke:var(--color-surface);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+/* Hero (P4-07): карточки «Чертежа» — заливка поверхностью или цветом-смыслом, контур 1.25 px, крупные радиусы;
+   фоновые формы — тоном контейнера. Плоско: без градиентов и теней. Один акцент — --hh-accent (последний шаг):
+   плоский --color-action из P2-07, пока его нет в базе — --color-primary. */
+.hi-hero{--hh-accent:var(--color-action,var(--color-primary));--hh-on-accent:var(--color-on-action,var(--color-on-primary))}
 .hi-hero .hi-ln{opacity:.5}
-.hi-accent{display:grid;place-items:center;height:30px;margin:2px;border-radius:var(--radius-full);background:var(--color-action-gradient);color:var(--color-on-action-gradient);font:600 10.5px var(--font-mono);font-stretch:var(--font-mono-stretch)}
+.hh-back{fill:var(--color-surface-container-high)}
+.hh-plus{fill:none;stroke:var(--color-on-surface);stroke-width:1.25;stroke-linecap:round;opacity:.3}
+.hh-card>rect:first-child{fill:var(--color-surface);stroke:var(--color-on-surface);stroke-width:1.25}
+.hh-agent>rect:first-child{fill:var(--color-agent-container)}
+.hh-practice>rect:first-child{fill:var(--color-practice-container)}
+.hh-human>rect:first-child{fill:var(--color-human-container)}
+.hh-chip{fill:var(--color-surface);stroke:var(--color-on-surface);stroke-width:1.25}
+.hh-bar{fill:var(--color-on-surface);opacity:.12}
+.hh-ink{fill:var(--color-on-surface)}
+.hh-tick{fill:none;stroke:var(--color-surface);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hh-h{fill:var(--color-on-surface);font:600 17px var(--font-text)}
+.hh-t,.hh-s,.hh-on-ink,.hi-accent text{font:500 11px var(--font-mono);font-stretch:var(--font-mono-stretch)}
+.hh-t{fill:var(--color-on-surface);font-size:13px}
+.hh-s{fill:var(--color-on-surface-variant)}
+.hh-on-ink{fill:var(--color-surface)}
+.hi-accent rect{fill:var(--hh-accent)}
+.hi-accent text{fill:var(--hh-on-accent);font-weight:500;font-size:13px}
+@media (forced-colors:active){.hh-card>rect:first-child,.hh-chip{stroke:CanvasText}}
 
 /* Карточки разделов: иллюстрация сверху, заголовок, строка, мета; 1 → 2 → 4 колонки по ширине. */
 .home-cards,.home-next{display:grid;gap:var(--space-2);margin:0;padding:0;list-style:none}
