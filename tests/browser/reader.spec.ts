@@ -63,17 +63,17 @@ test('context overlays remain accessible, reflow at zoom, and mobile light-dismi
 test('tooltip inside mobile sheet stays in its top layer and remains readable',async({page})=>{
  await page.setViewportSize({width:360,height:900});await ready(page,'/chapters/06');const block=data.blocks.find((b:{id:string;adjacent:boolean})=>b.id.startsWith('ch-06')&&b.adjacent);await page.locator(`#${block.id}>summary`).click();await page.locator(`[data-example="${block.id}"]`).click();await page.locator('.context-panel .term-link').first().click();const tip=page.getByRole('tooltip');await expect(tip).toBeVisible();expect(await tip.evaluate(n=>n.closest('dialog')?.matches(':modal'))).toBe(true);expect(await tip.evaluate(n=>{const r=n.getBoundingClientRect();return document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)?.closest('[role=tooltip]')===n;})).toBe(true);await page.keyboard.press('Escape');await expect(tip).toHaveCount(0);await expect(page.locator('.context-panel')).toBeVisible();await page.keyboard.press('Escape');await expect(page.locator('.context-panel')).not.toBeVisible();
 });
-test('introduction primary action keeps dark ink on the action gradient in both themes',async({page})=>{
- // axe cannot measure text on a gradient: check the token pair directly (palette.json: on-action-gradient on action-gradient).
- for(const colorScheme of ['light','dark'] as const){await page.emulateMedia({colorScheme});await ready(page,'/start/00-how-to-read');const cta=page.locator('.intro-actions .primary-action').first();await expect(cta).toHaveCSS('color','rgb(16, 16, 16)');expect(await cta.evaluate(n=>getComputedStyle(n).backgroundImage)).toContain('linear-gradient');}
+test('introduction primary action is flat: dark ink on the pastel action fill in both themes',async({page})=>{
+ // P2-07: плоская заливка без градиента и тени (palette.json: on-action на action, контраст в design-contrast).
+ for(const colorScheme of ['light','dark'] as const){await page.emulateMedia({colorScheme});await ready(page,'/start/00-how-to-read');const cta=page.locator('.intro-actions .primary-action').first();await expect(cta).toHaveCSS('color','rgb(17, 19, 24)');await expect(cta).toHaveCSS('background-image','none');await expect(cta).toHaveCSS('box-shadow','none');await expect(cta).toHaveCSS('background-color',colorScheme==='light'?'rgb(246, 180, 143)':'rgb(239, 171, 133)');}
 });
 test('design showcase: noindex, themes, keyboard, 44 px targets, reduced motion and axe',async({browser})=>{
  // P2-04: служебная витрина /design. Тема переключается чипами, движение — чипом и prefers-reduced-motion.
  const page=await browser.newPage();const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
  await page.goto('/design');await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content',/noindex/);await expect(page.getByRole('heading',{level:1})).toContainText('Чертёж');
  const bg=()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor);
- await page.getByRole('button',{name:'Тёмная'}).click();await expect(page.locator('html')).toHaveAttribute('data-theme','dark');expect(await bg()).toBe('rgb(16, 16, 16)');
- await page.getByRole('button',{name:'Светлая'}).click();expect(await bg()).toBe('rgb(250, 250, 250)');
+ await page.getByRole('button',{name:'Тёмная'}).click();await expect(page.locator('html')).toHaveAttribute('data-theme','dark');expect(await bg()).toBe('rgb(15, 17, 21)');
+ await page.getByRole('button',{name:'Светлая'}).click();expect(await bg()).toBe('rgb(246, 247, 249)');
  for(const width of [320,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
   const small=await page.evaluate(()=>[...document.querySelectorAll('main button, main a')].filter(e=>{const r=e.getBoundingClientRect();return r.height<44||r.width<44;}).map(e=>e.textContent));expect(small).toEqual([]);
   // Подписи шагов не вылезают из своей ячейки; схема не мельче viewBox и прокручивается в фокусируемой рамке.

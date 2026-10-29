@@ -15,8 +15,8 @@
 /* Hero: баннер страницы .page-hero (src/design/page-hero.css, P3-07) — две карточки, 8 px, радиус, поля, типографика, столбик.
    Здесь только отличия главной: рамка бренда и паттерн «+» (только hero главной и «Начать»), высота, ширина заголовка. */
 .home .home-hero{min-height:400px;margin:0}
-.home .home-hero__text{position:relative;isolation:isolate;overflow:hidden;border:var(--stroke-border) solid transparent;background:linear-gradient(var(--color-surface),var(--color-surface)) padding-box,var(--color-brand-frame-gradient) border-box}
-.home-plus{position:absolute;inset:0;z-index:-1;width:100%;height:100%;-webkit-mask-image:linear-gradient(to bottom,var(--color-on-surface) 0%,transparent 85%);mask-image:linear-gradient(to bottom,var(--color-on-surface) 0%,transparent 85%)}
+.home .home-hero__text{position:relative;isolation:isolate;overflow:hidden;border:var(--stroke-border) solid var(--color-outline-variant);background:var(--color-surface)}
+.home-plus{position:absolute;inset:0;z-index:-1;width:100%;height:100%}
 .home-plus path{stroke:var(--color-pattern-plus);stroke-width:1;fill:none}
 .home-hero h1{max-width:11ch}
 .home-actions{margin-top:var(--space-2)}
@@ -70,8 +70,8 @@
 @container (min-width:560px){.home-cards,.home-next{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @container (min-width:1000px){.home-cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .home-cards>li,.home-next>li{display:flex;min-width:0}
-.home-card{flex:1;display:flex;flex-direction:column;min-width:0;border:var(--stroke-border) solid var(--color-outline-variant);border-radius:var(--radius-l);background:var(--color-surface);color:var(--color-on-surface);text-decoration:none;transition:border-color var(--dur-1) var(--ease),box-shadow var(--dur-2) var(--ease)}
-a.home-card:hover{border-color:var(--color-primary-line);box-shadow:var(--shadow-2)}
+.home-card{flex:1;display:flex;flex-direction:column;min-width:0;border:var(--stroke-border) solid var(--color-outline-variant);border-radius:var(--radius-l);background:var(--color-surface);color:var(--color-on-surface);text-decoration:none;transition:border-color var(--dur-1) var(--ease),background-color var(--dur-1) var(--ease)}
+a.home-card:hover{border-color:var(--color-outline-variant-strong);background:var(--color-surface-container)}
 a.home-card:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
 .home-card-vis{display:grid;place-items:center;height:148px;margin:var(--space-2);border-radius:var(--radius-s);background:var(--home-vis);overflow:hidden}
 .home-card-vis .hi{width:92%;max-width:280px;max-height:140px}
@@ -97,13 +97,13 @@ a.home-card:is(:hover,:focus-visible) .hi-ln[pathLength]{animation:home-draw var
 .home-resume-eyebrow{margin:0;font:500 var(--type-label)/1.4 var(--font-mono);font-stretch:var(--font-mono-stretch)}
 .home-resume-place{margin:0;font:600 1.25rem/1.3 var(--font-text);letter-spacing:var(--tracking-heading)}
 .home-resume-bar{display:block;height:8px;margin-top:var(--space-2);max-width:300px;border-radius:var(--radius-full);background:var(--color-surface);overflow:hidden}
-.home-resume-bar i{display:block;height:100%;border-radius:inherit;background:var(--color-action-gradient)}
+.home-resume-bar i{display:block;height:100%;border-radius:inherit;background:var(--color-action)}
 .home-resume .resume-button{min-height:48px;justify-self:start}
-.home-drill{display:grid;align-content:center;gap:6px;padding:20px 22px;border:var(--stroke-border) solid var(--color-practice-accent);border-radius:var(--radius-l);background:var(--color-practice-container);color:var(--color-on-surface);text-decoration:none;transition:box-shadow var(--dur-2) var(--ease)}
+.home-drill{display:grid;align-content:center;gap:6px;padding:20px 22px;border:var(--stroke-border) solid var(--color-practice-accent);border-radius:var(--radius-l);background:var(--color-practice-container);color:var(--color-on-surface);text-decoration:none;transition:background-color var(--dur-1) var(--ease)}
 .home-drill .home-resume-eyebrow{color:var(--color-on-practice-container)}
 .home-drill h3{margin:0;font:600 var(--type-body)/1.35 var(--font-text)}
 .home-drill p{margin:0;font-size:var(--type-small);line-height:1.45;color:var(--color-on-surface-variant);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.home-drill:hover{box-shadow:var(--shadow-2)}
+.home-drill:hover{background:var(--color-practice-accent)}
 .home-drill:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
 
 /* Следующие шаги: тональные плитки со стрелкой, 2 колонки. */
