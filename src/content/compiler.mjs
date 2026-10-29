@@ -41,6 +41,7 @@ export const normalize = s => s.normalize('NFKC').toLocaleLowerCase('ru').replac
 const toolPages={'Обзоры инструментов':{id:'ch-tools',path:'/tools'},'Codex: от идеи до проверенного результата':{id:'ch-codex',path:'/tools/codex'},'Claude Code: рабочий процесс внутри проекта':{id:'ch-claude-code',path:'/tools/claude-code'}};
 // The introduction (ch-00) moved from «/» to its page in «Начать» (P4-01); «/» is Главная.
 export const INTRO_PATH='/start/00-how-to-read';
+// The old address of a page: the url-map key. Links use href (new address of a moved page), not path.
 export const chapterPath = id => Object.values(toolPages).find(page=>page.id===id)?.path??(id==='ch-00'?INTRO_PATH:id==='ch-23'?'/glossary':id==='ch-resources'?'/resources':`/chapters/${id.slice(3)}`);
 export function previewKind(definition, structured=false, linked=false){return !structured && [...definition.trim().replace(/\s+/g,' ')].length<=160?(linked?'popover':'tooltip'):'panel';}
 const slug = s => normalize(s).replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'');
@@ -301,13 +302,15 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
       for(const row of rows) {
         const cells=row.children.filter(n=>n.tagName==='td');const anchor=cells[0]?.children.find(n=>n.tagName==='a');const term=terms.find(t=>t.id===anchor?.properties.id);if(!term) continue;
         cells[0].children=cells[0].children.filter(n=>n!==anchor);
-        const card=el('article',{id:term.id,tabIndex:-1,className:['term-definition'],'data-topic':term.topic,'data-term':term.id,'data-level':term.level},[el('h4',{},cells[0].children),el('p',{},cells[1].children)]);
+        // The level is shown on the card too (P6-07b); the copy-link button joins it in the browser.
+        const meta=term.level?[el('p',{className:['term-meta']},[el('span',{className:['term-level'],'data-level':term.level},[el('span',{className:['sr-only']},[txt('Уровень: ')]),txt(levels.names[term.level])])])]:[];
+        const card=el('article',{id:term.id,tabIndex:-1,className:['term-definition'],'data-topic':term.topic,'data-term':term.id,'data-level':term.level},[el('h4',{},cells[0].children),...meta,el('p',{},cells[1].children)]);
         if(termProduct(term.id))card.children[0].children.unshift(productImage(termProduct(term.id)));
         decorateProductLinks(card);
         visit(card,'element',n=>{if(n.tagName==='a'&&/^https?:/.test(n.properties.href??'')){n.properties.target='_blank';n.properties.rel=['noopener','noreferrer'];n.properties['aria-label']=`${toText(n)} — открывается в новой вкладке`;n.children.push(structuredClone(externalIcon));}});
         term.definitionHtml=stringify(el('p',{},cells[1].children));
         node.children.push(card);usedIds.add(term.id);
-        search.push({id:term.id,chapter,title:term.label,type:'термин',text:`${term.label} ${term.aliases.join(' ')} ${term.definition}`});
+        search.push({id:term.id,chapter,title:term.label,type:'термин',text:`${term.label} ${term.aliases.join(' ')} ${term.definition}`,...(term.level?{level:levels.names[term.level].trim()}:{})});
       }
       // Basic terms of a collapsed topic (Git) go to a closed group at the end of the topic.
       const summary=levels?.collapsed.get(levels.number(terms.find(t=>t.id===node.children[0]?.properties.id)?.topic??''));
@@ -318,6 +321,9 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
           node.children.push(el('details',{className:['glossary-basics'],'data-level':'basic'},[el('summary',{},[txt(summary)]),el('div',{className:['glossary-list']},basic)]));
         }
       }
+    } else if(chapter==='ch-23'&&node.tagName==='p'&&node.children[0]?.tagName==='strong'&&toText(node.children[0])==='Служебный формат для сайта:'){
+      // A note on the source format, written for the site and agents: kept in the Markdown, hidden on the page and from search (P6-07b).
+      node.properties.hidden=true;node.properties.className=['glossary-service-note'];
     } else {
       if(chapter!=='ch-23') annotate(node,{id,chapter});
       visit(node,'element',(n,index,parent)=>{
@@ -478,22 +484,24 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
   audit.unexplainedGaps=audit.ambiguous.length+renderedGaps.length;
   // A live chapter (url-map `live`: its tab pages are built) is read at its tab
   // addresses: anchors, links and search go to the tab that holds the id.
+  // A live page without tabs (glossary, cheat sheet) is read at its new address.
   const tabAddress=(entry,tab)=>{const segment=urlMap.tabs.find(item=>item.id===tab).segment;return segment?`${entry.new}/${segment}`:entry.new;};
   const live=new Map([...tabbed].filter(([,entry])=>entry.live));const liveIds=new Map();
+  const moved=new Map((urlMap?.pages??[]).filter(entry=>entry.live&&entry.chapter&&!entry.tabs).map(entry=>[entry.chapter,entry]));
   for(const chapter of chapters){
     const entry=live.get(chapter.id);if(!entry)continue;
     for(const [,id] of chapter.heading.matchAll(/ id="([^"]+)"/g))liveIds.set(id,tabAddress(entry,'overview'));
     for(const tab of chapter.tabs){for(const [,id] of tab.html.matchAll(/ id="([^"]+)"/g))liveIds.set(id,tabAddress(entry,tab.id));for(const panel of tab.panels)liveIds.set(`${panel}-panel`,tabAddress(entry,tab.id));}
   }
-  const pathOf=(id,chapter)=>{if(!live.has(chapter))return chapterPath(chapter);if(!liveIds.has(id))throw Error(`${chapter}: ${id} is in no tab`);return liveIds.get(id);};
-  const chapterHref=chapter=>live.get(chapter)?.new??chapterPath(chapter);
+  const pathOf=(id,chapter)=>{if(moved.has(chapter))return moved.get(chapter).new;if(!live.has(chapter))return chapterPath(chapter);if(!liveIds.has(id))throw Error(`${chapter}: ${id} is in no tab`);return liveIds.get(id);};
+  const chapterHref=chapter=>(live.get(chapter)??moved.get(chapter))?.new??chapterPath(chapter);
   for(const chapter of chapters)chapter.href=chapterHref(chapter.id);
-  const anchors=Object.fromEntries(ids.map(id=>[id,{id,path:id.startsWith('term-')?'/glossary':pathOf(id,id.match(/ch-(?:\d{2}|resources|tools|codex|claude-code)/)?.[0]??'ch-00')}]));
+  const anchors=Object.fromEntries(ids.map(id=>[id,{id,path:id.startsWith('term-')?pathOf(id,'ch-23'):pathOf(id,id.match(/ch-(?:\d{2}|resources|tools|codex|claude-code)/)?.[0]??'ch-00')}]));
   for(const panel of panels)anchors[`${panel.id}-panel`]={id:`${panel.id}-panel`,path:pathOf(`${panel.id}-panel`,panel.chapter)};
   const targets={...anchors,...Object.fromEntries([...overviewIds].map(([id,chapter])=>[id,{id,path:pathOf(id,chapter)}]))};
   const routeLinks=fragment=>fragment.replace(/href="#([^"]+)"/g,(_,id)=>`href="${targets[decode(id)]?.path??'/'}#${id}"`);
   intro=routeLinks(intro);for(const chapter of chapters){chapter.html=routeLinks(chapter.html);if(chapter.tabs){chapter.heading=routeLinks(chapter.heading);for(const tab of chapter.tabs)tab.html=routeLinks(tab.html);}}
-  for(const entry of search)entry.path=live.has(entry.chapter)?tabAddress(live.get(entry.chapter),entry.tab):chapterPath(entry.chapter);
+  for(const entry of search)entry.path=live.has(entry.chapter)?tabAddress(live.get(entry.chapter),entry.tab):chapterHref(entry.chapter);
   for(const panel of panels){for(const choice of panel.choices){choice.html=routeLinks(choice.html);choice.titleHtml=routeLinks(choice.titleHtml??'');if(choice.evidenceHtml)choice.evidenceHtml=routeLinks(choice.evidenceHtml);if(choice.ownerHtml)choice.ownerHtml=routeLinks(choice.ownerHtml);if(choice.chapter)choice.path=chapterHref(choice.chapter);}for(const scenario of panel.scenarios??[])scenario.html=routeLinks(scenario.html);}
   for(const key of ['heading','description','subtitle'])presentation[key]=routeLinks(presentation[key]);presentation.timeline=presentation.timeline.map(routeLinks);
   const finalHtml=intro+chapters.map(c=>`<section data-chapter="${c.id}">${c.html}</section>`).join('');

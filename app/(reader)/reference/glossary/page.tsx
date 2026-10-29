@@ -1,5 +1,5 @@
-import {HandbookPage} from '../../../src/components/HandbookPage';
-import {brandTitle} from '../../../src/design/brand';
+import {HandbookPage} from '../../../../src/components/HandbookPage';
+import {brandTitle} from '../../../../src/design/brand';
 export const dynamic='force-static';
 export const revalidate=false;
 export const metadata={title:`Глоссарий · ${brandTitle}`};

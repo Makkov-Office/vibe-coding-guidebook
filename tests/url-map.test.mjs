@@ -80,16 +80,35 @@ test('a redirect is refused while the anchor registry still points to the old ad
 
 test('a live chapter: its registry is the resolved one, its old address redirects', () => {
   const live = map.pages.filter((entry) => entry.live);
-  assert.deepEqual(live.map((entry) => entry.chapter), ['ch-08']);
+  assert.deepEqual(live.map((entry) => entry.chapter), ['ch-08', 'ch-22', 'ch-23']);
   const resolved = resolveAnchors(map, generated);
   const own = Object.values(generated.anchors).filter((anchor) => anchor.path.startsWith('/flow/08-preflight'));
   assert.ok(own.length > 50);
   for (const anchor of own) assert.equal(resolved[anchor.id].path, anchor.path, anchor.id);
   assert.ok(!Object.values(generated.anchors).some((anchor) => anchor.path === '/chapters/08'));
   // The build serves the tabs instead of the old address: no stale anchor, one 308.
-  const built = new Set([...currentRoutes(generated).filter((route) => route !== '/chapters/08'), '/flow/08-preflight', '/flow/08-preflight/how-it-works', '/flow/08-preflight/apply', '/flow/08-preflight/check']);
+  const built = new Set([...currentRoutes(generated).filter((route) => !['/chapters/08', '/chapters/22', '/glossary'].includes(route)), '/flow/08-preflight', '/flow/08-preflight/how-it-works', '/flow/08-preflight/apply', '/flow/08-preflight/check', '/reference/22-cheatsheet', '/reference/glossary']);
   assert.deepEqual(staleAnchors(map, generated, built), []);
-  assert.deepEqual(redirectRoutes(map, built).map((route) => [route.src, route.headers.Location]), [['^/chapters/08/?$', '/flow/08-preflight']]);
+  assert.deepEqual(redirectRoutes(map, built).map((route) => [route.src, route.headers.Location]), [
+    ['^/chapters/08/?$', '/flow/08-preflight'],
+    ['^/chapters/22/?$', '/reference/22-cheatsheet'],
+    ['^/glossary/?$', '/reference/glossary'],
+    ['^/chapters/23/?$', '/reference/glossary'],
+  ]);
+});
+
+test('a live page without tabs (P2-05b): every anchor of it, terms included, is at its new address', () => {
+  const resolved = resolveAnchors(map, generated);
+  const own = (path) => Object.values(generated.anchors).filter((anchor) => anchor.path === path);
+  assert.ok(own('/reference/glossary').length > 394);
+  assert.ok(own('/reference/22-cheatsheet').length > 10);
+  for (const anchor of [...own('/reference/glossary'), ...own('/reference/22-cheatsheet')]) assert.deepEqual(resolved[anchor.id], { path: anchor.path, tab: 'overview' }, anchor.id);
+  assert.equal(generated.anchors['term-agent'].path, '/reference/glossary');
+  assert.ok(!Object.values(generated.anchors).some((anchor) => ['/glossary', '/chapters/22'].includes(anchor.path)));
+  // The old addresses stay in generated.json for the map, the pages are read at the new ones.
+  const chapter = (id) => generated.chapters.find((item) => item.id === id);
+  assert.deepEqual([chapter('ch-23').path, chapter('ch-23').href], ['/glossary', '/reference/glossary']);
+  assert.deepEqual([chapter('ch-22').path, chapter('ch-22').href], ['/chapters/22', '/reference/22-cheatsheet']);
 });
 
 test('broken entries fail the check', () => {
@@ -109,7 +128,8 @@ test('broken entries fail the check', () => {
     ['moved onto a section root', (copy) => { page(copy, '/chapters/06').new = '/flow'; }, /section landing page/],
     ['service page moves', (copy) => { page(copy, '/chapters/22').new = '/flow/22-x'; page(copy, '/chapters/22').section = 'service'; }, /service page keeps its address/],
     ['tabs without anchors', (copy) => { delete page(copy, '/chapters/01').anchors; }, /tabs need an anchors object/],
-    ['live without tabs', (copy) => { page(copy, '/glossary').live = true; }, /live is only true/],
+    ['live on a page that stays', (copy) => { page(copy, '/tools/codex').live = true; }, /live is only true/],
+    ['live without a chapter', (copy) => { page(copy, '/chapters/23').live = true; }, /live is only true/],
     ['live false', (copy) => { page(copy, '/chapters/08').live = false; }, /live is only true/],
     ['eight sections', (copy) => { copy.sections = copy.sections.filter((section) => section.id !== 'agents'); }, /9 sections/],
   ];

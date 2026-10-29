@@ -7,7 +7,7 @@ const gitBasic=basic.filter(term=>term.topic.startsWith('23.3.'));
 async function ready(page:import('@playwright/test').Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
 
 test('level filter counts and hides terms; basic Git terms are collapsed until needed',async({page})=>{
- await ready(page,'/glossary');
+ await ready(page,'/reference/glossary');
  const group=page.locator('details.glossary-basics');const status=page.locator('.glossary-filter [role=status]');
  await expect(group).toHaveCount(1);await expect(group).not.toHaveAttribute('open','');
  await expect(group.locator('summary')).toHaveText('Базовые термины Git');await expect(group.locator('.term-definition')).toHaveCount(gitBasic.length);
@@ -46,11 +46,11 @@ test('level filter counts and hides terms; basic Git terms are collapsed until n
 });
 
 test('arrival at a collapsed term opens its group, from a link and from search',async({page})=>{
- await ready(page,'/glossary#term-commit');
+ await ready(page,'/reference/glossary#term-commit');
  await expect(page.locator('details.glossary-basics')).toHaveAttribute('open','');await expect(page.locator('#term-commit')).toBeFocused();
- await ready(page,'/glossary');await page.getByRole('group',{name:'Уровень'}).getByRole('button',{name:/^Профессиональное/}).click();
+ await ready(page,'/reference/glossary');await page.getByRole('group',{name:'Уровень'}).getByRole('button',{name:/^Профессиональное/}).click();
  await page.keyboard.press('Control+k');await page.getByLabel('Термин, фраза или текст примера').fill('Squash merge');
- const result=page.locator('.search-results>a',{hasText:'Squash merge'}).first();await expect(result).toBeVisible();await result.click();
+ const result=page.locator('.search-results [role=option]',{hasText:'Squash merge'}).first();await expect(result).toBeVisible();await result.click();
  await expect(page.locator('#term-squash')).toBeVisible();await expect(page.locator('#term-squash')).toBeFocused();
  await expect(page.getByRole('group',{name:'Уровень'}).getByRole('button',{name:'Все'})).toHaveAttribute('aria-pressed','true');
 });

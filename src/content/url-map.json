@@ -121,8 +121,8 @@
       "ch-21-21-1-control-center-сначала-наблюдение": "how-it-works",
       "maturity-panel": "check"
     } },
-    { "old": "/chapters/22", "new": "/reference/22-cheatsheet", "section": "reference", "chapter": "ch-22" },
-    { "old": "/glossary", "new": "/reference/glossary", "section": "reference", "chapter": "ch-23" },
+    { "old": "/chapters/22", "new": "/reference/22-cheatsheet", "section": "reference", "chapter": "ch-22", "live": true },
+    { "old": "/glossary", "new": "/reference/glossary", "section": "reference", "chapter": "ch-23", "live": true },
     { "old": "/chapters/23", "new": "/reference/glossary", "section": "reference", "alias": true },
     { "old": "/chapters/00", "new": "/start/00-how-to-read", "section": "start", "alias": true },
     { "old": "/tools", "new": "/tools", "section": "tools", "chapter": "ch-tools" },

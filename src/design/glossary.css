@@ -1,0 +1,20 @@
+/* Glossary card (P6-07b): term on the left, level label and copy link on the right. Tokens only. */
+.term-definition{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:var(--space-3);align-items:start}
+.term-definition>:is(h3,h4){grid-column:1}
+.term-definition>.term-meta{grid-column:2;grid-row:1;display:flex;align-items:center;gap:var(--space-1);margin:0}
+.term-definition>p:not(.term-meta){grid-column:1/-1}
+.term-meta .term-level{margin-inline-start:0}
+.term-copy{display:inline-flex;align-items:center;justify-content:center;width:var(--touch-target);height:var(--touch-target);min-height:var(--touch-target);margin-block:calc(var(--space-3) * -1);padding:0;border:0;border-radius:var(--radius-full);background:transparent;color:var(--color-on-surface-variant);transition:background-color var(--dur-1) var(--ease)}
+.term-copy:hover{background:var(--color-surface-container-low)}
+@media print{.term-copy{display:none}}
+/* Narrow screens: the level and copy link go under the term, so a long term keeps its full line. */
+@media (max-width:599px){.term-definition>.term-meta{grid-column:1/-1;grid-row:auto;margin-block:0 var(--space-2)}.term-meta .term-copy{margin-block:0}}
+.term-copy-fallback{grid-column:1/-1;margin:var(--space-2) 0 0;font-size:var(--type-label);color:var(--color-on-surface-variant);overflow-wrap:anywhere}
+.term-copy-fallback code{user-select:all}
+
+/* Hero страницы (P6-07c): разметка и стили шаблона главы (.ct-hero, chapter-template.css); здесь только отличия. */
+.chapter.glossary-page{padding-top:0}
+.glossary-lead{max-width:65ch;color:var(--color-on-surface-variant)}
+/* Отступы только между абзацами: скрытая служебная заметка (последний p) не оставляет поля под текстом. */
+.glossary-lead>p{margin:0}.glossary-lead>p+p{margin-top:var(--space-3)}
+.glossary-page>.glossary-filter{margin:0}

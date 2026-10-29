@@ -31,14 +31,21 @@ test('every term has exactly one level, and generated.json carries it', async ()
 test('levels change no definition, alias, anchor or search entry', async () => {
   const leveled = await data(), base = await without();
   assert.deepEqual(leveled.terms.map(term => Object.fromEntries(Object.entries(term).filter(([key]) => key !== 'level'))), base.terms);
-  assert.deepEqual(leveled.search, base.search);
+  // Search entries of terms carry the level label (P3-03); everything else in them is unchanged.
+  assert.deepEqual(leveled.search.map(entry => Object.fromEntries(Object.entries(entry).filter(([key]) => key !== 'level'))), base.search);
+  const levelOf = new Map(leveled.terms.map(term => [term.id, leveled.levels[term.level]]));
+  for (const entry of leveled.search) assert.equal(entry.level, entry.type === 'термин' ? levelOf.get(entry.id) : undefined, entry.id);
   assert.deepEqual(Object.keys(leveled.anchors).sort(), Object.keys(base.anchors).sort());
   assert.equal(base.levels, null);
   assert.ok(base.terms.every(term => !('level' in term)));
   const before = cards(glossary(base)), after = cards(glossary(leveled));
   assert.deepEqual(Object.keys(after).sort(), Object.keys(before).sort());
-  for (const [id, card] of Object.entries(after)) assert.equal(card.replace(/ data-level="(basic|professional)"/, ''), before[id], id);
-  for (const term of leveled.terms) assert.match(after[term.id], new RegExp(`data-level="${term.level}"`));
+  // A level adds data-level and the visible level label (P6-07b), nothing else.
+  for (const [id, card] of Object.entries(after)) assert.equal(card.replace(/ data-level="(basic|professional)"/, '').replace(/<p class="term-meta"><span class="term-level" data-level="(basic|professional)"><span class="sr-only">Уровень: <\/span>[^<]+<\/span><\/p>/, ''), before[id], id);
+  for (const term of leveled.terms) {
+    assert.match(after[term.id], new RegExp(`data-level="${term.level}"`));
+    assert.ok(after[term.id].includes(`<span class="term-level" data-level="${term.level}"><span class="sr-only">Уровень: </span>${leveled.levels[term.level]}</span>`), term.id);
+  }
   // Every other chapter is unchanged.
   assert.deepEqual(leveled.chapters.filter(c => c.id !== 'ch-23'), base.chapters.filter(c => c.id !== 'ch-23'));
   assert.doesNotMatch(glossary(base), /glossary-basics/);
@@ -84,4 +91,12 @@ test('fail closed: the build stops on a missing, repeated, unknown or misplaced 
     const supplied = changed === null ? 'broken' : changed === 'null' ? null : changed === 'false' ? false : value;
     await assert.rejects(() => compileHandbook(source, { glossaryLevels: supplied }), error, name);
   }
+});
+
+test('the note on the source format stays in the Markdown, hidden on the page and from search (P6-07b)', async () => {
+  const { search } = await data(), html = glossary(await data());
+  assert.ok(source.includes('**Служебный формат для сайта:**'));
+  assert.match(html, /<p id="ch-23-[^"]+" hidden class="glossary-service-note"><strong>Служебный формат для сайта:<\/strong>/);
+  assert.equal(html.match(/Служебный формат/g).length, 1);
+  assert.ok(!search.some(entry => entry.text.includes('Служебный формат')));
 });
