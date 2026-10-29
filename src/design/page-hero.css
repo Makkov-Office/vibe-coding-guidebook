@@ -1,5 +1,6 @@
 /* Баннер страницы (P3-07, src/design/PageHero.tsx): две карточки M3 рядом с промежутком 8 px, радиус hero
-   (вариант f RD-01: --radius-xl). Ширина — вся рабочая область (app/globals.css, «Оболочка M3»). Только токены.
+   (вариант f RD-01: --radius-xl). Ширина — вся рабочая область, шире внутреннего контейнера --content-container
+   (app/globals.css, «Оболочка M3»; P3-08). Только токены.
    Единые правила для всех баннеров: внутренние страницы (PageHero), глава (.ct-banner, P5-05) и главная
    (.home-hero, P4-06) ставят те же классы; в их файлах — только отличия. */
 .page-hero{--page-hero-vis:var(--color-surface-container-low);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-2);min-height:340px;margin-top:var(--space-2);margin-bottom:var(--space-8)}
@@ -48,6 +49,10 @@
 @media (max-width:600px){.page-hero__text{padding:var(--space-6) var(--space-5)}.page-hero__visual{display:none}.page-hero h1{font-size:var(--type-h1)}}
 @media (forced-colors:active){.page-hero__visual{border:1px solid CanvasText}}
 @media print{.page-hero{display:block;min-height:0;margin:0 0 var(--space-6)}.page-hero__text{padding:0;border:0}.page-hero__visual,.page-hero__actions{display:none}}
+/* Крошки над баннером (P3-08) — на ширину баннера, по левому краю его текста: баннер шире контейнера, и крошки
+   над контейнером висели бы сдвинутыми. Уже 840 px поле контейнера 0, крошки и так над баннером. */
+@media (min-width:840px){.reading-column:has(.page-hero)>.breadcrumbs{margin-inline:calc(-1 * var(--container-side)) calc(-1 * (var(--container-side) + var(--outline-space)));padding-inline:var(--space-10)}}
+@media (min-width:840px) and (max-width:1199px){.reading-column:has(.page-hero)>.breadcrumbs{padding-inline:var(--space-8)}}
 .chapter:has(>.page-hero){padding-top:0}
 /* В шаблоне главы (.ct) промежутки задаёт сетка шаблона: полоса табов идёт за баннером через 8 px. */
 .ct>.page-hero{margin-bottom:0}

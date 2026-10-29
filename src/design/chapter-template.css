@@ -29,8 +29,10 @@
 .cv-pill--strong rect{fill:var(--color-primary-container);stroke:var(--color-primary)}
 .cv-pill--strong text{fill:var(--color-on-primary-container);font-weight:600}
 
-/* Полоса табов (P5-05): на всю ширину, высота 64 px, активный таб — тональная пилюля на всю ячейку.
-   При прокрутке прилипает и сжимается в плавающую пилюлю по центру с тенью и коротким именем главы.
+/* Полоса табов (P5-05, P3-08): на всю рабочую область, как баннер; активный таб — тональная пилюля на всю ячейку.
+   При прокрутке прилипает и сжимается ровно до ширины внутреннего контейнера (--content-container, поле --container-side
+   оболочки M3 в app/globals.css): плавающая пилюля с тенью и коротким именем главы над текстом и «На этой странице».
+   Переход — max-width по одной кривой --ease; reduced motion и data-motion="off" обнуляют длительности.
    Высота самой полосы в обоих состояниях одна: иначе scroll anchoring сдвигает страницу (позиция чтения). */
 .ct-tabs{--ct-tabs-gap:8px;position:sticky;top:var(--ct-sticky-top);z-index:5;display:flex;justify-content:center;height:72px;margin-top:calc(var(--ct-tabs-gap) - var(--space-6));pointer-events:none}
 .ct-tabs-row{display:flex;align-items:center;gap:var(--space-1);width:100%;max-width:100%;height:72px;padding:var(--space-1);border-radius:var(--radius-full);background:var(--color-surface-container-low);pointer-events:auto;transition:max-width var(--dur-3) var(--ease),height var(--dur-3) var(--ease),margin-top var(--dur-3) var(--ease),box-shadow var(--dur-3) var(--ease),background-color var(--dur-2) var(--ease)}
@@ -42,7 +44,7 @@
 .ct-tabs a[aria-current="page"]{background:var(--color-primary-container);color:var(--color-on-primary-container)}
 .ct-tabs a:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
 .ct-tabs-pill{flex:none;max-width:0;min-width:0;padding:0;opacity:0;overflow:hidden;color:var(--color-on-surface);font:500 var(--type-small)/1.2 var(--font-display);letter-spacing:var(--tracking-display);white-space:nowrap;text-overflow:ellipsis;transition:max-width var(--dur-3) var(--ease),opacity var(--dur-2) var(--ease),padding var(--dur-3) var(--ease)}
-.ct-tabs[data-stuck] .ct-tabs-row{max-width:820px;height:56px;margin-top:var(--space-2);background:var(--color-surface);box-shadow:var(--shadow-2)}
+.ct-tabs[data-stuck] .ct-tabs-row{max-width:calc(100% - 2 * var(--container-side));height:56px;margin-top:var(--space-2);background:var(--color-surface);box-shadow:var(--shadow-2)}
 .ct-tabs[data-stuck] .ct-tabs-pill{max-width:12rem;padding:0 var(--space-2) 0 var(--space-4);opacity:1}
 .ct-tabs[data-stuck] a{padding:0 var(--space-4)}
 @media (max-width:840px){.ct-tabs a{padding:0 var(--space-4)}}

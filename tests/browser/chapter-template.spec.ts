@@ -46,7 +46,7 @@ test('chapter template: banner of two cards, full-width tabs condense into a flo
  await expect(banner.locator('.ct-banner-visual svg.cv--preflight')).toBeVisible();await expect(banner.locator('.ct-banner-visual')).toHaveAttribute('aria-hidden','true');
  const [text,visual]=[(await banner.locator('.ct-banner-text').boundingBox())!,(await banner.locator('.ct-banner-visual').boundingBox())!];
  expect(Math.abs(text.y-visual.y)).toBeLessThanOrEqual(1);expect(visual.x).toBeGreaterThan(text.x+text.width);
- for(const width of [1440,360]){
+ for(const width of [1440,2560,360]){
   await page.setViewportSize({width,height:900});await open(page,'/design/chapters/08/apply');
   if(width===360)await expect(page.locator('.ct-banner-visual')).toBeHidden();
   const bar=page.locator('.ct-tabs'),row=page.locator('.ct-tabs-row');await expect(bar).not.toHaveAttribute('data-stuck');
@@ -57,12 +57,18 @@ test('chapter template: banner of two cards, full-width tabs condense into a flo
   // Курсор над текстом: в углу окна — rail, колесо прокрутило бы его.
   await page.mouse.move(width-24,450);await page.mouse.wheel(0,1200);
   await expect(bar).toHaveAttribute('data-stuck','true');
-  // Прилипшая полоса — плавающая пилюля по центру с тенью; высота полосы та же (без сдвига страницы).
-  await expect.poll(async()=>(await row.boundingBox())!.width,`${width}`).toBeLessThanOrEqual(Math.min(820,width));
+  // Прилипшая полоса — плавающая пилюля с тенью ровно на ширину внутреннего контейнера (P3-08, как M3 Buttons):
+  // от левого края текста до правого края «На этой странице» (или текста, если колонки нет); высота полосы та же.
+  const box=await page.evaluate(()=>{const body=document.querySelector('.ct-body')!.getBoundingClientRect(),outline=document.querySelector('.local-outline');
+   const right=outline?.checkVisibility()?outline.getBoundingClientRect().right:body.right;return {x:body.x,width:right-body.x};});
+  if(width>=1440)expect(Math.round(box.width),`${width}: container token`).toBe(1024);
+  if(width>=1440)expect(column.width-box.width,`${width}: banner wider than container`).toBeGreaterThan(200);
+  await expect.poll(async()=>Math.round((await row.boundingBox())!.width),`${width}`).toBe(Math.round(box.width));
   await expect(row).not.toHaveCSS('box-shadow','none');
-  const pill=(await row.boundingBox())!;expect(Math.abs(pill.x+pill.width/2-(column.x+column.width/2)),`${width}: centered`).toBeLessThanOrEqual(2);
+  const pill=(await row.boundingBox())!;expect(Math.abs(pill.x-box.x),`${width}: aligned with container`).toBeLessThanOrEqual(1);
+  expect(Math.abs(pill.x+pill.width/2-(column.x+column.width/2)),`${width}: centered`).toBeLessThanOrEqual(2);
   expect((await bar.boundingBox())!.height).toBe(height);
-  if(width===1440)await expect(page.locator('.ct-tabs-pill')).toHaveText('08 · Preflight');
+  if(width>=1440)await expect(page.locator('.ct-tabs-pill')).toHaveText('08 · Preflight');
   else await expect(page.locator('.ct-tabs-pill')).toBeHidden();
   // Шапки нет (P3-07): полоса прилипает к верхнему краю окна без щели, через которую виден текст.
   await expect(page.locator('header.topbar')).toHaveCount(0);
@@ -125,7 +131,7 @@ test('chapter template: widths, table cards, reduced motion and axe',async({page
  await page.emulateMedia({reducedMotion:'reduce'});await expect(page.locator('.ct-tabs-row')).toHaveCSS('transition-duration','0s');
  // Сжатие без анимации: после прокрутки пилюля сразу в итоговом виде.
  await page.setViewportSize({width:1440,height:900});await page.mouse.move(1416,450);await page.mouse.wheel(0,1500);await expect(page.locator('.ct-tabs')).toHaveAttribute('data-stuck','true');
- expect((await page.locator('.ct-tabs-row').boundingBox())!.width).toBeLessThanOrEqual(820);await page.mouse.wheel(0,-5000);
+ expect((await page.locator('.ct-tabs-row').boundingBox())!.width).toBe(1024);await page.mouse.wheel(0,-5000);
  for(const [width,theme] of [[320,'light'],[320,'dark'],[1440,'light'],[1440,'dark']] as const){
   await page.setViewportSize({width,height:900});
   await page.evaluate(t=>document.documentElement.setAttribute('data-theme',t),theme);
