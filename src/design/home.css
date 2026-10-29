@@ -111,7 +111,7 @@ a.home-card:is(:hover,:focus-visible) .hi-ln[pathLength]{animation:home-draw var
 .home-next-item>span{display:grid;gap:2px;min-width:0}
 .home-next-item h3{margin:0;font:600 var(--type-body)/1.35 var(--font-text)}
 .home-next-item p{margin:0;font-size:var(--type-small);line-height:1.45;color:var(--color-on-surface-variant)}
-.home-next-item .project-icon{flex-shrink:0;transition:transform var(--dur-1) var(--ease)}
+.home-next-item .project-icon{flex-shrink:0;transition:transform var(--dur-shape) var(--ease-spring)}
 a.home-next-item:hover{background:var(--color-surface-container)}
 a.home-next-item:hover .project-icon{transform:translateX(2px)}
 a.home-next-item:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}

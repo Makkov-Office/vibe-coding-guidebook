@@ -74,7 +74,7 @@
 /* Колонка «На этой странице» (сетка Reader/P3-07): вид RD-01 — моно-подпись, текущий пункт в тональной пилюле. */
 .reading-shell:has(.ct) .local-outline nav{display:grid;gap:2px}
 .reading-shell:has(.ct) .local-outline nav::before{content:"На этой странице";display:block;margin:0 0 var(--space-2) var(--space-3);color:var(--color-on-surface-variant);font:500 var(--type-label)/1.3 var(--font-mono);font-stretch:var(--font-mono-stretch)}
-.reading-shell:has(.ct) .local-outline a{display:block;padding:6px var(--space-3);border-radius:var(--radius-full);color:var(--color-on-surface-variant);font:400 var(--type-small)/1.35 var(--font-text);text-decoration:none;transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
+.reading-shell:has(.ct) .local-outline a{display:block;padding:6px var(--space-3);border-radius:var(--radius-full);color:var(--color-on-surface-variant);font:400 var(--type-small)/1.35 var(--font-text);text-decoration:none;transition:background-color var(--dur-hover) var(--ease),color var(--dur-hover) var(--ease)}
 .reading-shell:has(.ct) .local-outline a:hover{background:var(--color-surface-container-low);color:var(--color-on-surface)}
 .reading-shell:has(.ct) .local-outline a[aria-current="location"]{background:var(--color-primary-container);color:var(--color-on-primary-container);font-weight:600}
 .reading-shell:has(.ct) .local-outline a:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
