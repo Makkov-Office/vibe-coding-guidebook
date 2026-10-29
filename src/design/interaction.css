@@ -62,6 +62,8 @@ a.home-card .home-card-vis{border-radius:max(var(--radius-xs),calc(var(--shape-r
 
 /* Фокус с клавиатуры виден всегда и повторяет текущую форму (outline следует border-radius). */
 :is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+/* Табы главы лежат в .ct-tabs ul с overflow-x:auto: внешний контур обрезается, поэтому у них контур внутрь. */
+.ct-tabs a:focus-visible{outline-offset:-2px}
 
 /* Световой след в месте нажатия (в духе Apple Liquid Glass): короткое мягкое свечение, не заливка и не ripple.
    Скрипт ставит --glow-x/--glow-y (точка касания), --glow-reach (докуда растёт) и атрибут data-glowing.
