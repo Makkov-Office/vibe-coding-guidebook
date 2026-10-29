@@ -72,8 +72,8 @@ test('design showcase: noindex, themes, keyboard, 44 px targets, reduced motion 
  const page=await browser.newPage();const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
  await page.goto('/design');await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content',/noindex/);await expect(page.getByRole('heading',{level:1})).toContainText('Чертёж');
  const bg=()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor);
- await page.getByRole('button',{name:'Тёмная'}).click();await expect(page.locator('html')).toHaveAttribute('data-theme','dark');expect(await bg()).toBe('rgb(16, 16, 16)');
- await page.getByRole('button',{name:'Светлая'}).click();expect(await bg()).toBe('rgb(250, 250, 250)');
+ await page.getByRole('button',{name:'Тёмная'}).click();await expect(page.locator('html')).toHaveAttribute('data-theme','dark');expect(await bg()).toBe('rgb(15, 17, 21)');
+ await page.getByRole('button',{name:'Светлая'}).click();expect(await bg()).toBe('rgb(246, 247, 249)');
  for(const width of [320,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
   const small=await page.evaluate(()=>[...document.querySelectorAll('main button, main a')].filter(e=>{const r=e.getBoundingClientRect();return r.height<44||r.width<44;}).map(e=>e.textContent));expect(small).toEqual([]);
   // Подписи шагов не вылезают из своей ячейки; схема не мельче viewBox и прокручивается в фокусируемой рамке.
