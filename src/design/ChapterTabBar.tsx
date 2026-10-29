@@ -43,7 +43,7 @@ export function ChapterTabBar({title,current,tabs}:{title:string;current:TabId;t
     return()=>{removeEventListener('resize',watch);observer?.disconnect();};
   },[]);
   return <>
-    <nav ref={bar} className="ct-tabs" aria-label="Табы главы" data-stuck={stuck||undefined}>
+    <nav ref={bar} className="ct-tabs shell-wide" aria-label="Табы главы" data-stuck={stuck||undefined}>
       <div className="ct-tabs-row">
         <span className="ct-tabs-pill" aria-hidden="true">{title}</span>
         <ul>
