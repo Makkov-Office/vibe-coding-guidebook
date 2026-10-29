@@ -107,7 +107,10 @@ export function parseOverview(number,text){
   return {meta,body};
 }
 
-const HOME_SECTIONS=['Первый экран','Путь задачи','Разделы','Продолжить','Следующие шаги','Ссылки руководства'];
+const HOME_SECTIONS=['Первый экран','Путь задачи','Разделы','Продолжить','Следующие шаги','Ссылки руководства','Подписи'];
+// «Подписи» (P4-06): interface templates of Главная, «Название: шаблон» with {placeholders}.
+// «Страницы» holds three plural forms (1 / 2–4 / 5+) separated by « | ».
+const HOME_LABELS={'Глава':['chapter',['n']],'Главы':['chapters',['from','to']],'Страницы':['pages',['n']],'Таб':['tab',['tab','n','total']],'Тренажёр':['drill',['minutes']]};
 // Главная (P4-01): content/home.md. Plain text and links in a fixed order of
 // sections; the cards follow the rail sections of url-map (without Главная).
 // Throws with the broken rule; the result goes to generated.json as `home`.
@@ -124,7 +127,7 @@ export function parseHome(text,railLabels){
     else sections.at(-1).nodes.push(node);
   }
   if(sections.map(section=>section.title).join('|')!==HOME_SECTIONS.join('|'))fail(`sections must be exactly: ${HOME_SECTIONS.join(' / ')}`);
-  const [hero,path,cards,resume,next,footer]=sections;
+  const [hero,path,cards,resume,next,footer,labelSection]=sections;
   const plain=node=>{visit(node,n=>{if(!['paragraph','text','listItem','list','link','heading'].includes(n.type))fail(`only plain text and links, found ${n.type}`);});return toString(node).trim();};
   const paragraph=section=>{const p=section.nodes.filter(node=>node.type==='paragraph');if(p.length!==1||!plain(p[0]))fail(`«${section.title}» needs one paragraph`);return plain(p[0]);};
   const items=(section,list=section.nodes.find(node=>node.type==='list'))=>{if(!list||list.ordered)fail(`«${section.title}» needs a bulleted list`);return list.children.map(item=>{if(item.children.length!==1||item.children[0].type!=='paragraph')fail(`«${section.title}»: one line per item`);return item.children[0];});};
@@ -147,7 +150,19 @@ export function parseHome(text,railLabels){
     else fail('«Ссылки руководства» is ### groups, each with one list of links');
   }
   if(groups.length!==3||groups.some(group=>!group.links.length))fail('«Ссылки руководства» needs 3 groups of links');
-  return {title:plain(h1),subtitle:plain(lead),lead:paragraph(hero),actions:actions.map(({label,href})=>({label,href})),path:{title:paragraph(path),steps},sections:{heading:cards.title,lead:paragraph(cards),cards:cardList},resume:{heading:resume.title,lead:paragraph(resume),action:button[0]},next:{heading:next.title,items:steps2},footer:{heading:footer.title,groups}};
+  const labels={};
+  for(const node of items(labelSection)){
+    const {label,text}=pair(node,labelSection);const entry=HOME_LABELS[label];
+    if(!entry)fail(`«Подписи»: unknown label ${label}; expected ${Object.keys(HOME_LABELS).join(', ')}`);
+    const [key,slots]=entry;if(labels[key])fail(`«Подписи»: ${label} twice`);
+    const forms=key==='pages'?text.split(/\s+\|\s+/):[text];
+    if(key==='pages'&&forms.length!==3)fail('«Подписи»: Страницы needs 3 forms «1 | 2–4 | 5+»');
+    for(const form of forms){const used=[...form.matchAll(/\{(\w+)\}/g)].map(m=>m[1]);if(slots.some(slot=>!used.includes(slot))||used.some(slot=>!slots.includes(slot)))fail(`«Подписи»: ${label} must use exactly {${slots.join('}, {')}}`);}
+    labels[key]=key==='pages'?forms:text;
+  }
+  const missingLabels=Object.entries(HOME_LABELS).filter(([,[key]])=>!labels[key]).map(([label])=>label);
+  if(missingLabels.length)fail(`«Подписи»: missing ${missingLabels.join(', ')}`);
+  return {title:plain(h1),eyebrow:paragraph(hero),subtitle:plain(lead),actions:actions.map(({label,href})=>({label,href})),path:{title:paragraph(path),steps},sections:{heading:cards.title,lead:paragraph(cards),cards:cardList},resume:{heading:resume.title,lead:paragraph(resume),action:button[0]},next:{heading:next.title,items:steps2},footer:{heading:footer.title,groups},labels};
 }
 
 export const LEVELS=['basic','professional'];
