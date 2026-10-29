@@ -9,22 +9,18 @@
 .home-lead{margin:0;color:var(--color-on-surface-variant);font-size:var(--type-small)}
 .home-block>h2,.home-head{margin-bottom:var(--space-4);padding-inline:var(--space-2)}
 
-/* Hero: две карточки рядом (текст и одна спокойная схема), промежуток 8 px; уже 800 px — столбиком. */
-.home-hero{display:grid;gap:var(--space-2)}
-.home-hero__text,.home-hero__visual{border-radius:var(--radius-xl);min-width:0}
-.home-hero__text{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:var(--space-4);padding:var(--space-10) var(--space-10) 34px;border:var(--stroke-border) solid transparent;background:linear-gradient(var(--color-surface),var(--color-surface)) padding-box,var(--color-brand-frame-gradient) border-box}
+/* Hero: баннер страницы .page-hero (src/design/page-hero.css, P3-07) — две карточки, 8 px, радиус, поля, типографика, столбик.
+   Здесь только отличия главной: рамка бренда и паттерн «+» (только hero главной и «Начать»), высота, ширина заголовка. */
+.home .home-hero{min-height:400px;margin:0}
+.home .home-hero__text{position:relative;isolation:isolate;overflow:hidden;border:var(--stroke-border) solid transparent;background:linear-gradient(var(--color-surface),var(--color-surface)) padding-box,var(--color-brand-frame-gradient) border-box}
 .home-plus{position:absolute;inset:0;z-index:-1;width:100%;height:100%;-webkit-mask-image:linear-gradient(to bottom,var(--color-on-surface) 0%,transparent 85%);mask-image:linear-gradient(to bottom,var(--color-on-surface) 0%,transparent 85%)}
 .home-plus path{stroke:var(--color-pattern-plus);stroke-width:1;fill:none}
-.home-eyebrow{margin:0;font:500 var(--type-label)/1.4 var(--font-mono);font-stretch:var(--font-mono-stretch);color:var(--color-on-surface-variant)}
-.home-hero h1{margin:0;max-width:11ch;font:500 clamp(2.25rem,1.5rem + 2vw,3.5rem)/1.05 var(--font-display);letter-spacing:var(--tracking-display);overflow-wrap:anywhere}
-.home-subtitle{margin:0;max-width:46ch;font-size:1.0625rem;line-height:1.5;color:var(--color-on-surface-variant)}
-.home-actions{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-2)}
+.home-hero h1{max-width:11ch}
+.home-actions{margin-top:var(--space-2)}
 .home-actions .bp-button{min-height:48px;padding-inline:var(--space-6);font-size:var(--type-body)}
-.home-hero__visual{margin:0;display:grid;place-items:center;padding:var(--space-4);border:var(--stroke-border) solid var(--color-outline-variant);background:var(--home-vis)}
 .home-hero__visual .hi{max-width:560px}
-@container (min-width:800px){.home-hero{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);min-height:400px}}
-/* Узко схема уходит; шаги пути остаются для скринридера в #home-path-steps внутри текстовой карточки. */
-@container (max-width:520px){.home-hero__text{padding:var(--space-8) var(--space-6) var(--space-6)}.home-hero__visual{display:none}}
+/* Узко схема уходит (page-hero.css, ≤ 600 px); шаги пути остаются для скринридера в #home-path-steps внутри текстовой карточки. */
+@media (max-width:839px){.home .home-hero{min-height:0}}
 
 /* Иллюстрации «Чертежа»: заливки — токены, контур 1.25 px, моно-подписи. */
 .hi{display:block;width:100%;height:auto;overflow:visible}

@@ -42,15 +42,16 @@ test('chapter template: banner of two cards, full-width tabs condense into a flo
  // P5-05: баннер — текстовая карточка и визуал; ≤ 600 px визуал скрыт, ≤ 840 px карточки в столбик.
  await page.setViewportSize({width:1440,height:900});await open(page,'/design/chapters/08/apply');
  const banner=page.locator('.ct-banner');await expect(banner.locator('.ct-kicker')).toHaveText('Процесс · Глава 08');
- await expect(banner.getByRole('img',{name:/Чек-лист preflight/})).toBeVisible();
+ // Визуал декоративный (P3-07 review): виден, но скрыт от вспомогательных технологий.
+ await expect(banner.locator('.ct-banner-visual svg.cv--preflight')).toBeVisible();await expect(banner.locator('.ct-banner-visual')).toHaveAttribute('aria-hidden','true');
  const [text,visual]=[(await banner.locator('.ct-banner-text').boundingBox())!,(await banner.locator('.ct-banner-visual').boundingBox())!];
  expect(Math.abs(text.y-visual.y)).toBeLessThanOrEqual(1);expect(visual.x).toBeGreaterThan(text.x+text.width);
  for(const width of [1440,360]){
   await page.setViewportSize({width,height:900});await open(page,'/design/chapters/08/apply');
   if(width===360)await expect(page.locator('.ct-banner-visual')).toBeHidden();
   const bar=page.locator('.ct-tabs'),row=page.locator('.ct-tabs-row');await expect(bar).not.toHaveAttribute('data-stuck');
-  // Полоса на всю ширину колонки, активный таб — тональная пилюля.
-  const wide=(await row.boundingBox())!,column=(await page.locator('main .ct').boundingBox())!;expect(Math.abs(wide.width-column.width),`${width}`).toBeLessThanOrEqual(1);
+  // Полоса на всю ширину баннера (.shell-wide, P3-07: вся рабочая область), активный таб — тональная пилюля.
+  const wide=(await row.boundingBox())!,column=(await page.locator('.ct-banner').boundingBox())!;expect(Math.abs(wide.width-column.width),`${width}`).toBeLessThanOrEqual(1);
   await expect(page.locator('.ct-tabs a[aria-current="page"]')).not.toHaveCSS('background-color','rgba(0, 0, 0, 0)');
   const height=(await bar.boundingBox())!.height;
   // Курсор над текстом: в углу окна — rail, колесо прокрутило бы его.
@@ -63,9 +64,9 @@ test('chapter template: banner of two cards, full-width tabs condense into a flo
   expect((await bar.boundingBox())!.height).toBe(height);
   if(width===1440)await expect(page.locator('.ct-tabs-pill')).toHaveText('08 · Preflight');
   else await expect(page.locator('.ct-tabs-pill')).toBeHidden();
-  // Под шапкой (если она есть) без зазора больше полосы: пилюля сразу под её нижним краем.
-  const header=await page.locator('.topbar').boundingBox();const top=header?header.y+header.height:0;
-  expect((await bar.boundingBox())!.y-top,`${width}`).toBeLessThanOrEqual(1);
+  // Шапки нет (P3-07): полоса прилипает к верхнему краю окна без щели, через которую виден текст.
+  await expect(page.locator('header.topbar')).toHaveCount(0);
+  expect(Math.abs((await bar.boundingBox())!.y),`${width}`).toBeLessThanOrEqual(1);
   await page.mouse.wheel(0,-5000);await expect(bar).not.toHaveAttribute('data-stuck');
  }
  // Служебные образцы не перезаписывают позицию чтения настоящей главы.
@@ -76,7 +77,8 @@ test('chapter template: banner of two cards, full-width tabs condense into a flo
 test('chapter template: other chapters get the calm generic banner visual',async({page})=>{
  await page.setViewportSize({width:1024,height:900});await open(page,'/design/chapters/07/how-it-works');
  await expect(page.locator('.ct-banner .ct-kicker')).toHaveText('Процесс · Глава 07');
- await expect(page.locator('.ct-banner').getByRole('img',{name:/Глава 07: четыре таба/})).toBeVisible();
+ // Общий визуал: номер главы и четыре таба, выделен текущий (здесь «Как устроено»); визуал декоративный.
+ await expect(page.locator('.ct-banner-visual svg.cv')).toBeVisible();await expect(page.locator('.ct-banner-visual .cv-pill--strong text')).toHaveText('Как устроено');
  // 840 px и уже — карточки в столбик.
  await page.setViewportSize({width:768,height:900});
  const [text,visual]=[(await page.locator('.ct-banner-text').boundingBox())!,(await page.locator('.ct-banner-visual').boundingBox())!];expect(visual.y).toBeGreaterThan(text.y+text.height-1);

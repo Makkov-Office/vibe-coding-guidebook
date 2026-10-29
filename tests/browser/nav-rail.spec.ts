@@ -2,7 +2,7 @@ import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
 // Navigation rail and mega-menu (P3-01): hover, focus, tap, keyboard, addresses and accessibility.
 const urlMap=JSON.parse(fs.readFileSync('src/content/url-map.json','utf8')) as {pages:{old:string;new:string;chapter?:string}[]};
-async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
+async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 const item=(page:Page,id:string)=>page.locator(`.rail-entry[data-section=${id}] .rail-item`);
 const menu=(page:Page,id:string)=>page.locator(`#mega-${id}`);
 

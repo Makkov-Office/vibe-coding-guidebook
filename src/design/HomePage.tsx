@@ -31,19 +31,19 @@ export function HomePage(){
   // Тренажёр — только своей главы читателя (P7-03): у главы без тренажёра карточки нет.
   const drills=Object.fromEntries(handbook.drills.map(drill=>[drill.chapter,{title:drill.title,text:drill.intro,minutes:drill.minutes,href:pageHref(drill.chapter,'check')}]));
   return <><ReaderPageData value={pageData}/><main id="reader" tabIndex={-1} className="home shell-wide">
-    <div className="home-hero">
-      <section className="home-hero__text" aria-labelledby="home-title">
+    <div className="home-hero page-hero">
+      <section className="home-hero__text page-hero__text" aria-labelledby="home-title">
         <svg className="home-plus" aria-hidden="true" focusable="false">
           <defs><pattern id="home-plus" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M10 14h8M14 10v8"/></pattern></defs>
           <rect width="100%" height="100%" fill="url(#home-plus)"/>
         </svg>
-        <p className="home-eyebrow">{home.eyebrow}</p>
+        <p className="home-eyebrow page-hero__eyebrow">{home.eyebrow}</p>
         <h1 id="home-title">{home.title}</h1>
-        <p className="home-subtitle">{home.subtitle}</p>
-        <div className="home-actions">{home.actions.map((action,i)=><Link key={action.href} className={`bp-button bp-button--${i?'tonal':'fill'}`} href={action.href}>{action.label}{!i&&<ProjectIcon name="arrowRight"/>}</Link>)}</div>
+        <p className="home-subtitle page-hero__description">{home.subtitle}</p>
+        <div className="home-actions page-hero__actions">{home.actions.map((action,i)=><Link key={action.href} className={`bp-button bp-button--${i?'tonal':'fill'}`} href={action.href}>{action.label}{!i&&<ProjectIcon name="arrowRight"/>}</Link>)}</div>
         <p className="sr-only" id="home-path-steps">{home.path.title} {home.path.steps.map(step=>`${step.label}: ${step.sub}`).join(' → ')}</p>
       </section>
-      <figure className="home-hero__visual home-path">
+      <figure className="home-hero__visual page-hero__visual home-path">
         <HeroPath title={home.path.title} steps={home.path.steps}/>
       </figure>
     </div>

@@ -44,7 +44,10 @@ const heading=(html:string)=>html.replace(/<a [^>]*class="permalink"[^>]*>#<\/a>
 /** Раздел главы из url-map: надзаголовок баннера «Процесс · Глава 08». */
 const sectionOf=(chapterId:string)=>{const page=urlMap.pages.find(p=>'chapter' in p&&p.chapter===chapterId&&!('alias' in p));return urlMap.sections.find(s=>s.id===page?.section)?.label;};
 /** Одна строка описания в баннере — первый абзац «Обзора» как текст (учебный текст не дублируется в коде). */
-export function lede(html:string){const m=/<p\b[^>]*>([\s\S]*?)<\/p>/.exec(html);return m?m[1].replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim():'';}
+// Текст первого абзаца без разметки; сущности компилятора (&quot;, &#x27; и др.) декодируются — React экранирует текст сам.
+const entities:Record<string,string>={amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:'\u00a0'};
+const decode=(text:string)=>text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi,(all,code:string)=>code[0]==='#'?String.fromCodePoint(code[1].toLowerCase()==='x'?parseInt(code.slice(2),16):+code.slice(1)):entities[code.toLowerCase()]??all);
+export function lede(html:string){const m=/<p\b[^>]*>([\s\S]*?)<\/p>/.exec(html);return m?decode(m[1].replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim()):'';}
 
 export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,aside,tools,children}:ChapterTemplateProps){
   const chapter=handbook.chapters.find(c=>c.id===chapterId);
@@ -70,17 +73,17 @@ export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,a
     <main id="reader" tabIndex={-1}><article className="ct" data-chapter={chapterId} data-tab={tabId}>
       <header className="ct-banner page-hero shell-wide">
         <div className="ct-banner-text page-hero__text">
-          <p className="ct-kicker">{section?`${section} · `:''}Глава {chapter.number}</p>
+          <p className="ct-kicker page-hero__eyebrow">{section?`${section} · `:''}Глава {chapter.number}</p>
           <div className="ct-title" dangerouslySetInnerHTML={{__html:heading(chapter.heading)}}/>
-          {summary&&<p className="ct-lede">{summary}</p>}
-          <ul className="ct-chips" aria-label="О главе">
+          {summary&&<p className="ct-lede page-hero__description">{summary}</p>}
+          <ul className="ct-chips page-hero__meta" aria-label="О главе">
             {total>0&&<li><RoleIcon role="readingTime"/>{total} мин</li>}
             {meta?.level&&<li><RoleIcon role="level"/>{meta.level}</li>}
             {meta?.template&&<li><RoleIcon role="template"/>{meta.template}</li>}
           </ul>
           {tools}
         </div>
-        <div className="ct-banner-visual page-hero__visual"><ChapterVisual chapterId={chapterId} number={chapter.number} tabs={tabs.map(t=>t.label)}/></div>
+        <div className="ct-banner-visual page-hero__visual" aria-hidden="true"><ChapterVisual chapterId={chapterId} number={chapter.number} tabs={tabs.map(t=>t.label)} current={Math.max(0,index)}/></div>
       </header>
       <ChapterTabBar title={`${chapter.number} · ${shortTitle(chapter.title)}`} current={tabId} tabs={tabs.map(t=>({id:t.id,label:t.label,href:hrefs[t.id]}))}/>
       <div className="ct-body">

@@ -2,7 +2,7 @@ import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
 // P4-01: Главная на «/», вводная глава 00 на /start/00-how-to-read. Вид P4-06 (RD-01): hero из двух карточек, карточки с иллюстрацией.
 const home=JSON.parse(fs.readFileSync('src/content/generated.json','utf8')).home;
-async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
+async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 async function settled(page:Page){await page.evaluate(()=>Promise.all(document.getAnimations().filter(a=>Number.isFinite(Number(a.effect?.getComputedTiming().endTime))).map(a=>a.finished.catch(()=>undefined))));}
 const errorsOf=(page:Page)=>{const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});return errors;};
 
@@ -36,7 +36,7 @@ test('home: hero, task path, 8 sections, next steps and footer; every link answe
  expect(hrefs.length).toBeGreaterThanOrEqual(13);
  for(const href of hrefs)expect((await request.get(href)).status(),href).toBe(200);
  // Карточка раздела ведёт на его первую страницу без перезагрузки.
- await page.locator('.home-cards a.home-card').first().click();await expect(page).toHaveURL(/\/start\/00-how-to-read$/);await expect(page.locator('main .intro')).toBeVisible();
+ await page.locator('.home-cards a.home-card').first().click();await expect(page).toHaveURL(/\/start\/00-how-to-read$/);await expect(page.locator('main .intro-hero')).toBeVisible();
  expect(errors).toEqual([]);
 });
 
@@ -72,7 +72,7 @@ test('home: «Продолжить» for a returning reader, introduction at its
  await expect(resume.locator('.home-resume-grid')).toHaveClass(/home-resume-grid--single/);
  // Вводная глава: учебный профиль и прежний текст.
  await ready(page,'/start/00-how-to-read');
- await expect(page.locator('main .intro')).toBeVisible();await expect(page.locator('.learning-profile-home')).toBeVisible();
+ await expect(page.locator('main .intro-hero')).toBeVisible();await expect(page.locator('.learning-profile-home')).toBeVisible();
  await expect(page.locator('.rail-entry[data-section=start] .rail-item')).toHaveAttribute('aria-current',/page|true/);
  // Из главы 01 «Предыдущий раздел» ведёт на вводную главу, а не на Главную.
  await ready(page,'/chapters/01');
