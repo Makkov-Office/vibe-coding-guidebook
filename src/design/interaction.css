@@ -19,9 +19,9 @@
 /* Карточки: ссылки-карточки главной, тренажёр, «что дальше», пейджер главы. */
 :is(.bp-press--card,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link){--shape-rest:var(--shape-card);--shape-hover:var(--shape-card-hover);--shape-press:var(--shape-card-press)}
 
-/* Общее: радиус из --shape-r; hover уходит медленнее, чем входит; форма — пружиной. Позиция — для следа (:where не
-   перебивает position у компонентов). */
-:where(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link,[data-glow]){position:relative}
+/* Общее: радиус из --shape-r; hover уходит медленнее, чем входит; форма — пружиной. Позиция и свой слой (isolation) —
+   для следа: он лежит под подписью и иконкой, над фоном (P2-09). :where не перебивает position у компонентов. */
+:where(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link,[data-glow]){position:relative;isolation:isolate}
 :is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link){
   --shape-r:var(--shape-rest);
   border-radius:var(--shape-r);
@@ -71,7 +71,7 @@ a.home-card .home-card-vis{border-radius:max(var(--radius-xs),calc(var(--shape-r
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--glow-peak:.14;--glow-peak-fill:.2}}
 .bp-button--fill{--glow-tone:light-dark(var(--color-surface),var(--color-on-surface));--glow-peak:var(--glow-peak-fill)}
 :is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link,[data-glow])[data-glowing]::after{
-  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;
   background:radial-gradient(circle var(--glow-r) at var(--glow-x,50%) var(--glow-y,50%),var(--glow-tone),transparent);
   animation:press-glow var(--dur-glow) var(--ease-enter) forwards;
 }

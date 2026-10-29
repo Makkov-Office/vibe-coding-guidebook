@@ -23,8 +23,8 @@
 .rail-item,.rail-search,.ui-control{transition:color var(--dur-2) var(--ease)}
 .rail-trace{position:absolute;inset:0;width:100%;height:100%;overflow:visible;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;pointer-events:none}
 .rail-trace path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset var(--dur-2) var(--ease)}
-.rail-item:hover,.rail-item[aria-expanded=true],.rail-search:hover:not(:disabled),.ui-control:hover:not([aria-disabled=true]){color:var(--color-on-surface)}
-.rail-item:hover .rail-trace path,.rail-item[aria-expanded=true] .rail-trace path,.rail-search:hover:not(:disabled) .rail-trace path,.ui-control:hover:not([aria-disabled=true]) .rail-trace path{stroke-dashoffset:0}
+.rail-item:hover,.rail-item[aria-expanded=true],.rail-search:hover:not(:disabled),.ui-control:hover{color:var(--color-on-surface)}
+.rail-item:hover .rail-trace path,.rail-item[aria-expanded=true] .rail-trace path,.rail-search:hover:not(:disabled) .rail-trace path,.ui-control:hover .rail-trace path{stroke-dashoffset:0}
 :is(.rail-item,.rail-search,.ui-control):focus-visible{outline:none}
 :is(.rail-item,.rail-search,.ui-control):focus-visible :is(.rail-indicator,.ui-control-indicator){outline:2px solid var(--color-primary);outline-offset:2px}
 
@@ -68,6 +68,5 @@
 .rail-controls{position:sticky;bottom:calc(-1 * var(--space-4));z-index:1;margin-top:auto;margin-bottom:calc(-1 * var(--space-4));justify-items:center;padding:var(--space-2) 0 var(--space-2);background:var(--color-rail);border-top:var(--stroke-border) solid var(--color-outline-variant)}
 .menu-controls{grid-template-columns:minmax(0,1fr);margin-top:var(--space-4);padding-top:var(--space-3);border-top:var(--stroke-border) solid var(--color-outline-variant)}
 .ui-control{display:flex;flex-direction:column;align-items:center;gap:var(--space-1);width:100%;min-height:52px;padding:var(--space-1) 0;border:0;background:none;color:var(--color-on-surface-variant);font:600 var(--type-label) var(--font-text);text-align:center;cursor:pointer}
-.ui-control[aria-disabled=true]{opacity:.6;cursor:default}
 .ui-control-indicator{position:relative;display:grid;place-items:center;width:56px;height:32px;border-radius:var(--radius-full)}
 .ui-control-label{max-width:calc(var(--rail-width) - var(--space-2));line-height:1.2}

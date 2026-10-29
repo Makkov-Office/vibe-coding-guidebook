@@ -16,7 +16,8 @@ const pill=({x,y,w,label}:Pill,size?:number)=><g key={`${label}-${x}-${y}`}>
  *  режет края (slice), смысловая часть сжата в зону x 100–700, y 40–380: её видно и на 1440 (режутся бока),
  *  и на 2560 (режутся верх и низ). Подписи — шаги пути из content/home.md
  *  (label и sub) и служебные метки; для скринридера — <title> и #home-path-steps в HomePage.tsx.
- *  Движение — одно: линия пути прорисовывается один раз (.motion-draw, pathLength 1). */
+ *  Движение — одно: линия пути прорисовывается один раз (.motion-draw, pathLength 1). Линия соединяет все
+ *  карточки по порядку (P2-09); карточки не перекрывают друг друга, кроме Founder за агентом. */
 export function HeroPath({title,steps}:{title:string;steps:{label:string;sub:string}[]}){
   const s=(i:number)=>steps[i]??{label:'',sub:''};
   const [founder,ticket,agent,branch,review,decision,main,deploy]=[0,1,2,3,4,5,6,7].map(s);
@@ -33,7 +34,7 @@ export function HeroPath({title,steps}:{title:string;steps:{label:string;sub:str
       <path className="hh-plus" d="M446 40h12M452 34v12M120 300h12M126 294v12M718 250h12M724 244v12M300 384h12M306 378v12"/>
     </g>
     <g transform="translate(400 210) scale(.94) translate(-400 -214)">
-    <path className="hi-ln" d="M192 164V210Q192 232 214 232H244M540 208H584Q608 208 608 186" pathLength={1}/>
+    <path className="hi-ln" d="M192 164V210Q192 232 214 232H236M494 208H540Q560 208 560 180M650 182V236M651 344V364" pathLength={1}/>
     <g className="hh-card hh-practice">
       <rect x={506} y={34} width={204} height={148} rx={26}/>
       <text className="hh-h" x={530} y={70}>{review.label}</text><text className="hh-s" x={530} y={90}>{review.sub}</text>
@@ -46,21 +47,21 @@ export function HeroPath({title,steps}:{title:string;steps:{label:string;sub:str
       <rect className="hh-chip" x={116} y={128} width={96} height={24} rx={12}/><text className="hh-s" x={164} y={144} textAnchor="middle">{ticket.label}</text>
     </g>
     <g className="hh-card hh-agent">
-      <rect x={240} y={130} width={300} height={196} rx={30}/>
-      <text className="hh-h" x={266} y={168}>{agent.label}</text><text className="hh-s" x={514} y={166} textAnchor="end">{agent.sub}</text>
-      <rect className="hh-chip" x={262} y={184} width={256} height={86} rx={18}/>
-      <text className="hh-t" x={280} y={212}>&gt;</text>
-      <rect className="hh-bar" x={298} y={202} width={140} height={10} rx={5}/><rect className="hh-bar" x={298} y={222} width={190} height={10} rx={5}/><rect className="hh-bar" x={298} y={242} width={100} height={10} rx={5}/>
-      <rect className="hh-ink" x={404} y={240} width={7} height={14} rx={2}/>
-      <rect className="hh-chip" x={262} y={284} width={112} height={28} rx={14}/><circle className="hh-ink" cx={280} cy={298} r={4}/><text className="hh-s" x={292} y={302}>{branch.label}</text>
+      <rect x={232} y={130} width={262} height={196} rx={30}/>
+      <text className="hh-h" x={256} y={168}>{agent.label}</text><text className="hh-s" x={472} y={166} textAnchor="end">{agent.sub}</text>
+      <rect className="hh-chip" x={254} y={184} width={218} height={86} rx={18}/>
+      <text className="hh-t" x={272} y={212}>&gt;</text>
+      <rect className="hh-bar" x={290} y={202} width={130} height={10} rx={5}/><rect className="hh-bar" x={290} y={222} width={164} height={10} rx={5}/><rect className="hh-bar" x={290} y={242} width={96} height={10} rx={5}/>
+      <rect className="hh-ink" x={392} y={240} width={7} height={14} rx={2}/>
+      <rect className="hh-chip" x={254} y={284} width={112} height={28} rx={14}/><circle className="hh-ink" cx={272} cy={298} r={4}/><text className="hh-s" x={284} y={302}>{branch.label}</text>
     </g>
     <g className="hh-card hh-human">
-      <rect x={512} y={236} width={198} height={114} rx={26}/>
-      <text className="hh-h" x={536} y={272}>{decision.label}</text><text className="hh-s" x={536} y={292}>{decision.sub}</text>
-      <rect className="hh-chip" x={536} y={308} width={74} height={28} rx={14}/><text className="hh-s" x={573} y={326} textAnchor="middle">назад</text>
-      <rect className="hh-ink" x={618} y={308} width={74} height={28} rx={14}/><text className="hh-on-ink" x={655} y={326} textAnchor="middle">{main.label}</text>
+      <rect x={512} y={236} width={198} height={108} rx={26}/>
+      <text className="hh-h" x={536} y={270}>{decision.label}</text><text className="hh-s" x={536} y={288}>{decision.sub}</text>
+      <rect className="hh-chip" x={536} y={302} width={74} height={28} rx={14}/><text className="hh-s" x={573} y={320} textAnchor="middle">назад</text>
+      <rect className="hh-ink" x={618} y={302} width={74} height={28} rx={14}/><text className="hh-on-ink" x={655} y={320} textAnchor="middle">{main.label}</text>
     </g>
-    <g className="hi-accent"><rect x={592} y={360} width={118} height={34} rx={17}/><text x={651} y={382} textAnchor="middle">{deploy.label}</text></g>
+    <g className="hi-accent"><rect x={592} y={364} width={118} height={32} rx={16}/><text x={651} y={385} textAnchor="middle">{deploy.label}</text></g>
     </g>
   </svg>;
 }
