@@ -28,7 +28,8 @@ export function ChapterTabBar({title,current,tabs}:{title:string;current:TabId;t
   },[current]);
   useEffect(()=>{
     const node=bar.current,mark=node?.previousElementSibling;if(!node||!mark||typeof IntersectionObserver==='undefined')return;
-    // Полоса прилипла, когда низ баннера над ней (с промежутком 8 px) ушёл под шапку: тогда она сжимается.
+    // Полоса прилипает, когда низ баннера над ней уходит на 8 px (промежуток) выше верха прилипания: тогда она сжимается.
+    // Граница root смещена на промежуток вниз (rootMargin = gap − top), иначе пилюля сжималась бы на 16 px раньше.
     // Высота шапки меняется с шириной окна, поэтому отступ прилипания пересчитывается, а observer пересоздаётся.
     const gap=parseFloat(getComputedStyle(node).getPropertyValue('--ct-tabs-gap'))||8;
     let observer:IntersectionObserver|undefined,top=-1;
@@ -36,7 +37,7 @@ export function ChapterTabBar({title,current,tabs}:{title:string;current:TabId;t
       const next=headerBottom();if(next===top&&observer)return;top=next;
       node.closest<HTMLElement>('.ct')?.style.setProperty('--ct-sticky-top',`${top}px`);
       observer?.disconnect();
-      observer=new IntersectionObserver(([entry])=>setStuck(!entry.isIntersecting&&entry.boundingClientRect.top<(entry.rootBounds?.top??top)),{rootMargin:`-${top+gap}px 0px 0px 0px`,threshold:0});
+      observer=new IntersectionObserver(([entry])=>setStuck(!entry.isIntersecting&&entry.boundingClientRect.top<(entry.rootBounds?.top??top)),{rootMargin:`${gap-top}px 0px 0px 0px`,threshold:0});
       observer.observe(mark);
     };
     watch();addEventListener('resize',watch);

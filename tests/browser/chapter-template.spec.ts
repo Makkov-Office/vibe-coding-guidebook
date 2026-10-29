@@ -42,7 +42,8 @@ test('chapter template: banner of two cards, full-width tabs condense into a flo
  // P5-05: баннер — текстовая карточка и визуал; ≤ 600 px визуал скрыт, ≤ 840 px карточки в столбик.
  await page.setViewportSize({width:1440,height:900});await open(page,'/design/chapters/08/apply');
  const banner=page.locator('.ct-banner');await expect(banner.locator('.ct-kicker')).toHaveText('Процесс · Глава 08');
- await expect(banner.getByRole('img',{name:/Чек-лист preflight/})).toBeVisible();
+ // Визуал декоративный (P3-07 review): виден, но скрыт от вспомогательных технологий.
+ await expect(banner.locator('.ct-banner-visual svg.cv--preflight')).toBeVisible();await expect(banner.locator('.ct-banner-visual')).toHaveAttribute('aria-hidden','true');
  const [text,visual]=[(await banner.locator('.ct-banner-text').boundingBox())!,(await banner.locator('.ct-banner-visual').boundingBox())!];
  expect(Math.abs(text.y-visual.y)).toBeLessThanOrEqual(1);expect(visual.x).toBeGreaterThan(text.x+text.width);
  for(const width of [1440,360]){
@@ -76,7 +77,8 @@ test('chapter template: banner of two cards, full-width tabs condense into a flo
 test('chapter template: other chapters get the calm generic banner visual',async({page})=>{
  await page.setViewportSize({width:1024,height:900});await open(page,'/design/chapters/07/how-it-works');
  await expect(page.locator('.ct-banner .ct-kicker')).toHaveText('Процесс · Глава 07');
- await expect(page.locator('.ct-banner').getByRole('img',{name:/Глава 07: четыре таба/})).toBeVisible();
+ // Общий визуал: номер главы и четыре таба, выделен текущий (здесь «Как устроено»); визуал декоративный.
+ await expect(page.locator('.ct-banner-visual svg.cv')).toBeVisible();await expect(page.locator('.ct-banner-visual .cv-pill--strong text')).toHaveText('Как устроено');
  // 840 px и уже — карточки в столбик.
  await page.setViewportSize({width:768,height:900});
  const [text,visual]=[(await page.locator('.ct-banner-text').boundingBox())!,(await page.locator('.ct-banner-visual').boundingBox())!];expect(visual.y).toBeGreaterThan(text.y+text.height-1);

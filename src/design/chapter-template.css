@@ -16,28 +16,15 @@
 .ct-hero .agent-copy{justify-content:flex-start;margin:0}.ct-hero .agent-copy-status{text-align:start}
 .ct-chips .project-icon{width:var(--icon-size-s);height:var(--icon-size-s)}
 
-/* Баннер главы (P5-05): две карточки рядом, как «Страница темы» RD-01 и M3 Buttons.
-   Значения — контракт баннера P3-07 (.page-hero): радиус --radius-xl, промежуток 8 px, текстовая карточка 40/40/34,
-   надзаголовок моно, h1 Unbounded 500; ≤ 840 px — столбик, ≤ 600 px визуал скрыт. .shell-wide — слот P3-07 на всю ширину. */
-.ct-banner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-2);min-height:340px;margin-top:var(--space-2)}
-.ct-banner-text{container-type:inline-size;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:var(--space-3);min-width:0;padding:var(--space-10) var(--space-10) 34px;border:var(--stroke-border) solid var(--color-outline-variant);border-radius:var(--radius-xl);background:var(--color-surface)}
-.ct-kicker{margin:0;color:var(--color-on-surface-variant);font:500 var(--type-label)/1.4 var(--font-mono);font-stretch:var(--font-mono-stretch)}
-.ct-banner .ct-title h1{margin:0;font:500 clamp(1.75rem,.5rem + 7cqi,3.5rem)/1.08 var(--font-display);letter-spacing:var(--tracking-display);overflow-wrap:break-word;text-wrap:balance}
-.ct-banner .ct-title h1 .project-icon{display:none}
-.ct-banner .ct-title h1 .term-link{color:inherit}
-.ct-lede{max-width:60ch;margin:0;color:var(--color-on-surface-variant);font:400 var(--type-body)/1.5 var(--font-text)}
-.ct-banner .ct-chips li{border:0;background:var(--color-surface-container-low)}
-.ct-banner .agent-copy{justify-content:flex-start;margin:0}.ct-banner .agent-copy-status{text-align:start}
-.ct-banner-visual{display:grid;place-items:center;min-width:0;padding:var(--space-6);border-radius:var(--radius-xl);background:var(--color-surface-container);overflow:hidden}
-@media (max-width:840px){.ct-banner{grid-template-columns:minmax(0,1fr);min-height:0}.ct-banner-visual{min-height:240px}}
-@media (max-width:600px){.ct-banner-text{padding:var(--space-6)}.ct-banner-visual{display:none}}
+/* Баннер главы (P5-05): классы и значения баннера страницы — .page-hero (src/design/page-hero.css, P3-07);
+   здесь своих правил нет. .shell-wide — слот P3-07 на всю ширину рабочей области. */
 
 /* Визуал баннера (ChapterVisual.tsx): примитивы «Чертежа», только токены. */
 .cv{display:block;width:100%;max-width:520px;height:auto;overflow:visible}
 .cv-card{fill:var(--color-surface);stroke:var(--color-on-surface);stroke-width:var(--stroke-line)}
 .cv-check{fill:var(--color-surface-container-high)}
 .cv-tick{fill:none;stroke:var(--color-on-surface);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.cv-label,.cv-pill text{fill:var(--color-on-surface);font:500 11px var(--font-mono);font-stretch:var(--font-mono-stretch)}
+.cv-label,.cv-pill text{fill:var(--color-on-surface);font:500 13px var(--font-mono);font-stretch:var(--font-mono-stretch)}
 .cv-number{fill:var(--color-on-surface);font:500 56px var(--font-display);letter-spacing:var(--tracking-display)}
 .cv-line{fill:none;stroke:var(--color-on-surface-variant);stroke-width:var(--stroke-line);opacity:.5}
 .cv-pill rect{fill:var(--color-surface);stroke:var(--color-on-surface);stroke-width:var(--stroke-line)}

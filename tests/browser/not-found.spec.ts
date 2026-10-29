@@ -7,3 +7,9 @@ test('unknown route keeps the rail and 404 text after hydration without page err
  await expect(page.locator('.nav-rail')).toBeVisible();await expect(page.getByRole('heading',{name:'404'})).toBeVisible();await expect(page.getByText('This page could not be found.')).toBeVisible();
  await expect(page.getByText(/This page couldn.t load/)).toHaveCount(0);expect(errors).toEqual([]);
 });
+test('without JavaScript the 404 page still links to «Главная» (P3-07: no header)',async({browser})=>{
+ const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();
+ const response=await page.goto((process.env.HANDBOOK_URL||'http://localhost:3000')+'/nope');expect(response!.status()).toBe(404);
+ await expect(page.locator('.sidebar a[href="/"]')).toBeVisible();await expect(page.locator('.sidebar a[href="/"]')).toHaveText('Главная');
+ await context.close();
+});
