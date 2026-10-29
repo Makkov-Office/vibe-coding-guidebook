@@ -34,7 +34,7 @@ export function HeroPath({title,steps}:{title:string;steps:{label:string;sub:str
       <path className="hh-plus" d="M446 40h12M452 34v12M120 300h12M126 294v12M718 250h12M724 244v12M300 384h12M306 378v12"/>
     </g>
     <g transform="translate(400 210) scale(.94) translate(-400 -214)">
-    <path className="hi-ln" d="M192 164V210Q192 232 214 232H236M494 208H540Q560 208 560 188M650 182V236M651 344V364" pathLength={1}/>
+    <path className="hi-ln" d="M192 164V210Q192 232 214 232H236M494 208H540Q560 208 560 180M650 182V236M651 344V364" pathLength={1}/>
     <g className="hh-card hh-practice">
       <rect x={506} y={34} width={204} height={148} rx={26}/>
       <text className="hh-h" x={530} y={70}>{review.label}</text><text className="hh-s" x={530} y={90}>{review.sub}</text>
