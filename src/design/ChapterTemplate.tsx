@@ -24,8 +24,6 @@ export type ChapterTemplateProps={
   pageData?:Partial<PageData>;
   /** Место под мини-таймлайн DEMO-42 и мини-карту системы (бриф 9.3–9.4). */
   aside?:ReactNode;
-  /** Действия под hero, например «Скопировать для агента» (P8-03). */
-  tools?:ReactNode;
   /** Содержимое таба сверх текста и панелей (тренажёр таба «Проверь себя», P7-03): идёт после них, таб с ним не пустой. */
   children?:ReactNode;
 };
@@ -49,7 +47,7 @@ const entities:Record<string,string>={amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nb
 const decode=(text:string)=>text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi,(all,code:string)=>code[0]==='#'?String.fromCodePoint(code[1].toLowerCase()==='x'?parseInt(code.slice(2),16):+code.slice(1)):entities[code.toLowerCase()]??all);
 export function lede(html:string){const m=/<p\b[^>]*>([\s\S]*?)<\/p>/.exec(html);return m?decode(m[1].replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim()):'';}
 
-export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,aside,tools,children}:ChapterTemplateProps){
+export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,aside,children}:ChapterTemplateProps){
   const chapter=handbook.chapters.find(c=>c.id===chapterId);
   if(!chapter?.tabs||!chapter.heading)throw new Error(`ChapterTemplate: ${chapterId} has no tabs`);
   const tab=chapter.tabs.find(t=>t.id===tabId);
@@ -81,7 +79,6 @@ export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,a
             {meta?.level&&<li><RoleIcon role="level"/>{meta.level}</li>}
             {meta?.template&&<li><RoleIcon role="template"/>{meta.template}</li>}
           </ul>
-          {tools}
         </div>
         <div className="ct-banner-visual page-hero__visual" aria-hidden="true"><ChapterVisual chapterId={chapterId} number={chapter.number} tabs={tabs.map(t=>t.label)} current={Math.max(0,index)}/></div>
       </header>

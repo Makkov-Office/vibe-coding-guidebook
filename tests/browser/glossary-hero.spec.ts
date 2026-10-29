@@ -17,7 +17,8 @@ test('glossary hero: title, chips, lead, then filter, then topics',async({page})
  await expect(hero.locator('h1 .permalink')).toHaveCount(0);
  await expect(hero.getByRole('list',{name:'О глоссарии'}).locator('li')).toHaveText([plural(generated.terms.length,['термин','термина','терминов']),plural(generated.topics.length,['тема','темы','тем']),'2 уровня']);
  await expect(hero.locator('.page-hero__description')).toContainText('Сначала выбери тему');
- await expect(hero.getByRole('button',{name:'Скопировать для агента'})).toBeVisible();
+ // «Скопировать для агента» снята решением founder 29.10.2026 (P8-05).
+ await expect(hero.getByRole('button',{name:'Скопировать для агента'})).toHaveCount(0);
  // Порядок: hero → фильтр → первая тема.
  const order=await page.evaluate(()=>{const at=(s:string)=>document.querySelector(s)!;const after=(a:Element,b:Element)=>!!(a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_FOLLOWING);return after(at('.glossary-page>.page-hero'),at('.glossary-filter'))&&after(at('.glossary-filter'),at('.ct-prose h2'));});
  expect(order).toBe(true);

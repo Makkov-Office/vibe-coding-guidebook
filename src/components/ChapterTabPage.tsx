@@ -1,7 +1,5 @@
 import {handbook} from './HandbookPage';
 import {LearningProgress} from './LearningProgress';
-import {CopyForAgent} from './CopyForAgent';
-import agentPack from '../content/agent-pack.json';
 import {chapterTabHrefs} from '../content/chapter-routes';
 import type {ReactNode} from 'react';
 import type {TabId} from '../content/types';
@@ -10,7 +8,5 @@ import {ChapterTemplate} from '../design/ChapterTemplate';
 export function ChapterTabPage({chapterId,tabId,children}:{chapterId:string;tabId:TabId;children?:ReactNode}){
  const reading=handbook.chapters.filter(c=>/^ch-\d{2}$/.test(c.id)),index=reading.findIndex(c=>c.id===chapterId);
  const link=(i:number)=>reading[i]&&{href:reading[i].href,label:reading[i].title};
- // The whole chapter in Markdown, the same on every tab (P8-03).
- const markdown=(agentPack.markdown as Record<string,string>)[chapterId];
- return <><ChapterTemplate chapterId={chapterId} tabId={tabId} hrefs={chapterTabHrefs(chapterId)} prev={link(index-1)} next={link(index+1)} tools={markdown&&<CopyForAgent href={markdown}/>}>{children}</ChapterTemplate><LearningProgress chapter={chapterId}/></>;
+ return <><ChapterTemplate chapterId={chapterId} tabId={tabId} hrefs={chapterTabHrefs(chapterId)} prev={link(index-1)} next={link(index+1)}>{children}</ChapterTemplate><LearningProgress chapter={chapterId}/></>;
 }
