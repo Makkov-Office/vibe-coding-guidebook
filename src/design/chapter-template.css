@@ -35,7 +35,7 @@
    Переход — max-width по одной кривой --ease; reduced motion и data-motion="off" обнуляют длительности.
    Высота самой полосы в обоих состояниях одна: иначе scroll anchoring сдвигает страницу (позиция чтения). */
 .ct-tabs{--ct-tabs-gap:8px;position:sticky;top:var(--ct-sticky-top);z-index:5;display:flex;justify-content:center;height:72px;margin-top:calc(var(--ct-tabs-gap) - var(--space-6));pointer-events:none}
-.ct-tabs-row{display:flex;align-items:center;gap:var(--space-1);width:100%;max-width:100%;height:72px;padding:var(--space-1);border-radius:var(--radius-full);background:var(--color-surface-container-low);pointer-events:auto;transition:max-width var(--dur-3) var(--ease),height var(--dur-3) var(--ease),margin-top var(--dur-3) var(--ease),box-shadow var(--dur-3) var(--ease),background-color var(--dur-2) var(--ease)}
+.ct-tabs-row{display:flex;align-items:center;gap:var(--space-1);width:100%;max-width:100%;height:72px;padding:var(--space-1);border-radius:var(--radius-full);background:var(--color-surface-container-low);pointer-events:auto;transition:max-width var(--dur-3) var(--ease),height var(--dur-3) var(--ease),margin-top var(--dur-3) var(--ease),background-color var(--dur-2) var(--ease)}
 .ct-tabs ul{display:flex;flex:1 1 auto;min-width:0;height:100%;gap:var(--space-1);margin:0;padding:0;list-style:none;overflow-x:auto;scrollbar-width:none}
 .ct-tabs ul::-webkit-scrollbar{display:none}
 .ct-tabs li{display:flex;flex:1 0 auto}
@@ -44,7 +44,7 @@
 .ct-tabs a[aria-current="page"]{background:var(--color-primary-container);color:var(--color-on-primary-container)}
 .ct-tabs a:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
 .ct-tabs-pill{flex:none;max-width:0;min-width:0;padding:0;opacity:0;overflow:hidden;color:var(--color-on-surface);font:500 var(--type-small)/1.2 var(--font-display);letter-spacing:var(--tracking-display);white-space:nowrap;text-overflow:ellipsis;transition:max-width var(--dur-3) var(--ease),opacity var(--dur-2) var(--ease),padding var(--dur-3) var(--ease)}
-.ct-tabs[data-stuck] .ct-tabs-row{max-width:calc(100% - 2 * var(--container-side));height:56px;margin-top:var(--space-2);background:var(--color-surface);box-shadow:var(--shadow-2)}
+.ct-tabs[data-stuck] .ct-tabs-row{max-width:calc(100% - 2 * var(--container-side));height:56px;margin-top:var(--space-2);background:var(--color-surface);outline:var(--stroke-border) solid var(--color-outline-variant);outline-offset:calc(var(--stroke-border) * -1)}
 .ct-tabs[data-stuck] .ct-tabs-pill{max-width:12rem;padding:0 var(--space-2) 0 var(--space-4);opacity:1}
 .ct-tabs[data-stuck] a{padding:0 var(--space-4)}
 @media (max-width:840px){.ct-tabs a{padding:0 var(--space-4)}}
@@ -95,7 +95,7 @@
 /* Соседние страницы. */
 .ct-pager{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);padding-block:var(--space-6) var(--space-10)}
 .ct-pager-link{display:grid;gap:var(--space-1);min-height:var(--touch-target);padding:var(--space-4) var(--space-5);border:var(--stroke-border) solid var(--color-outline-variant);border-radius:var(--radius-l);background:var(--color-surface);color:var(--color-on-surface);text-decoration:none;transition:background-color var(--dur-1) var(--ease)}
-.ct-pager-link:hover{background:var(--color-surface-container-low)}
+.ct-pager-link:hover{background:var(--color-surface-container);border-color:var(--color-outline-variant-strong)}
 .ct-pager-link:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
 .ct-pager-link span{display:inline-flex;align-items:center;gap:var(--space-1);color:var(--color-on-surface-variant);font:500 var(--type-label)/1.3 var(--font-text)}
 .ct-pager-link strong{font:600 var(--type-small)/1.3 var(--font-text)}

@@ -84,11 +84,12 @@ test('palette keeps the approved brand and concept values', () => {
     ['#FFFFFF', '#FDDCD4', '#FBB9A9', '#F9967D', '#F87352', '#AA6858', '#84635A', '#5D5D5D']);
   assert.deepEqual([palette.brand['module-lilac'], palette.brand['module-mint'], palette.brand['module-peach']],
     ['#E4CAFF', '#CAFFDA', '#FFE9CA']);
+  // P2-07 (#108, решение founder 29.10.2026): плоский абрикосовый акцент, холодные нейтрали, новые цвета-смыслы.
   const { light, dark } = palette.themes;
   assert.deepEqual([light.background, light['on-surface'], light['on-surface-variant'], light.primary],
-    ['#FAFAFA', '#101010', '#595959', '#B4401F']);
-  assert.deepEqual([light['primary-container'], light['on-primary-container'], light['on-action-gradient']],
-    ['#FDE6DF', '#7A2A16', '#101010']);
-  assert.deepEqual(light['action-gradient'], ['#F9967D', '#F87352', '#E8613F']);
-  assert.deepEqual([dark.background, dark.primary, dark['on-surface-variant']], ['#101010', '#F87352', '#B2B2B2']);
+    ['#F6F7F9', '#111318', '#545A64', '#9E4A22']);
+  assert.deepEqual([light.action, light['action-hover'], light['on-action']], ['#F6B48F', '#F0A077', '#111318']);
+  assert.deepEqual([dark.background, dark.primary, dark.action, dark['on-surface-variant']], ['#0F1115', '#F2B08C', '#EFAB85', '#ADB3BC']);
+  assert.deepEqual([light['agent-container'], light['practice-container'], light['human-container']], ['#E8EBFA', '#E0F1E9', '#F7E6EB']);
+  assert.deepEqual([dark['agent-container'], dark['practice-container'], dark['human-container']], ['#1D2236', '#16261F', '#2A1E27']);
 });
