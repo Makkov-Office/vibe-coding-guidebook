@@ -14,14 +14,14 @@
 @media(max-width:599px){.breadcrumbs ol{flex-wrap:nowrap}.breadcrumbs li{flex-shrink:0}.breadcrumbs li.crumb-page{flex-shrink:1;min-width:3.5em}.breadcrumbs ol:has(>li:nth-child(4))>li:nth-child(2){display:none}.breadcrumbs .crumb-page>a{line-height:var(--touch-target)}.breadcrumbs .crumb-page>*{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
 @media print{.breadcrumbs{display:none}}
 
-/* Поиск вверху rail; «Глоссарий» в шапке нужен только там, где rail нет. */
+/* Поиск вверху rail (шапки нет, P3-07). */
 /* Same shape as a rail item (nav-rail.css), but not a section: it stays out of the roving focus. */
 .rail-search{display:flex;flex-direction:column;align-items:center;gap:var(--space-1);width:100%;min-height:56px;margin-bottom:var(--space-1);padding:var(--space-1) 0;border:0;border-radius:0;background:none;color:var(--color-on-surface-variant);font:600 var(--type-label) var(--font-text);text-align:center;cursor:pointer}
 .rail-search:disabled{opacity:.6;cursor:default}
 .rail-search:hover:not(:disabled) .rail-indicator{background:color-mix(in srgb,var(--color-on-surface) 8%,transparent)}
 .rail-search:focus-visible{outline:none}
 .rail-search:focus-visible .rail-indicator{outline:2px solid var(--color-primary);outline-offset:2px}
-@media(min-width:1024px){.header-glossary{display:none!important}}
+
 
 /* Группы результатов и подсказок в диалоге поиска. */
 .search-group{display:flex;flex-direction:column;gap:var(--space-1)}

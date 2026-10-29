@@ -38,14 +38,15 @@ test('chapter template: hero, tabs, on this page, neighbours and empty tab',asyn
  expect(errors).toEqual([]);
 });
 
-test('chapter template: sticky tab bar condenses into a pill right under the header',async({page})=>{
+test('chapter template: sticky tab bar condenses into a pill at the top of the window',async({page})=>{
  for(const width of [1440,360]){
   await page.setViewportSize({width,height:900});await open(page,'/design/chapters/08/apply');
   const bar=page.locator('.ct-tabs');await expect(bar).not.toHaveAttribute('data-stuck');await expect(page.locator('.ct-tabs-pill')).toBeHidden();
-  await page.mouse.wheel(0,1200);
+  // Колесо над текстом, а не в углу окна: там с P3-07 (шапки нет) rail, он прокручивается сам.
+  await page.mouse.move(width-24,450);await page.mouse.wheel(0,1200);
   await expect(bar).toHaveAttribute('data-stuck','true');await expect(page.locator('.ct-tabs-pill')).toHaveText('Preflight');
-  // Между шапкой и полосой нет щели, через которую виден текст.
-  const header=(await page.locator('.topbar').boundingBox())!;expect(Math.abs((await bar.boundingBox())!.y-(header.y+header.height)),`${width}`).toBeLessThanOrEqual(1);
+  // Шапки нет (P3-07): полоса прилипает к верхнему краю окна без щели, через которую виден текст.
+  expect(Math.abs((await bar.boundingBox())!.y),`${width}`).toBeLessThanOrEqual(1);
   await page.mouse.wheel(0,-5000);await expect(bar).not.toHaveAttribute('data-stuck');
  }
  // Служебные образцы не перезаписывают позицию чтения настоящей главы.

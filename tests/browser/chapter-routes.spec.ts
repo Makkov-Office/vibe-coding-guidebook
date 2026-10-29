@@ -1,6 +1,6 @@
 import {test,expect,type Page} from '@playwright/test';
 // P5-02b: chapter 08 lives at /flow/08-preflight and its tabs; the old address and its anchors lead to the right tab.
-async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
+async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 const tabs=(page:Page)=>page.getByRole('navigation',{name:'Табы главы'});
 
 test('the chapter opens on its overview tab and switches tabs by address',async({page})=>{
@@ -63,8 +63,8 @@ test('the glossary and the cheat sheet live at their new addresses; links lead t
  await expect(page.locator('main h1')).toContainText('Операционная памятка');
  await expect(page.locator('.sidebar a[href="/reference/22-cheatsheet"]')).toHaveAttribute('aria-current','page');
  await expect(page.locator('main .term-link').first()).toHaveAttribute('href',/^\/reference\/glossary#term-/);
- await expect(page.locator('.header-glossary')).toHaveAttribute('href','/reference/glossary');
- await page.setViewportSize({width:800,height:900});await page.locator('.header-glossary').click();
+ // P3-07: the header link is gone; below 1024 px the glossary is in «Разделы» (the current section starts open).
+ await page.setViewportSize({width:800,height:900});await page.locator('.bottom-bar').getByRole('button',{name:'Разделы'}).click();await page.locator('#section-menu a[href="/reference/glossary"]').click();
  await expect(page).toHaveURL(/\/reference\/glossary$/);await expect(page.locator('main [data-chapter="ch-23"]')).toBeVisible();
  await expect(page).toHaveTitle(/^Глоссарий · /);
  // The old address of a heading anchor is found in the registry and opens the new page.

@@ -5,7 +5,7 @@ type Card={id:string;scenario:string;question:string;options:{id:string;label:st
 const data:{drills:{id:string;chapter:string;title:string;cards:Card[]}[]}=JSON.parse(fs.readFileSync('src/content/generated.json','utf8'));
 const drill=data.drills.find(item=>item.chapter==='ch-08')!;
 const total=drill.cards.length;
-async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
+async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 const label=(card:Card,id:string)=>card.options.find(option=>option.id===id)!.label;
 
 test('the drill is played card by card, with feedback, a result and a saved best',async({page})=>{

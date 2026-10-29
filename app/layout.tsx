@@ -11,6 +11,7 @@ import "../src/design/chapter-template.css";
 import "../src/design/home.css";
 import "../src/components/drill.css";
 import "../src/design/glossary.css";
+import "../src/design/page-hero.css";
 import {brandTitle} from "../src/design/brand";
 import {uiPrefsScript} from "../src/design/ui-prefs.mjs";
 

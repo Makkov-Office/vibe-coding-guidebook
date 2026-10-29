@@ -12,9 +12,6 @@
 .term-copy-fallback{grid-column:1/-1;margin:var(--space-2) 0 0;font-size:var(--type-label);color:var(--color-on-surface-variant);overflow-wrap:anywhere}
 .term-copy-fallback code{user-select:all}
 
-/* Hero страницы (P6-07c): разметка и стили шаблона главы (.ct-hero, chapter-template.css); здесь только отличия. */
+/* Баннер страницы — PageHero (P3-07, page-hero.css); абзацы описания там же разделены только между собой. */
 .chapter.glossary-page{padding-top:0}
-.glossary-lead{max-width:65ch;color:var(--color-on-surface-variant)}
-/* Отступы только между абзацами: скрытая служебная заметка (последний p) не оставляет поля под текстом. */
-.glossary-lead>p{margin:0}.glossary-lead>p+p{margin-top:var(--space-3)}
 .glossary-page>.glossary-filter{margin:0}

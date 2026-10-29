@@ -1,10 +1,9 @@
 /* Шаблон страницы главы (P5-02): только токены app/tokens.css и примитивы P2-04.
    Спецификация — docs/design/visual-language.md, раздел «Шаблон страницы главы». */
 
-.ct{--ct-sticky-top:68px;display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-6);min-width:0}
+.ct{--ct-sticky-top:0px;display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-6);min-width:0}
 
-/* Высота шапки .topbar (app/globals.css): 68 px, уже 768 px — 60 px. */
-@media (max-width:767px){.ct{--ct-sticky-top:60px}}
+/* Шапки над страницей нет (P3-07): полоса табов прилипает к верхнему краю окна. */
 
 /* Hero: номер главы, название, чипы. */
 .ct-hero{display:grid;gap:var(--space-3);padding-top:var(--space-6)}
@@ -39,7 +38,7 @@
 
 /* Тело таба. */
 .ct-body{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-6);min-width:0}
-/* html уже даёт scroll-padding-top 120 px под шапку; сверху добавляется место под прилипшую полосу. */
+/* html даёт scroll-padding-top 56 px; сверху добавляется место под прилипшую полосу. */
 .ct-prose h2,.ct-prose h3{scroll-margin-top:32px}
 
 /* «На этой странице» в колонке текста: там, где нет правой колонки Reader (local-outline). */

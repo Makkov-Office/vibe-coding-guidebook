@@ -4,7 +4,7 @@ import fs from 'node:fs';
 const data:{terms:{id:string;topic:string;level:string}[]}=JSON.parse(fs.readFileSync('src/content/generated.json','utf8'));
 const basic=data.terms.filter(term=>term.level==='basic'),professional=data.terms.filter(term=>term.level==='professional');
 const gitBasic=basic.filter(term=>term.topic.startsWith('23.3.'));
-async function ready(page:import('@playwright/test').Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
+async function ready(page:import('@playwright/test').Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 
 test('level filter counts and hides terms; basic Git terms are collapsed until needed',async({page})=>{
  await ready(page,'/reference/glossary');
