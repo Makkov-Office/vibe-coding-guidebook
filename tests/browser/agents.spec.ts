@@ -1,5 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
-// Agent delivery (P8-03): /agents, the archive download, llms.txt and «Скопировать для агента».
+// Agent delivery (P8-03): /agents, the archive download, llms.txt; page Markdown without the UI button (P8-05).
 async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 async function settled(page:Page){await page.evaluate(()=>Promise.all(document.getAnimations().filter(a=>Number.isFinite(Number(a.effect?.getComputedTiming().endTime))).map(a=>a.finished.catch(()=>undefined))));}
 
@@ -18,23 +18,18 @@ test('/agents offers the archive, llms.txt and the pack description',async({page
  await expect(page.locator('.route-loading')).toBeEmpty();
 });
 
-test('«Скопировать для агента» copies the page Markdown from the keyboard and announces it',async({page,context,request})=>{
- await context.grantPermissions(['clipboard-read','clipboard-write']);
- await ready(page,'/flow/08-preflight');
- const button=page.getByRole('button',{name:'Скопировать для агента'});
- // The live region is in the accessibility tree before the first message, so screen readers announce it.
- expect(await page.locator('.agent-copy [role=status]').evaluate(e=>getComputedStyle(e).display)).not.toBe('none');
- await button.focus();await page.keyboard.press('Enter');
- await expect(page.locator('.agent-copy [role=status]')).toHaveText(/скопирован/);
+// P8-05: «Скопировать для агента» и «Markdown страницы» сняты решением founder 29.10.2026; Markdown страниц по-прежнему раздаётся агентам.
+test('pages have no «Скопировать для агента» or «Markdown страницы», the page Markdown is still served',async({page,request})=>{
  const expected=await (await request.get('/flow/08-preflight.md')).text();
  // The address the pack used before the move still serves the same Markdown.
  expect(await (await request.get('/chapters/08.md')).text()).toBe(expected);
  expect(expected).toMatch(/^## 08\. Preflight/);
- expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe(expected);
- await expect(page.getByRole('link',{name:'Markdown страницы'})).toHaveAttribute('href','/flow/08-preflight.md');
- // Every tab of the chapter, the introduction and the tool reviews have the button too.
- for(const [path,md] of [['/flow/08-preflight/apply','/flow/08-preflight.md'],['/flow/08-preflight/check','/flow/08-preflight.md'],['/start/00-how-to-read','/start/00-how-to-read.md'],['/tools/claude-code','/tools/claude-code.md'],['/reference/glossary','/reference/glossary.md']]){
-  await ready(page,path);await expect(page.locator('.agent-copy a')).toHaveAttribute('href',md);
+ for(const [path,md] of [['/flow/08-preflight','/flow/08-preflight.md'],['/flow/08-preflight/apply','/flow/08-preflight.md'],['/flow/08-preflight/check','/flow/08-preflight.md'],['/start/00-how-to-read','/start/00-how-to-read.md'],['/tools/claude-code','/tools/claude-code.md'],['/reference/glossary','/reference/glossary.md']]){
+  await ready(page,path);
+  await expect(page.getByRole('button',{name:'Скопировать для агента'}),path).toHaveCount(0);
+  await expect(page.getByRole('link',{name:'Markdown страницы'}),path).toHaveCount(0);
+  await expect(page.locator('.agent-copy'),path).toHaveCount(0);
+  const r=await request.get(md);expect(r.status(),md).toBe(200);expect(await r.text(),md).toMatch(/^##? /);
  }
 });
 
