@@ -1,11 +1,11 @@
 /* Движение (docs/design/visual-language.md, раздел 7): только токены из tokens.css.
-   Четыре приёма; без анимации каждый элемент уже в итоговом состоянии, поэтому
+   Пять приёмов; без анимации каждый элемент уже в итоговом состоянии, поэтому
    reduced motion и data-motion="off" просто снимают анимации. */
 
 /* 1. Появление: прозрачность и сдвиг на --shift-appear. */
-.motion-appear{animation:motion-appear var(--dur-3) var(--ease) backwards}
-.motion-appear-fast{animation:motion-appear var(--dur-2) var(--ease) backwards}
-.motion-appear-x{animation:motion-appear-x var(--dur-3) var(--ease) backwards}
+.motion-appear{animation:motion-appear var(--dur-3) var(--ease-enter) backwards}
+.motion-appear-fast{animation:motion-appear var(--dur-2) var(--ease-enter) backwards}
+.motion-appear-x{animation:motion-appear-x var(--dur-3) var(--ease-enter) backwards}
 @keyframes motion-appear{from{opacity:0;transform:translateY(var(--shift-appear))}}
 @keyframes motion-appear-x{from{opacity:0;transform:translateX(var(--shift-appear))}}
 
@@ -21,6 +21,16 @@
 .motion-steps>*{animation:motion-step var(--dur-step) var(--ease) backwards;animation-delay:calc(var(--step,0) * var(--dur-step))}
 @keyframes motion-step{from{opacity:.3}}
 
+/* 5. Уход (P2-08): диалог поиска, меню разделов и панель контекста при закрытии гаснут и смещаются на --shift-appear
+   короче и с разгоном (--dur-exit, --ease-exit) — зеркало появления. display и overlay держатся до конца ухода
+   (transition-behavior: allow-discrete; где не поддерживается — закрытие мгновенное, как раньше). Закрытый диалог
+   не ловит клики, пока гаснет. */
+:is(.search-dialog,.section-menu,.context-panel){transition:opacity var(--dur-exit) var(--ease-exit),translate var(--dur-exit) var(--ease-exit),display var(--dur-exit) allow-discrete,overlay var(--dur-exit) allow-discrete}
+:is(.search-dialog,.section-menu,.context-panel):not([open]){opacity:0;translate:0 var(--shift-appear);pointer-events:none}
+.context-panel:not([open]){translate:var(--shift-appear) 0}
+:is(.search-dialog,.section-menu,.context-panel)::backdrop{transition:opacity var(--dur-exit) var(--ease-exit),display var(--dur-exit) allow-discrete,overlay var(--dur-exit) allow-discrete}
+:is(.search-dialog,.section-menu,.context-panel):not([open])::backdrop{opacity:0}
+
 /* Переход между страницами: View Transitions API, меняется только колонка чтения.
    Колонка выше экрана, и старая страница бывает прокручена далеко вниз: геометрию группы не
    анимируем (иначе снимок пролетит через экран), старый снимок убираем сразу, новый появляется. */
@@ -28,7 +38,7 @@
 ::view-transition-group(root),::view-transition-old(root),::view-transition-new(root){animation:none}
 ::view-transition-group(page){animation:none}
 ::view-transition-old(page){display:none}
-::view-transition-new(page){animation:motion-appear var(--dur-3) var(--ease) both}
+::view-transition-new(page){animation:motion-appear var(--dur-3) var(--ease-enter) both}
 
 /* Выключатель: системная настройка или data-motion="off" на <html>. */
 @media (prefers-reduced-motion:reduce){

@@ -46,7 +46,7 @@ a.bp-card:focus-visible{outline:2px solid var(--color-primary);outline-offset:2p
 .bp-button--tonal:hover{background:var(--color-surface-container-high);color:var(--color-on-surface)}
 .bp-button--text{background:transparent;color:var(--color-primary);padding:0 var(--space-3)}
 .bp-button--text:hover{background:var(--color-surface-container)}
-.bp-button .project-icon{transition:transform var(--dur-1) var(--ease)}
+.bp-button .project-icon{transition:transform var(--dur-shape) var(--ease-spring)}
 .bp-button:hover .project-icon{transform:translateX(2px)}
 
 /* Линия шага: пройденные загораются по одному слева направо (приём «Смена шага»). */

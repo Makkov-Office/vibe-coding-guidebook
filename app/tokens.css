@@ -34,13 +34,27 @@
   --type-label:.75rem;
   --type-mono:.8125rem;
 
-  /* Формы: радиусы варианта f, сетка 4 px, касание 44 px (раздел 6). */
-  --radius-xs:4px;
-  --radius-s:8px;
-  --radius-m:12px;
-  --radius-l:16px;
-  --radius-xl:20px;
+  /* Формы: шкала M3 Expressive, сильнее варианта f (P2-08, решение founder 29.10.2026), сетка 4 px, касание 44 px (раздел 6).
+     l — карточки (M3 extra-large 28), xl — баннеры и hero (M3 extra-large-increased 32). */
+  --radius-xs:6px;
+  --radius-s:12px;
+  --radius-m:16px;
+  --radius-l:28px;
+  --radius-xl:32px;
   --radius-full:999px;
+  /* Смена формы кликабельных (P2-08, src/design/interaction.css): в покое максимально круглые, на hover углы чуть
+     притупляются, при нажатии — ещё сильнее (как pressedShape у кнопок M3 Expressive). Пилюля — половина высоты
+     (кнопки до 48 px, табы главы 64 px), а не 999px: иначе переход от 999px к 16px видно только в последний миг;
+     радиус больше половины высоты браузер сам ужимает до пилюли. */
+  --shape-pill:24px;
+  --shape-pill-l:32px;
+  --shape-pill-l-hover:22px;
+  --shape-pill-l-press:16px;
+  --shape-pill-hover:16px;
+  --shape-pill-press:10px;
+  --shape-card:var(--radius-l);
+  --shape-card-hover:20px;
+  --shape-card-press:16px;
   --space-1:4px;
   --space-2:8px;
   --space-3:12px;
@@ -69,7 +83,20 @@
   --dur-1:120ms;
   --dur-2:240ms;
   --dur-3:480ms;
-  --shift-appear:6px;
+  --shift-appear:8px;
+  /* Плавность (P2-08): появление тормозит в конце, уход разгоняется (пара emphasized из M3); форма — пружина
+     с перелётом ~4 % (linear(), где не поддерживается — общая кривая). Hover входит быстрее, чем уходит. */
+  --ease-enter:cubic-bezier(.05,.7,.1,1);
+  --ease-exit:cubic-bezier(.3,0,.8,.15);
+  /* Затухание следа по клику: держится, потом ровно гаснет. */
+  --ease-fade:cubic-bezier(.4,0,.6,1);
+  --ease-spring:var(--ease);
+  --dur-hover:180ms;
+  --dur-hover-out:320ms;
+  --dur-press:90ms;
+  --dur-shape:560ms;
+  --dur-exit:200ms;
+  --dur-glow:680ms;
   /* Приёмы движения (раздел 7): прорисовка линии, бег точки, смена шага. */
   --dur-draw:900ms;
   --dur-dot:6s;
@@ -207,6 +234,11 @@
 
 /* Движение выключено: системная настройка prefers-reduced-motion или data-motion="off" на <html> (кнопки «Анимации» в rail больше нет, P3-09). */
 @media (prefers-reduced-motion:reduce){
-  :root{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--dur-draw:0ms;--dur-dot:0ms;--dur-step:0ms;--shift-appear:0px}
+  :root{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--dur-draw:0ms;--dur-dot:0ms;--dur-step:0ms;--dur-hover:0ms;--dur-hover-out:0ms;--dur-press:0ms;--dur-shape:0ms;--dur-exit:0ms;--dur-glow:0ms;--shift-appear:0px}
 }
-:root[data-motion=off]{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--dur-draw:0ms;--dur-dot:0ms;--dur-step:0ms;--shift-appear:0px}
+:root[data-motion=off]{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--dur-draw:0ms;--dur-dot:0ms;--dur-step:0ms;--dur-hover:0ms;--dur-hover-out:0ms;--dur-press:0ms;--dur-shape:0ms;--dur-exit:0ms;--dur-glow:0ms;--shift-appear:0px}
+
+/* Пружина формы: linear() есть в Chrome 113+, Safari 17.2+, Firefox 112+; иначе остаётся --ease. */
+@supports (transition-timing-function:linear(0,1)){
+  :root{--ease-spring:linear(0,.042,.143,.274,.415,.55,.671,.774,.857,.921,.968,1.001,1.022,1.033,1.038,1.038,1.035,1.031,1.025,1.02,1.015,1.011,1.007,1.004,1)}
+}
