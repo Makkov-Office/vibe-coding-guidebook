@@ -1,4 +1,4 @@
-// Шаблон страницы главы (P5-02, бриф 8.3): hero, полоса 4 табов, «На этой странице», соседние страницы, copy link.
+// Шаблон страницы главы (P5-02, бриф 8.3; P5-05 — баннер M3 из двух карточек): баннер, полоса 4 табов, «На этой странице», соседние страницы, copy link.
 // Данные — формат P5-01 (chapter.heading, chapter.tabs[]); адреса табов — chapterTabHrefs (P5-02b) или tabHrefs для образцов.
 import Link from 'next/link';
 import type {ReactNode} from 'react';
@@ -7,9 +7,11 @@ import type {Handbook,TabId} from '../content/types';
 import {chapterTabs as tabs} from '../content/chapter-routes';
 import {InteractivePanel} from '../components/InteractivePanel';
 import {ReaderPageData,type PageData} from '../components/ReaderPageData';
-import {Annotation,ButtonLink,RoleIcon} from './primitives';
+import {ButtonLink,RoleIcon} from './primitives';
 import {ChapterTabBar} from './ChapterTabBar';
 import {ChapterEnhancer} from './ChapterEnhancer';
+import {ChapterVisual} from './ChapterVisual';
+import urlMap from '../content/url-map.json';
 
 export type {TabId};
 export type PageLink={href:string;label:string};
@@ -39,6 +41,13 @@ export function shortTitle(title:string){return title.replace(/^\d+\.\s*/,'').sp
 // Заголовок главы — h1, заголовки таба на уровень выше (как в HandbookPage); старый «#» заменяет copy link.
 const lift=(html:string)=>html.replace(/<(\/?)h3\b/g,'<$1h2').replace(/<(\/?)h4\b/g,'<$1h3');
 const heading=(html:string)=>html.replace(/<a [^>]*class="permalink"[^>]*>#<\/a>/,'').replace(/^<h2/,'<h1').replace(/<\/h2>$/,'</h1>');
+/** Раздел главы из url-map: надзаголовок баннера «Процесс · Глава 08». */
+const sectionOf=(chapterId:string)=>{const page=urlMap.pages.find(p=>'chapter' in p&&p.chapter===chapterId&&!('alias' in p));return urlMap.sections.find(s=>s.id===page?.section)?.label;};
+/** Одна строка описания в баннере — первый абзац «Обзора» как текст (учебный текст не дублируется в коде). */
+// Текст первого абзаца без разметки; сущности компилятора (&quot;, &#x27; и др.) декодируются — React экранирует текст сам.
+const entities:Record<string,string>={amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:'\u00a0'};
+const decode=(text:string)=>text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi,(all,code:string)=>code[0]==='#'?String.fromCodePoint(code[1].toLowerCase()==='x'?parseInt(code.slice(2),16):+code.slice(1)):entities[code.toLowerCase()]??all);
+export function lede(html:string){const m=/<p\b[^>]*>([\s\S]*?)<\/p>/.exec(html);return m?decode(m[1].replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim()):'';}
 
 export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,aside,tools,children}:ChapterTemplateProps){
   const chapter=handbook.chapters.find(c=>c.id===chapterId);
@@ -52,6 +61,7 @@ export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,a
   const before=index>0?{href:hrefs[tabs[index-1].id],label:label(tabs[index-1].id),kind:'Предыдущий таб'}:prev&&{...prev,kind:'Предыдущая глава'};
   const after=index<tabs.length-1?{href:hrefs[tabs[index+1].id],label:label(tabs[index+1].id),kind:'Дальше'}:next&&{...next,kind:'Следующая глава'};
   const filled=chapter.tabs.find((t,i)=>i>index&&t.html)??chapter.tabs.find(t=>t.html&&t.id!==tabId);
+  const section=sectionOf(chapterId),summary=lede(chapter.tabs.find(t=>t.id==='overview')?.html??'');
   const panels=tab.panels.map(id=>handbook.panels.find(p=>p.chapter===chapterId&&p.id===id)).filter(p=>p!==undefined);
   // Термины и блоки кода — как в HandbookPage, но только для текста этого таба.
   const blocks=handbook.blocks.filter(b=>tab.html.includes(` id="${b.id}"`));
@@ -61,17 +71,21 @@ export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,a
   return <>
     <ReaderPageData value={data}/>
     <main id="reader" tabIndex={-1}><article className="ct" data-chapter={chapterId} data-tab={tabId}>
-      <header className="ct-hero">
-        <Annotation>Глава {chapter.number}</Annotation>
-        <div className="ct-title" dangerouslySetInnerHTML={{__html:heading(chapter.heading)}}/>
-        <ul className="ct-chips" aria-label="О главе">
-          {total>0&&<li><RoleIcon role="readingTime"/>{total} мин</li>}
-          {meta?.level&&<li><RoleIcon role="level"/>{meta.level}</li>}
-          {meta?.template&&<li><RoleIcon role="template"/>{meta.template}</li>}
-        </ul>
-        {tools}
+      <header className="ct-banner page-hero shell-wide">
+        <div className="ct-banner-text page-hero__text">
+          <p className="ct-kicker page-hero__eyebrow">{section?`${section} · `:''}Глава {chapter.number}</p>
+          <div className="ct-title" dangerouslySetInnerHTML={{__html:heading(chapter.heading)}}/>
+          {summary&&<p className="ct-lede page-hero__description">{summary}</p>}
+          <ul className="ct-chips page-hero__meta" aria-label="О главе">
+            {total>0&&<li><RoleIcon role="readingTime"/>{total} мин</li>}
+            {meta?.level&&<li><RoleIcon role="level"/>{meta.level}</li>}
+            {meta?.template&&<li><RoleIcon role="template"/>{meta.template}</li>}
+          </ul>
+          {tools}
+        </div>
+        <div className="ct-banner-visual page-hero__visual" aria-hidden="true"><ChapterVisual chapterId={chapterId} number={chapter.number} tabs={tabs.map(t=>t.label)} current={Math.max(0,index)}/></div>
       </header>
-      <ChapterTabBar title={shortTitle(chapter.title)} current={tabId} tabs={tabs.map(t=>({id:t.id,label:t.label,href:hrefs[t.id],minutes:minutes[t.id]}))}/>
+      <ChapterTabBar title={`${chapter.number} · ${shortTitle(chapter.title)}`} current={tabId} tabs={tabs.map(t=>({id:t.id,label:t.label,href:hrefs[t.id]}))}/>
       <div className="ct-body">
         {tab.outline.length>1&&<details className="ct-toc"><summary>На этой странице<span>{minutes[tabId]} мин</span></summary><nav aria-label="На этой странице"><ol>{tab.outline.map(item=><li key={item.id}><a href={`#${item.id}`}>{item.title}</a></li>)}</ol></nav></details>}
         {tab.html&&<div className="reader-prose ct-prose" dangerouslySetInnerHTML={{__html:lift(tab.html)}}/>}

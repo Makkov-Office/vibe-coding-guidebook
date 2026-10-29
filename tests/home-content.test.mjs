@@ -25,6 +25,9 @@ test('content/home.md compiles into generated.home', () => {
   // Подпись узла 124 px: Martian Mono 10.5 px, 14 знаков при равных отступах 14 px.
   for (const step of home.path.steps) assert.ok([...step.sub].length <= 14, `${step.label}: «${step.sub}» longer than 14`);
   assert.deepEqual(home.sections.cards.map(card => card.label), rail);
+  // P4-06: подписи главной — шаблоны в content/home.md, не в коде.
+  assert.deepEqual(Object.keys(home.labels).sort(), ['chapter', 'chapters', 'drill', 'pages', 'tab']);
+  assert.equal(home.labels.pages.length, 3);
 });
 
 test('every link of Главная is a page the map knows or a published file', () => {
@@ -44,6 +47,10 @@ test('a broken home.md fails with the rule', () => {
     [broken('Путь одной задачи', '<b>Путь</b> одной задачи'), /raw HTML/],
     [broken('- Founder: ставит цель', '- Founder ставит цель'), /is not «Название: текст»/],
     [broken('## Продолжить\n', '## Продолжить\n\n**Важно.**\n'), /only plain text and links|one paragraph/],
+    [broken('- Тренажёр: тренажёр · {minutes} мин\n', ''), /missing Тренажёр/],
+    [broken('- Главы: главы {from}–{to}', '- Главы: главы {from}'), /must use exactly \{from\}, \{to\}/],
+    [broken('{n} страница | {n} страницы | {n} страниц', '{n} страниц'), /3 forms/],
+    [broken('- Глава: глава {n}', '- Раздел: глава {n}'), /unknown label Раздел/],
   ];
   for (const [text, message] of cases) assert.throws(() => parseHome(text, rail), message);
 });

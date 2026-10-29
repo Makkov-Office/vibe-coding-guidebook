@@ -1,6 +1,6 @@
 import {test,expect,type Page} from '@playwright/test';
 // Agent delivery (P8-03): /agents, the archive download, llms.txt and «Скопировать для агента».
-async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
+async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 async function settled(page:Page){await page.evaluate(()=>Promise.all(document.getAnimations().filter(a=>Number.isFinite(Number(a.effect?.getComputedTiming().endTime))).map(a=>a.finished.catch(()=>undefined))));}
 
 test('/agents offers the archive, llms.txt and the pack description',async({page,request})=>{

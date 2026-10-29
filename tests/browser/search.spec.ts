@@ -2,7 +2,7 @@ import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
 // Search ⌘K and breadcrumbs (P3-03): rail button, bottom bar, shortcuts, grouped results, suggestions.
 const data=JSON.parse(fs.readFileSync('src/content/generated.json','utf8')) as {chapters:{id:string;path:string;href?:string;title:string}[]};
-async function ready(page:Page,path:string,width=1440){await page.setViewportSize({width,height:900});await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
+async function ready(page:Page,path:string,width=1440){await page.setViewportSize({width,height:900});await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 const dialog=(page:Page)=>page.locator('.search-dialog'),input=(page:Page)=>page.locator('#handbook-search');
 const railSearch=(page:Page)=>page.locator('.nav-rail').getByRole('button',{name:'Поиск',exact:true});
 const group=(page:Page,label:string)=>page.locator('#search-results').getByRole('group',{name:label});
@@ -12,15 +12,16 @@ test('the rail button, Ctrl+K, Meta+K and «/» open search; Esc returns focus',
  await railSearch(page).click();await expect(dialog(page)).toBeVisible();await expect(input(page)).toBeFocused();
  await page.keyboard.press('Escape');await expect(dialog(page)).toBeHidden();await expect(railSearch(page)).toBeFocused();
  for(const keys of ['Control+k','Meta+k','/']){
+  // A shortcut has no opener: focus returns to what had it before (main after a click in the text; P3-07, no header button).
   await page.locator('main h1').first().click();await page.keyboard.press(keys);await expect(dialog(page)).toBeVisible();
-  await page.keyboard.press('Escape');await expect(page.locator('.search-trigger')).toBeFocused();
+  await page.keyboard.press('Escape');await expect(page.locator('main#reader')).toBeFocused();
  }
  // «/» while typing stays a character.
  await ready(page,'/reference/glossary');const filter=page.getByLabel('Термин',{exact:true});await filter.click();await page.keyboard.type('a/b');
  await expect(filter).toHaveValue('a/b');await expect(dialog(page)).toBeHidden();
- // The header «Глоссарий» is only where there is no rail.
- await expect(page.locator('.header-glossary')).toBeHidden();
- await page.setViewportSize({width:800,height:900});await expect(page.locator('.header-glossary')).toBeVisible();
+ // P3-07: no header above the page; search lives in the rail, and below 1024 px in the bottom bar.
+ await expect(page.locator('header.topbar')).toHaveCount(0);
+ await page.setViewportSize({width:800,height:900});await expect(page.locator('.bottom-bar').getByRole('button',{name:'Поиск'})).toBeVisible();
 });
 
 test('results are grouped; a term shows its level and opens the glossary on #term-*, keyboard only',async({page})=>{

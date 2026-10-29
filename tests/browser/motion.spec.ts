@@ -2,7 +2,7 @@ import {test,expect,type Page} from '@playwright/test';
 import {railNavigate} from './nav';
 // Motion system (P3-05, docs/design/visual-language.md section 7): one curve and token durations,
 // page transitions through the View Transitions API, and two switches that remove every animation.
-async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
+async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 // Record View Transitions and every CSS animation or transition that starts; the API call itself is passed through.
 async function record(page:Page){await page.addInitScript(()=>{const w=window as unknown as {__transitions:number;__started:string[]};w.__transitions=0;w.__started=[];const doc=document as unknown as {startViewTransition?:(...a:unknown[])=>unknown};const start=doc.startViewTransition?.bind(document);if(start)doc.startViewTransition=(...a:unknown[])=>{w.__transitions++;return start(...a);};for(const type of ['animationstart','transitionrun'])addEventListener(type,event=>{const e=event as AnimationEvent&TransitionEvent;w.__started.push(`${type}:${e.animationName??e.propertyName}`);},true);});}
 const transitions=(page:Page)=>page.evaluate(()=>(window as unknown as {__transitions:number}).__transitions);

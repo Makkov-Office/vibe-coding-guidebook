@@ -1,6 +1,6 @@
 import {test,expect,type Page} from '@playwright/test';
 // Rail controls (P3-04): theme in three states and the animation switch, stored and applied before paint.
-async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
+async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 const controls=(page:Page)=>page.locator('.rail-controls');
 const theme=(page:Page)=>controls(page).getByRole('button',{name:/^Тема:/});
 const motion=(page:Page)=>controls(page).getByRole('button',{name:'Анимации'});

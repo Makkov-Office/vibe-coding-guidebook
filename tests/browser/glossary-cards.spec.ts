@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 // P6-07b: a glossary card shows its level and copies a link to the term; the note on the source format is not shown.
-async function ready(page:import('@playwright/test').Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
+async function ready(page:import('@playwright/test').Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 
 test('a term card shows its level and copies a link to the term',async({page,context,browserName})=>{
  test.skip(browserName!=='chromium','clipboard permissions are Chromium-only');

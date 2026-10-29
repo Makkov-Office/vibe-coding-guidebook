@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test';
 import fs from 'node:fs';
 // localStorage captured from a real session on the main build before P7-01 (tests/fixtures/progress-v1-main.json).
 const fixture:{storage:Record<string,string>;shown:{completed:string;xp:number;exercises:string}}=JSON.parse(fs.readFileSync('tests/fixtures/progress-v1-main.json','utf8'));
-async function ready(page:import('@playwright/test').Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.search-trigger')).toBeEnabled();}
+async function ready(page:import('@playwright/test').Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 
 test('progress saved by the previous version is shown after the update, once migrated',async({page})=>{
  // Only the first document gets the old keys: later loads must read the migrated record.

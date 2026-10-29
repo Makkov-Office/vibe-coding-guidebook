@@ -1,12 +1,11 @@
-/* Шаблон страницы главы (P5-02): только токены app/tokens.css и примитивы P2-04.
+/* Шаблон страницы главы (P5-02, P5-05): только токены app/tokens.css и примитивы P2-04.
    Спецификация — docs/design/visual-language.md, раздел «Шаблон страницы главы». */
 
-.ct{--ct-sticky-top:68px;display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-6);min-width:0}
+.ct{--ct-sticky-top:0px;display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-6);min-width:0}
 
-/* Высота шапки .topbar (app/globals.css): 68 px, уже 768 px — 60 px. */
-@media (max-width:767px){.ct{--ct-sticky-top:60px}}
+/* Шапки над страницей нет (P3-07): полоса прилипает к верхнему краю окна; ChapterTabBar после гидратации ставит высоту .topbar, если она когда-нибудь вернётся. */
 
-/* Hero: номер главы, название, чипы. */
+/* Hero глоссария (P6-07c) — прежний вид шапки шаблона: номер, название, чипы. Глава — баннер ниже. */
 .ct-hero{display:grid;gap:var(--space-3);padding-top:var(--space-6)}
 .ct-hero>.bp-anno{justify-self:start}
 .ct-title h1{margin:0;font:500 var(--type-h1)/1.15 var(--font-display);letter-spacing:var(--tracking-display);overflow-wrap:anywhere}
@@ -17,29 +16,48 @@
 .ct-hero .agent-copy{justify-content:flex-start;margin:0}.ct-hero .agent-copy-status{text-align:start}
 .ct-chips .project-icon{width:var(--icon-size-s);height:var(--icon-size-s)}
 
-/* Полоса табов: прилипает под шапкой; в прилипшем виде — пилюля с именем главы и плотные табы. */
-.ct-tabs{position:sticky;top:var(--ct-sticky-top);z-index:5;display:flex;align-items:center;gap:var(--space-3);margin-inline:calc(-1 * var(--space-2));padding:var(--space-2);border-bottom:var(--stroke-border) solid var(--color-outline-variant);background:var(--color-background);transition:box-shadow var(--dur-2) var(--ease)}
-.ct-tabs ul{display:flex;flex:1 1 auto;min-width:0;gap:var(--space-1);margin:0;padding:0;list-style:none;overflow-x:auto;scrollbar-width:none}
-.ct-tabs a{display:inline-flex;align-items:center;gap:var(--space-2);min-height:var(--touch-target);min-width:var(--touch-target);padding:0 var(--space-4);border-radius:var(--radius-full);color:var(--color-on-surface-variant);font:500 var(--type-small)/1 var(--font-text);text-decoration:none;white-space:nowrap;transition:background-color var(--dur-1) var(--ease)}
-.ct-tabs a:hover{background:var(--color-surface-container-low);color:var(--color-on-surface)}
-.ct-tabs a[aria-current="page"]{background:var(--color-primary-container);color:var(--color-on-primary-container);font-weight:600}
+/* Баннер главы (P5-05): классы и значения баннера страницы — .page-hero (src/design/page-hero.css, P3-07);
+   здесь своих правил нет. .shell-wide — слот P3-07 на всю ширину рабочей области. */
+
+/* Визуал баннера (ChapterVisual.tsx): примитивы «Чертежа», только токены. */
+.cv{display:block;width:100%;max-width:520px;height:auto;overflow:visible}
+.cv-card{fill:var(--color-surface);stroke:var(--color-on-surface);stroke-width:var(--stroke-line)}
+.cv-check{fill:var(--color-surface-container-high)}
+.cv-tick{fill:none;stroke:var(--color-on-surface);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.cv-label,.cv-pill text{fill:var(--color-on-surface);font:500 13px var(--font-mono);font-stretch:var(--font-mono-stretch)}
+.cv-number{fill:var(--color-on-surface);font:500 56px var(--font-display);letter-spacing:var(--tracking-display)}
+.cv-line{fill:none;stroke:var(--color-on-surface-variant);stroke-width:var(--stroke-line);opacity:.5}
+.cv-pill rect{fill:var(--color-surface);stroke:var(--color-on-surface);stroke-width:var(--stroke-line)}
+.cv-pill--strong rect{fill:var(--color-primary-container);stroke:var(--color-primary)}
+.cv-pill--strong text{fill:var(--color-on-primary-container);font-weight:600}
+
+/* Полоса табов (P5-05): на всю ширину, высота 64 px, активный таб — тональная пилюля на всю ячейку.
+   При прокрутке прилипает и сжимается в плавающую пилюлю по центру с тенью и коротким именем главы.
+   Высота самой полосы в обоих состояниях одна: иначе scroll anchoring сдвигает страницу (позиция чтения). */
+.ct-tabs{--ct-tabs-gap:8px;position:sticky;top:var(--ct-sticky-top);z-index:5;display:flex;justify-content:center;height:72px;margin-top:calc(var(--ct-tabs-gap) - var(--space-6));pointer-events:none}
+.ct-tabs-row{display:flex;align-items:center;gap:var(--space-1);width:100%;max-width:100%;height:72px;padding:var(--space-1);border-radius:var(--radius-full);background:var(--color-surface-container-low);pointer-events:auto;transition:max-width var(--dur-3) var(--ease),height var(--dur-3) var(--ease),margin-top var(--dur-3) var(--ease),box-shadow var(--dur-3) var(--ease),background-color var(--dur-2) var(--ease)}
+.ct-tabs ul{display:flex;flex:1 1 auto;min-width:0;height:100%;gap:var(--space-1);margin:0;padding:0;list-style:none;overflow-x:auto;scrollbar-width:none}
+.ct-tabs ul::-webkit-scrollbar{display:none}
+.ct-tabs li{display:flex;flex:1 0 auto}
+.ct-tabs a{display:flex;flex:1;align-items:center;justify-content:center;gap:var(--space-2);min-height:var(--touch-target);min-width:var(--touch-target);padding:0 var(--space-5);border-radius:var(--radius-full);color:var(--color-on-surface-variant);font:600 var(--type-small)/1 var(--font-text);text-decoration:none;white-space:nowrap;transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
+.ct-tabs a:hover{background:var(--color-surface-container);color:var(--color-on-surface)}
+.ct-tabs a[aria-current="page"]{background:var(--color-primary-container);color:var(--color-on-primary-container)}
 .ct-tabs a:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
-.ct-tab-minutes{color:inherit;font:500 var(--type-label)/1 var(--font-mono);font-stretch:var(--font-mono-stretch)}
-.ct-tabs-pill{display:none;flex:none;min-width:0;padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);background:var(--color-surface-container);color:var(--color-on-surface);font:600 var(--type-label)/1.3 var(--font-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:12rem}
-/* Высота полосы в обоих состояниях одна: иначе scroll anchoring сдвигает страницу (восстановление позиции чтения). */
-.ct-tabs[data-stuck]{box-shadow:var(--shadow-1)}
-.ct-tabs[data-stuck] .ct-tabs-pill{display:inline-block}
-.ct-tabs[data-stuck] .ct-tab-minutes{display:none}
+.ct-tabs-pill{flex:none;max-width:0;min-width:0;padding:0;opacity:0;overflow:hidden;color:var(--color-on-surface);font:500 var(--type-small)/1.2 var(--font-display);letter-spacing:var(--tracking-display);white-space:nowrap;text-overflow:ellipsis;transition:max-width var(--dur-3) var(--ease),opacity var(--dur-2) var(--ease),padding var(--dur-3) var(--ease)}
+.ct-tabs[data-stuck] .ct-tabs-row{max-width:820px;height:56px;margin-top:var(--space-2);background:var(--color-surface);box-shadow:var(--shadow-2)}
+.ct-tabs[data-stuck] .ct-tabs-pill{max-width:12rem;padding:0 var(--space-2) 0 var(--space-4);opacity:1}
+.ct-tabs[data-stuck] a{padding:0 var(--space-4)}
+@media (max-width:840px){.ct-tabs a{padding:0 var(--space-4)}}
 @media (max-width:600px){
-  .ct-tabs a{padding:0 var(--space-3)}
-  .ct-tabs a>span:not(.ct-tab-minutes){font-size:var(--type-label)}
-  .ct-tab-minutes{display:none}
-  .ct-tabs[data-stuck] .ct-tabs-pill{max-width:7rem}
+  .ct-tabs,.ct-tabs-row{height:60px}
+  .ct-tabs a,.ct-tabs[data-stuck] a{padding:0 var(--space-3);font-size:var(--type-label)}
+  .ct-tabs[data-stuck] .ct-tabs-row{height:52px}
+  .ct-tabs[data-stuck] .ct-tabs-pill{max-width:0;padding:0;opacity:0}
 }
 
 /* Тело таба. */
 .ct-body{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-6);min-width:0}
-/* html уже даёт scroll-padding-top 120 px под шапку; сверху добавляется место под прилипшую полосу. */
+/* html даёт scroll-padding-top 56 px; сверху добавляется место под прилипшую полосу. */
 .ct-prose h2,.ct-prose h3{scroll-margin-top:32px}
 
 /* «На этой странице» в колонке текста: там, где нет правой колонки Reader (local-outline). */
@@ -50,10 +68,16 @@
 .ct-toc ol{display:grid;gap:var(--space-1);margin:0;padding:0 var(--space-2) var(--space-3);list-style:none}
 .ct-toc a{display:flex;align-items:center;min-height:var(--touch-target);padding:0 var(--space-3);border-radius:var(--radius-s);color:var(--color-on-surface-variant);text-decoration:none}
 .ct-toc a:hover{background:var(--color-surface-container-low)}
-.ct-toc a[aria-current="location"],.local-outline a[aria-current="location"]{color:var(--color-primary);font-weight:600}
+.ct-toc a[aria-current="location"]{background:var(--color-primary-container);color:var(--color-on-primary-container);font-weight:600}
 .ct-toc a:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
 @media (min-width:1360px){.reading-shell:has(.local-outline) .ct-toc{display:none}}
-.reading-shell:has(.ct) .local-outline nav::before{content:"На этой странице";display:block;margin-bottom:var(--space-2);color:var(--color-on-surface);font:600 var(--type-label)/1.3 var(--font-text)}
+/* Колонка «На этой странице» (сетка Reader/P3-07): вид RD-01 — моно-подпись, текущий пункт в тональной пилюле. */
+.reading-shell:has(.ct) .local-outline nav{display:grid;gap:2px}
+.reading-shell:has(.ct) .local-outline nav::before{content:"На этой странице";display:block;margin:0 0 var(--space-2) var(--space-3);color:var(--color-on-surface-variant);font:500 var(--type-label)/1.3 var(--font-mono);font-stretch:var(--font-mono-stretch)}
+.reading-shell:has(.ct) .local-outline a{display:block;padding:6px var(--space-3);border-radius:var(--radius-full);color:var(--color-on-surface-variant);font:400 var(--type-small)/1.35 var(--font-text);text-decoration:none;transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
+.reading-shell:has(.ct) .local-outline a:hover{background:var(--color-surface-container-low);color:var(--color-on-surface)}
+.reading-shell:has(.ct) .local-outline a[aria-current="location"]{background:var(--color-primary-container);color:var(--color-on-primary-container);font-weight:600}
+.reading-shell:has(.ct) .local-outline a:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
 
 /* Copy link у заголовка. Отрицательные поля по вертикали: кнопка 44 px не растит строку заголовка. */
 .ct-copy{display:inline-flex;align-items:center;justify-content:center;width:var(--touch-target);height:var(--touch-target);margin-inline-start:var(--space-1);margin-block:calc(var(--space-3) * -1);vertical-align:middle;border:0;border-radius:var(--radius-full);background:transparent;color:var(--color-on-surface-variant);cursor:pointer;opacity:.6;transition:opacity var(--dur-1) var(--ease),background-color var(--dur-1) var(--ease)}
@@ -89,5 +113,5 @@
 }
 
 /* Reduced motion и пауза: сжатие полосы без анимации (общий выключатель — app/motion.css). */
-@media (prefers-reduced-motion:reduce){.ct-tabs{transition:none}}
+@media (prefers-reduced-motion:reduce){.ct-tabs-row,.ct-tabs-pill,.ct-tabs a{transition:none}}
 @media print{.ct-tabs,.ct-pager,.ct-copy,.ct-toc{display:none!important}}

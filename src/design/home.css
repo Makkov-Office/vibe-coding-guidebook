@@ -1,45 +1,102 @@
-/* Главная (P4-01): только токены app/tokens.css и примитивы P2-04 (primitives.css).
-   Подключается в app/layout.tsx: <link> стиля из компонента поднимается в <head>, и vinext не фокусирует main#reader. */
-.home{display:grid;gap:var(--space-12);padding-block:var(--space-6) var(--space-12)}
-.home h2{margin:0;font:600 var(--type-h2)/1.25 var(--font-text);letter-spacing:var(--tracking-heading)}
-.home-lead{margin:var(--space-2) 0 0;color:var(--color-on-surface-variant)}
+/* Главная (P4-01, вид P4-06 — экран «Главная» RD-01 f): только токены app/tokens.css и примитивы P2-04.
+   Подключается в app/layout.tsx: <link> стиля из компонента поднимается в <head>, и vinext не фокусирует main#reader.
+   Своей узкой ширины нет: главная занимает всю .reading-column, раскладка — по ширине контейнера. */
+.home{--home-vis:var(--color-surface-container-low);container-type:inline-size;display:grid;gap:var(--space-10);padding-block:var(--space-2) var(--space-12)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .home{--home-vis:var(--color-surface-container)}}
+:root[data-theme="dark"] .home{--home-vis:var(--color-surface-container)}
+.home h2{margin:0;font:600 var(--type-block)/1.2 var(--font-text);letter-spacing:var(--tracking-heading)}
+.home-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:var(--space-2) var(--space-6)}
+.home-lead{margin:0;color:var(--color-on-surface-variant);font-size:var(--type-small)}
+.home-block>h2,.home-head{margin-bottom:var(--space-4);padding-inline:var(--space-2)}
 
-/* Hero: текст и путь задачи; от 1024 px — две колонки. */
-.home-hero .bp-banner{align-items:center}
-.home-hero-text{display:grid;gap:var(--space-4);min-width:0}
-.home-hero h1{margin:0;font:500 var(--type-hero)/1.05 var(--font-display);letter-spacing:var(--tracking-display);overflow-wrap:anywhere}
-.home-hero-text p{margin:0;max-width:52ch;color:var(--color-on-surface-variant)}
-.home-hero-text .home-subtitle{color:var(--color-on-surface);font-weight:600}
-.home-actions{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-2)}
-.home-path{margin:0;min-width:0;max-width:440px;justify-self:center;width:100%}
-.home-path figcaption{margin-top:var(--space-2);font:500 var(--type-label)/1.4 var(--font-mono);font-stretch:var(--font-mono-stretch);color:var(--color-on-surface-variant);text-align:center}
-@media (min-width:1024px){.home-hero .bp-banner{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:var(--space-8)}}
+/* Hero: баннер страницы .page-hero (src/design/page-hero.css, P3-07) — две карточки, 8 px, радиус, поля, типографика, столбик.
+   Здесь только отличия главной: рамка бренда и паттерн «+» (только hero главной и «Начать»), высота, ширина заголовка. */
+.home .home-hero{min-height:400px;margin:0}
+.home .home-hero__text{position:relative;isolation:isolate;overflow:hidden;border:var(--stroke-border) solid transparent;background:linear-gradient(var(--color-surface),var(--color-surface)) padding-box,var(--color-brand-frame-gradient) border-box}
+.home-plus{position:absolute;inset:0;z-index:-1;width:100%;height:100%;-webkit-mask-image:linear-gradient(to bottom,var(--color-on-surface) 0%,transparent 85%);mask-image:linear-gradient(to bottom,var(--color-on-surface) 0%,transparent 85%)}
+.home-plus path{stroke:var(--color-pattern-plus);stroke-width:1;fill:none}
+.home-hero h1{max-width:11ch}
+.home-actions{margin-top:var(--space-2)}
+.home-actions .bp-button{min-height:48px;padding-inline:var(--space-6);font-size:var(--type-body)}
+.home-hero__visual .hi{max-width:560px}
+/* Узко схема уходит (page-hero.css, ≤ 600 px); шаги пути остаются для скринридера в #home-path-steps внутри текстовой карточки. */
+@media (max-width:839px){.home .home-hero{min-height:0}}
 
-/* Карточки разделов: при наведении под заголовком прорисовывается линия (приём «прорисовка»). */
-.home-cards,.home-next{display:grid;gap:var(--space-4);margin:var(--space-6) 0 0;padding:0;list-style:none}
-.home-cards{grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr))}
+/* Иллюстрации «Чертежа»: заливки — токены, контур 1.25 px, моно-подписи. */
+.hi{display:block;width:100%;height:auto;overflow:visible}
+.hi-1{fill:var(--color-primary-line)}
+.hi-2{fill:var(--color-primary-container)}
+.hi-3{fill:var(--color-surface-container)}
+.hi-4{fill:var(--color-surface)}
+.hi-5{fill:var(--color-on-surface)}
+.hi-p{fill:var(--color-primary)}
+.hi-o{stroke:var(--color-on-surface);stroke-width:1.25}
+.hi-ln{fill:none;stroke:var(--color-on-surface);stroke-width:1.25;stroke-linecap:round;opacity:.38}
+.hi-ln--dots{stroke-dasharray:2 5}
+.hi-t{fill:var(--color-on-surface);font:500 10.5px var(--font-mono);font-stretch:var(--font-mono-stretch)}
+.hi-tick{fill:none;stroke:var(--color-on-primary);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.hi-tick2{fill:none;stroke:var(--color-surface);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.hi-hero .hi-ln{opacity:.5}
+.hi-accent{display:grid;place-items:center;height:30px;margin:2px;border-radius:var(--radius-full);background:var(--color-action-gradient);color:var(--color-on-action-gradient);font:600 10.5px var(--font-mono);font-stretch:var(--font-mono-stretch)}
+
+/* Карточки разделов: иллюстрация сверху, заголовок, строка, мета; 1 → 2 → 4 колонки по ширине. */
+.home-cards,.home-next{display:grid;gap:var(--space-2);margin:0;padding:0;list-style:none}
+@container (min-width:560px){.home-cards,.home-next{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@container (min-width:1000px){.home-cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .home-cards>li,.home-next>li{display:flex;min-width:0}
-.home-card,.home-next-item{flex:1;position:relative}
-.home-card-icon{display:inline-grid;place-items:center;width:var(--touch-target);height:var(--touch-target);border-radius:var(--radius-m);background:var(--color-surface-container);color:var(--color-on-surface)}
-.home-card-line{display:block;height:var(--stroke-line);margin-top:auto;background:var(--color-primary);transform:scaleX(0);transform-origin:left;transition:transform var(--dur-2) var(--ease)}
-a.home-card:hover .home-card-line,a.home-card:focus-visible .home-card-line{transform:scaleX(1)}
-div.home-card .home-card-icon{color:var(--color-on-surface-variant)}
-.home-next{grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr))}
-.home-next-item{padding-inline-end:calc(var(--space-5) + var(--touch-target))}
-.home-next-arrow{position:absolute;inset-block-start:var(--space-4);inset-inline-end:var(--space-3);display:grid;place-items:center;width:var(--touch-target);height:var(--touch-target);color:var(--color-primary)}
+.home-card{flex:1;display:flex;flex-direction:column;min-width:0;border:var(--stroke-border) solid var(--color-outline-variant);border-radius:var(--radius-l);background:var(--color-surface);color:var(--color-on-surface);text-decoration:none;transition:border-color var(--dur-1) var(--ease),box-shadow var(--dur-2) var(--ease)}
+a.home-card:hover{border-color:var(--color-primary-line);box-shadow:var(--shadow-2)}
+a.home-card:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+.home-card-vis{display:grid;place-items:center;height:148px;margin:var(--space-2);border-radius:var(--radius-s);background:var(--home-vis);overflow:hidden}
+.home-card-vis .hi{width:92%;max-width:280px;max-height:140px}
+.home-card-vis--practice{background:var(--color-practice-container)}
+.home-card-vis--agent{background:var(--color-agent-container)}
+.home-card-vis--human{background:var(--color-human-container)}
+.home-card-body{flex:1;display:flex;flex-direction:column;gap:var(--space-1);padding:6px 18px 18px}
+.home-card h3{margin:0;font:600 1.0625rem/1.3 var(--font-text);letter-spacing:var(--tracking-heading)}
+.home-card p{margin:0;font-size:var(--type-small);line-height:1.45;color:var(--color-on-surface-variant)}
+.home-card-meta{margin-top:auto;padding-top:var(--space-2);font:500 var(--type-label)/1.4 var(--font-mono);font-stretch:var(--font-mono-stretch);color:var(--color-on-surface-variant)}
+.home-card--off{background:var(--color-surface-container-low)}
+/* Наведение и фокус: линии иллюстрации мягко прорисовываются заново (приём «прорисовка», один раз). */
+a.home-card:is(:hover,:focus-visible) .hi-ln[pathLength]{animation:home-draw var(--dur-draw) var(--ease)}
+@keyframes home-draw{from{stroke-dasharray:1;stroke-dashoffset:1}to{stroke-dasharray:1;stroke-dashoffset:0}}
 
-/* «Продолжить». */
-.home-resume{display:grid;justify-items:start;gap:var(--space-3);padding:var(--space-6);border:var(--stroke-border) solid var(--color-outline-variant);border-radius:var(--radius-l);background:var(--color-surface-container-low)}
-.home-resume .home-lead{margin:0}
-.home-resume-place{margin:0;font-weight:600}
+/* «Продолжить»: позиция чтения (тональная) и тренажёр главы (практика). */
+.home-resume-grid{display:grid;gap:var(--space-2)}
+@container (min-width:800px){.home-resume-grid:not(.home-resume-grid--single){grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}}
+.home-resume-card{display:grid;gap:var(--space-4) var(--space-5);align-items:center;padding:22px var(--space-6);border:var(--stroke-border) solid var(--color-primary-line);border-radius:var(--radius-l);background:var(--color-primary-container);color:var(--color-on-primary-container)}
+@container (min-width:560px){.home-resume-card{grid-template-columns:minmax(0,1fr) auto}}
+.home-resume-text{display:grid;gap:var(--space-1);min-width:0}
+.home-resume-text p{margin:0;font-size:var(--type-small)}
+.home-resume-eyebrow{margin:0;font:500 var(--type-label)/1.4 var(--font-mono);font-stretch:var(--font-mono-stretch)}
+.home-resume-place{margin:0;font:600 1.25rem/1.3 var(--font-text);letter-spacing:var(--tracking-heading)}
+.home-resume-bar{display:block;height:8px;margin-top:var(--space-2);max-width:300px;border-radius:var(--radius-full);background:var(--color-surface);overflow:hidden}
+.home-resume-bar i{display:block;height:100%;border-radius:inherit;background:var(--color-action-gradient)}
+.home-resume .resume-button{min-height:48px;justify-self:start}
+.home-drill{display:grid;align-content:center;gap:6px;padding:20px 22px;border:var(--stroke-border) solid var(--color-practice-accent);border-radius:var(--radius-l);background:var(--color-practice-container);color:var(--color-on-surface);text-decoration:none;transition:box-shadow var(--dur-2) var(--ease)}
+.home-drill .home-resume-eyebrow{color:var(--color-on-practice-container)}
+.home-drill h3{margin:0;font:600 var(--type-body)/1.35 var(--font-text)}
+.home-drill p{margin:0;font-size:var(--type-small);line-height:1.45;color:var(--color-on-surface-variant);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.home-drill:hover{box-shadow:var(--shadow-2)}
+.home-drill:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+
+/* Следующие шаги: тональные плитки со стрелкой, 2 колонки. */
+.home-next-item{flex:1;display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);min-height:76px;padding:18px 20px;border-radius:var(--radius-l);background:var(--color-surface-container-low);color:var(--color-on-surface);text-decoration:none;transition:background-color var(--dur-2) var(--ease)}
+.home-next-item>span{display:grid;gap:2px;min-width:0}
+.home-next-item h3{margin:0;font:600 var(--type-body)/1.35 var(--font-text)}
+.home-next-item p{margin:0;font-size:var(--type-small);line-height:1.45;color:var(--color-on-surface-variant)}
+.home-next-item .project-icon{flex-shrink:0;transition:transform var(--dur-1) var(--ease)}
+a.home-next-item:hover{background:var(--color-surface-container)}
+a.home-next-item:hover .project-icon{transform:translateX(2px)}
+a.home-next-item:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
 
 /* Подвал главной («Ссылки руководства»): три группы ссылок; подпись «by Makkov» и Open Source — общий подвал Reader. */
-.home-footer{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:var(--space-6);padding-top:var(--space-8);border-top:var(--stroke-border) solid var(--color-outline-variant)}
-.home-footer h2{font:600 var(--type-label)/1.4 var(--font-mono);font-stretch:var(--font-mono-stretch);letter-spacing:.04em;text-transform:uppercase;color:var(--color-on-surface-variant)}
-.home-footer ul{display:grid;margin:var(--space-2) 0 0;padding:0;list-style:none}
-.home-footer a{display:inline-flex;align-items:center;min-height:var(--touch-target);color:var(--color-on-surface)}
+.home-footer{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:var(--space-6);margin-inline:var(--space-2);padding-top:var(--space-6);border-top:var(--stroke-border) solid var(--color-outline-variant)}
+.home .home-footer h2{font:600 var(--type-small)/1.4 var(--font-text);letter-spacing:0;color:var(--color-on-surface)}
+.home-footer ul{display:grid;margin:var(--space-1) 0 0;padding:0;list-style:none}
+.home-footer a{display:inline-flex;align-items:center;min-height:var(--touch-target);min-width:var(--touch-target);font-size:var(--type-small);color:var(--color-on-surface-variant);text-decoration:none}
+.home-footer a:hover{color:var(--color-on-surface);text-decoration:underline}
 .home-footer a:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
 
-@media (max-width:600px){.home{gap:var(--space-10)}}
-@media (prefers-reduced-motion:reduce){.home-card-line{transition:none}}
-@media print{.home-path,.home-actions,.home-resume,.home-card-line,.home-next-arrow{display:none!important}}
+@container (max-width:520px){.home h2{font-size:var(--type-h2)}.home-card-vis{height:120px}}
+@media print{.home-hero__visual,.home-card-vis,.home-actions,.home-resume,.home-next-item .project-icon,.home-plus{display:none!important}}
