@@ -147,7 +147,7 @@ export function parseHome(text,railLabels){
     else fail('«Ссылки руководства» is ### groups, each with one list of links');
   }
   if(groups.length!==3||groups.some(group=>!group.links.length))fail('«Ссылки руководства» needs 3 groups of links');
-  return {title:plain(h1),subtitle:plain(lead),lead:paragraph(hero),actions:actions.map(({label,href})=>({label,href})),path:{title:paragraph(path),steps},sections:{heading:cards.title,lead:paragraph(cards),cards:cardList},resume:{heading:resume.title,lead:paragraph(resume),action:button[0]},next:{heading:next.title,items:steps2},footer:{heading:footer.title,groups}};
+  return {title:plain(h1),eyebrow:paragraph(hero),subtitle:plain(lead),actions:actions.map(({label,href})=>({label,href})),path:{title:paragraph(path),steps},sections:{heading:cards.title,lead:paragraph(cards),cards:cardList},resume:{heading:resume.title,lead:paragraph(resume),action:button[0]},next:{heading:next.title,items:steps2},footer:{heading:footer.title,groups}};
 }
 
 export const LEVELS=['basic','professional'];
