@@ -8,6 +8,7 @@ import {useEffect,useMemo,useRef,useState,type KeyboardEvent,type PointerEvent} 
 import {appear} from '../design/motion';
 import {navSections,currentSection,type NavChapter,type NavPage,type NavSection,onPage} from '../design/nav-sections';
 import {progressStore} from './progress-store.mjs';
+import {RailTrace} from './RailTrace';
 import {RoleIcon} from './RoleIcon';
 import {UiControls} from './UiControls';
 import '../design/nav-rail.css';
@@ -92,14 +93,14 @@ export function NavRail({chapters,pathname,ready,onSearch}:{chapters:NavChapter[
  const leave=()=>{const entry=open?items.current.get(open)?.closest('.rail-entry'):null;if(!entry?.contains(document.activeElement))schedule(null,closeDelay);};
  return <nav className="nav-rail" aria-label="Разделы руководства" onMouseLeave={leave} onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node|null))setOpen(null);}}>
   {/* Search at the top of the rail (P3-03); the dialog returns focus here when it closes. */}
-  <button type="button" className="rail-search" disabled={!ready} aria-keyshortcuts="Control+K Meta+K /" onClick={event=>onSearch(event.currentTarget)}><span className="rail-indicator"><RoleIcon role="search"/></span><span className="rail-label">Поиск</span></button>
+  <button type="button" className="rail-search" disabled={!ready} aria-keyshortcuts="Control+K Meta+K /" onClick={event=>onSearch(event.currentTarget)}><span className="rail-indicator"><RoleIcon role="search"/><RailTrace/></span><span className="rail-label">Поиск</span></button>
   <ul className="rail-list">{sections.map(s=>{
    const expanded=open===s.id,current=active===s.id,menu=hasMenu(s);
    const common={ref:(node:HTMLElement|null)=>{if(node)items.current.set(s.id,node);else items.current.delete(s.id);},className:'rail-item',tabIndex:focusable===s.id?0:-1,
     'aria-expanded':menu?expanded:undefined,'aria-controls':menu?`mega-${s.id}`:undefined,
     onPointerCancel:resetTap,onFocus:()=>{setFocusable(s.id);if(s.href)router.prefetch(s.href);if(returning.current)return;if(menu)show(s.id);else setOpen(null);},onKeyDown:(e:KeyboardEvent<HTMLElement>)=>{resetTap(e);railKey(e,s);},
     onPointerDown:(e:PointerEvent<HTMLElement>)=>pointerDown(e,s)};
-   const body=<><span className="rail-indicator"><RoleIcon role={s.icon} filled={current}/></span><span className="rail-label">{s.label}</span></>;
+   const body=<><span className="rail-indicator"><RoleIcon role={s.icon} filled={current}/><RailTrace/></span><span className="rail-label">{s.label}</span></>;
    return <li key={s.id} className="rail-entry" data-section={s.id} onMouseEnter={()=>{if(s.href)router.prefetch(s.href);schedule(menu?s.id:null,openDelay);}}>
     {s.href?<Link {...common} href={s.href} prefetch={false} aria-current={current?'true':undefined} onClick={event=>{event.currentTarget.removeAttribute('data-tap-open');if(touch.current){touch.current=false;event.preventDefault();show(s.id);return;}setOpen(null);}}>{body}</Link>
      :<button {...common} type="button" aria-current={current?'true':undefined} onClick={event=>{resetTap(event);show(s.id);}}>{body}</button>}
