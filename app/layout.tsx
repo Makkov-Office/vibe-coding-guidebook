@@ -12,8 +12,11 @@ import "../src/design/home.css";
 import "../src/components/drill.css";
 import "../src/design/glossary.css";
 import "../src/design/page-hero.css";
+// Последним: поведение кликабельных (форма на hover и нажатии, след по клику) поверх стилей компонентов (P2-08).
+import "../src/design/interaction.css";
 import {brandTitle} from "../src/design/brand";
 import {uiPrefsScript} from "../src/design/ui-prefs.mjs";
+import {pressGlowScript} from "../src/design/press-glow.mjs";
 
 export const metadata: Metadata = {
   title: brandTitle,
@@ -35,6 +38,8 @@ export default function RootLayout({
     <html lang="ru" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{__html:uiPrefsScript}} />
+        {/* Световой след по клику (P2-08): один делегированный обработчик, работает и до гидрации. */}
+        <script dangerouslySetInnerHTML={{__html:pressGlowScript}} />
         <link rel="preload" href="/fonts/geist-cyrillic-400-600.woff2" as="font" type="font/woff2" crossOrigin="" />
         <link rel="preload" href="/fonts/geist-latin-400-600.woff2" as="font" type="font/woff2" crossOrigin="" />
       </head>

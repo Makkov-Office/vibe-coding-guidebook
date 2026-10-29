@@ -1,7 +1,7 @@
 // Иллюстрации главной (P4-06, RD-01 «Главная», вариант f): фронтальные SVG из примитивов «Чертежа» —
 // пилюли, скруглённые прямоугольники, линии, круг и моно-подписи в 1–3 слова. Цвета — только токены
 // через классы .hi-* (src/design/home.css). Линии (.hi-ln, pathLength 1) прорисовываются при наведении
-// на карточку; постоянной анимации нет. Подписи на схемах — служебные метки, не учебный текст.
+// на карточку; постоянной анимации нет. Подписи на схемах — служебные метки, не учебный текст. Hero — P4-07.
 import type {ReactNode} from 'react';
 
 type Pill={x:number;y:number;w:number;label:string};
@@ -10,18 +10,59 @@ const pill=({x,y,w,label}:Pill,size?:number)=><g key={`${label}-${x}-${y}`}>
   <text className="hi-t" x={x} y={y+4} textAnchor="middle" style={size?{fontSize:size}:undefined}>{label}</text>
 </g>;
 
-/** Hero: путь одной задачи — восемь моно-пилюль на одной линии, единственный акцент — последний шаг. */
+/** Hero (P4-07): путь задачи как коллаж карточек «Чертежа» разного масштаба — человек ставит цель, агент делает
+ *  в своей ветке, проверка, решение человека, единственный акцент — последний шаг. Глубина — слоями и масштабом
+ *  (фоновые формы, задние и передние карточки), без перспективы и теней. viewBox 800×420 с полями: карточка визуала
+ *  режет края (slice), смысловая часть сжата в зону x 100–700, y 40–380: её видно и на 1440 (режутся бока),
+ *  и на 2560 (режутся верх и низ). Подписи — шаги пути из content/home.md
+ *  (label и sub) и служебные метки; для скринридера — <title> и #home-path-steps в HomePage.tsx.
+ *  Движение — одно: линия пути прорисовывается один раз (.motion-draw, pathLength 1). Линия соединяет все
+ *  карточки по порядку (P2-09); карточки не перекрывают друг друга, кроме Founder за агентом. */
 export function HeroPath({title,steps}:{title:string;steps:{label:string;sub:string}[]}){
-  // Змейка 3 · 3 · 2: ряд слева направо, разворот, ряд справа налево, разворот, последний ряд.
-  const d='M64 104H332Q372 104 372 144Q372 184 332 184H108Q68 184 68 224Q68 264 108 264H300';
-  const at=[[64,104],[176,104],[288,104],[288,184],[176,184],[64,184],[176,264]];
-  const last=steps.at(-1);
-  return <svg className="hi hi-hero motion-draw" viewBox="-6 40 396 260" role="img" aria-labelledby="home-path-title">
+  const s=(i:number)=>steps[i]??{label:'',sub:''};
+  const [founder,ticket,agent,branch,review,decision,main,deploy]=[0,1,2,3,4,5,6,7].map(s);
+  const row=(y:number,label:string)=><g key={label}>
+    <rect className="hh-chip" x={530} y={y} width={154} height={26} rx={13}/>
+    <circle className="hh-ink" cx={547} cy={y+13} r={7}/><path className="hh-tick" d={`M543.5 ${y+13}l2.5 2.5 4.5-5`}/>
+    <text className="hh-s" x={562} y={y+17}>{label}</text>
+  </g>;
+  return <svg className="hi hi-hero motion-draw" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="home-path-title">
     <title id="home-path-title">{title}</title>
-    <text className="hi-t" x="16" y="64">{title}</text>
-    <path className="hi-ln" d={d} pathLength={1}/>
-    {steps.slice(0,-1).map((step,i)=>pill({x:at[i][0],y:at[i][1],w:96,label:step.label}))}
-    {last&&<foreignObject x={248} y={247} width={104} height={34}><div className="hi-accent">{last.label}</div></foreignObject>}
+    <g aria-hidden="true">
+      <rect className="hh-back" x={-60} y={292} width={470} height={230} rx={115}/>
+      <circle className="hh-back" cx={770} cy={24} r={140}/>
+      <path className="hh-plus" d="M446 40h12M452 34v12M120 300h12M126 294v12M718 250h12M724 244v12M300 384h12M306 378v12"/>
+    </g>
+    <g transform="translate(400 210) scale(.94) translate(-400 -214)">
+    <path className="hi-ln" d="M192 164V210Q192 232 214 232H236M494 208H540Q560 208 560 180M650 182V236M651 344V364" pathLength={1}/>
+    <g className="hh-card hh-practice">
+      <rect x={506} y={34} width={204} height={148} rx={26}/>
+      <text className="hh-h" x={530} y={70}>{review.label}</text><text className="hh-s" x={530} y={90}>{review.sub}</text>
+      {row(104,'validate')}{row(138,'e2e')}
+    </g>
+    <g className="hh-card hh-human">
+      <rect x={92} y={40} width={200} height={124} rx={26}/>
+      <circle className="hh-chip" cx={126} cy={76} r={16}/><circle className="hh-ink" cx={126} cy={72} r={5}/><path className="hh-ink" d="M117 85a9 7 0 0 1 18 0z"/>
+      <text className="hh-h" x={152} y={82}>{founder.label}</text><text className="hh-s" x={116} y={118}>{founder.sub}</text>
+      <rect className="hh-chip" x={116} y={128} width={96} height={24} rx={12}/><text className="hh-s" x={164} y={144} textAnchor="middle">{ticket.label}</text>
+    </g>
+    <g className="hh-card hh-agent">
+      <rect x={232} y={130} width={262} height={196} rx={30}/>
+      <text className="hh-h" x={256} y={168}>{agent.label}</text><text className="hh-s" x={472} y={166} textAnchor="end">{agent.sub}</text>
+      <rect className="hh-chip" x={254} y={184} width={218} height={86} rx={18}/>
+      <text className="hh-t" x={272} y={212}>&gt;</text>
+      <rect className="hh-bar" x={290} y={202} width={130} height={10} rx={5}/><rect className="hh-bar" x={290} y={222} width={164} height={10} rx={5}/><rect className="hh-bar" x={290} y={242} width={96} height={10} rx={5}/>
+      <rect className="hh-ink" x={392} y={240} width={7} height={14} rx={2}/>
+      <rect className="hh-chip" x={254} y={284} width={112} height={28} rx={14}/><circle className="hh-ink" cx={272} cy={298} r={4}/><text className="hh-s" x={284} y={302}>{branch.label}</text>
+    </g>
+    <g className="hh-card hh-human">
+      <rect x={512} y={236} width={198} height={108} rx={26}/>
+      <text className="hh-h" x={536} y={270}>{decision.label}</text><text className="hh-s" x={536} y={288}>{decision.sub}</text>
+      <rect className="hh-chip" x={536} y={302} width={74} height={28} rx={14}/><text className="hh-s" x={573} y={320} textAnchor="middle">назад</text>
+      <rect className="hh-ink" x={618} y={302} width={74} height={28} rx={14}/><text className="hh-on-ink" x={655} y={320} textAnchor="middle">{main.label}</text>
+    </g>
+    <g className="hi-accent"><rect x={592} y={364} width={118} height={32} rx={16}/><text x={651} y={385} textAnchor="middle">{deploy.label}</text></g>
+    </g>
   </svg>;
 }
 

@@ -11,7 +11,7 @@
 .bp-card h3{margin:0;font:600 var(--type-h3)/1.3 var(--font-text);letter-spacing:var(--tracking-heading)}
 .bp-card p{margin:0;color:var(--color-on-surface-variant);font-size:var(--type-small);line-height:1.5}
 a.bp-card{transition:background-color var(--dur-1) var(--ease),border-color var(--dur-1) var(--ease)}
-a.bp-card:hover{background:var(--color-surface-container-low);border-color:var(--color-outline-variant-strong)}
+a.bp-card:hover{background:var(--color-surface-container);border-color:var(--color-outline-variant-strong)}
 a.bp-card:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
 
 /* Тональная пилюля: смысл + подпись + иконка роли (раздел 4). */
@@ -40,13 +40,13 @@ a.bp-card:focus-visible{outline:2px solid var(--color-primary);outline-offset:2p
 /* Кнопки: заливка градиентом действия / тональная / текстовая. */
 .bp-button{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);min-height:var(--touch-target);padding:0 var(--space-5);border:0;border-radius:var(--radius-full);font:600 var(--type-small)/1 var(--font-text);text-decoration:none;cursor:pointer;transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
 .bp-button:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
-.bp-button--fill{background:var(--color-action-gradient);color:var(--color-on-action-gradient)}
-.bp-button--fill:hover{background:var(--color-primary);color:var(--color-on-primary)}
+.bp-button--fill{background:var(--color-action);color:var(--color-on-action)}
+.bp-button--fill:hover{background:var(--color-action-hover);color:var(--color-on-action)}
 .bp-button--tonal{background:var(--color-primary-container);color:var(--color-on-primary-container)}
 .bp-button--tonal:hover{background:var(--color-surface-container-high);color:var(--color-on-surface)}
 .bp-button--text{background:transparent;color:var(--color-primary);padding:0 var(--space-3)}
 .bp-button--text:hover{background:var(--color-surface-container)}
-.bp-button .project-icon{transition:transform var(--dur-1) var(--ease)}
+.bp-button .project-icon{transition:transform var(--dur-shape) var(--ease-spring)}
 .bp-button:hover .project-icon{transform:translateX(2px)}
 
 /* Линия шага: пройденные загораются по одному слева направо (приём «Смена шага»). */
@@ -67,7 +67,7 @@ a.bp-card:focus-visible{outline:2px solid var(--color-primary);outline-offset:2p
 .bp-dots{display:inline-flex;align-items:center;gap:6px}
 .bp-dots i{width:8px;height:8px;border-radius:var(--radius-full);background:var(--color-outline-variant-strong);transition:width var(--dur-2) var(--ease)}
 .bp-dots i[data-state="done"]{background:var(--color-primary)}
-.bp-dots i[data-state="current"]{width:26px;background:var(--color-action-gradient)}
+.bp-dots i[data-state="current"]{width:26px;background:var(--color-action)}
 
 /* Аннотация «чертежа»: моноширинная подпись в пунктирной рамке. */
 .bp-anno{display:inline-block;padding:1px var(--space-2);border:var(--stroke-border) dashed var(--color-primary);border-radius:var(--radius-xs);background:var(--color-surface);color:var(--color-primary);font:500 var(--type-label)/1.5 var(--font-mono);font-stretch:var(--font-mono-stretch);max-width:100%;overflow-wrap:anywhere}
@@ -75,8 +75,8 @@ a.bp-card:focus-visible{outline:2px solid var(--color-primary);outline-offset:2p
 /* Игровая метка Pixelify: до трёх слов, смысл «Практика». */
 .bp-game{display:inline-flex;align-items:center;gap:var(--space-1);padding:2px var(--space-2);border-radius:var(--radius-xs);background:var(--color-practice-container);color:var(--color-on-practice-container);font:500 var(--type-small)/1.3 var(--font-game);letter-spacing:.02em}
 
-/* Баннер с паттерном «+» и фирменной рамкой (только hero главной и «Начать»). */
-.bp-banner{position:relative;overflow:hidden;display:grid;gap:var(--space-4);padding:var(--space-10) var(--space-8);border:var(--stroke-border) solid transparent;border-radius:var(--radius-xl);background:linear-gradient(var(--color-surface),var(--color-surface)) padding-box,var(--color-brand-frame-gradient) border-box;color:var(--color-on-surface)}
+/* Баннер с паттерном «+» и плоской рамкой outline-variant (только hero главной и «Начать»; градиентной рамки нет с P2-07). */
+.bp-banner{position:relative;overflow:hidden;display:grid;gap:var(--space-4);padding:var(--space-10) var(--space-8);border:var(--stroke-border) solid var(--color-outline-variant);border-radius:var(--radius-xl);background:var(--color-surface);color:var(--color-on-surface)}
 .bp-banner>*{position:relative}
 .bp-banner>.bp-anno{justify-self:start}
 .bp-banner .bp-plus{position:absolute;inset:0;width:100%;height:100%}

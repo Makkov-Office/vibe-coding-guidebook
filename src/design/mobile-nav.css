@@ -20,7 +20,7 @@
 /* Полноэкранное меню: modal dialog во весь экран, разделы раскрываются на месте. */
 .section-menu{position:fixed;inset:0;width:100%;max-width:none;height:100dvh;max-height:none;margin:0;padding:0 var(--space-4) calc(var(--space-6) + env(safe-area-inset-bottom));border:0;border-radius:0;background:var(--color-surface);color:var(--color-on-surface);overflow-y:auto;overscroll-behavior:contain}
 .section-menu::backdrop{background:var(--scrim)}
-.section-menu[open]{animation:motion-appear var(--dur-2) var(--ease) backwards}
+.section-menu[open]{animation:motion-appear var(--dur-2) var(--ease-enter) backwards}
 .section-menu-header{position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);padding:var(--space-3) 0;background:var(--color-surface)}
 .section-menu-header h2{margin:0;font:500 var(--type-h3)/1.25 var(--font-display);letter-spacing:var(--tracking-heading)}
 .section-menu-close{display:grid;place-items:center;width:var(--touch-target);height:var(--touch-target);border:0;border-radius:var(--radius-full);background:none;color:var(--color-on-surface)}

@@ -47,6 +47,35 @@ test('hover opens the menu after a short delay and leaving closes it',async({pag
  await item(page,'agents').click();await expect(page).toHaveURL(/\/agents$/);await expect(item(page,'agents')).toHaveAttribute('aria-current','true');
 });
 
+// Hover «Обводка» (P3-09): search, sections and the theme react alike — the contour line is drawn,
+// the background stays; the mega-menu is flat; keyboard focus has its own ring.
+test('hover draws the contour on every rail control without a background, the mega-menu has no shadow',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});await ready(page,'/flow/08-preflight');
+ const away=()=>page.mouse.move(1200,600);
+ const targets=[['search',page.locator('.rail-search')],['home',item(page,'home')],['current',item(page,'flow')],['theme',page.locator('.rail-controls .ui-control')]] as const;
+ for(const [name,target] of targets){
+  await away();
+  const indicator=target.locator('.rail-indicator,.ui-control-indicator'),path=target.locator('.rail-trace path').first();
+  const before={button:await target.evaluate(el=>getComputedStyle(el).backgroundColor),pill:await indicator.evaluate(el=>getComputedStyle(el).backgroundColor)};
+  await expect(path,name).toHaveCSS('stroke-dashoffset','1px');
+  await target.hover();
+  await expect(path,name).toHaveCSS('stroke-dashoffset','0px');
+  expect(await target.evaluate(el=>getComputedStyle(el).backgroundColor),name).toBe(before.button);
+  expect(await indicator.evaluate(el=>getComputedStyle(el).backgroundColor),name).toBe(before.pill);
+  await expect(target.locator('.rail-trace path')).toHaveCount(2);
+  await expect(path,name).toHaveCSS('transition-timing-function','cubic-bezier(0.2, 0, 0, 1)');
+ }
+ await away();await item(page,'control').hover();await expect(menu(page,'control')).toBeVisible();
+ await expect(menu(page,'control')).toHaveCSS('box-shadow','none');
+ // The open section keeps its contour while the pointer is in the menu.
+ await menu(page,'control').locator('.mega-item').first().hover();
+ await expect(item(page,'control').locator('.rail-trace path').first()).toHaveCSS('stroke-dashoffset','0px');
+ // Keyboard focus: a separate 2 px ring outside the contour.
+ await away();await page.keyboard.press('Escape');await page.locator('.rail-search').focus();await page.keyboard.press('Shift+Tab');await page.keyboard.press('Tab');
+ await expect(page.locator('.rail-search')).toBeFocused();
+ await expect(page.locator('.rail-search .rail-indicator')).toHaveCSS('outline-width','2px');
+});
+
 test('keyboard: focus opens, Tab enters the menu, arrows move, Esc returns focus to the rail',async({page})=>{
  await ready(page,'/flow/08-preflight');
  await item(page,'flow').focus();

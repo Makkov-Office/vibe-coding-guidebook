@@ -57,14 +57,14 @@ test('chapter template: banner of two cards, full-width tabs condense into a flo
   // Курсор над текстом: в углу окна — rail, колесо прокрутило бы его.
   await page.mouse.move(width-24,450);await page.mouse.wheel(0,1200);
   await expect(bar).toHaveAttribute('data-stuck','true');
-  // Прилипшая полоса — плавающая пилюля с тенью ровно на ширину внутреннего контейнера (P3-08, как M3 Buttons):
+  // Прилипшая полоса — плоская плавающая пилюля (без тени, P2-07: контур outline-variant) ровно на ширину внутреннего контейнера (P3-08, как M3 Buttons):
   // от левого края текста до правого края «На этой странице» (или текста, если колонки нет); высота полосы та же.
   const box=await page.evaluate(()=>{const body=document.querySelector('.ct-body')!.getBoundingClientRect(),outline=document.querySelector('.local-outline');
    const right=outline?.checkVisibility()?outline.getBoundingClientRect().right:body.right;return {x:body.x,width:right-body.x};});
   if(width>=1440)expect(Math.round(box.width),`${width}: container token`).toBe(1024);
   if(width>=1440)expect(column.width-box.width,`${width}: banner wider than container`).toBeGreaterThan(200);
   await expect.poll(async()=>Math.round((await row.boundingBox())!.width),`${width}`).toBe(Math.round(box.width));
-  await expect(row).not.toHaveCSS('box-shadow','none');
+  await expect(row).toHaveCSS('box-shadow','none');await expect(row).not.toHaveCSS('outline-style','none');
   const pill=(await row.boundingBox())!;expect(Math.abs(pill.x-box.x),`${width}: aligned with container`).toBeLessThanOrEqual(1);
   expect(Math.abs(pill.x+pill.width/2-(column.x+column.width/2)),`${width}: centered`).toBeLessThanOrEqual(2);
   expect((await bar.boundingBox())!.height).toBe(height);

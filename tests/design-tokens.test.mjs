@@ -104,3 +104,41 @@ test('reduced motion and data-motion="off" zero every duration token', () => {
     for (const name of [...durations, '--shift-appear']) assert.match(body, new RegExp(`${name}:0(?:ms|px)`), name);
   }
 });
+
+// Плоский стиль (P2-07, решение founder 29.10.2026): ни градиентов, ни теней — в светлой и тёмной теме.
+// Разрешены: жёсткая полоса фона rail (linear-gradient в globals.css, не виден как градиент) и световой след
+// по клику P2-08 (radial-gradient в ::after на время нажатия, src/design/interaction.css). Тени: только none; токены --shadow-* остаются со значением none.
+test('flat style: no gradient roles, no shadows, no visible gradients, no hover lift in stylesheets', () => {
+  assert.equal(palette.aliases, undefined, 'palette.json: псевдонимы *-gradient удалены (P2-07)');
+  assert.doesNotMatch(tokens, /--color-[\w-]*gradient/);
+  for (const theme of Object.values(palette.themes)) {
+    for (const [role, value] of Object.entries(theme)) {
+      assert.ok(!Array.isArray(value) && !/gradient\(/.test(value), `palette role ${role} is a gradient`);
+    }
+  }
+  for (const [, name, value] of tokens.matchAll(/(--shadow-[\w-]+):([^;]+);/g)) assert.equal(value.trim(), 'none', name);
+  const offenders = [];
+  for (const file of [...cssFiles('app'), ...cssFiles('src')]) {
+    const css = read(file).replace(/\/\*[\s\S]*?\*\//g, '');
+    for (const match of css.matchAll(/(?:box|text)-shadow\s*:\s*([^;}]+)/g)) {
+      const value = match[1].replace(/!important/, '').trim();
+      if (value !== 'none' && !/^var\(--shadow-[\w-]+\)$/.test(value)) offenders.push(`${file}: ${match[0]}`);
+    }
+    for (const match of css.matchAll(/drop-shadow\(|(?:radial|conic|repeating-linear)-gradient\(/g)) {
+      // Исключение одно: световой след по клику P2-08 — кратковременный ::after с radial-gradient, в покое его нет.
+      const line = css.slice(css.lastIndexOf('\n', match.index) + 1, css.indexOf('\n', match.index));
+      if (file === 'src/design/interaction.css' && /^\s*background:radial-gradient\(circle var\(--glow-r\)/.test(line)) continue;
+      offenders.push(`${file}: ${match[0]}`);
+    }
+    // Hover меняет цвет, а не поднимает карточку: translateY на :hover запрещён.
+    for (const [, selector, body] of css.matchAll(/([^{}]*:hover[^{}]*)\{([^{}]*)\}/g)) {
+      if (/translateY\(/.test(body)) offenders.push(`${file}: translateY on ${selector.trim().slice(0, 80)}`);
+    }
+    for (const match of css.matchAll(/linear-gradient\(/g)) {
+      const line = css.slice(css.lastIndexOf('\n', match.index) + 1, css.indexOf('\n', match.index));
+      if (file === 'app/globals.css' && /body:has\(\.nav-rail\)\{background-image:linear-gradient\(to right,var\(--color-rail\)/.test(line)) continue;
+      offenders.push(`${file}: linear-gradient in ${line.trim().slice(0, 80)}`);
+    }
+  }
+  assert.deepEqual(offenders, []);
+});
