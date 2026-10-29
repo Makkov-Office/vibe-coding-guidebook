@@ -22,13 +22,13 @@ export function motionDuration(name: MotionToken): number {
   return value.endsWith('ms') ? number : value.endsWith('s') ? number * 1000 : 0;
 }
 
-/** Technique 1, "appear": opacity and the --shift-appear offset, on the shared curve. */
+/** Technique 1, "appear": opacity and the --shift-appear offset, decelerating on the enter curve (--ease-enter). */
 export function appear(element: Element | null | undefined, name: MotionToken = '--dur-2'): Animation | undefined {
   const duration = motionDuration(name);
   if (!element || !duration) return undefined;
   return element.animate(
     [{ opacity: 0, transform: `translateY(${token('--shift-appear') || '0px'})` }, { opacity: 1, transform: 'none' }],
-    { duration, easing: token('--ease') || undefined },
+    { duration, easing: token('--ease-enter') || token('--ease') || undefined },
   );
 }
 

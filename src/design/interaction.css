@@ -1,0 +1,85 @@
+/* Поведение кликабельных элементов (P2-08): смена формы на hover и при нажатии, мягкий hover и световой след в месте
+   клика. Спецификация — docs/design/visual-language.md, разделы «Форма» и «Движение». Только токены app/tokens.css.
+
+   Подключение: класс .bp-press (форма пилюли) или .bp-press.bp-press--card (форма карточки) на элементе, либо селектор
+   в списке ниже. След по клику даёт атрибут data-glow или тот же список (src/design/press-glow.mjs, PRESS_SELECTOR —
+   список там и здесь сверяет tests/press-glow.test.mjs). Rail (P3-09) подключится классом .bp-press на ссылке пункта.
+
+   Без анимации (prefers-reduced-motion, data-motion="off") форма не меняется, следа нет: остаётся только смена цвета. */
+
+/* Радиус живёт в зарегистрированном свойстве --shape-r: его можно плавно анимировать, а вложенные поверхности
+   (картинка внутри карточки) берут концентричный радиус calc(var(--shape-r) - отступ), как у Apple. */
+@property --shape-r{syntax:'<length>';inherits:true;initial-value:0px}
+@property --glow-r{syntax:'<length>';inherits:false;initial-value:0px}
+
+/* Пилюли: кнопки, чипы, табы главы, кнопка «скопировать ссылку». */
+:is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy){--shape-rest:var(--shape-pill);--shape-hover:var(--shape-pill-hover);--shape-press:var(--shape-pill-press)}
+/* Высокие пилюли: табы главы (64 px). */
+.ct-tabs a{--shape-rest:var(--shape-pill-l);--shape-hover:var(--shape-pill-l-hover);--shape-press:var(--shape-pill-l-press)}
+/* Карточки: ссылки-карточки главной, тренажёр, «что дальше», пейджер главы. */
+:is(.bp-press--card,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link){--shape-rest:var(--shape-card);--shape-hover:var(--shape-card-hover);--shape-press:var(--shape-card-press)}
+
+/* Общее: радиус из --shape-r; hover уходит медленнее, чем входит; форма — пружиной. Позиция — для следа (:where не
+   перебивает position у компонентов). */
+:where(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link,[data-glow]){position:relative}
+:is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link){
+  --shape-r:var(--shape-rest);
+  border-radius:var(--shape-r);
+  transition:
+    background-color var(--dur-hover-out) var(--ease),
+    border-color var(--dur-hover-out) var(--ease),
+    color var(--dur-hover-out) var(--ease),
+    opacity var(--dur-hover-out) var(--ease),
+    --shape-r var(--dur-shape) var(--ease-spring),
+    transform var(--dur-shape) var(--ease-spring);
+}
+@media (hover:hover){
+  :is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):hover{
+    transition-duration:var(--dur-hover),var(--dur-hover),var(--dur-hover),var(--dur-hover),var(--dur-shape),var(--dur-shape);
+  }
+}
+/* Нажатие короткое и без пружины; отпускание возвращает форму пружиной (общее правило выше). */
+:is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):active{
+  transition-duration:var(--dur-press),var(--dur-press),var(--dur-press),var(--dur-press),var(--dur-press),var(--dur-press);
+  transition-timing-function:var(--ease);
+}
+
+/* Морфинг только при включённом движении. */
+@media (prefers-reduced-motion:no-preference){
+  @media (hover:hover){
+    :root:not([data-motion=off]) :is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):hover{--shape-r:var(--shape-hover)}
+  }
+  :root:not([data-motion=off]) :is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):active{--shape-r:var(--shape-press)}
+}
+/* Нажатие едино для всего сайта (раньше в globals.css было два разных scale только у button): пилюли и кнопки
+   проседают до 97 %, карточки не масштабируются (текст не плывёт), rail и мега-меню — без сжатия (P3-09). */
+@media (prefers-reduced-motion:no-preference){
+  :root:not([data-motion=off]) :is(button,.primary-action,.chapter-pagination a,.bp-press:not(.bp-press--card),.bp-button,.bp-chip,.ct-tabs a,.ct-copy):not(:is(.nav-rail,.mega-menu) *):active{transform:scale(.97)}
+}
+
+/* Концентричность: иллюстрация внутри карточки главной повторяет её радиус за вычетом отступа. */
+a.home-card .home-card-vis{border-radius:max(var(--radius-xs),calc(var(--shape-r) - var(--space-2)))}
+
+/* Фокус с клавиатуры виден всегда и повторяет текущую форму (outline следует border-radius). */
+:is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+
+/* Световой след в месте нажатия (в духе Apple Liquid Glass): короткое мягкое свечение, не заливка и не ripple.
+   Скрипт ставит --glow-x/--glow-y (точка касания), --glow-reach (докуда растёт) и атрибут data-glowing.
+   Цвет: светлая тема — тёплый тон линии действия, тёмная — светлый тон текста; на заливке действия — светлое. */
+:root{--glow-tone:light-dark(var(--color-primary-line),var(--color-on-surface));--glow-peak:.3;--glow-peak-fill:.28}
+:root[data-theme=dark]{--glow-peak:.14;--glow-peak-fill:.2}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--glow-peak:.14;--glow-peak-fill:.2}}
+.bp-button--fill{--glow-tone:light-dark(var(--color-surface),var(--color-on-surface));--glow-peak:var(--glow-peak-fill)}
+:is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link,[data-glow])[data-glowing]::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(circle var(--glow-r) at var(--glow-x,50%) var(--glow-y,50%),var(--glow-tone),transparent);
+  animation:press-glow var(--dur-glow) var(--ease-enter) forwards;
+}
+/* Радиус растёт с торможением; свет вспыхивает за первые 12 % и дальше гаснет ровно, оставляя шлейф. */
+@keyframes press-glow{
+  0%{opacity:0;--glow-r:12px;animation-timing-function:var(--ease-enter)}
+  12%{opacity:var(--glow-peak);animation-timing-function:var(--ease-fade)}
+  100%{opacity:0;--glow-r:var(--glow-reach,120px)}
+}
+@media (prefers-reduced-motion:reduce){[data-glowing]::after{content:none}}
+:root[data-motion=off] [data-glowing]::after{content:none}
