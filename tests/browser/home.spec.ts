@@ -119,3 +119,17 @@ test('home: widths, keyboard, reduced motion and axe',async({page})=>{
   expect(violations,`${width} ${theme}`).toEqual([]);
  }
 });
+
+test('home: hero spans the workspace, everything below sits in the inner container',async({page})=>{
+ // P3-08 (как M3): баннер шире внутреннего контейнера; блоки ниже hero и подвал Reader — в контейнере по центру.
+ for(const width of [1440,2560,360]){
+  await page.setViewportSize({width,height:900});await ready(page,'/');
+  const hero=(await page.locator('.home-hero').boundingBox())!;
+  const boxes=await page.evaluate(()=>['.home-cards','.home-next','.reader-footer'].map(s=>{const r=document.querySelector(s)!.getBoundingClientRect();return {s,x:r.x,width:r.width};}));
+  for(const box of boxes){
+   if(width>=1440){expect(Math.round(box.width),`${width} ${box.s}`).toBe(1024);expect(hero.width-box.width,`${width} ${box.s}`).toBeGreaterThan(200);}
+   else expect(Math.abs(box.width-hero.width),`${width} ${box.s}`).toBeLessThanOrEqual(1);
+   expect(Math.abs(box.x+box.width/2-(hero.x+hero.width/2)),`${width} ${box.s}: centered`).toBeLessThanOrEqual(1);
+  }
+ }
+});

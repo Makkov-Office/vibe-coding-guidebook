@@ -52,6 +52,11 @@
   --space-12:48px;
   --touch-target:44px;
   --rail-width:96px;
+  /* Сетка M3 (P3-07, P3-08): рабочая область (окно минус rail) — до --workspace-max по центру; баннер и полоса табов
+     идут на всю её ширину, содержимое ниже — во внутреннем контейнере --content-container по центру (вместе с колонкой
+     «На этой странице»); прилипшая полоса табов сужается ровно до него (как m3.material.io/components/buttons). */
+  --workspace-max:1760px;
+  --content-container:1024px;
   --mega-width:320px;
   --stroke-line:1.5px;
   --stroke-border:1px;
