@@ -12,7 +12,7 @@
 .page-tabs ul::-webkit-scrollbar{display:none}
 .page-tabs li{display:flex;flex:1 0 auto}
 .page-tabs a{display:flex;flex:1;align-items:center;justify-content:center;gap:var(--space-2);min-height:var(--touch-target);min-width:var(--touch-target);padding:0 var(--space-5);border-radius:var(--radius-full);color:var(--color-on-surface-variant);font:600 var(--type-small)/1 var(--font-text);text-decoration:none;white-space:nowrap;transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
-.page-tabs a:hover{background:var(--color-surface-container);color:var(--color-on-surface)}
+@media (hover:hover){.page-tabs a:hover{background:var(--color-surface-container);color:var(--color-on-surface)}}
 .page-tabs a:is([aria-current="page"],[aria-current="location"]){background:var(--color-primary-container);color:var(--color-on-primary-container)}
 .page-tabs a:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
 .page-tabs__pill{flex:none;max-width:0;min-width:0;padding:0;opacity:0;overflow:hidden;color:var(--color-on-surface);font:500 var(--type-small)/1.2 var(--font-display);letter-spacing:var(--tracking-display);white-space:nowrap;text-overflow:ellipsis;transition:max-width var(--dur-3) var(--ease),opacity var(--dur-2) var(--ease),padding var(--dur-3) var(--ease)}
@@ -25,11 +25,27 @@
   .page-tabs a,.page-tabs[data-stuck] a{padding:0 var(--space-3);font-size:var(--type-label)}
   .page-tabs[data-stuck] .page-tabs__row{height:52px}
   .page-tabs[data-stuck] .page-tabs__pill{max-width:0;padding:0;opacity:0}
+  /* P3-12: табы-страницы с иконками на телефоне — равные ячейки, иконка над подписью (подпись в две строки,
+     если не влезает), как нижняя навигация. Прилипнув, полоса сжимается: у остальных табов остаются иконки,
+     текущий раскрывается в иконку с подписью. Подписи скрыты только визуально — имя ссылки на месте. */
+  .page-tabs[data-icons],.page-tabs[data-icons] .page-tabs__row{height:68px}
+  .page-tabs[data-icons] li{flex:1 1 0;min-width:var(--touch-target);transition:flex var(--dur-3) var(--ease-spring)}
+  .page-tabs[data-icons] a{flex-direction:column;gap:2px;padding:var(--space-1);font-size:var(--type-label);line-height:1.15;white-space:normal;text-align:center}
+  .page-tabs[data-icons] a>span{display:block;max-width:100%;overflow:hidden;transition:max-width var(--dur-3) var(--ease),opacity var(--dur-2) var(--ease)}
+  .page-tabs[data-icons][data-stuck] .page-tabs__row{height:52px}
+  .page-tabs[data-icons][data-stuck] li{flex:0 0 48px}
+  .page-tabs[data-icons][data-stuck] li:has(>[aria-current]){flex:1 1 0}
+  .page-tabs[data-icons][data-stuck] a{flex-direction:row;gap:var(--space-2);padding:0 var(--space-3);white-space:nowrap}
+  .page-tabs[data-icons][data-stuck] a:not([aria-current])>span{max-width:0;opacity:0}
+  .page-tabs[data-icons][data-stuck] a:not([aria-current]){gap:0;padding:0}
 }
+/* Нажатие на таб — короткое сжатие (тач-отклик). */
+.page-tabs a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.page-tabs a:active{scale:.96}
 
 /* Разделы страницы: подписи длиннее, ячейки по содержимому; полоса прокручивается, текущий таб в зоне видимости. */
 .page-tabs[data-mode=anchor] li{flex:0 0 auto}
 .page-tabs[data-mode=anchor] a{padding:0 var(--space-4);font-weight:500}
 .page-tabs[data-mode=anchor] ul{scroll-behavior:smooth;scroll-padding-inline:var(--space-6)}
-@media (prefers-reduced-motion:reduce){.page-tabs__row,.page-tabs__pill,.page-tabs a{transition:none}.page-tabs ul{scroll-behavior:auto}}
+@media (prefers-reduced-motion:reduce){.page-tabs__row,.page-tabs__pill,.page-tabs a,.page-tabs li,.page-tabs a>span{transition:none}.page-tabs ul{scroll-behavior:auto}}
 @media print{.page-tabs{display:none!important}}

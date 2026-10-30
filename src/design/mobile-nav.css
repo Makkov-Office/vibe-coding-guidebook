@@ -1,5 +1,5 @@
 /* Мобильная навигация (P3-02, docs/design/visual-language.md, «Навигация»). Уже 1024 px вместо rail —
-   нижняя панель из четырёх пунктов; «Разделы» открывает полноэкранное меню с теми же разделами. */
+   нижняя панель из четырёх пунктов; «Разделы» открывает нижний лист с теми же разделами (P3-12). */
 :root{--bottom-bar:64px}
 .bottom-bar{display:none}
 @media(max-width:1023px){
@@ -8,34 +8,78 @@
   html.js-enabled .reading-shell{padding-bottom:calc(var(--bottom-bar) + env(safe-area-inset-bottom))}
   html.js-enabled .return-reading{bottom:calc(var(--bottom-bar) + env(safe-area-inset-bottom) + var(--space-3))}
 }
-.bottom-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-1);min-width:0;min-height:var(--bottom-bar);padding:var(--space-1) 0;border:0;background:none;color:var(--color-on-surface-variant);font:600 var(--type-label) var(--font-text);text-align:center;text-decoration:none;cursor:pointer}
+/* P3-12: панель уходит вниз, пока читатель листает вниз, и возвращается при прокрутке вверх, у начала и конца страницы.
+   Фокус с клавиатуры внутри панели всегда её показывает. */
+.bottom-bar{transition:translate var(--dur-2) var(--ease)}
+.bottom-bar[data-hidden]:not(:focus-within){translate:0 100%;transition-timing-function:var(--ease-exit)}
+.bottom-item{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-1);min-width:0;min-height:var(--bottom-bar);padding:var(--space-1) 0;border:0;border-radius:var(--radius-m,16px);background:none;color:var(--color-on-surface-variant);font:600 var(--type-label) var(--font-text);text-align:center;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.bottom-item>span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bottom-item:disabled{opacity:.6;cursor:default}
-.bottom-indicator{display:grid;place-items:center;width:56px;height:32px;border-radius:var(--radius-full);transition:background-color var(--dur-1) var(--ease)}
-.bottom-item:hover:not(:disabled) .bottom-indicator,.bottom-item[aria-expanded=true] .bottom-indicator{background:color-mix(in srgb,var(--color-on-surface) 8%,transparent)}
+/* Индикатор M3: пилюля за иконкой; у текущего пункта раскрывается из центра, нажатие чуть сжимает её. */
+.bottom-indicator{position:relative;display:grid;place-items:center;width:56px;height:32px;border-radius:var(--radius-full);transition:scale var(--dur-press) var(--ease)}
+.bottom-indicator::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:var(--color-primary-container);scale:.3 1;opacity:0;transition:scale var(--dur-3) var(--ease-spring),opacity var(--dur-1) var(--ease)}
+.bottom-indicator{isolation:isolate}
 .bottom-item[aria-current=page]{color:var(--color-on-surface)}
-.bottom-item[aria-current=page] .bottom-indicator{background:var(--color-primary-container);color:var(--color-on-primary-container)}
+.bottom-item[aria-current=page] .bottom-indicator{color:var(--color-on-primary-container)}
+.bottom-item[aria-current=page] .bottom-indicator::before{scale:1;opacity:1}
+.bottom-item[aria-expanded=true] .bottom-indicator{background:color-mix(in srgb,var(--color-on-surface) 10%,transparent)}
+.bottom-item:active:not(:disabled) .bottom-indicator{scale:.9}
+@media(hover:hover){.bottom-item:hover:not(:disabled):not([aria-current=page]) .bottom-indicator{background:color-mix(in srgb,var(--color-on-surface) 8%,transparent)}}
 .bottom-item:focus-visible{outline:none}
 .bottom-item:focus-visible .bottom-indicator{outline:2px solid var(--color-primary);outline-offset:2px}
 
-/* Полноэкранное меню: modal dialog во весь экран, разделы раскрываются на месте. */
-.section-menu{position:fixed;inset:0;width:100%;max-width:none;height:100dvh;max-height:none;margin:0;padding:0 var(--space-4) calc(var(--space-6) + env(safe-area-inset-bottom));border:0;border-radius:0;background:var(--color-surface);color:var(--color-on-surface);overflow-y:auto;overscroll-behavior:contain}
+/* Меню разделов — нижний лист M3: выезжает снизу, скруглён сверху, ручка и шапка тянутся вниз (src/design/sheet-drag.ts).
+   Шире 600 px лист не шире 640 px и стоит по центру. Внутри прокручивается только тело, шапка на месте. */
+.section-menu{position:fixed;inset:auto 0 0;display:flex;flex-direction:column;width:100%;max-width:640px;height:auto;max-height:calc(100dvh - var(--space-6) - env(safe-area-inset-top));margin:0 auto;padding:0;border:0;border-radius:var(--radius-l) var(--radius-l) 0 0;background:var(--color-surface);color:var(--color-on-surface);overflow:hidden;overscroll-behavior:contain}
+.section-menu:not([open]){display:none}
 .section-menu::backdrop{background:var(--scrim)}
-.section-menu[open]{animation:motion-appear var(--dur-2) var(--ease-enter) backwards}
-.section-menu-header{position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);padding:var(--space-3) 0;background:var(--color-surface)}
-.section-menu-header h2{margin:0;font:500 var(--type-h3)/1.25 var(--font-display);letter-spacing:var(--tracking-heading)}
-.section-menu-close{display:grid;place-items:center;width:var(--touch-target);height:var(--touch-target);border:0;border-radius:var(--radius-full);background:none;color:var(--color-on-surface)}
-.section-menu-close:hover{background:color-mix(in srgb,var(--color-on-surface) 8%,transparent)}
-.section-menu-close:focus-visible,.section-row:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
+/* Открытие: снизу по кривой входа (@starting-style); уход — вниз, короче. Во время жеста — за пальцем, без перехода. */
+dialog.section-menu{transition:translate var(--dur-3) var(--ease-enter),opacity var(--dur-1) var(--ease),display var(--dur-exit) allow-discrete,overlay var(--dur-exit) allow-discrete}
+dialog.section-menu[open]{animation:none}
+@starting-style{dialog.section-menu[open]{translate:0 100%}}
+dialog.section-menu:not([open]){translate:0 100%;opacity:1;transition-duration:var(--dur-2),var(--dur-2),var(--dur-2),var(--dur-2);transition-timing-function:var(--ease-exit)}
+dialog.section-menu[data-dragging]{transition:none}
+dialog.section-menu::backdrop{transition:opacity var(--dur-2) var(--ease),display var(--dur-2) allow-discrete,overlay var(--dur-2) allow-discrete}
+@starting-style{dialog.section-menu[open]::backdrop{opacity:0}}
+.section-menu-header{position:relative;flex:none;display:flex;align-items:center;gap:var(--space-2);padding:var(--space-5) var(--space-3) var(--space-2) var(--space-5);background:var(--color-surface);touch-action:none;cursor:grab;user-select:none}
+.sheet-handle{position:absolute;top:var(--space-2);left:50%;width:32px;height:4px;margin-left:-16px;border-radius:var(--radius-full);background:var(--color-outline-variant-strong)}
+.section-menu-header h2{flex:1;min-width:0;margin:0;font:500 var(--type-h3)/1.25 var(--font-display);letter-spacing:var(--tracking-heading)}
+.section-menu-close{flex:none;display:grid;place-items:center;width:var(--touch-target);height:var(--touch-target);padding:0;border:0;border-radius:var(--radius-full);background:none;color:var(--color-on-surface);touch-action:manipulation}
+.section-menu-close:active{background:color-mix(in srgb,var(--color-on-surface) 12%,transparent)}
+@media(hover:hover){.section-menu-close:hover{background:color-mix(in srgb,var(--color-on-surface) 8%,transparent)}}
+.section-menu-close:focus-visible,.section-row:focus-visible,.menu-continue:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
+/* Тема — компактная пилюля в шапке листа: иконка и подпись в строку. */
+.section-menu .menu-controls{display:block;flex:none;margin:0;padding:0;border:0}
+.section-menu .ui-control{flex-direction:row;gap:var(--space-1);width:auto;min-height:var(--touch-target);padding:0 var(--space-3) 0 var(--space-1);border-radius:var(--radius-full)}
+.section-menu .ui-control-indicator{width:32px}
+.section-menu .ui-control:active{background:color-mix(in srgb,var(--color-on-surface) 12%,transparent)}
+.section-menu-body{flex:1 1 auto;min-height:0;padding:var(--space-2) var(--space-4) calc(var(--space-6) + env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain}
+
+/* «Продолжить» — первая карточка листа: следующая глава и общий прогресс. Коралл — «Твой путь». */
+.menu-continue{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-1);margin:0 0 var(--space-3);padding:var(--space-4) var(--space-5);border-radius:var(--radius-xl);background:var(--color-primary-container);color:var(--color-on-primary-container);text-decoration:none;-webkit-tap-highlight-color:transparent;transition:scale var(--dur-press) var(--ease);animation:motion-appear var(--dur-enter) var(--ease-enter) backwards}
+.menu-continue:active{scale:.98}
+.menu-continue-label{font:500 var(--type-label)/1.4 var(--font-mono);font-stretch:var(--font-mono-stretch);opacity:.85}
+.menu-continue-title{display:flex;align-items:baseline;gap:var(--space-2);font:600 var(--type-body)/1.35 var(--font-text)}
+.menu-continue-number{font:500 var(--type-small) var(--font-mono);font-stretch:var(--font-mono-stretch)}
+.menu-continue-progress{display:block;height:4px;margin-top:var(--space-2);border-radius:var(--radius-full);background:color-mix(in srgb,currentColor 18%,transparent);overflow:hidden}
+.menu-continue-progress>span{display:block;height:100%;border-radius:inherit;background:currentColor;transform-origin:left;transition:transform var(--dur-3) var(--ease)}
+.menu-continue-count{font:500 var(--type-label)/1.4 var(--font-text);opacity:.85}
+
 .section-list{display:grid;gap:var(--space-1);margin:0;padding:0;list-style:none}
-.section-row{display:grid;grid-template-columns:56px minmax(0,1fr) 20px;align-items:center;gap:var(--space-2);width:100%;min-height:56px;padding:var(--space-1) var(--space-2);border:0;border-radius:var(--radius-full);background:none;color:var(--color-on-surface);font:600 var(--type-body) var(--font-text);text-align:left;text-decoration:none;cursor:pointer}
-.section-row:hover{background:color-mix(in srgb,var(--color-on-surface) 6%,transparent)}
-.section-icon{display:grid;place-items:center;width:56px;height:32px;border-radius:var(--radius-full);color:var(--color-on-surface-variant)}
+.section-row{display:grid;grid-template-columns:56px minmax(0,1fr) 20px;align-items:center;gap:var(--space-2);width:100%;min-height:56px;padding:var(--space-1) var(--space-2);border:0;border-radius:var(--radius-full);background:none;color:var(--color-on-surface);font:600 var(--type-body) var(--font-text);text-align:left;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:background-color var(--dur-1) var(--ease),scale var(--dur-press) var(--ease)}
+.section-row:active{background:color-mix(in srgb,var(--color-on-surface) 10%,transparent);scale:.985}
+@media(hover:hover){.section-row:hover{background:color-mix(in srgb,var(--color-on-surface) 6%,transparent)}}
+.section-row[aria-expanded=true]{background:var(--color-surface-container-low)}
+.section-icon{display:grid;place-items:center;width:56px;height:32px;border-radius:var(--radius-full);color:var(--color-on-surface-variant);transition:background-color var(--dur-2) var(--ease)}
 .section-row[aria-current=true] .section-icon{background:var(--color-primary-container);color:var(--color-on-primary-container)}
-.section-chevron{width:8px;height:8px;justify-self:center;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform var(--dur-1) var(--ease)}
+.section-chevron{width:8px;height:8px;justify-self:center;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform var(--dur-2) var(--ease-spring)}
 .section-row[aria-expanded=true] .section-chevron{transform:rotate(-135deg)}
-.section-panel{display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-1) 0 var(--space-3) var(--space-3)}
+/* Раскрытый раздел выезжает на месте, его страницы — каскадом (app/motion.css, группа .mega-list). */
+.section-panel{display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-1) 0 var(--space-3) var(--space-3);animation:motion-appear var(--dur-2) var(--ease-enter) backwards}
 .section-panel[hidden]{display:none}
 .section-panel .mega-description{padding:0 var(--space-3)}
 .section-panel .mega-progress{margin-top:0}
-@media(forced-colors:active){.bottom-item[aria-current=page] .bottom-indicator,.section-row[aria-current=true] .section-icon{outline:2px solid Highlight}}
+.section-panel .mega-item{min-height:var(--touch-target);-webkit-tap-highlight-color:transparent}
+.section-panel .mega-item:active{background:color-mix(in srgb,var(--color-on-surface) 10%,transparent)}
+@media(forced-colors:active){.bottom-item[aria-current=page] .bottom-indicator,.menu-continue,.section-row[aria-current=true] .section-icon{outline:2px solid Highlight}}
 @media print{.bottom-bar,.section-menu{display:none!important}}

@@ -117,3 +117,48 @@ test('«Продолжить» is the current item on any tab of the chapter it 
  const next=bar(page).getByRole('link',{name:'Продолжить'});
  await expect(next).toHaveAttribute('href','/flow/08-preflight');await expect(next).toHaveAttribute('aria-current','page');
 });
+
+// Mobile overhaul (P3-12): the bar steps aside while reading down, the menu is a bottom sheet dragged down to close,
+// chapter tabs stack the icon over the label and shrink to icons once stuck.
+test('the bar hides while scrolling down and returns on the way up',async({page})=>{
+ await ready(page,'/flow/08-preflight');
+ await page.mouse.move(180,300);
+ await page.mouse.wheel(0,600);await expect(bar(page)).toHaveAttribute('data-hidden','');
+ await expect.poll(async()=>(await bar(page).boundingBox())!.y).toBeGreaterThanOrEqual(800-1);
+ await page.mouse.wheel(0,-200);await expect(bar(page)).not.toHaveAttribute('data-hidden');
+ // Keyboard focus inside a hidden bar shows it.
+ await page.mouse.wheel(0,600);await expect(bar(page)).toHaveAttribute('data-hidden','');
+ await bar(page).getByRole('link',{name:'Главная'}).focus();
+ await expect.poll(async()=>{const b=(await bar(page).boundingBox())!;return b.y+b.height;}).toBeLessThanOrEqual(801);
+});
+
+test('the section menu is a bottom sheet: «Продолжить» first, dragged down it closes',async({page})=>{
+ await ready(page,'/flow/08-preflight');
+ await page.getByRole('button',{name:'Разделы',exact:true}).click();await expect(menu(page)).toBeVisible();
+ await expect(menu(page).locator('.menu-continue')).toHaveAttribute('href','/chapters/01');
+ await expect(menu(page).locator('.menu-continue')).toContainText('0 из 22 глав пройдено');
+ await page.evaluate(()=>Promise.all(document.getAnimations().map(a=>a.finished.catch(()=>undefined))));
+ const sheet=(await menu(page).boundingBox())!;expect(sheet.y+sheet.height).toBeGreaterThanOrEqual(799);
+ // A short drag springs back; a long one closes the sheet.
+ const header=(await menu(page).locator('.section-menu-header').boundingBox())!,x=header.x+60,y=header.y+20;
+ await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x,y+30,{steps:5});await page.mouse.up();
+ await expect(menu(page)).toBeVisible();
+ await page.waitForTimeout(600);
+ await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x,y+200,{steps:20});await page.mouse.up();
+ await expect(menu(page)).toBeHidden();await expect(page.getByRole('button',{name:'Разделы',exact:true})).toBeFocused();
+});
+
+test('on a phone chapter tabs fit without scrolling and shrink to icons when stuck, names intact',async({page})=>{
+ for(const width of [360,390,430]){
+  await ready(page,'/flow/08-preflight',width);
+  const tabs=page.locator('.page-tabs');await expect(tabs).toHaveAttribute('data-icons','true');
+  expect(await tabs.locator('ul').evaluate(list=>list.scrollWidth<=list.clientWidth)).toBe(true);
+  await expect(tabs.getByRole('link')).toHaveText(['Обзор','Как устроено','Как применять','Проверь себя']);
+  await page.mouse.move(width/2,400);await page.mouse.wheel(0,1200);await expect(tabs).toHaveAttribute('data-stuck','true');
+  await page.evaluate(()=>Promise.all(document.getAnimations().map(a=>a.finished.catch(()=>undefined))));
+  // Other tabs are icons of at least 44 px; the current one keeps its label; names stay for assistive tech.
+  const sizes=await tabs.locator('a').evaluateAll(links=>links.map(a=>{const r=a.getBoundingClientRect();return {w:r.width,h:r.height,current:a.hasAttribute('aria-current')};}));
+  for(const size of sizes){expect(size.h).toBeGreaterThanOrEqual(44);expect(size.w).toBeGreaterThanOrEqual(44);if(!size.current)expect(size.w).toBeLessThan(60);}
+  await expect(tabs.getByRole('link',{name:'Как устроено'})).toBeVisible();
+ }
+});
