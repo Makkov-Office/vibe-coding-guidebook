@@ -4,7 +4,7 @@
 // поэтому подключается встроенным скриптом, как ui-prefs.mjs. При reduced motion и data-motion="off" ничего не делает.
 
 /** Кликабельные элементы со следом; тот же список — в src/design/interaction.css (сверяет tests/press-glow.test.mjs). */
-export const PRESS_SELECTOR='.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link,[data-glow]';
+export const PRESS_SELECTOR='.bp-press,.bp-button,.bp-chip,.page-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link,[data-glow]';
 
 /**
  * Ставит обработчик. Функция самодостаточна: её исходный текст встраивается в страницу (pressGlowScript).

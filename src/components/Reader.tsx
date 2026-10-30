@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import {useRouter,usePathname} from 'next/navigation';
-import {useEffect,useRef,useState,useMemo,type ReactNode} from 'react';
+import {Suspense,lazy,useEffect,useRef,useState,useMemo,type ComponentProps,type ReactNode} from 'react';
 import {ProjectIcon,ChapterIcon} from './ProjectIcon';
 import {ContextPreview} from './ContextPreview';
 import {NavRail} from './NavRail';
@@ -9,9 +9,10 @@ import {MobileNav} from './MobileNav';
 import {Breadcrumbs} from './Breadcrumbs';
 import {navSections} from '../design/nav-sections';
 import {norm,readRecent,rememberPage,type GroupId} from '../design/search-groups.mjs';
-import {SearchPalette,type SearchHit,type SearchPage} from './SearchPalette';
+import type {SearchHit,SearchPage} from './SearchPalette';
 import {BrandSignature} from './BrandSignature';
-import {transitionTo} from '../design/motion';
+import {motionDuration,transitionTo} from '../design/motion';
+import {revealOnScroll} from '../design/reveal';
 import {progressStore} from './progress-store.mjs';
 import type {Chapter,SearchEntry} from '../content/types';
 import {ReaderPageContext,type PageData} from './ReaderPageData';
@@ -22,6 +23,10 @@ function fetchSearch(url:string){let promise=loadedSearch.get(url);if(!promise){
 const groups=[['Понять систему',1,5],['Провести задачу',6,11],['Риск и интеграция',12,17],['Практика и развитие',18,21],['Инструменты',0,0],['Справочник',22,23]] as const;
 const toolIds=['ch-tools','ch-codex','ch-claude-code'];
 const skeletonDelay=500;
+// Search palette is its own chunk (P3-11): loaded when the browser is idle after the first page, or on the first open.
+const SearchPalette=lazy(()=>import('./SearchPalette').then(module=>({default:module.SearchPalette})));
+/** Mounts the lazy palette and reports when its dialog is in the document. */
+function LazySearch({onReady,...props}:ComponentProps<typeof SearchPalette>&{onReady:()=>void}){useEffect(onReady,[onReady]);return <SearchPalette {...props}/>;}
 export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];assets:{search:string;anchors:string};children:ReactNode}){
  const pathname=usePathname(),live=liveRoute(pathname),chapterId=live?live.chapterId:pathname==='/agents'?'agents':movedPages.find(entry=>entry.new===pathname)?.chapter??(pathname==='/resources'?'ch-resources':pathname==='/tools'?'ch-tools':pathname.startsWith('/tools/')?'ch-'+pathname.split('/').pop():pathname.startsWith('/chapters/')?'ch-'+pathname.split('/').pop():pathname.startsWith('/design/chapters/')?'ch-'+pathname.split('/')[3]:pathname==='/'?'home':'ch-00');
  const [pageData,setPageData]=useState<PageData>({chapterId:'',outline:[],hasChecklists:false,terms:[],levels:null,blocks:[]}),[searchData,setSearchData]=useState<(SearchEntry&{normalized:string})[]|null>(null),[searchState,setSearchState]=useState<'idle'|'loading'|'ready'|'error'>('idle'),[pending,setPending]=useState(false);
@@ -43,15 +48,20 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
  const chapter=pageData.chapterId===chapterId?pageData:null;
  // Pages search can lead to by address, for quick jumps and «Недавние» (P3-03).
  const pages=useMemo(()=>{const list=new Map<string,SearchPage>(chapters.map(c=>[liveChapter(c.id)||movedPage(c.id)?pageHref(c.id):c.path,{title:c.id==='ch-23'?'Глоссарий':c.title,chapter:c.id}]));const agents=navSections(chapters).find(s=>s.id==='agents')?.href;if(agents)list.set(agents,{title:'Agent Pack',chapter:null});if(!list.has('/start/00-how-to-read'))list.set('/start/00-how-to-read',{title:'Как читать руководство',chapter:'ch-00'});return list;},[chapters]);
- const [recent,setRecent]=useState<string[]>([]);
+ const [recent,setRecent]=useState<string[]>([]),[searchLoaded,setSearchLoaded]=useState(false),openPending=useRef(false);
  // Closing search returns focus to the button that opened it (rail or bottom bar), or to what had focus before a shortcut opened it (P3-07: no header button).
  const searchOpener=useRef<HTMLElement|null>(null);
- function openSearch(opener:HTMLElement|null=null){searchOpener.current=opener??(document.activeElement instanceof HTMLElement&&document.activeElement!==document.body?document.activeElement:null);setRecent(readRecent());setSelected(0);setScope(null);window.dispatchEvent(new Event('context-close'));searchRef.current?.showModal();inputRef.current?.focus();if(searchDataRef.current)return;setSearchState('loading');fetchSearch(assets.search).then(entries=>{setSearchData(entries);setSearchState('ready');},()=>setSearchState('error'));}
+ function showSearch(){searchRef.current?.showModal();inputRef.current?.focus();}
+ const searchReady=useRef(()=>{if(openPending.current){openPending.current=false;showSearch();}}).current;
+ function openSearch(opener:HTMLElement|null=null){searchOpener.current=opener??(document.activeElement instanceof HTMLElement&&document.activeElement!==document.body?document.activeElement:null);setRecent(readRecent());setSelected(0);setScope(null);window.dispatchEvent(new Event('context-close'));if(searchRef.current)showSearch();else {openPending.current=true;setSearchLoaded(true);}if(searchDataRef.current)return;setSearchState('loading');fetchSearch(assets.search).then(entries=>{setSearchData(entries);setSearchState('ready');},()=>setSearchState('error'));}
 
- function reveal(id:string){const target=document.getElementById(id);if(!target)return;if(id.startsWith('term-'))window.dispatchEvent(new CustomEvent('glossary-reveal'));target.hidden=false;let node:HTMLElement|null=target;while(node){if(node instanceof HTMLDetailsElement)node.open=true;node=node.parentElement;}requestAnimationFrame(()=>{target.scrollIntoView({block:'start',behavior:'instant'});target.tabIndex=-1;target.focus({preventScroll:true});if(id.startsWith('term-')){document.querySelectorAll('.term-arrival').forEach(n=>n.classList.remove('term-arrival'));target.classList.add('term-arrival');if(highlight.current)clearTimeout(highlight.current);highlight.current=setTimeout(()=>target.classList.remove('term-arrival'),1000);}});}
+ // A closing modal (search) keeps the page inert until its exit transition ends: focus the target once it has.
+ function retryFocus(target:HTMLElement){const dialog=document.querySelector<HTMLElement>('dialog.search-dialog');const again=()=>{if(target.isConnected&&document.activeElement!==target)target.focus({preventScroll:true});};if(dialog)dialog.addEventListener('transitionend',again,{once:true});setTimeout(again,motionDuration('--dur-exit')+50);}
+ function reveal(id:string){const target=document.getElementById(id);if(!target)return;if(id.startsWith('term-'))window.dispatchEvent(new CustomEvent('glossary-reveal'));target.hidden=false;let node:HTMLElement|null=target;while(node){if(node instanceof HTMLDetailsElement)node.open=true;node=node.parentElement;}requestAnimationFrame(()=>{target.scrollIntoView({block:'start',behavior:'instant'});target.tabIndex=-1;target.focus({preventScroll:true});if(document.activeElement!==target)retryFocus(target);if(id.startsWith('term-')){document.querySelectorAll('.term-arrival').forEach(n=>n.classList.remove('term-arrival'));target.classList.add('term-arrival');if(highlight.current)clearTimeout(highlight.current);highlight.current=setTimeout(()=>target.classList.remove('term-arrival'),1000);}});}
  function result(hit:SearchHit){const entry=hit.entry;searchNavigating.current=true;searchRef.current?.close();if(!entry){if(hit.href===location.pathname)searchNavigating.current=false;else {setPending(true);go(hit.href);}return;}if(entry.path===location.pathname){history.pushState(null,'',`${entry.path}#${entry.id}`);reveal(entry.id);}else {setPending(true);go(`${entry.path}#${entry.id}`);}}
  useEffect(()=>{
   setReady(true);document.documentElement.classList.add('js-enabled');
+  const idle=window.requestIdleCallback?.(()=>setSearchLoaded(true),{timeout:3000})??window.setTimeout(()=>setSearchLoaded(true),1500);
   const key=(event:KeyboardEvent)=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){event.preventDefault();openSearch();return;}
   // «/» opens search too, unless the reader is typing or another dialog is open (P3-03).
   if(event.key==='/'&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&!(event.target as HTMLElement).closest?.('input,textarea,select,[contenteditable]:not([contenteditable=false])')&&!document.querySelector('dialog[open]')){event.preventDefault();openSearch();}};
@@ -62,7 +72,7 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
   let last=0;const save=()=>{updateProgress();const id=current.current.chapterId;if(['home','ch-00','ch-23','ch-resources',...toolIds].includes(id)||current.current.pathname.startsWith('/design/')||Date.now()-last<800)return;last=Date.now();const tab=current.current.tab;progressStore.set(()=>({reading:tab?{page:id,tab,y:scrollY}:{page:id,y:scrollY}}));};
   const hash=()=>{if(location.hash)reveal(decodeURIComponent(location.hash.slice(1)));};
   document.addEventListener('keydown',key);document.addEventListener('click',click,true);document.addEventListener('change',change);window.addEventListener('hashchange',hash);window.addEventListener('scroll',save,{passive:true});
-  return()=>{size.disconnect();window.removeEventListener('resize',updateProgress);document.removeEventListener('keydown',key);document.removeEventListener('click',click,true);document.removeEventListener('change',change);window.removeEventListener('hashchange',hash);window.removeEventListener('scroll',save);if(highlight.current)clearTimeout(highlight.current);};
+  return()=>{if(window.cancelIdleCallback)window.cancelIdleCallback(idle);else clearTimeout(idle);size.disconnect();window.removeEventListener('resize',updateProgress);document.removeEventListener('keydown',key);document.removeEventListener('click',click,true);document.removeEventListener('change',change);window.removeEventListener('hashchange',hash);window.removeEventListener('scroll',save);if(highlight.current)clearTimeout(highlight.current);};
  // Global handlers survive chapter transitions and read current page metadata through a ref.
  // eslint-disable-next-line react-hooks/exhaustive-deps
  },[assets.search]);
@@ -88,6 +98,9 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
   return()=>{disposed=true;cancelAnimationFrame(frame);};
  // eslint-disable-next-line react-hooks/exhaustive-deps
  },[pageData,chapterId,pathname]);
+ // Children of cascade groups below the screen appear as they scroll in (P3-11, src/design/reveal.ts).
+ // Scheduled for the frame after the page paints: reading geometry during hydration would force an extra layout.
+ useEffect(()=>{let cancel=()=>{};const frame=requestAnimationFrame(()=>{cancel=revealOnScroll(document.getElementById('reader'));});return()=>{cancelAnimationFrame(frame);cancel();};},[pathname,pageData.chapterId]);
  // Wide blocks at the top of the page (.page-hero, .shell-wide) span the outline column as well: the outline starts below them (P3-07).
  // A sticky block (chapter tabs) is placed where it sits before sticking: after the previous block, its margin and the parent's row gap
  // (once stuck, its own box moves with the scroll).
@@ -108,6 +121,6 @@ export function Reader({chapters,assets,children}:{chapters:NavigationChapter[];
  return <ReaderPageContext.Provider value={setPageData}><Link className="skip-link" href="#reader">Перейти к чтению</Link><div className="reading-progress-track" aria-hidden="true"><div ref={readingProgress}/></div>
  <div ref={shell} className={`reading-shell ${pending?'navigation-pending':''}${skeleton?' navigation-skeleton':''}`}><div className="route-loading" role="status" aria-live="polite">{pending&&<><span className="loading-spinner"/> Загружаем главу…</>}</div><NavRail chapters={chapters} pathname={pathname} ready={ready} onSearch={openSearch}/><MobileNav chapters={chapters} pathname={pathname} ready={ready} onSearch={openSearch}/><aside className="sidebar">{nav()}{utilities}</aside><div className="reading-column"><Breadcrumbs chapters={chapters} pathname={pathname}/>{skeleton&&<main className="reader-skeleton" aria-busy="true" aria-label="Загрузка главы"><span className="skeleton-title"/>{Array.from({length:8},(_,i)=><span className="skeleton-line" key={i}/>)}</main>}{children}<footer className="reader-footer"><BrandSignature/>{hasChecklists&&<div className="footer-actions"><button type="button" disabled={!ready} onClick={()=>{document.querySelectorAll<HTMLInputElement>('[data-practice]:not([data-exercise])').forEach(box=>{box.checked=false;});const ids=new Set([...document.querySelectorAll<HTMLInputElement>('[data-practice]:not([data-exercise])')].map(box=>box.dataset.practice));progressStore.set(({practice})=>({practice:Object.fromEntries(Object.entries(practice).filter(([id])=>!ids.has(id)))}));setStatus('Операционные отметки на странице сброшены.');}}><ProjectIcon name="reset"/> Сбросить чеклисты</button></div>}</footer></div>{!!chapter?.outline.length&&<aside className="local-outline"><nav aria-label="Подразделы текущей главы">{chapter.outline.map(item=><Link href={`#${item.id}`} key={item.id}>{item.title}</Link>)}</nav></aside>}</div>
  {returnTo&&<Link className="return-reading" href={`${returnTo.path}?return=1#${returnTo.id}`}>Вернуться к месту чтения <ProjectIcon name="arrowLeft"/></Link>}
- <SearchPalette dialogRef={searchRef} inputRef={inputRef} query={query} onQuery={setQuery} selected={selected} onSelect={setSelected} scope={scope} onScope={setScope} data={searchData} state={searchState} pages={pages} recent={recent} here={here} onPick={result} onRetry={()=>openSearch(searchOpener.current)} onClosed={()=>{if(!searchNavigating.current){const opener=searchOpener.current;if(opener?.isConnected&&opener.checkVisibility?.()!==false)opener.focus();else document.querySelector<HTMLElement>('main#reader')?.focus({preventScroll:true});}searchNavigating.current=false;}}/>
+ {searchLoaded&&<Suspense fallback={null}><LazySearch onReady={searchReady} dialogRef={searchRef} inputRef={inputRef} query={query} onQuery={setQuery} selected={selected} onSelect={setSelected} scope={scope} onScope={setScope} data={searchData} state={searchState} pages={pages} recent={recent} here={here} onPick={result} onRetry={()=>openSearch(searchOpener.current)} onClosed={()=>{if(!searchNavigating.current){const opener=searchOpener.current;if(opener?.isConnected&&opener.checkVisibility?.()!==false)opener.focus();else document.querySelector<HTMLElement>('main#reader')?.focus({preventScroll:true});}searchNavigating.current=false;}}/></Suspense>}
  <ContextPreview terms={chapter?.terms??[]} levels={chapter?.levels??null} blocks={chapter?.blocks??[]}/><p role="status" className="reader-status">{status}</p><noscript><style>{`.nav-rail,.bottom-bar,.search-trigger,.local-outline,.glossary-filter,.learning-progress,[data-example]{display:none!important}.sidebar{display:block!important;position:static!important;width:auto!important;max-height:none!important}.reading-shell{display:block!important;margin:0!important}.reading-column{margin:0 auto!important}.panel-workspace,.scenarios,.scenario-result{display:none!important}.static-panel>div{display:block!important}`}</style><p className="no-js-note">JavaScript отключён. Чтение, навигация, глоссарий и текстовые схемы доступны.</p></noscript></ReaderPageContext.Provider>;
 }

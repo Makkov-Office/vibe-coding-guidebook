@@ -6,7 +6,10 @@
 .motion-appear{animation:motion-appear var(--dur-3) var(--ease-enter) backwards}
 .motion-appear-fast{animation:motion-appear var(--dur-2) var(--ease-enter) backwards}
 .motion-appear-x{animation:motion-appear-x var(--dur-3) var(--ease-enter) backwards}
-@keyframes motion-appear{from{opacity:0;transform:translateY(var(--shift-appear))}}
+/* overflow-anchor:none в начале появления: сдвиг ещё летящего элемента не сбивает scroll anchoring (Chrome учитывает
+   transform якоря, и восстановленная позиция чтения уезжала бы на --shift-appear). Дискретно: к середине появления,
+   когда сдвиг меньше пикселя, элемент снова может быть якорем. */
+@keyframes motion-appear{from{opacity:0;transform:translateY(var(--shift-appear));overflow-anchor:none}}
 @keyframes motion-appear-x{from{opacity:0;transform:translateX(var(--shift-appear))}}
 
 /* 2. Прорисовка линии: у линии pathLength="1"; один раз, когда схема появилась. */
@@ -31,6 +34,63 @@
 :is(.search-dialog,.section-menu,.context-panel)::backdrop{transition:opacity var(--dur-exit) var(--ease-exit),display var(--dur-exit) allow-discrete,overlay var(--dur-exit) allow-discrete}
 :is(.search-dialog,.section-menu,.context-panel):not([open])::backdrop{opacity:0}
 
+/* 6. Каскад (stagger): дети группы из реестра src/design/motion-groups.mjs появляются друг за другом с шагом
+   --dur-stagger — быстро, но каждый отдельно. Подключать ничего не нужно: правило ниже ловит группы по классам
+   шаблона (баннер, табы, текст, меню, карточки) и атрибуту data-stagger. Номер ребёнка --i — из nth-child; свой
+   шаг получают первые --stagger-cap детей, остальные ниже экрана показывает reveal.ts при прокрутке. Группа внутри
+   группы целиком не появляется — каскад идёт по её детям; --stagger-from сдвигает начало группы на N шагов.
+   Все селекторы каскада — в :where() (вес 0): правило компонента и выключатель всегда сильнее.
+   Список групп совпадает с STAGGER_GROUPS (сверяет tests/motion-groups.test.mjs). */
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(-n+14)){animation:motion-appear var(--dur-enter) var(--ease-enter) backwards;animation-delay:calc((var(--stagger-from,0) + var(--i,0)) * var(--dur-stagger))}
+/* Номер ребёнка: sibling-index() (одно правило), где его нет — nth-child. */
+@supports (z-index:sibling-index()){:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>*{--i:min(sibling-index() - 1,var(--stagger-cap))}}
+@supports not (z-index:sibling-index()){
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(2)){--i:1}
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(3)){--i:2}
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(4)){--i:3}
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(5)){--i:4}
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(6)){--i:5}
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(7)){--i:6}
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(8)){--i:7}
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(9)){--i:8}
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(10)){--i:9}
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(11)){--i:10}
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(12)){--i:11}
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(13)){--i:12}
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where(:nth-child(14)){--i:13}
+}
+:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination)>:where([data-stagger],.rail-list,.mega-menu,.mega-list,.section-list,.bottom-bar,.page-hero__text,.page-hero__meta,.page-tabs ul,.page-body,.reader-prose,.home-cards,.home-next,.home-footer,.ct-pager,.chapter-pagination){animation:none}
+.page-hero__visual{--stagger-from:2}
+.page-hero__meta{--stagger-from:3}
+.page-tabs ul{--stagger-from:3}
+:is(.page-body,.reader-prose){--stagger-from:5}
+.page-body .reader-prose{--stagger-from:6}
+.mega-list{--stagger-from:1}
+.mega-group .mega-list{--stagger-from:2}
+/* Заголовок и описание баннера — главный контент первого экрана (LCP): только подъём без прозрачности, чтобы
+   браузер считал их показанными с первого кадра. */
+:where(.page-hero__text)>:where(.page-hero__title,h1,.page-hero__description){animation-name:motion-rise}
+@keyframes motion-rise{from{transform:translateY(var(--shift-appear));overflow-anchor:none}}
+/* Визуал баннера проявляется следом за текстом: прозрачность и лёгкое приближение. */
+.page-hero__visual{animation:motion-zoom var(--dur-3) var(--ease-enter) backwards;animation-delay:calc(var(--stagger-from) * var(--dur-stagger))}
+@keyframes motion-zoom{from{opacity:0;transform:scale(.97);overflow-anchor:none}}
+
+/* 7. Появление при прокрутке: reveal.ts ставит data-reveal="wait" детям групп ниже экрана и "in", когда они
+   входят в экран; --i — номер в пачке, вошедшей вместе. Скрытое состояние — только при включённом движении:
+   выключатель и печать показывают всё сразу. */
+[data-reveal=in]{animation:motion-appear var(--dur-enter) var(--ease-enter) backwards;animation-delay:calc(min(var(--i,0),var(--stagger-cap)) * var(--dur-stagger))}
+@media (prefers-reduced-motion:no-preference){:root:not([data-motion=off]) [data-reveal=wait]{opacity:0;animation:none}}
+@media print{[data-reveal]{opacity:1!important;animation:none!important}}
+
+/* 8. Отклик на прокрутку (scroll-driven, без скрипта, на компоновщике): схема баннера уходит вверх медленнее
+   страницы и чуть уменьшается. Где animation-timeline нет, баннер просто прокручивается. */
+@supports (animation-timeline:view()){
+  @media (prefers-reduced-motion:no-preference){
+    .page-hero__visual>*{animation:motion-parallax var(--ease-linear) both;animation-timeline:view();animation-range:exit 0% exit 100%}
+  }
+}
+@keyframes motion-parallax{to{transform:translateY(18%) scale(.94);opacity:.4}}
+
 /* Переход между страницами: View Transitions API, меняется только колонка чтения.
    Колонка выше экрана, и старая страница бывает прокручена далеко вниз: геометрию группы не
    анимируем (иначе снимок пролетит через экран), старый снимок убираем сразу, новый появляется. */
@@ -38,7 +98,8 @@
 ::view-transition-group(root),::view-transition-old(root),::view-transition-new(root){animation:none}
 ::view-transition-group(page){animation:none}
 ::view-transition-old(page){display:none}
-::view-transition-new(page){animation:motion-appear var(--dur-3) var(--ease-enter) both}
+::view-transition-new(page){animation:motion-fade var(--dur-2) var(--ease-enter) both}
+@keyframes motion-fade{from{opacity:0}}
 
 /* Выключатель: системная настройка или data-motion="off" на <html>. */
 @media (prefers-reduced-motion:reduce){

@@ -12,6 +12,8 @@ import "../src/design/home.css";
 import "../src/components/drill.css";
 import "../src/design/glossary.css";
 import "../src/design/page-hero.css";
+import "../src/design/page-template.css";
+import "../src/design/page-tabs.css";
 // Последним: поведение кликабельных (форма на hover и нажатии, след по клику) поверх стилей компонентов (P2-08).
 import "../src/design/interaction.css";
 import {brandTitle} from "../src/design/brand";

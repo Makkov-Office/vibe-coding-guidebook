@@ -16,14 +16,14 @@ test('chapter template: hero, tabs, on this page, neighbours and empty tab',asyn
  await expect(page.locator('.ct-chips li')).toHaveText([/\d+ мин/,'2 · Инженер','Отчёт preflight']);
  const tabs=page.getByRole('navigation',{name:'Табы главы'}).getByRole('link');
  await expect(tabs).toHaveCount(4);
- await expect(page.locator('.ct-tabs a[aria-current="page"]')).toHaveAttribute('href','/design/chapters/08/apply');
+ await expect(page.locator('.page-tabs a[aria-current="page"]')).toHaveAttribute('href','/design/chapters/08/apply');
  // «На этой странице»: два пункта таба, переход по якорю, текущий пункт отмечается.
  const toc=page.locator('.ct-toc');await toc.locator('summary').click();
  await expect(toc.getByRole('link')).toHaveText(['8.1. Последовательность','8.2. Отчёт preflight']);
  await toc.getByRole('link',{name:'8.2. Отчёт preflight'}).click();
  await expect(page).toHaveURL(/#ch-08-8-2-/);await expect(toc.locator('a[aria-current="location"]')).toHaveText('8.2. Отчёт preflight');
  // Заголовок не прячется под шапкой и прилипшей полосой.
- const heading=await page.locator('.ct-prose h2[id^="ch-08-8-2-"]').boundingBox();const bar=await page.locator('.ct-tabs').boundingBox();expect(heading!.y).toBeGreaterThanOrEqual(bar!.y+bar!.height);
+ const heading=await page.locator('.ct-prose h2[id^="ch-08-8-2-"]').boundingBox();const bar=await page.locator('.page-tabs').boundingBox();expect(heading!.y).toBeGreaterThanOrEqual(bar!.y+bar!.height);
  const pager=page.getByRole('navigation',{name:'Соседние страницы'});
  await expect(pager.getByRole('link')).toHaveText([/Предыдущий таб\s*Как устроено/,/Дальше\s*Проверь себя/]);
  await pager.getByRole('link',{name:/Проверь себя/}).click();await expect(page).toHaveURL(/\/design\/chapters\/08\/check$/);
@@ -49,17 +49,17 @@ test('chapter template: banner of two cards, full-width tabs condense into a flo
  for(const width of [1440,2560,360]){
   await page.setViewportSize({width,height:900});await open(page,'/design/chapters/08/apply');
   if(width===360)await expect(page.locator('.ct-banner-visual')).toBeHidden();
-  const bar=page.locator('.ct-tabs'),row=page.locator('.ct-tabs-row');await expect(bar).not.toHaveAttribute('data-stuck');
+  const bar=page.locator('.page-tabs'),row=page.locator('.page-tabs__row');await expect(bar).not.toHaveAttribute('data-stuck');
   // Полоса на всю ширину баннера (.shell-wide, P3-07: вся рабочая область), активный таб — тональная пилюля.
   const wide=(await row.boundingBox())!,column=(await page.locator('.ct-banner').boundingBox())!;expect(Math.abs(wide.width-column.width),`${width}`).toBeLessThanOrEqual(1);
-  await expect(page.locator('.ct-tabs a[aria-current="page"]')).not.toHaveCSS('background-color','rgba(0, 0, 0, 0)');
+  await expect(page.locator('.page-tabs a[aria-current="page"]')).not.toHaveCSS('background-color','rgba(0, 0, 0, 0)');
   const height=(await bar.boundingBox())!.height;
   // Курсор над текстом: в углу окна — rail, колесо прокрутило бы его.
   await page.mouse.move(width-24,450);await page.mouse.wheel(0,1200);
   await expect(bar).toHaveAttribute('data-stuck','true');
   // Прилипшая полоса — плоская плавающая пилюля (без тени, P2-07: контур outline-variant) ровно на ширину внутреннего контейнера (P3-08, как M3 Buttons):
   // от левого края текста до правого края «На этой странице» (или текста, если колонки нет); высота полосы та же.
-  const box=await page.evaluate(()=>{const body=document.querySelector('.ct-body')!.getBoundingClientRect(),outline=document.querySelector('.local-outline');
+  const box=await page.evaluate(()=>{const body=document.querySelector('.page-body')!.getBoundingClientRect(),outline=document.querySelector('.local-outline');
    const right=outline?.checkVisibility()?outline.getBoundingClientRect().right:body.right;return {x:body.x,width:right-body.x};});
   if(width>=1440)expect(Math.round(box.width),`${width}: container token`).toBe(1024);
   if(width>=1440)expect(column.width-box.width,`${width}: banner wider than container`).toBeGreaterThan(200);
@@ -68,8 +68,8 @@ test('chapter template: banner of two cards, full-width tabs condense into a flo
   const pill=(await row.boundingBox())!;expect(Math.abs(pill.x-box.x),`${width}: aligned with container`).toBeLessThanOrEqual(1);
   expect(Math.abs(pill.x+pill.width/2-(column.x+column.width/2)),`${width}: centered`).toBeLessThanOrEqual(2);
   expect((await bar.boundingBox())!.height).toBe(height);
-  if(width>=1440)await expect(page.locator('.ct-tabs-pill')).toHaveText('08 · Preflight');
-  else await expect(page.locator('.ct-tabs-pill')).toBeHidden();
+  if(width>=1440)await expect(page.locator('.page-tabs__pill')).toHaveText('08 · Preflight');
+  else await expect(page.locator('.page-tabs__pill')).toBeHidden();
   // Шапки нет (P3-07): полоса прилипает к верхнему краю окна без щели, через которую виден текст.
   await expect(page.locator('header.topbar')).toHaveCount(0);
   expect(Math.abs((await bar.boundingBox())!.y),`${width}`).toBeLessThanOrEqual(1);
@@ -105,33 +105,33 @@ test('chapter template: copy link, keyboard and clipboard refusal',async({page})
  await page.evaluate(()=>{(window as unknown as {deny:boolean}).deny=true;});await copy.click();
  await expect(page.locator('.ct-live')).toContainText('Не удалось скопировать. Адрес раздела:');
  // С клавиатуры по табам: фокус видим, переход меняет текущий таб.
- const tab=page.locator('.ct-tabs a[href="/design/chapters/08/how-it-works"]');await tab.focus();await expect(tab).toHaveCSS('outline-style','solid');await page.keyboard.press('Enter');
- await expect(page).toHaveURL(/\/how-it-works$/);await expect(page.locator('.ct-tabs a[aria-current="page"]')).toHaveAttribute('href','/design/chapters/08/how-it-works');
+ const tab=page.locator('.page-tabs a[href="/design/chapters/08/how-it-works"]');await tab.focus();await expect(tab).toHaveCSS('outline-style','solid');await page.keyboard.press('Enter');
+ await expect(page).toHaveURL(/\/how-it-works$/);await expect(page.locator('.page-tabs a[aria-current="page"]')).toHaveAttribute('href','/design/chapters/08/how-it-works');
 });
 
 test('chapter template: widths, table cards, reduced motion and axe',async({page})=>{
  for(const width of [320,360,768,1024,1440]){
   await page.setViewportSize({width,height:900});await open(page,'/design/chapters/07/how-it-works');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth),`${width}: no page scroll`).toBe(true);
-  const small=await page.evaluate(()=>[...document.querySelectorAll('.ct-tabs a, .ct-copy, .ct-pager-link, .ct-toc summary, .ct-empty a')].filter(e=>{const r=e.getBoundingClientRect();return r.width&&(r.height<44||r.width<44);}).map(e=>e.className));expect(small,`${width}: 44 px`).toEqual([]);
+  const small=await page.evaluate(()=>[...document.querySelectorAll('.page-tabs a, .ct-copy, .ct-pager-link, .ct-toc summary, .ct-empty a')].filter(e=>{const r=e.getBoundingClientRect();return r.width&&(r.height<44||r.width<44);}).map(e=>e.className));expect(small,`${width}: 44 px`).toEqual([]);
   // Ниже 600 px строка таблицы — карточка с подписью столбца.
   const cell=page.locator('.ct-prose table.ct-cards tbody td').first();await expect(cell).toHaveAttribute('data-label',/.+/);
   expect(await cell.evaluate(td=>getComputedStyle(td).display)).toBe(width<=600?'block':'table-cell');
   // На узком экране текущий таб виден в прокручиваемой полосе.
-  const current=await page.locator('.ct-tabs a[aria-current="page"]').boundingBox();expect(current!.x).toBeGreaterThanOrEqual(0);expect(current!.x+current!.width).toBeLessThanOrEqual(width);
+  const current=await page.locator('.page-tabs a[aria-current="page"]').boundingBox();expect(current!.x).toBeGreaterThanOrEqual(0);expect(current!.x+current!.width).toBeLessThanOrEqual(width);
  }
  // Переход по табу без перезагрузки: новый текущий таб тоже в зоне видимости.
  await page.setViewportSize({width:320,height:900});await open(page,'/design/chapters/07');
  await page.getByRole('navigation',{name:'Соседние страницы'}).getByRole('link',{name:/Как устроено/}).click();await page.getByRole('navigation',{name:'Соседние страницы'}).getByRole('link',{name:/Как применять/}).click();
  await expect(page).toHaveURL(/\/07\/apply$/);
- await expect.poll(async()=>{const b=(await page.locator('.ct-tabs a[aria-current="page"]').boundingBox())!;return b.x>=0&&b.x+b.width<=320;}).toBe(true);
+ await expect.poll(async()=>{const b=(await page.locator('.page-tabs a[aria-current="page"]').boundingBox())!;return b.x>=0&&b.x+b.width<=320;}).toBe(true);
  // data-motion="off" (P3-05) выключает переход так же, как reduced motion.
- await page.evaluate(()=>document.documentElement.setAttribute('data-motion','off'));await expect(page.locator('.ct-tabs-row')).toHaveCSS('transition-duration','0s');await page.evaluate(()=>document.documentElement.removeAttribute('data-motion'));
- await expect(page.locator('.ct-tabs-row')).not.toHaveCSS('transition-duration','0s');
- await page.emulateMedia({reducedMotion:'reduce'});await expect(page.locator('.ct-tabs-row')).toHaveCSS('transition-duration','0s');
+ await page.evaluate(()=>document.documentElement.setAttribute('data-motion','off'));await expect(page.locator('.page-tabs__row')).toHaveCSS('transition-duration','0s');await page.evaluate(()=>document.documentElement.removeAttribute('data-motion'));
+ await expect(page.locator('.page-tabs__row')).not.toHaveCSS('transition-duration','0s');
+ await page.emulateMedia({reducedMotion:'reduce'});await expect(page.locator('.page-tabs__row')).toHaveCSS('transition-duration','0s');
  // Сжатие без анимации: после прокрутки пилюля сразу в итоговом виде.
- await page.setViewportSize({width:1440,height:900});await page.mouse.move(1416,450);await page.mouse.wheel(0,1500);await expect(page.locator('.ct-tabs')).toHaveAttribute('data-stuck','true');
- expect((await page.locator('.ct-tabs-row').boundingBox())!.width).toBe(1024);await page.mouse.wheel(0,-5000);
+ await page.setViewportSize({width:1440,height:900});await page.mouse.move(1416,450);await page.mouse.wheel(0,1500);await expect(page.locator('.page-tabs')).toHaveAttribute('data-stuck','true');
+ expect((await page.locator('.page-tabs__row').boundingBox())!.width).toBe(1024);await page.mouse.wheel(0,-5000);
  for(const [width,theme] of [[320,'light'],[320,'dark'],[1440,'light'],[1440,'dark']] as const){
   await page.setViewportSize({width,height:900});
   await page.evaluate(t=>document.documentElement.setAttribute('data-theme',t),theme);

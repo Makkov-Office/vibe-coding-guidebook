@@ -1,0 +1,35 @@
+/* Табы страницы (src/design/PageTabs.tsx): одна полоса для всех страниц шаблона (src/design/PageTemplate.tsx).
+   Режим route — табы-страницы главы (aria-current="page"), режим anchor — разделы страницы, текущий по прокрутке
+   (aria-current="location"). Только токены. */
+/* P5-05, P3-08: на всю рабочую область, как баннер; активный таб — тональная пилюля на всю ячейку.
+   При прокрутке прилипает и сжимается ровно до ширины внутреннего контейнера (--content-container, поле --container-side
+   оболочки M3 в app/globals.css): плавающая пилюля с тенью и коротким именем главы над текстом и «На этой странице».
+   Переход — max-width по одной кривой --ease; reduced motion и data-motion="off" обнуляют длительности.
+   Высота самой полосы в обоих состояниях одна: иначе scroll anchoring сдвигает страницу (позиция чтения). */
+.page-tabs{--page-tabs-gap:8px;position:sticky;top:var(--page-tabs-top);z-index:5;display:flex;justify-content:center;height:72px;margin-top:calc(var(--page-tabs-gap) - var(--space-6));pointer-events:none}
+.page-tabs__row{display:flex;align-items:center;gap:var(--space-1);width:100%;max-width:100%;height:72px;padding:var(--space-1);border-radius:var(--radius-full);background:var(--color-surface-container-low);pointer-events:auto;transition:max-width var(--dur-3) var(--ease),height var(--dur-3) var(--ease),margin-top var(--dur-3) var(--ease),background-color var(--dur-2) var(--ease)}
+.page-tabs ul{display:flex;flex:1 1 auto;min-width:0;height:100%;gap:var(--space-1);margin:0;padding:0;list-style:none;overflow-x:auto;scrollbar-width:none}
+.page-tabs ul::-webkit-scrollbar{display:none}
+.page-tabs li{display:flex;flex:1 0 auto}
+.page-tabs a{display:flex;flex:1;align-items:center;justify-content:center;gap:var(--space-2);min-height:var(--touch-target);min-width:var(--touch-target);padding:0 var(--space-5);border-radius:var(--radius-full);color:var(--color-on-surface-variant);font:600 var(--type-small)/1 var(--font-text);text-decoration:none;white-space:nowrap;transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
+.page-tabs a:hover{background:var(--color-surface-container);color:var(--color-on-surface)}
+.page-tabs a:is([aria-current="page"],[aria-current="location"]){background:var(--color-primary-container);color:var(--color-on-primary-container)}
+.page-tabs a:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
+.page-tabs__pill{flex:none;max-width:0;min-width:0;padding:0;opacity:0;overflow:hidden;color:var(--color-on-surface);font:500 var(--type-small)/1.2 var(--font-display);letter-spacing:var(--tracking-display);white-space:nowrap;text-overflow:ellipsis;transition:max-width var(--dur-3) var(--ease),opacity var(--dur-2) var(--ease),padding var(--dur-3) var(--ease)}
+.page-tabs[data-stuck] .page-tabs__row{max-width:calc(100% - 2 * var(--container-side));height:56px;margin-top:var(--space-2);background:var(--color-surface);outline:var(--stroke-border) solid var(--color-outline-variant);outline-offset:calc(var(--stroke-border) * -1)}
+.page-tabs[data-stuck] .page-tabs__pill{max-width:12rem;padding:0 var(--space-2) 0 var(--space-4);opacity:1}
+.page-tabs[data-stuck] a{padding:0 var(--space-4)}
+@media (max-width:840px){.page-tabs a{padding:0 var(--space-4)}}
+@media (max-width:600px){
+  .page-tabs,.page-tabs__row{height:60px}
+  .page-tabs a,.page-tabs[data-stuck] a{padding:0 var(--space-3);font-size:var(--type-label)}
+  .page-tabs[data-stuck] .page-tabs__row{height:52px}
+  .page-tabs[data-stuck] .page-tabs__pill{max-width:0;padding:0;opacity:0}
+}
+
+/* Разделы страницы: подписи длиннее, ячейки по содержимому; полоса прокручивается, текущий таб в зоне видимости. */
+.page-tabs[data-mode=anchor] li{flex:0 0 auto}
+.page-tabs[data-mode=anchor] a{padding:0 var(--space-4);font-weight:500}
+.page-tabs[data-mode=anchor] ul{scroll-behavior:smooth;scroll-padding-inline:var(--space-6)}
+@media (prefers-reduced-motion:reduce){.page-tabs__row,.page-tabs__pill,.page-tabs a{transition:none}.page-tabs ul{scroll-behavior:auto}}
+@media print{.page-tabs{display:none!important}}

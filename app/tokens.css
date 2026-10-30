@@ -101,6 +101,13 @@
   --dur-draw:900ms;
   --dur-dot:6s;
   --dur-step:350ms;
+  /* Каскад (приём 6, app/motion.css): элементы группы появляются друг за другом с шагом --dur-stagger;
+     шаг короткий, вся группа — не дольше --stagger-cap шагов, затем остальные идут вместе. */
+  --dur-stagger:28ms;
+  --dur-enter:320ms;
+  --stagger-cap:14;
+  /* Отклик на прокрутку (scroll-driven): прогресс анимации равен прогрессу прокрутки. */
+  --ease-linear:linear;
 
   /* Цвет — светлая тема (palette.json → themes.light). Плоский стиль P2-07: без градиентов и теней, один тёплый акцент `action`. */
   color-scheme:light;
@@ -234,9 +241,9 @@
 
 /* Движение выключено: системная настройка prefers-reduced-motion или data-motion="off" на <html> (кнопки «Анимации» в rail больше нет, P3-09). */
 @media (prefers-reduced-motion:reduce){
-  :root{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--dur-draw:0ms;--dur-dot:0ms;--dur-step:0ms;--dur-hover:0ms;--dur-hover-out:0ms;--dur-press:0ms;--dur-shape:0ms;--dur-exit:0ms;--dur-glow:0ms;--shift-appear:0px}
+  :root{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--dur-draw:0ms;--dur-dot:0ms;--dur-step:0ms;--dur-hover:0ms;--dur-hover-out:0ms;--dur-press:0ms;--dur-shape:0ms;--dur-exit:0ms;--dur-glow:0ms;--dur-stagger:0ms;--dur-enter:0ms;--shift-appear:0px}
 }
-:root[data-motion=off]{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--dur-draw:0ms;--dur-dot:0ms;--dur-step:0ms;--dur-hover:0ms;--dur-hover-out:0ms;--dur-press:0ms;--dur-shape:0ms;--dur-exit:0ms;--dur-glow:0ms;--shift-appear:0px}
+:root[data-motion=off]{--dur-1:0ms;--dur-2:0ms;--dur-3:0ms;--dur-draw:0ms;--dur-dot:0ms;--dur-step:0ms;--dur-hover:0ms;--dur-hover-out:0ms;--dur-press:0ms;--dur-shape:0ms;--dur-exit:0ms;--dur-glow:0ms;--dur-stagger:0ms;--dur-enter:0ms;--shift-appear:0px}
 
 /* Пружина формы: linear() есть в Chrome 113+, Safari 17.2+, Firefox 112+; иначе остаётся --ease. */
 @supports (transition-timing-function:linear(0,1)){
