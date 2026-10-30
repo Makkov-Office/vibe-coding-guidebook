@@ -18,7 +18,7 @@ export function revealOnScroll(root:HTMLElement|null):()=>void{
   const observer=new IntersectionObserver(entries=>{
     const shown=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top||a.boundingClientRect.left-b.boundingClientRect.left);
     shown.forEach((entry,i)=>{const el=entry.target as HTMLElement;el.style.setProperty('--i',String(i));el.dataset.reveal='in';observer.unobserve(el);});
-  },{rootMargin:'0px 0px -6% 0px'});
+  });
   for(const el of waiting){el.dataset.reveal='wait';observer.observe(el);}
   return ()=>{observer.disconnect();for(const el of waiting)if(el.dataset.reveal==='wait')delete el.dataset.reveal;};
 }

@@ -31,23 +31,25 @@ function headerBottom(){
 
 /** Текущий раздел по прокрутке: последний, чей заголовок выше 45 % экрана; у конца страницы — последний. */
 function useScrollSpy(ids:string[],enabled:boolean){
-  const [current,setCurrent]=useState(ids[0]);
   const key=ids.join('|');
+  // Состояние помнит, к какому набору разделов относится: при переходе на другую страницу сразу её первый раздел.
+  const [spied,setSpied]=useState<{key:string;id?:string}>({key,id:ids[0]});
   useEffect(()=>{
     if(!enabled)return;
     const headings=key.split('|').map(id=>document.getElementById(id)).filter((h):h is HTMLElement=>!!h);
     if(!headings.length)return;
     let frame=0;
     const mark=()=>{frame=0;
-      const end=innerHeight+scrollY>=document.documentElement.scrollHeight-2;
-      setCurrent((end?headings.at(-1):headings.filter(h=>h.getBoundingClientRect().top<innerHeight*.45).at(-1)??headings[0])!.id);
+      // Конец страницы — только после прокрутки: на короткой странице без прокрутки текущий раздел первый.
+      const end=scrollY>0&&innerHeight+scrollY>=document.documentElement.scrollHeight-2;
+      setSpied({key,id:(end?headings.at(-1):headings.filter(h=>h.getBoundingClientRect().top<innerHeight*.45).at(-1)??headings[0])!.id});
     };
     const schedule=()=>{if(!frame)frame=requestAnimationFrame(mark);};
     // Первая отметка — в кадре после отрисовки, не во время гидратации: чтение геометрии не форсирует лишний layout.
     schedule();addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);
     return()=>{cancelAnimationFrame(frame);removeEventListener('scroll',schedule);removeEventListener('resize',schedule);};
   },[key,enabled]);
-  return current;
+  return spied.key===key?spied.id:ids[0];
 }
 
 export function PageTabs({label,title,tabs,current,mode='route'}:PageTabsProps){

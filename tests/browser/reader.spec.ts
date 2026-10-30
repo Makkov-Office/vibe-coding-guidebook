@@ -88,3 +88,12 @@ test('design showcase: noindex, themes, keyboard, 44 px targets, reduced motion 
  for(const theme of ['Светлая','Тёмная']){await page.getByRole('button',{name:theme}).click();await page.addScriptTag({path:'node_modules/axe-core/axe.min.js'});const violations=await page.evaluate(async()=>{const result=await(window as unknown as {axe:{run:(options:object)=>Promise<{violations:{id:string}[]}>}}).axe.run({runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}});return result.violations.map(v=>v.id);});expect(violations).toEqual([]);}
  expect(errors).toEqual([]);await page.close();
 });
+test('search chunk that fails to load leaves the page usable and explains why on every open',async({page})=>{
+ await page.route(/\/SearchPalette-[^/]+\.js$/,route=>route.abort());
+ await ready(page,'/flow/08-preflight');
+ for(let open=0;open<2;open++){
+  await page.keyboard.press('Control+k');
+  await expect(page.locator('.reader-status')).toContainText('Поиск не загрузился');
+  await expect(page.locator('main#reader h1')).toBeVisible();
+ }
+});

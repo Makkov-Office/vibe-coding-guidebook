@@ -4,5 +4,6 @@
 .page>.page-hero{margin-bottom:0}
 .page-body{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-6);min-width:0}
 .page-body>.reader-prose>:last-child{margin-bottom:0}
-/* html даёт scroll-padding-top 56 px; сверху добавляется место под прилипшую полосу табов. */
-.page:has(>.page-tabs) .page-body :is(h2,h3)[id]{scroll-margin-top:32px}
+/* html даёт scroll-padding-top 56 px; сверху добавляется место под прилипшую полосу табов — у любой цели перехода
+   в теле (заголовки, термины глоссария, панели). */
+.page:has(>.page-tabs) .page-body [id]{scroll-margin-top:32px}
