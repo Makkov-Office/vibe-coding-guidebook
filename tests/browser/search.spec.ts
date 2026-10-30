@@ -34,7 +34,7 @@ test('results are grouped; a term shows its level and opens the glossary on #ter
  expect(labels.length).toBeGreaterThan(1);expect(labels).toEqual(order.filter(label=>labels.includes(label)));
  const term=group(page,'Термины глоссария').getByRole('option').first();
  await expect(term).toHaveAttribute('href','/reference/glossary#term-harness');await expect(term.locator('.result-meta')).toContainText('Профессиональное');
- await expect(page.locator('.search-count')).toHaveText(/\d+\+? результатов/);
+ await expect(page.locator('.search-count')).toHaveText(/^\d+ результат/);
  // Arrow down to the first term, Enter.
  const options=page.locator('#search-results [role=option]'),target=await term.getAttribute('id');
  const index=Number(target!.replace('search-result-',''));
@@ -47,7 +47,7 @@ test('results are grouped; a term shows its level and opens the glossary on #ter
 test('an empty query suggests the glossary, the memo and pages opened recently',async({page})=>{
  await ready(page,'/chapters/03');await ready(page,'/chapters/05');
  await page.keyboard.press('Control+k');
- await expect(group(page,'Подсказки').getByRole('option')).toContainText(['Глоссарий','Операционная памятка']);
+ await expect(group(page,'Быстрый переход').getByRole('option')).toContainText(['Глоссарий','Операционная памятка']);
  const recent=group(page,'Недавние страницы').getByRole('option');
  await expect(recent).toHaveCount(1);await expect(recent).toHaveAttribute('href','/chapters/03');
  await page.keyboard.press('ArrowDown');await page.keyboard.press('Enter');
@@ -57,12 +57,40 @@ test('an empty query suggests the glossary, the memo and pages opened recently',
  await expect(group(page,'Недавние страницы').getByRole('option').first()).toHaveAttribute('href','/flow/08-preflight');
 });
 
+test('the palette: one input field, filter chips, popular queries and the other keyboard layout',async({page})=>{
+ await ready(page,'/flow/08-preflight');await page.keyboard.press('Control+k');
+ // One field: the input draws no border or background of its own inside the row (the «input in an input» bug).
+ const field=await input(page).evaluate(node=>{const s=getComputedStyle(node);return [s.borderTopWidth,s.backgroundColor];});
+ expect(field).toEqual(['0px','rgba(0, 0, 0, 0)']);
+ // A popular query fills the input.
+ const popular=group(page,'Часто ищут').getByRole('option',{name:/worktree/});await popular.click();
+ await expect(input(page)).toHaveValue('worktree');await expect(input(page)).toBeFocused();
+ // A filter chip leaves one group and keeps the focus in the input.
+ const scopes=page.getByRole('group',{name:'Показать в результатах'});
+ await scopes.getByRole('button',{name:/^Термины/}).click();
+ await expect(page.locator('#search-results [role=group]')).toHaveCount(1);await expect(group(page,'Термины глоссария')).toBeVisible();
+ await expect(input(page)).toBeFocused();
+ await scopes.getByRole('button',{name:/^Все/}).click();await expect(page.locator('#search-results [role=group]').nth(1)).toBeVisible();
+ // A new query starts without a filter.
+ await scopes.getByRole('button',{name:/^Термины/}).click();await input(page).fill('preflight');
+ await expect(scopes.getByRole('button',{name:/^Все/})).toHaveAttribute('aria-pressed','true');
+ // «кумшуц» is «review» typed in the Russian layout.
+ await input(page).fill('кумшуц');
+ await expect(page.locator('.cmdk-swapped')).toContainText('review');await expect(page.locator('#search-results [role=option]').first()).toBeVisible();
+ // Nothing found: one message, no listbox.
+ await input(page).fill('zzqqxx');await expect(page.locator('.cmdk-empty')).toContainText('Ничего не найдено');await expect(page.locator('#search-results')).toHaveCount(0);
+ // Arrows wrap around.
+ await input(page).fill('');await page.keyboard.press('ArrowUp');
+ const last=await page.locator('#search-results [role=option]').count();
+ await expect(input(page)).toHaveAttribute('aria-activedescendant',`search-result-${last-1}`);
+});
+
 test('when the index fails to load, suggestions stay and the error sits outside the listbox',async({page})=>{
  await page.route('**/data/search-*.json',route=>route.abort());
  await ready(page,'/flow/08-preflight');await page.keyboard.press('Control+k');
  await expect(page.locator('.search-dialog [role=status]',{hasText:'Поиск не загрузился.'})).toBeVisible();
  await expect(page.locator('#search-results [role=status]')).toHaveCount(0);
- await expect(group(page,'Подсказки').getByRole('option').first()).toHaveText(/Глоссарий/);
+ await expect(group(page,'Быстрый переход').getByRole('option').first()).toHaveText(/Глоссарий/);
  // Every child of the listbox is a group of options.
  expect(await page.locator('#search-results').evaluate(box=>[...box.children].every(child=>child.getAttribute('role')==='group'&&[...child.querySelectorAll('[role=option]')].length>0))).toBe(true);
  // A second opening starts at the first suggestion.

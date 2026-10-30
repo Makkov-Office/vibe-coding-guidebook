@@ -1,4 +1,4 @@
-// Шаблон страницы главы (P5-02, бриф 8.3; P5-05 — баннер M3 из двух карточек): баннер, полоса 4 табов, «На этой странице», соседние страницы, copy link.
+// Шаблон страницы главы (P5-02, бриф 8.3; P5-05 — баннер M3 из двух карточек; каркас — PageTemplate, P3-11): баннер, полоса 4 табов, «На этой странице», соседние страницы, copy link.
 // Данные — формат P5-01 (chapter.heading, chapter.tabs[]); адреса табов — chapterTabHrefs (P5-02b) или tabHrefs для образцов.
 import Link from 'next/link';
 import type {ReactNode} from 'react';
@@ -8,10 +8,10 @@ import {chapterTabs as tabs} from '../content/chapter-routes';
 import {InteractivePanel} from '../components/InteractivePanel';
 import {ReaderPageData,type PageData} from '../components/ReaderPageData';
 import {ButtonLink,RoleIcon} from './primitives';
-import {ChapterTabBar} from './ChapterTabBar';
+import {PageTemplate} from './PageTemplate';
 import {ChapterEnhancer} from './ChapterEnhancer';
 import {ChapterVisual} from './ChapterVisual';
-import urlMap from '../content/url-map.json';
+import {readingMinutes,sectionOf,shortTitle} from './page-data';
 
 export type {TabId};
 export type PageLink={href:string;label:string};
@@ -29,18 +29,12 @@ export type ChapterTemplateProps={
 };
 
 const handbook=generated as unknown as Handbook;
-const WORDS_PER_MINUTE=180;
-/** Минуты чтения по тексту HTML: не меньше одной у непустого таба. */
-export function readingMinutes(html:string){const words=html.replace(/<[^>]+>/g,' ').split(/\s+/).filter(Boolean).length;return words?Math.max(1,Math.round(words/WORDS_PER_MINUTE)):0;}
+const tabIcon={overview:'tabOverview','how-it-works':'tabMechanics',apply:'tabApply',check:'tabCheck'} as const;
 /** Адреса 4 табов от адреса страницы: «Обзор» — сам адрес, остальные — сегмент из url-map. */
 export function tabHrefs(base:string){return Object.fromEntries(tabs.map(t=>[t.id,t.segment?`${base}/${t.segment}`:base])) as Record<TabId,string>;}
-/** «08. Preflight: начать правильно» → «Preflight». */
-export function shortTitle(title:string){return title.replace(/^\d+\.\s*/,'').split(':')[0].trim();}
 // Заголовок главы — h1, заголовки таба на уровень выше (как в HandbookPage); старый «#» заменяет copy link.
 const lift=(html:string)=>html.replace(/<(\/?)h3\b/g,'<$1h2').replace(/<(\/?)h4\b/g,'<$1h3');
 const heading=(html:string)=>html.replace(/<a [^>]*class="permalink"[^>]*>#<\/a>/,'').replace(/^<h2/,'<h1').replace(/<\/h2>$/,'</h1>');
-/** Раздел главы из url-map: надзаголовок баннера «Процесс · Глава 08». */
-const sectionOf=(chapterId:string)=>{const page=urlMap.pages.find(p=>'chapter' in p&&p.chapter===chapterId&&!('alias' in p));return urlMap.sections.find(s=>s.id===page?.section)?.label;};
 /** Одна строка описания в баннере — первый абзац «Обзора» как текст (учебный текст не дублируется в коде). */
 // Текст первого абзаца без разметки; сущности компилятора (&quot;, &#x27; и др.) декодируются — React экранирует текст сам.
 const entities:Record<string,string>={amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:'\u00a0'};
@@ -59,7 +53,7 @@ export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,a
   const before=index>0?{href:hrefs[tabs[index-1].id],label:label(tabs[index-1].id),kind:'Предыдущий таб'}:prev&&{...prev,kind:'Предыдущая глава'};
   const after=index<tabs.length-1?{href:hrefs[tabs[index+1].id],label:label(tabs[index+1].id),kind:'Дальше'}:next&&{...next,kind:'Следующая глава'};
   const filled=chapter.tabs.find((t,i)=>i>index&&t.html)??chapter.tabs.find(t=>t.html&&t.id!==tabId);
-  const section=sectionOf(chapterId),summary=lede(chapter.tabs.find(t=>t.id==='overview')?.html??'');
+  const section=sectionOf(chapterId).label,summary=lede(chapter.tabs.find(t=>t.id==='overview')?.html??'');
   const panels=tab.panels.map(id=>handbook.panels.find(p=>p.chapter===chapterId&&p.id===id)).filter(p=>p!==undefined);
   // Термины и блоки кода — как в HandbookPage, но только для текста этого таба.
   const blocks=handbook.blocks.filter(b=>tab.html.includes(` id="${b.id}"`));
@@ -68,8 +62,8 @@ export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,a
 
   return <>
     <ReaderPageData value={data}/>
-    <main id="reader" tabIndex={-1}><article className="ct" data-chapter={chapterId} data-tab={tabId}>
-      <header className="ct-banner page-hero shell-wide">
+    <main id="reader" tabIndex={-1}><PageTemplate className="ct" chapter={chapterId} tab={tabId}
+      hero={<header className="ct-banner page-hero shell-wide">
         <div className="ct-banner-text page-hero__text">
           <p className="ct-kicker page-hero__eyebrow">{section?`${section} · `:''}Глава {chapter.number}</p>
           <div className="ct-title" dangerouslySetInnerHTML={{__html:heading(chapter.heading)}}/>
@@ -81,21 +75,21 @@ export function ChapterTemplate({chapterId,tabId,hrefs,prev,next,meta,pageData,a
           </ul>
         </div>
         <div className="ct-banner-visual page-hero__visual" aria-hidden="true"><ChapterVisual chapterId={chapterId} number={chapter.number} tabs={tabs.map(t=>t.label)} current={Math.max(0,index)}/></div>
-      </header>
-      <ChapterTabBar title={`${chapter.number} · ${shortTitle(chapter.title)}`} current={tabId} tabs={tabs.map(t=>({id:t.id,label:t.label,href:hrefs[t.id]}))}/>
-      <div className="ct-body">
-        {tab.outline.length>1&&<details className="ct-toc"><summary>На этой странице<span>{minutes[tabId]} мин</span></summary><nav aria-label="На этой странице"><ol>{tab.outline.map(item=><li key={item.id}><a href={`#${item.id}`}>{item.title}</a></li>)}</ol></nav></details>}
-        {tab.html&&<div className="reader-prose ct-prose" dangerouslySetInnerHTML={{__html:lift(tab.html)}}/>}
-        {!tab.html&&!panels.length&&!children&&<div className="ct-empty bp-card bp-card--low" role="status"><h2>Таб «{label(tabId)}» готовится</h2><p>Его текст появится в следующих волнах редизайна. Остальной текст главы уже на месте.</p>{filled&&<ButtonLink variant="tonal" href={hrefs[filled.id]} icon="next">{label(filled.id)}</ButtonLink>}</div>}
-        {panels.map(panel=><div id={`${panel.id}-panel`} key={panel.id}><InteractivePanel panel={panel}/></div>)}
-        {children}
-        {aside&&<aside className="ct-slot" aria-label="Схема главы">{aside}</aside>}
-      </div>
-      {(before||after)&&<nav className="ct-pager" aria-label="Соседние страницы">
-        {before&&<Link className="ct-pager-link ct-pager-prev" href={before.href}><span><RoleIcon role="previous"/>{before.kind}</span><strong>{before.label}</strong></Link>}
-        {after&&<Link className="ct-pager-link ct-pager-next" href={after.href}><span>{after.kind}<RoleIcon role="next"/></span><strong>{after.label}</strong></Link>}
-      </nav>}
-      <ChapterEnhancer key={`${chapterId}/${tabId}`}/>
-    </article></main>
+      </header>}
+      tabs={{label:'Табы главы',title:`${chapter.number} · ${shortTitle(chapter.title)}`,current:tabId,tabs:tabs.map(t=>({id:t.id,label:t.label,href:hrefs[t.id],icon:tabIcon[t.id]}))}}
+      after={<>
+        {(before||after)&&<nav className="ct-pager" aria-label="Соседние страницы">
+          {before&&<Link className="ct-pager-link ct-pager-prev" href={before.href}><span><RoleIcon role="previous"/>{before.kind}</span><strong>{before.label}</strong></Link>}
+          {after&&<Link className="ct-pager-link ct-pager-next" href={after.href}><span>{after.kind}<RoleIcon role="next"/></span><strong>{after.label}</strong></Link>}
+        </nav>}
+        <ChapterEnhancer key={`${chapterId}/${tabId}`}/>
+      </>}>
+      {tab.outline.length>1&&<details className="ct-toc"><summary>На этой странице<span>{minutes[tabId]} мин</span></summary><nav aria-label="На этой странице"><ol>{tab.outline.map(item=><li key={item.id}><a href={`#${item.id}`}>{item.title}</a></li>)}</ol></nav></details>}
+      {tab.html&&<div className="reader-prose ct-prose" dangerouslySetInnerHTML={{__html:lift(tab.html)}}/>}
+      {!tab.html&&!panels.length&&!children&&<div className="ct-empty bp-card bp-card--low" role="status"><h2>Таб «{label(tabId)}» готовится</h2><p>Его текст появится в следующих волнах редизайна. Остальной текст главы уже на месте.</p>{filled&&<ButtonLink variant="tonal" href={hrefs[filled.id]} icon="next">{label(filled.id)}</ButtonLink>}</div>}
+      {panels.map(panel=><div id={`${panel.id}-panel`} key={panel.id}><InteractivePanel panel={panel}/></div>)}
+      {children}
+      {aside&&<aside className="ct-slot" aria-label="Схема главы">{aside}</aside>}
+    </PageTemplate></main>
   </>;
 }

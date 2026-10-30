@@ -1,9 +1,9 @@
 /* Шаблон страницы главы (P5-02, P5-05): только токены app/tokens.css и примитивы P2-04.
    Спецификация — docs/design/visual-language.md, раздел «Шаблон страницы главы». */
 
-.ct{--ct-sticky-top:0px;display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-6);min-width:0}
+/* Каркас .page (сетка баннер → табы → тело) — src/design/page-template.css; здесь только отличия главы. */
 
-/* Шапки над страницей нет (P3-07): полоса прилипает к верхнему краю окна; ChapterTabBar после гидратации ставит высоту .topbar, если она когда-нибудь вернётся. */
+/* Шапки над страницей нет (P3-07): полоса табов прилипает к верхнему краю окна; PageTabs после гидратации ставит высоту .topbar, если она когда-нибудь вернётся. */
 
 /* Hero глоссария (P6-07c) — прежний вид шапки шаблона: номер, название, чипы. Глава — баннер ниже. */
 .ct-hero{display:grid;gap:var(--space-3);padding-top:var(--space-6)}
@@ -29,36 +29,7 @@
 .cv-pill--strong rect{fill:var(--color-primary-container);stroke:var(--color-primary)}
 .cv-pill--strong text{fill:var(--color-on-primary-container);font-weight:600}
 
-/* Полоса табов (P5-05, P3-08): на всю рабочую область, как баннер; активный таб — тональная пилюля на всю ячейку.
-   При прокрутке прилипает и сжимается ровно до ширины внутреннего контейнера (--content-container, поле --container-side
-   оболочки M3 в app/globals.css): плавающая пилюля с тенью и коротким именем главы над текстом и «На этой странице».
-   Переход — max-width по одной кривой --ease; reduced motion и data-motion="off" обнуляют длительности.
-   Высота самой полосы в обоих состояниях одна: иначе scroll anchoring сдвигает страницу (позиция чтения). */
-.ct-tabs{--ct-tabs-gap:8px;position:sticky;top:var(--ct-sticky-top);z-index:5;display:flex;justify-content:center;height:72px;margin-top:calc(var(--ct-tabs-gap) - var(--space-6));pointer-events:none}
-.ct-tabs-row{display:flex;align-items:center;gap:var(--space-1);width:100%;max-width:100%;height:72px;padding:var(--space-1);border-radius:var(--radius-full);background:var(--color-surface-container-low);pointer-events:auto;transition:max-width var(--dur-3) var(--ease),height var(--dur-3) var(--ease),margin-top var(--dur-3) var(--ease),background-color var(--dur-2) var(--ease)}
-.ct-tabs ul{display:flex;flex:1 1 auto;min-width:0;height:100%;gap:var(--space-1);margin:0;padding:0;list-style:none;overflow-x:auto;scrollbar-width:none}
-.ct-tabs ul::-webkit-scrollbar{display:none}
-.ct-tabs li{display:flex;flex:1 0 auto}
-.ct-tabs a{display:flex;flex:1;align-items:center;justify-content:center;gap:var(--space-2);min-height:var(--touch-target);min-width:var(--touch-target);padding:0 var(--space-5);border-radius:var(--radius-full);color:var(--color-on-surface-variant);font:600 var(--type-small)/1 var(--font-text);text-decoration:none;white-space:nowrap;transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
-.ct-tabs a:hover{background:var(--color-surface-container);color:var(--color-on-surface)}
-.ct-tabs a[aria-current="page"]{background:var(--color-primary-container);color:var(--color-on-primary-container)}
-.ct-tabs a:focus-visible{outline:2px solid var(--color-primary);outline-offset:-2px}
-.ct-tabs-pill{flex:none;max-width:0;min-width:0;padding:0;opacity:0;overflow:hidden;color:var(--color-on-surface);font:500 var(--type-small)/1.2 var(--font-display);letter-spacing:var(--tracking-display);white-space:nowrap;text-overflow:ellipsis;transition:max-width var(--dur-3) var(--ease),opacity var(--dur-2) var(--ease),padding var(--dur-3) var(--ease)}
-.ct-tabs[data-stuck] .ct-tabs-row{max-width:calc(100% - 2 * var(--container-side));height:56px;margin-top:var(--space-2);background:var(--color-surface);outline:var(--stroke-border) solid var(--color-outline-variant);outline-offset:calc(var(--stroke-border) * -1)}
-.ct-tabs[data-stuck] .ct-tabs-pill{max-width:12rem;padding:0 var(--space-2) 0 var(--space-4);opacity:1}
-.ct-tabs[data-stuck] a{padding:0 var(--space-4)}
-@media (max-width:840px){.ct-tabs a{padding:0 var(--space-4)}}
-@media (max-width:600px){
-  .ct-tabs,.ct-tabs-row{height:60px}
-  .ct-tabs a,.ct-tabs[data-stuck] a{padding:0 var(--space-3);font-size:var(--type-label)}
-  .ct-tabs[data-stuck] .ct-tabs-row{height:52px}
-  .ct-tabs[data-stuck] .ct-tabs-pill{max-width:0;padding:0;opacity:0}
-}
-
 /* Тело таба. */
-.ct-body{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-6);min-width:0}
-/* html даёт scroll-padding-top 56 px; сверху добавляется место под прилипшую полосу. */
-.ct-prose h2,.ct-prose h3{scroll-margin-top:32px}
 
 /* «На этой странице» в колонке текста: там, где нет правой колонки Reader (local-outline). */
 .ct-toc{border:var(--stroke-border) solid var(--color-outline-variant);border-radius:var(--radius-l);background:var(--color-surface)}
@@ -113,5 +84,4 @@
 }
 
 /* Reduced motion и пауза: сжатие полосы без анимации (общий выключатель — app/motion.css). */
-@media (prefers-reduced-motion:reduce){.ct-tabs-row,.ct-tabs-pill,.ct-tabs a{transition:none}}
-@media print{.ct-tabs,.ct-pager,.ct-copy,.ct-toc{display:none!important}}
+@media print{.ct-pager,.ct-copy,.ct-toc{display:none!important}}

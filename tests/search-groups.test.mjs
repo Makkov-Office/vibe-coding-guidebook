@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {norm,groupOf,groupResults,SEARCH_GROUPS,rememberPage,readRecent,RECENT_KEY} from '../src/design/search-groups.mjs';
+import {norm,groupOf,groupResults,otherLayout,matchRanges,SEARCH_GROUPS,SCOPED_LIMIT,rememberPage,readRecent,RECENT_KEY} from '../src/design/search-groups.mjs';
 
 const entry=(id,type,chapter,title,text=title)=>({id,type,chapter,title,text,path:'/x',normalized:norm(`${title} ${text}`)});
 
@@ -29,6 +29,31 @@ test('groupResults keeps group order, ranks a headline match first and caps each
  const capped=groupResults(many,'review');
  assert.equal(capped.groups[0].entries.length,SEARCH_GROUPS[0].limit);assert.equal(capped.more,true);
  assert.deepEqual(groupResults(entries,'').groups,[]);
+});
+
+test('a phrase found as typed wins; otherwise every word must match, in any order; counts and a scope',()=>{
+ const typed=[entry('p','текст','ch-01','01','бери в работу задачу'),entry('w','заголовок','ch-01','01','В работу не бери')];
+ assert.deepEqual(groupResults(typed,norm('бери в работу')).groups.flatMap(g=>g.entries.map(e=>e.id)),['p']);
+ const entries=[
+  entry('a','заголовок','ch-07','07','Review и merge'),
+  entry('b','текст','ch-07','07','merge после независимого review'),
+  entry('c','текст','ch-07','07','только review'),
+  entry('d','термин','ch-23','Merge queue','очередь, review не нужен'),
+ ];
+ const {groups,counts}=groupResults(entries,norm('merge review'));
+ assert.deepEqual(groups.flatMap(g=>g.entries.map(e=>e.id)),['a','d','b']);
+ assert.deepEqual(counts,{pages:1,terms:1,memo:0,text:1});
+ const many=Array.from({length:80},(_,i)=>entry(`x${i}`,'текст','ch-02','Стр',`review ${i}`));
+ const scoped=groupResults([...many,...entries],'review','text');
+ assert.deepEqual(scoped.groups.map(g=>g.id),['text']);assert.equal(scoped.groups[0].entries.length,SCOPED_LIMIT);
+ assert.equal(scoped.counts.pages,1,'counts include the groups a scope hides');
+});
+
+test('the other keyboard layout and the ranges to mark',()=>{
+ assert.equal(otherLayout('кумшуц'),'review');assert.equal(otherLayout('review'),'кумшуц');assert.equal(otherLayout('ыщгксу'),'source');
+ assert.deepEqual(matchRanges('Review и merge','merge review'),[[0,6],[9,14]]);
+ assert.deepEqual(matchRanges('Ёлка','елка'),[[0,4]]);
+ assert.deepEqual(matchRanges('nothing','zz'),[]);
 });
 
 test('the built index carries the glossary level of every term',()=>{

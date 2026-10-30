@@ -20,11 +20,4 @@
 .rail-search:disabled{opacity:.6;cursor:default}
 /* Hover и фокус — общие с пунктами rail (nav-rail.css, P3-09). */
 
-
-/* Группы результатов и подсказок в диалоге поиска. */
-.search-group{display:flex;flex-direction:column;gap:var(--space-1)}
-.search-group+.search-group{margin-top:var(--space-2)}
-.search-group-label{padding:0 var(--space-3);font:600 var(--type-label) var(--font-text);color:var(--color-on-surface-variant);text-transform:uppercase;letter-spacing:.06em}
-/* Загрузка, ошибка и «Ничего не найдено» стоят вне listbox (в нём только пункты). */
-.search-state{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-2);margin:var(--space-2) 0;font-size:var(--type-small);color:var(--color-on-surface-variant)}
-.search-state p{margin:0}
+/* Сам диалог поиска — src/design/search-palette.css. */

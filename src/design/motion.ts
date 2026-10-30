@@ -3,7 +3,7 @@
 // carries its own numbers, and both switches (prefers-reduced-motion, data-motion="off")
 // apply to it exactly as to CSS.
 
-export type MotionToken = '--dur-1' | '--dur-2' | '--dur-3' | '--dur-draw' | '--dur-dot' | '--dur-step';
+export type MotionToken = '--dur-1' | '--dur-2' | '--dur-3' | '--dur-draw' | '--dur-dot' | '--dur-step' | '--dur-exit' | '--dur-enter' | '--dur-stagger';
 
 export function motionEnabled(): boolean {
   if (typeof window === 'undefined') return false;

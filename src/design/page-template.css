@@ -1,0 +1,9 @@
+/* Единый шаблон страницы (src/design/PageTemplate.tsx): сетка баннер → табы → тело. Только токены.
+   Баннер — page-hero.css, табы — page-tabs.css, движение — app/motion.css (приёмы 6–8). */
+.page{--page-tabs-top:0px;display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-6);min-width:0}
+.page>.page-hero{margin-bottom:0}
+.page-body{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-6);min-width:0}
+.page-body>.reader-prose>:last-child{margin-bottom:0}
+/* html даёт scroll-padding-top 56 px; сверху добавляется место под прилипшую полосу табов — у любой цели перехода
+   в теле (заголовки, термины глоссария, панели). */
+.page:has(>.page-tabs) .page-body [id]{scroll-margin-top:32px}

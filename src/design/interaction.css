@@ -13,16 +13,16 @@
 @property --glow-r{syntax:'<length>';inherits:false;initial-value:0px}
 
 /* Пилюли: кнопки, чипы, табы главы, кнопка «скопировать ссылку». */
-:is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy){--shape-rest:var(--shape-pill);--shape-hover:var(--shape-pill-hover);--shape-press:var(--shape-pill-press)}
+:is(.bp-press,.bp-button,.bp-chip,.page-tabs a,.ct-copy){--shape-rest:var(--shape-pill);--shape-hover:var(--shape-pill-hover);--shape-press:var(--shape-pill-press)}
 /* Высокие пилюли: табы главы (64 px). */
-.ct-tabs a{--shape-rest:var(--shape-pill-l);--shape-hover:var(--shape-pill-l-hover);--shape-press:var(--shape-pill-l-press)}
+.page-tabs a{--shape-rest:var(--shape-pill-l);--shape-hover:var(--shape-pill-l-hover);--shape-press:var(--shape-pill-l-press)}
 /* Карточки: ссылки-карточки главной, тренажёр, «что дальше», пейджер главы. */
 :is(.bp-press--card,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link){--shape-rest:var(--shape-card);--shape-hover:var(--shape-card-hover);--shape-press:var(--shape-card-press)}
 
 /* Общее: радиус из --shape-r; hover уходит медленнее, чем входит; форма — пружиной. Позиция и свой слой (isolation) —
    для следа: он лежит под подписью и иконкой, над фоном (P2-09). :where не перебивает position у компонентов. */
-:where(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link,[data-glow]){position:relative;isolation:isolate}
-:is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link){
+:where(.bp-press,.bp-button,.bp-chip,.page-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link,[data-glow]){position:relative;isolation:isolate}
+:is(.bp-press,.bp-button,.bp-chip,.page-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link){
   --shape-r:var(--shape-rest);
   border-radius:var(--shape-r);
   transition:
@@ -34,12 +34,12 @@
     transform var(--dur-shape) var(--ease-spring);
 }
 @media (hover:hover){
-  :is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):hover{
+  :is(.bp-press,.bp-button,.bp-chip,.page-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):hover{
     transition-duration:var(--dur-hover),var(--dur-hover),var(--dur-hover),var(--dur-hover),var(--dur-shape),var(--dur-shape);
   }
 }
 /* Нажатие короткое и без пружины; отпускание возвращает форму пружиной (общее правило выше). */
-:is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):active{
+:is(.bp-press,.bp-button,.bp-chip,.page-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):active{
   transition-duration:var(--dur-press),var(--dur-press),var(--dur-press),var(--dur-press),var(--dur-press),var(--dur-press);
   transition-timing-function:var(--ease);
 }
@@ -47,23 +47,23 @@
 /* Морфинг только при включённом движении. */
 @media (prefers-reduced-motion:no-preference){
   @media (hover:hover){
-    :root:not([data-motion=off]) :is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):hover{--shape-r:var(--shape-hover)}
+    :root:not([data-motion=off]) :is(.bp-press,.bp-button,.bp-chip,.page-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):hover{--shape-r:var(--shape-hover)}
   }
-  :root:not([data-motion=off]) :is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):active{--shape-r:var(--shape-press)}
+  :root:not([data-motion=off]) :is(.bp-press,.bp-button,.bp-chip,.page-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):active{--shape-r:var(--shape-press)}
 }
 /* Нажатие едино для всего сайта (раньше в globals.css было два разных scale только у button): пилюли и кнопки
    проседают до 97 %, карточки не масштабируются (текст не плывёт), rail и мега-меню — без сжатия (P3-09). */
 @media (prefers-reduced-motion:no-preference){
-  :root:not([data-motion=off]) :is(button,.primary-action,.chapter-pagination a,.bp-press:not(.bp-press--card),.bp-button,.bp-chip,.ct-tabs a,.ct-copy):not(:is(.nav-rail,.mega-menu) *):active{transform:scale(.97)}
+  :root:not([data-motion=off]) :is(button,.primary-action,.chapter-pagination a,.bp-press:not(.bp-press--card),.bp-button,.bp-chip,.page-tabs a,.ct-copy):not(:is(.nav-rail,.mega-menu) *):active{transform:scale(.97)}
 }
 
 /* Концентричность: иллюстрация внутри карточки главной повторяет её радиус за вычетом отступа. */
 a.home-card .home-card-vis{border-radius:max(var(--radius-xs),calc(var(--shape-r) - var(--space-2)))}
 
 /* Фокус с клавиатуры виден всегда и повторяет текущую форму (outline следует border-radius). */
-:is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
-/* Табы главы лежат в .ct-tabs ul с overflow-x:auto: внешний контур обрезается, поэтому у них контур внутрь. */
-.ct-tabs a:focus-visible{outline-offset:-2px}
+:is(.bp-press,.bp-button,.bp-chip,.page-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link):focus-visible{outline:2px solid var(--color-primary);outline-offset:2px}
+/* Табы главы лежат в .page-tabs ul с overflow-x:auto: внешний контур обрезается, поэтому у них контур внутрь. */
+.page-tabs a:focus-visible{outline-offset:-2px}
 
 /* Световой след в месте нажатия (в духе Apple Liquid Glass): короткое мягкое свечение, не заливка и не ripple.
    Скрипт ставит --glow-x/--glow-y (точка касания), --glow-reach (докуда растёт) и атрибут data-glowing.
@@ -72,7 +72,7 @@ a.home-card .home-card-vis{border-radius:max(var(--radius-xs),calc(var(--shape-r
 :root[data-theme=dark]{--glow-peak:.14;--glow-peak-fill:.2}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--glow-peak:.14;--glow-peak-fill:.2}}
 .bp-button--fill{--glow-tone:light-dark(var(--color-surface),var(--color-on-surface));--glow-peak:var(--glow-peak-fill)}
-:is(.bp-press,.bp-button,.bp-chip,.ct-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link,[data-glow])[data-glowing]::after{
+:is(.bp-press,.bp-button,.bp-chip,.page-tabs a,.ct-copy,a.bp-card,a.home-card,a.home-drill,a.home-next-item,.ct-pager-link,[data-glow])[data-glowing]::after{
   content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;
   background:radial-gradient(circle var(--glow-r) at var(--glow-x,50%) var(--glow-y,50%),var(--glow-tone),transparent);
   animation:press-glow var(--dur-glow) var(--ease-enter) forwards;

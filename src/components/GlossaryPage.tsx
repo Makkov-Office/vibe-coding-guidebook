@@ -3,6 +3,8 @@
 import type {Chapter,Handbook} from '../content/types';
 import {RoleIcon} from '../design/primitives';
 import {PageHero} from '../design/PageHero';
+import {PageTemplate} from '../design/PageTemplate';
+import type {PageTabsProps} from '../design/PageTabs';
 import {GlossaryVisual} from '../design/HeroVisuals';
 import {ChapterEnhancer} from '../design/ChapterEnhancer';
 import {GlossaryFilter} from './GlossaryFilter';
@@ -11,7 +13,7 @@ import {ProjectIcon} from './ProjectIcon';
 import {plural} from './plural';
 
 
-export function GlossaryPage({chapter,handbook,html}:{chapter:Chapter;handbook:Handbook;html:string}){
+export function GlossaryPage({chapter,handbook,html,tabs}:{chapter:Chapter;handbook:Handbook;html:string;tabs?:PageTabsProps|null}){
   // html — текст раздела с h1 и темами в h2 (как в HandbookPage). Заголовок и вводные абзацы уходят в hero
   // баннера (заголовок без старого «#»), темы — после фильтра: ChapterEnhancer берёт первый .ct-prose, в нём должны быть темы.
   const close=html.indexOf('</h1>');if(close<0)throw new Error('GlossaryPage: the glossary has no h1');
@@ -19,16 +21,15 @@ export function GlossaryPage({chapter,handbook,html}:{chapter:Chapter;handbook:H
   const heading=html.slice(0,end).replace(/<a [^>]*class="permalink"[^>]*>#<\/a>/,'');
   const intro=html.slice(end,topics<0?html.length:topics),rest=topics<0?'':html.slice(topics);
   const levels=handbook.levels;
-  return <section className="chapter ct glossary-page" data-chapter={chapter.id}>
-    <PageHero eyebrow="Справочник" titleHtml={heading} descriptionHtml={intro} visual={<GlossaryVisual/>}
+  return <PageTemplate className="chapter ct glossary-page" chapter={chapter.id} tabs={tabs}
+    hero={<PageHero eyebrow="Справочник" titleHtml={heading} descriptionHtml={intro} visual={<GlossaryVisual/>}
       meta={<ul className="page-hero__meta" aria-label="О глоссарии">
         <li><ProjectIcon name="glossary"/>{plural(handbook.terms.length,['термин','термина','терминов'])}</li>
         <li><ProjectIcon name="tags"/>{plural(handbook.topics.length,['тема','темы','тем'])}</li>
         {levels&&<li><RoleIcon role="level"/>{plural(Object.keys(levels).length,['уровень','уровня','уровней'])}</li>}
-      </ul>}/>
+      </ul>}/>}
+    after={<><GlossaryEnhancer/><ChapterEnhancer key={chapter.id}/></>}>
     <GlossaryFilter terms={handbook.terms.map(({id,label,aliases,topic,definition,level})=>({id,label,aliases,topic,definition,level}))} topics={handbook.topics} levels={levels}/>
     <div className="reader-prose ct-prose" dangerouslySetInnerHTML={{__html:rest}}/>
-    <GlossaryEnhancer/>
-    <ChapterEnhancer key={chapter.id}/>
-  </section>;
+  </PageTemplate>;
 }

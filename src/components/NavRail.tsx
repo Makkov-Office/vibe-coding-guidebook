@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element -- The FLOW mark is served without transformation. */
 // Navigation rail and mega-menu (P3-01, docs/design/visual-language.md «Навигация»): nine sections,
 // disclosure navigation (not role=menu). Hover opens after a short delay, focus and tap open at once,
 // Esc closes and returns focus to the rail item, arrows move along the rail and inside the menu.
@@ -92,6 +93,8 @@ export function NavRail({chapters,pathname,ready,onSearch}:{chapters:NavChapter[
  // Leaving the rail closes the menu unless focus sits in the open section (its rail item or panel).
  const leave=()=>{const entry=open?items.current.get(open)?.closest('.rail-entry'):null;if(!entry?.contains(document.activeElement))schedule(null,closeDelay);};
  return <nav className="nav-rail" aria-label="Разделы руководства" onMouseLeave={leave} onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget as Node|null))setOpen(null);}}>
+  {/* Logo, then search, each closed by a divider; the sections sit in the middle, the theme at the bottom. */}
+  <Link className="rail-logo" href="/" prefetch={false} aria-label="На главную"><img src="/brand/flow.svg" width={32} height={32} alt=""/></Link>
   {/* Search at the top of the rail (P3-03); the dialog returns focus here when it closes. */}
   <button type="button" className="rail-search" disabled={!ready} aria-keyshortcuts="Control+K Meta+K /" onClick={event=>onSearch(event.currentTarget)}><span className="rail-indicator"><RoleIcon role="search"/><RailTrace/></span><span className="rail-label">Поиск</span></button>
   <ul className="rail-list">{sections.map(s=>{

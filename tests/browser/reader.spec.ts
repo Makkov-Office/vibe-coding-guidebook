@@ -12,7 +12,7 @@ test('chapter routes have initial HTML, canonical anchors, native history and le
  await ready(page,'/chapters/01');await expect(page.locator('main [data-chapter]')).toHaveCount(1);await expect(page.locator('.nav-rail .mega-item[aria-current="page"]')).toHaveAttribute('href','/chapters/01');await railNavigate(page,'/chapters/02');await expect(page).toHaveURL(/\/chapters\/02$/);await page.goBack();await expect(page).toHaveURL(/\/chapters\/01$/);await page.reload();await expect(page.locator('#ch-01')).toBeVisible();await ready(page,'/#ch-22');await expect(page).toHaveURL(/\/reference\/22-cheatsheet#ch-22$/);
 });
 test('inline term preview does not move reading or history; repeat, keyboard and dismissal',async({page})=>{
- await ready(page,'/chapters/01');const term=page.locator('main .term-link').first();await term.scrollIntoViewIfNeeded();const before=await page.evaluate(()=>({y:scrollY,url:location.href,length:history.length}));await term.click();await expect(page.getByRole('tooltip')).toBeVisible();expect(await page.evaluate(()=>({y:scrollY,url:location.href,length:history.length}))).toEqual(before);await expect(term).toBeFocused();await term.click();await expect(page.getByRole('tooltip')).toHaveCount(0);await term.focus();await page.keyboard.press('Space');await expect(page.getByRole('tooltip')).toBeVisible();await page.keyboard.press('Escape');await expect(page.getByRole('tooltip')).toHaveCount(0);await page.keyboard.press('Enter');await expect(page.getByRole('tooltip')).toBeVisible();await page.locator('#ch-01>svg').click();await expect(page.getByRole('tooltip')).toHaveCount(0);
+ await ready(page,'/chapters/01');const term=page.locator('main .term-link').first();await term.scrollIntoViewIfNeeded();const before=await page.evaluate(()=>({y:scrollY,url:location.href,length:history.length}));await term.click();await expect(page.getByRole('tooltip')).toBeVisible();expect(await page.evaluate(()=>({y:scrollY,url:location.href,length:history.length}))).toEqual(before);await expect(term).toBeFocused();await term.click();await expect(page.getByRole('tooltip')).toHaveCount(0);await term.focus();await page.keyboard.press('Space');await expect(page.getByRole('tooltip')).toBeVisible();await page.keyboard.press('Escape');await expect(page.getByRole('tooltip')).toHaveCount(0);await page.keyboard.press('Enter');await expect(page.getByRole('tooltip')).toBeVisible();await page.locator('.page-hero__eyebrow').click();await expect(page.getByRole('tooltip')).toHaveCount(0);
  for(const width of [320,360,768,1024,1440]){await page.setViewportSize({width,height:900});await term.click();
   // The tooltip is placed one frame after it opens (ContextPreview: requestAnimationFrame); a slow runner can measure the frame before.
   await expect.poll(async()=>{const bounds=await page.getByRole('tooltip').boundingBox();return bounds!.x>=0&&bounds!.x+bounds!.width<=width;}).toBe(true);await page.keyboard.press('Escape');}
@@ -87,4 +87,13 @@ test('design showcase: noindex, themes, keyboard, 44 px targets, reduced motion 
  await page.emulateMedia({reducedMotion:'reduce'});await expect(draw).toHaveCSS('animation-name','none');await expect(page.locator('.bp-run')).toHaveCSS('animation-name','none');
  for(const theme of ['Светлая','Тёмная']){await page.getByRole('button',{name:theme}).click();await page.addScriptTag({path:'node_modules/axe-core/axe.min.js'});const violations=await page.evaluate(async()=>{const result=await(window as unknown as {axe:{run:(options:object)=>Promise<{violations:{id:string}[]}>}}).axe.run({runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}});return result.violations.map(v=>v.id);});expect(violations).toEqual([]);}
  expect(errors).toEqual([]);await page.close();
+});
+test('search chunk that fails to load leaves the page usable and explains why on every open',async({page})=>{
+ await page.route(/\/SearchPalette-[^/]+\.js$/,route=>route.abort());
+ await ready(page,'/flow/08-preflight');
+ for(let open=0;open<2;open++){
+  await page.keyboard.press('Control+k');
+  await expect(page.locator('.reader-status')).toContainText('Поиск не загрузился');
+  await expect(page.locator('main#reader h1')).toBeVisible();
+ }
 });

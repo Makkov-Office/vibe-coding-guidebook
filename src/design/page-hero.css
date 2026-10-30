@@ -28,6 +28,8 @@
 .page-hero__visual--practice{background:var(--color-practice-container)}
 .page-hero__visual--human{background:var(--color-human-container)}
 .phv{display:block;width:100%;max-width:520px;height:auto;overflow:visible}
+/* Иллюстрация раздела меню (home-illustrations.tsx) в баннере главы — та же, что в карточке раздела на главной. */
+.page-hero__visual>.hi{display:block;width:100%;max-width:440px;height:auto;max-height:280px}
 .phv-card,.phv-term,.phv-term rect,.phv-row rect,.phv-step circle{fill:var(--color-surface);stroke:var(--color-on-surface);stroke-width:var(--stroke-line)}
 .phv-row circle{fill:var(--color-surface);stroke:var(--color-outline);stroke-width:var(--stroke-line)}
 .phv-soft{fill:var(--color-surface-container);stroke:var(--color-outline-variant-strong);stroke-width:var(--stroke-border)}
@@ -54,5 +56,4 @@
 @media (min-width:840px){.reading-column:has(.page-hero)>.breadcrumbs{margin-inline:calc(-1 * var(--container-side)) calc(-1 * (var(--container-side) + var(--outline-space)));padding-inline:var(--space-10)}}
 @media (min-width:840px) and (max-width:1199px){.reading-column:has(.page-hero)>.breadcrumbs{padding-inline:var(--space-8)}}
 .chapter:has(>.page-hero){padding-top:0}
-/* В шаблоне главы (.ct) промежутки задаёт сетка шаблона: полоса табов идёт за баннером через 8 px. */
-.ct>.page-hero{margin-bottom:0}
+/* В шаблоне страницы (.page, page-template.css) промежутки задаёт сетка шаблона. */
