@@ -1,5 +1,6 @@
 'use client';
 // Табы страницы (P5-02, P5-05; единый шаблон — PageTemplate.tsx): на всю ширину под баннером, текущий таб — тональная пилюля.
+// P3-12: data-icons — у всех табов есть иконки; на телефоне такие табы — иконка над подписью и сжатие до иконок.
 // При прокрутке полоса прилипает и сжимается до ширины внутреннего контейнера (--content-container, P3-08) —
 // плавающая пилюля с коротким именем страницы (RD-01, экран «Страница темы»; m3.material.io/components/buttons).
 // Полоса идёт сразу за баннером: по нему видно, что она прилипла. Стили — page-tabs.css.
@@ -84,7 +85,8 @@ export function PageTabs({label,title,tabs,current,mode='route'}:PageTabsProps){
     watch();addEventListener('resize',watch);
     return()=>{removeEventListener('resize',watch);observer?.disconnect();};
   },[]);
-  return <nav ref={bar} className="page-tabs shell-wide" aria-label={label} data-mode={mode} data-stuck={stuck||undefined}>
+  return <nav ref={bar} className="page-tabs shell-wide" aria-label={label} data-mode={mode} data-stuck={stuck||undefined}
+    data-icons={tabs.every(tab=>tab.icon)||undefined}>
     <div className="page-tabs__row">
       <span className="page-tabs__pill" aria-hidden="true">{title}</span>
       <ul>

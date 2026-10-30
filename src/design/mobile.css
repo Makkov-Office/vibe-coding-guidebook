@@ -1,0 +1,48 @@
+/* Мобильный адаптив (P3-12): отклик на касание, нижние листы и плотность первого экрана на телефоне.
+   Навигация (нижняя панель и лист «Разделы») — mobile-nav.css, табы страницы — page-tabs.css. Только токены;
+   reduced motion и data-motion="off" обнуляют длительности (app/tokens.css, app/motion.css). */
+
+/* Касание: вместо серой вспышки браузера — короткое сжатие карточек и кнопок, как в нативных приложениях.
+   scale — отдельное свойство и не спорит с transform наведения. */
+:is(.home-card,.home-next-item,.ct-pager-link,.chapter-pagination a,.bp-button,.primary-action,.menu-continue){-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+@media (hover:none){
+  :is(.home-card,.home-next-item,.ct-pager-link,.chapter-pagination a){transition:scale var(--dur-press) var(--ease),background-color var(--dur-1) var(--ease)}
+  :is(.home-card,.home-next-item,.ct-pager-link,.chapter-pagination a):active{scale:.98}
+  :is(.bp-button,.primary-action):active{scale:.96}
+}
+
+/* Значок «#» у заголовка: под пальцем зона 44 px, хотя сам значок маленький. */
+@media (pointer:coarse){
+  .permalink{position:relative}
+  .permalink::after{content:"";position:absolute;inset:50% auto auto 50%;width:var(--touch-target);height:var(--touch-target);translate:-50% -50%}
+}
+
+/* Первый экран телефона: кнопки главной на всю ширину, одна под другой. */
+@media (max-width:599px){
+  .home-actions{flex-direction:column;align-items:stretch;width:100%}
+  .home-actions .bp-button{width:100%}
+  .page-hero__actions{width:100%}
+  .page-hero__actions>:is(a,button){flex:1 1 auto}
+}
+
+/* Панель термина и примера ниже 768 px — нижний лист: выезжает снизу, ручка, шапку тянут вниз (sheet-drag.ts). */
+.context-panel .sheet-handle{display:none}
+@media (max-width:767px){
+  .context-panel{border-radius:var(--radius-l) var(--radius-l) 0 0}
+  .context-panel .dialog-header{padding-top:var(--space-6);touch-action:none;cursor:grab;user-select:none}
+  .context-panel .sheet-handle{display:block;position:absolute;top:var(--space-2);left:50%;width:32px;height:4px;margin-left:-16px;border-radius:var(--radius-full);background:var(--color-outline-variant-strong)}
+  dialog.context-panel[open]{animation:none}
+  dialog.context-panel{transition:translate var(--dur-3) var(--ease-enter),display var(--dur-exit) allow-discrete,overlay var(--dur-exit) allow-discrete}
+  @starting-style{dialog.context-panel[open]{translate:0 100%}}
+  dialog.context-panel:not([open]){translate:0 100%;opacity:1;transition-duration:var(--dur-2);transition-timing-function:var(--ease-exit)}
+  dialog.context-panel[data-dragging]{transition:none}
+}
+
+/* Поиск на телефоне — во весь экран (search-palette.css); появляется подъёмом снизу, строка ввода под вырезом экрана. */
+@media (max-width:599px){
+  .search-dialog{padding-top:env(safe-area-inset-top)}
+  dialog.search-dialog[open]{transition:opacity var(--dur-2) var(--ease),translate var(--dur-3) var(--ease-enter),display var(--dur-exit) allow-discrete,overlay var(--dur-exit) allow-discrete}
+  @starting-style{dialog.search-dialog[open]{opacity:0;translate:0 var(--space-6)}}
+}
+
+@media print{.sheet-handle{display:none!important}}
