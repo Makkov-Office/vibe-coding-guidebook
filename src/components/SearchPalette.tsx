@@ -52,7 +52,7 @@ export function SearchPalette({dialogRef,inputRef,query,onQuery,selected,onSelec
   const direct=groupResults(data??[],typed,scope);
   if(!typed||direct.groups.length||Object.values(direct.counts).some(Boolean))return {...direct,query:typed,swapped:false};
   const other=otherLayout(typed),again=groupResults(data??[],other,scope);
-  return again.groups.length?{...again,query:other,swapped:true}:{...direct,query:typed,swapped:false};
+  return Object.values(again.counts).some(Boolean)?{...again,query:other,swapped:true}:{...direct,query:typed,swapped:false};
  },[data,typed,scope]);
  const total=Object.values(search.counts).reduce((a,b)=>a+b,0);
 
@@ -87,7 +87,7 @@ export function SearchPalette({dialogRef,inputRef,query,onQuery,selected,onSelec
   if(event.key==='ArrowDown')move(1);
   else if(event.key==='ArrowUp')move(-1);
   else if(event.key==='Home'&&event.ctrlKey){event.preventDefault();onSelect(0);}
-  else if(event.key==='End'&&event.ctrlKey){event.preventDefault();onSelect(results.length-1);}
+  else if(event.key==='End'&&event.ctrlKey){event.preventDefault();onSelect(Math.max(0,results.length-1));}
   else if(event.key==='Enter'&&results[active]){event.preventDefault();pick(results[active]);}
  }
  function pick(hit:SearchHit){if(hit.query===undefined){onPick(hit);return;}onQuery(hit.query);onScope(null);onSelect(0);inputRef.current?.focus();}
@@ -100,7 +100,7 @@ export function SearchPalette({dialogRef,inputRef,query,onQuery,selected,onSelec
   <div className="cmdk-field">
    <ProjectIcon name="search"/>
    <label htmlFor="handbook-search" className="sr-only">Термин, фраза или текст примера</label>
-   <input id="handbook-search" ref={inputRef} type="text" role="combobox" aria-autocomplete="list" aria-expanded={results.length>0} aria-controls="search-results" aria-activedescendant={results[active]?`search-result-${active}`:undefined} autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="go" value={query} placeholder="Глава, термин или пример" onChange={e=>{onQuery(e.target.value);onSelect(0);if(!e.target.value)onScope(null);}} onKeyDown={key}/>
+   <input id="handbook-search" ref={inputRef} type="text" role="combobox" aria-autocomplete="list" aria-expanded={results.length>0} aria-controls="search-results" aria-activedescendant={results[active]?`search-result-${active}`:undefined} autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="go" value={query} placeholder="Глава, термин или пример" onChange={e=>{onQuery(e.target.value);onSelect(0);onScope(null);}} onKeyDown={key}/>
    {query&&<button type="button" className="cmdk-icon-button" aria-label="Очистить поиск" onClick={()=>{onQuery('');onScope(null);onSelect(0);inputRef.current?.focus();}}><ProjectIcon name="close"/></button>}
    <button type="button" className="cmdk-close" aria-label="Закрыть поиск" onClick={()=>dialogRef.current?.close()}><kbd>Esc</kbd><span className="cmdk-close-text">Закрыть</span></button>
   </div>

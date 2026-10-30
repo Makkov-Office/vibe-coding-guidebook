@@ -71,6 +71,9 @@ test('the palette: one input field, filter chips, popular queries and the other 
  await expect(page.locator('#search-results [role=group]')).toHaveCount(1);await expect(group(page,'Термины глоссария')).toBeVisible();
  await expect(input(page)).toBeFocused();
  await scopes.getByRole('button',{name:/^Все/}).click();await expect(page.locator('#search-results [role=group]').nth(1)).toBeVisible();
+ // A new query starts without a filter.
+ await scopes.getByRole('button',{name:/^Термины/}).click();await input(page).fill('preflight');
+ await expect(scopes.getByRole('button',{name:/^Все/})).toHaveAttribute('aria-pressed','true');
  // «кумшуц» is «review» typed in the Russian layout.
  await input(page).fill('кумшуц');
  await expect(page.locator('.cmdk-swapped')).toContainText('review');await expect(page.locator('#search-results [role=option]').first()).toBeVisible();
