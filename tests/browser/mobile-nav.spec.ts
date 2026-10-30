@@ -162,3 +162,31 @@ test('on a phone chapter tabs fit without scrolling and shrink to icons when stu
   await expect(tabs.getByRole('link',{name:'Как устроено'})).toBeVisible();
  }
 });
+
+// Review of PR #127: a gesture ends wherever the pointer is released; the next click after a drag works;
+// a bar button left focused by a tap does not keep the bar on screen.
+test('the sheet gesture ends outside the header and leaves the next click alone',async({page})=>{
+ await ready(page,'/flow/08-preflight',390);
+ await page.getByRole('button',{name:'Разделы',exact:true}).click();await expect(menu(page)).toBeVisible();
+ await page.evaluate(()=>Promise.all(document.getAnimations().map(a=>a.finished.catch(()=>undefined))));
+ const header=(await menu(page).locator('.section-menu-header').boundingBox())!,x=header.x+60,y=header.y+20;
+ // Pressed on the header, released above it: hovering the header afterwards does not drag the sheet.
+ await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x,y-80,{steps:5});await page.mouse.up();
+ await page.mouse.move(x,y+40,{steps:5});
+ await expect(menu(page)).not.toHaveAttribute('data-dragging');expect(await menu(page).evaluate(n=>n.style.translate)).toBe('');
+ // A short drag springs back; one click on «Закрыть разделы» then closes the sheet.
+ await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x,y+30,{steps:5});await page.mouse.up();
+ await expect(menu(page)).toBeVisible();await page.waitForTimeout(600);
+ await page.getByRole('button',{name:'Закрыть разделы'}).click();await expect(menu(page)).toBeHidden();
+});
+
+test('after a tap on the bar the bar still hides on scroll',async({browser})=>{
+ const context=await browser.newContext({viewport:{width:390,height:800},hasTouch:true,isMobile:true}),page=await context.newPage();
+ await page.goto('/flow/08-preflight');await page.waitForSelector('html.js-enabled');
+ await page.getByRole('button',{name:'Разделы',exact:true}).tap();await expect(menu(page)).toBeVisible();
+ await page.getByRole('button',{name:'Закрыть разделы'}).tap();await expect(menu(page)).toBeHidden();
+ await page.evaluate(()=>scrollBy(0,400));await page.waitForTimeout(100);await page.evaluate(()=>scrollBy(0,500));
+ await expect(bar(page)).toHaveAttribute('data-hidden','');
+ await expect.poll(async()=>(await bar(page).boundingBox())!.y).toBeGreaterThanOrEqual(799);
+ await context.close();
+});

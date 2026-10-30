@@ -8,7 +8,9 @@ const distance=(sheet:HTMLElement)=>Math.min(120,sheet.offsetHeight*.25),flick=.
 /** Подключает жест к листу; возвращает отписку. Начало жеста на кнопке или ссылке не мешает их нажатию:
  *  лист сдвигается только после 6 px движения вниз. enabled — жест действует сейчас (панель стала листом). */
 export function sheetDrag(sheet:HTMLElement,grip:HTMLElement,close:()=>void,enabled:()=>boolean=()=>true){
-  let start=0,offset=0,last=0,time=0,speed=0,pointer=-1,moving=false;
+  let start=0,offset=0,last=0,time=0,speed=0,pointer=-1,moving=false,suppress=false;
+  // Сброс жеста: отпускание где угодно (мышь вне шапки не захвачена), отмена, закрытие листа посреди жеста.
+  const reset=()=>{pointer=-1;moving=false;delete sheet.dataset.dragging;sheet.style.translate='';};
   const down=(event:PointerEvent)=>{
     if(pointer>=0||(event.pointerType==='mouse'&&event.button!==0)||!enabled())return;
     pointer=event.pointerId;start=last=event.clientY;time=event.timeStamp;offset=speed=0;moving=false;
@@ -22,18 +24,18 @@ export function sheetDrag(sheet:HTMLElement,grip:HTMLElement,close:()=>void,enab
     sheet.style.translate=`0 ${offset}px`;
   };
   const up=(event:PointerEvent)=>{
-    if(event.pointerId!==pointer)return;pointer=-1;
-    if(!moving)return;moving=false;delete sheet.dataset.dragging;
+    if(event.pointerId!==pointer)return;
+    const dragged=moving;reset();if(!dragged)return;
+    // Клик этого же жеста (на кнопке, где он начался) не нажимает её; следующий клик — уже обычный.
+    suppress=true;setTimeout(()=>{suppress=false;});
     // Ушёл в CSS: закрытый лист уезжает вниз из текущего положения, открытый возвращается на место.
-    sheet.style.translate='';
     if(event.type==='pointerup'&&(offset>distance(sheet)||speed>flick))close();
   };
-  // Клик после жеста не нажимает кнопку, на которой жест начался.
-  const click=(event:MouseEvent)=>{if(offset>6){event.preventDefault();event.stopPropagation();offset=0;}};
-  grip.addEventListener('pointerdown',down);grip.addEventListener('pointermove',move);
-  grip.addEventListener('pointerup',up);grip.addEventListener('pointercancel',up);grip.addEventListener('click',click,true);
+  const click=(event:MouseEvent)=>{if(suppress){event.preventDefault();event.stopPropagation();suppress=false;}};
+  grip.addEventListener('pointerdown',down);grip.addEventListener('pointermove',move);grip.addEventListener('click',click,true);
+  addEventListener('pointerup',up);addEventListener('pointercancel',up);sheet.addEventListener('close',reset);
   return()=>{
-    grip.removeEventListener('pointerdown',down);grip.removeEventListener('pointermove',move);
-    grip.removeEventListener('pointerup',up);grip.removeEventListener('pointercancel',up);grip.removeEventListener('click',click,true);
+    grip.removeEventListener('pointerdown',down);grip.removeEventListener('pointermove',move);grip.removeEventListener('click',click,true);
+    removeEventListener('pointerup',up);removeEventListener('pointercancel',up);sheet.removeEventListener('close',reset);
   };
 }

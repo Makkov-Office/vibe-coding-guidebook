@@ -9,9 +9,10 @@
   html.js-enabled .return-reading{bottom:calc(var(--bottom-bar) + env(safe-area-inset-bottom) + var(--space-3))}
 }
 /* P3-12: панель уходит вниз, пока читатель листает вниз, и возвращается при прокрутке вверх, у начала и конца страницы.
-   Фокус с клавиатуры внутри панели всегда её показывает. */
+   Фокус с клавиатуры внутри панели всегда её показывает (только видимый фокус: после касания кнопка панели остаётся
+   в фокусе, и :focus-within не дал бы ей уйти). */
 .bottom-bar{transition:translate var(--dur-2) var(--ease)}
-.bottom-bar[data-hidden]:not(:focus-within){translate:0 100%;transition-timing-function:var(--ease-exit)}
+.bottom-bar[data-hidden]:not(:has(:focus-visible)){translate:0 100%;transition-timing-function:var(--ease-exit)}
 .bottom-item{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-1);min-width:0;min-height:var(--bottom-bar);padding:var(--space-1) 0;border:0;border-radius:var(--radius-m,16px);background:none;color:var(--color-on-surface-variant);font:600 var(--type-label) var(--font-text);text-align:center;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .bottom-item>span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bottom-item:disabled{opacity:.6;cursor:default}
@@ -81,5 +82,5 @@ dialog.section-menu::backdrop{transition:opacity var(--dur-2) var(--ease),displa
 .section-panel .mega-progress{margin-top:0}
 .section-panel .mega-item{min-height:var(--touch-target);-webkit-tap-highlight-color:transparent}
 .section-panel .mega-item:active{background:color-mix(in srgb,var(--color-on-surface) 10%,transparent)}
-@media(forced-colors:active){.bottom-item[aria-current=page] .bottom-indicator,.menu-continue,.section-row[aria-current=true] .section-icon{outline:2px solid Highlight}}
+@media(forced-colors:active){.section-menu{border-top:1px solid CanvasText}.sheet-handle{background:CanvasText}.bottom-item[aria-current=page] .bottom-indicator,.menu-continue,.section-row[aria-current=true] .section-icon{outline:2px solid Highlight}}
 @media print{.bottom-bar,.section-menu{display:none!important}}

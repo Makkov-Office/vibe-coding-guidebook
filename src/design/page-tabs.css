@@ -36,12 +36,15 @@
   .page-tabs[data-icons][data-stuck] li{flex:0 0 48px}
   .page-tabs[data-icons][data-stuck] li:has(>[aria-current]){flex:1 1 0}
   .page-tabs[data-icons][data-stuck] a{flex-direction:row;gap:var(--space-2);padding:0 var(--space-3);white-space:nowrap}
+  .page-tabs[data-icons][data-stuck] a[aria-current]>span{text-overflow:ellipsis}
   .page-tabs[data-icons][data-stuck] a:not([aria-current])>span{max-width:0;opacity:0}
   .page-tabs[data-icons][data-stuck] a:not([aria-current]){gap:0;padding:0}
 }
-/* Нажатие на таб — короткое сжатие (тач-отклик). */
+/* Нажатие на таб на тач-экране — короткое сжатие (тач-отклик). */
 .page-tabs a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-.page-tabs a:active{scale:.96}
+@media (hover:none){.page-tabs a:active{scale:.96}}
+/* Самые узкие экраны: подпись под иконкой мельче, чтобы «Как применять» влезло в ячейку. */
+@media (max-width:359px){.page-tabs[data-icons]:not([data-stuck]) a{padding:var(--space-1) 0;font-size:.6875rem;letter-spacing:-.01em}}
 
 /* Разделы страницы: подписи длиннее, ячейки по содержимому; полоса прокручивается, текущий таб в зоне видимости. */
 .page-tabs[data-mode=anchor] li{flex:0 0 auto}
