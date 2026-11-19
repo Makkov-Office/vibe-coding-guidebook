@@ -1,32 +1,32 @@
 Implements #
 
-## Что изменилось
-<!-- Какую проблему решает PR и что теперь происходит. Один outcome. -->
+## What changed
+<!-- What problem the PR solves and what happens now. One outcome. -->
 
 ## Scope
-- В scope:
-- Вне scope:
+- In scope:
+- Out of scope:
 
 ## Risk: Low / Medium / High
-<!-- Почему именно этот уровень. Неясно — классифицируй вверх. -->
+<!-- Why this level. If unclear, classify up. -->
 
 ## Docs Impact: none / updated / follow-up
-<!-- Какие документы обновлены или почему их не нужно трогать. -->
+<!-- Which documents were updated, or why they need no change. -->
 
 ## Evidence
-| Проверка | Команда / ссылка | Результат | SHA |
+| Check | Command / link | Result | SHA |
 |---|---|---|---|
 | validate | `npm run validate` | PASS / FAIL / INCOMPLETE | |
 | CI | | | |
-| Parity (если применимо) | `npm run parity-check` | | |
+| Parity (if applicable) | `npm run parity-check` | | |
 
-## Коллизии и merge order
-<!-- Пересечения с другими открытыми PR, зависимости, порядок. -->
+## Collisions and merge order
+<!-- Overlaps with other open PRs, dependencies, order. -->
 
-## Ограничения и что не проверено
+## Limitations and what was not checked
 
 ## Rollback
-<!-- Только если изменение имеет значимые последствия. -->
+<!-- Only if the change has significant consequences. -->
 
 ---
-Автор останавливается до merge. Merge — оркестратор после independent review READY на HEAD и зелёного CI, для учебного текста — плюс READY агента-редактора на том же HEAD (бриф, разделы 9.5 и 14); production, хостинг, домен, новые зависимости и новый учебный текст P6-06 — решение founder.
+The author stops before merge. Merge is done by the orchestrator after independent review READY on HEAD and green CI; for learning content, also READY from the editor agent on the same HEAD (brief, sections 9.5 and 14). Production, hosting, domain, new dependencies and the new learning content of P6-06 are founder decisions.

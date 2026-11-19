@@ -1,511 +1,511 @@
-# Mastering Agentic Engineering — ТЗ на перенос и развитие платформы
+# Mastering Agentic Engineering — specification for moving and developing the platform
 
-> Название продукта: **Mastering Agentic Engineering** (решение founder 22.10.2026, раздел 2). Основа: «ULTIMATE Vibe-coder guidebook [BETA]» v1.2, собранный в Codex; исходник — репозиторий `Makkov-Office/vibe-coding-guidebook`.
-> Документ — канонический бриф (Product HQ) для агентов и людей, работающих над проектом. Версия брифа: 1.3 · 26.10.2026 · владелец: Makkov.
-> Приоритет источников: решение founder → этот бриф → `docs/cloud-handoff.md` (правила оригинала, если бриф их явно не меняет) → код на конкретном SHA.
-> v1.3 фиксирует решения founder по редизайну от 26.10.2026 (план RD-01): модель m3.material.io, новая структура, новый порядок фаз P2–P9, процесс без флага. Обоснование и отвергнутые варианты — `docs/adr/0003-m3-redesign.md` (ADR-0003).
+> Product name: **Mastering Agentic Engineering** (founder decision of 2026-10-22, section 2). Basis: "ULTIMATE Vibe-coder guidebook [BETA]" v1.2, built in Codex; source: the repository `Makkov-Office/vibe-coding-guidebook`.
+> This document is the canonical brief (Product HQ) for the agents and people working on the project. Brief version: 1.3 · 2026-10-26 · owner: Makkov.
+> Source priority: founder decision → this brief → `docs/cloud-handoff.md` (the original's rules, unless the brief explicitly changes them) → the code at a specific SHA.
+> v1.3 records the founder's redesign decisions of 2026-10-26 (plan RD-01): the m3.material.io model, a new structure, a new phase order P2–P9, a process without a flag. Rationale and rejected options: `docs/adr/0003-m3-redesign.md` (ADR-0003).
 
-Ключевые слова **MUST / MUST NOT / SHOULD / MAY** используются в смысле RFC 2119: MUST — обязательно, SHOULD — по умолчанию да, отступление объясняется в PR, MAY — на усмотрение.
+The keywords **MUST / MUST NOT / SHOULD / MAY** are used in the RFC 2119 sense: MUST is mandatory, SHOULD is yes by default with any deviation explained in the PR, MAY is at discretion.
 
 ---
 
 ## 0. TL;DR
 
-1. **Фаза 1 — перенос и паритет.** Оригинал 1:1 уже лежит в этом репозитории и собирается. Задача — сделать его рабочим домом для Claude Code: синхронизировать lockfile, harness, CI, перенести хостинг на Vercel с preview на каждый PR. Контент и UI в этой фазе не меняются.
-2. **Редизайн по модели Material 3 (ADR-0003).** Переносим модель m3.material.io целиком: navigation rail с мега-меню по наведению, главная из карточек, «Начать» со scroll-story и sticky-визуалом, страница темы с 4 табами (Обзор / Как устроено / Как применять / Проверь себя), которые при скролле сжимаются в шапку. 9 пунктов rail, около 27 → около 70 страниц (раздел 5).
-3. **Фаза P2 — фундамент дизайна:** бриф v1.3 и ADR-0003, концепт «Чертёж» в цветах бренда, токены, визуальная грамматика, иконки Tabler, карта URL.
-4. **Фаза P3 — оболочка и навигация:** rail, мега-меню, мобильная навигация, поиск ⌘K, кнопки темы и анимаций, движение.
-5. **Фаза P4 — главная, «Начать» и ребрендинг** в Mastering Agentic Engineering (P4-05). Продающий лендинг v1.2 заменяется главной M3; дашборд — блоком «Продолжить».
-6. **Фаза P5 — страница темы и дробление:** формат контента с табами, шаблон страницы, пилот на главах 01, 08, 12.
-7. **Фаза P6 — контент проще.** Волны по разделам: слой «Обзор», визуал на каждом табе, «Так / Не так». Сюда же пробелы аудита: reference-harness, enforcement, память, observability, auto-merge, изоляция, оркестрация.
-8. **Фаза P7 — геймификация v2.** Уровни мастерства M0–M5 вместо голого XP, тренажёры по реальным решениям из гайда, награда за компетенцию, а не за прокрутку.
-9. **Фаза P8 — Agent Pack.** Машиночитаемый набор: AGENTS.md/CLAUDE.md, skills, JSON Schema, hooks, `llms.txt`. Идёт параллельным потоком.
-10. **Фаза P9 — музыка.** В самом конце, когда будут треки и лицензии.
-11. **Без флага нового UI.** Каждый merge после independent review READY на HEAD и зелёного CI сразу идёт в production; откат — revert PR. Founder смотрит 4 контрольные точки (раздел 6.3, раздел 14).
-12. **Проект ведётся по правилам самого гайда** (dogfooding): тикет → ветка → PR → независимое review → merge по делегированию founder.
+1. **Phase 1 — move and parity.** The original 1:1 is already in this repository and builds. The task is to make it a working home for Claude Code: sync the lockfile, harness, CI, move hosting to Vercel with a preview on every PR. Content and UI do not change in this phase.
+2. **Redesign on the Material 3 model (ADR-0003).** We adopt the m3.material.io model as a whole: a navigation rail with a hover mega menu, a home page made of cards, "Get started" with a scroll story and a sticky visual, a topic page with 4 tabs (Overview / How it works / How to apply / Test yourself) that collapse into the header on scroll. 9 rail items, about 27 → about 70 pages (section 5).
+3. **Phase P2 — design foundation:** brief v1.3 and ADR-0003, the "Blueprint" concept in brand colors, tokens, visual grammar, Tabler icons, URL map.
+4. **Phase P3 — shell and navigation:** rail, mega menu, mobile navigation, ⌘K search, theme and animation buttons, motion.
+5. **Phase P4 — home page, "Get started" and rebranding** to Mastering Agentic Engineering (P4-05). The v1.2 sales landing page is replaced by the M3 home page; the dashboard becomes the "Continue" block.
+6. **Phase P5 — topic page and splitting:** content format with tabs, page template, pilot on chapters 01, 08, 12.
+7. **Phase P6 — simpler content.** Waves by section: the Overview layer, a visual on every tab, "Do / Don't". The audit gaps also go here: reference harness, enforcement, memory, observability, auto-merge, isolation, orchestration.
+8. **Phase P7 — gamification v2.** Mastery levels M0–M5 instead of bare XP, drills based on real decisions from the guide, rewards for competence rather than for scrolling.
+9. **Phase P8 — Agent Pack.** A machine-readable set: AGENTS.md/CLAUDE.md, skills, JSON Schema, hooks, `llms.txt`. Runs as a parallel stream.
+10. **Phase P9 — music.** At the very end, once there are tracks and licenses.
+11. **No flag for the new UI.** Every merge after independent review READY on HEAD and green CI goes straight to production; rollback is a revert PR. The founder looks at 4 checkpoints (section 6.3, section 14).
+12. **The project follows the rules of the guide itself** (dogfooding): ticket → branch → PR → independent review → merge under founder delegation.
 
-### 0.1. Что изменилось в v1.3
+### 0.1. What changed in v1.3
 
-| Тема | Было (v1.2) | Стало (v1.3) |
+| Topic | Was (v1.2) | Now (v1.3) |
 |---|---|---|
-| Вход на сайт | Фаза 5: продающий лендинг + отдельный дашборд | Главная в стиле M3 + «Начать»; дашборд превращается в блок «Продолжить» на главной (раздел 7.3) |
-| Порядок фаз | Контент → подача → геймификация → лендинг → Agent Pack | Дизайн → оболочка → главная → страница темы → контент → геймификация; Agent Pack параллельно, музыка в конце (раздел 6) |
-| Подача | Переключатель «Коротко / Полностью» | 4 таба: «Обзор» = короткий слой, полный текст — в «Как устроено» и «Как применять» (раздел 5.3) |
-| Визуал | Мини-карта системы, 4 типа callout | Визуал на каждом табе по визуальной грамматике MAE, «Так / Не так», нумерованная анатомия (разделы 7.1, 9.4) |
-| Дизайн | Принцип 9: Linear-стиль сохраняется до решения founder | Решение принято: концепт «Чертёж» в цветах бренда UIX PRO (ADR-0003) |
-| Контролы | Не было | Тема (3 состояния) и Play/Pause анимаций внизу rail; музыка — в P9 |
-| Выкатка | Production из `main` (P1-16), merge — по решению founder | Без флага `NEXT_UI`: каждый проверенный merge сразу в production, 4 контрольные точки вместо приёмки каждого PR (раздел 14) |
-| Вычитка текстов | Изменение учебного текста — с founder approval | Упрощённые тексты сверяет с оригиналом отдельный агент-редактор; founder — только спорный смысл; новый текст P6-06 — по-прежнему с founder approval (раздел 9.5) |
+| Site entry | Phase 5: sales landing page + separate dashboard | M3-style home page + "Get started"; the dashboard becomes the "Continue" block on the home page (section 7.3) |
+| Phase order | Content → presentation → gamification → landing → Agent Pack | Design → shell → home page → topic page → content → gamification; Agent Pack in parallel, music at the end (section 6) |
+| Presentation | "Short / Full" switch | 4 tabs: "Overview" = the short layer, the full text is in "How it works" and "How to apply" (section 5.3) |
+| Visuals | System mini map, 4 callout types | A visual on every tab following the MAE visual grammar, "Do / Don't", numbered anatomy (sections 7.1, 9.4) |
+| Design | Principle 9: Linear style is kept until a founder decision | Decision made: the "Blueprint" concept in UIX PRO brand colors (ADR-0003) |
+| Controls | None | Theme (3 states) and animation Play/Pause at the bottom of the rail; music in P9 |
+| Rollout | Production from `main` (P1-16), merge by founder decision | No `NEXT_UI` flag: every verified merge goes straight to production, 4 checkpoints instead of accepting every PR (section 14) |
+| Text proofreading | Changes to learning content need founder approval | A separate editor agent checks simplified texts against the original; the founder handles only disputed meaning; the new text of P6-06 still needs founder approval (section 9.5) |
 
 ---
 
-## 1. Контекст и цели
+## 1. Context and goals
 
-### 1.1. Что есть сейчас
+### 1.1. What exists now
 
-Сайт `agentic-engineering-handbook-makkov.makkov.chatgpt.site` — русскоязычное руководство по управляемой разработке с AI-агентами. Оценка аудита от 22.10.2026:
+The site `agentic-engineering-handbook-makkov.makkov.chatgpt.site` is a guide to managed development with AI agents. Audit score of 2026-10-22:
 
-| Ось | Балл | Главная причина |
+| Axis | Score | Main reason |
 |---|---|---|
-| Архитектура системы | 78/100 | Сильный governance; нет исполняемого ядра, памяти, observability |
-| Подача для человека | 70/100 | Хорошая структура; конфликт тона, рус-англ смесь, оборонительный стиль, нет сквозного примера |
-| Подача для ИИ | 80/100 | Чистый Markdown и шаблоны; нет RFC 2119, JSON Schema, разбиения на загружаемые части |
+| System architecture | 78/100 | Strong governance; no executable core, memory or observability |
+| Presentation for people | 70/100 | Good structure; conflicting tone, mixed languages, defensive style, no end-to-end example |
+| Presentation for AI | 80/100 | Clean Markdown and templates; no RFC 2119, JSON Schema or splitting into loadable parts |
 
-### 1.2. Цели
+### 1.2. Goals
 
-| # | Цель | Как проверяем |
+| # | Goal | How we check |
 |---|---|---|
-| G1 | Полный паритет с оригиналом | Acceptance фазы 1 (раздел 4.5) — 100% пунктов PASS |
-| G2 | Подача для человека ≥ 85/100 | Повторный аудит + тест «новичок проходит главу 01 и объясняет правило своими словами» |
-| G3 | Подача для ИИ ≥ 90/100 | Fresh-agent exit test на Agent Pack (раздел 11.4) |
-| G4 | Архитектура ≥ 88/100 | Есть работающий reference-harness и новые главы из раздела 9.6 |
-| G5 | Главная и «Начать» ведут в начало обучения | Событие «начал главу 01 / прошёл диагностику» отслеживается (раздел 7.4) |
+| G1 | Full parity with the original | Phase 1 acceptance (section 4.5) — 100% of items PASS |
+| G2 | Presentation for people ≥ 85/100 | Repeat audit + the test "a beginner completes chapter 01 and explains the rule in their own words" |
+| G3 | Presentation for AI ≥ 90/100 | Fresh-agent exit test on the Agent Pack (section 11.4) |
+| G4 | Architecture ≥ 88/100 | There is a working reference harness and the new chapters from section 9.6 |
+| G5 | The home page and "Get started" lead into the start of learning | The event "started chapter 01 / completed the diagnostic" is tracked (section 7.4) |
 
-### 1.3. Не-цели
+### 1.3. Non-goals
 
-- Не строить Agent Control Center как работающий runtime — только описывать его (как в оригинале).
-- Не делать бэкенд с аккаунтами в фазах P1–P9 этого брифа. Прогресс хранится у пользователя (раздел 10.7).
-- Не переводить на английский в рамках этого брифа (архитектура MUST позволять i18n позже).
+- Do not build the Agent Control Center as a working runtime — only describe it (as in the original).
+- Do not build a backend with accounts in phases P1–P9 of this brief. Progress is stored on the user's side (section 10.7).
+- Do not translate into English within this brief (the architecture MUST allow i18n later).
 
 ---
 
-## 2. Название платформы
+## 2. Platform name
 
-### 2.1. Решение founder (22.10.2026): **Mastering Agentic Engineering**
+### 2.1. Founder decision (2026-10-22): **Mastering Agentic Engineering**
 
-**Подзаголовок:** «Полный цикл разработки с AI-агентами — от вайбкодинга до top-tier SDLC».
-**Русская подпись (где нужна):** «Мастерство агентной инженерии».
-**Короткая форма в UI:** MAE (только где не хватает места; основное имя пишется полностью).
+**Subtitle:** "The full development cycle with AI agents — from vibe coding to top-tier SDLC".
+**Caption in the site's content language (where needed):** the equivalent of "Mastery of agentic engineering".
+**Short form in the UI:** MAE (only where space is short; the main name is written in full).
 
-Почему так:
-- Прежнее имя «ULTIMATE Vibe-coder guidebook [BETA]» обещало лёгкий гайд для вайбкодеров, а внутри — инженерная дисциплина; URL при этом говорил «agentic-engineering-handbook». Новое имя совпадает с содержанием и с текущим URL по смыслу.
-- «Mastering» описывает путь человека к мастерству; шкала M0–M5 из главы 21 становится естественной шкалой этого пути (раздел 2.2).
-- «SDLC» в подзаголовке закрепляет экспертность, не отпугивая новичка в основном имени.
-- Не привязано к вендору (Codex/Claude), переживёт смену инструментов.
-- Слова «ULTIMATE» и «[BETA]» из названия убираются.
+Why:
+- The previous name "ULTIMATE Vibe-coder guidebook [BETA]" promised a light guide for vibe coders, while the inside is an engineering discipline; meanwhile the URL said "agentic-engineering-handbook". The new name matches the content and, in meaning, the current URL.
+- "Mastering" describes a person's path to mastery; the M0–M5 scale from chapter 21 becomes the natural scale of that path (section 2.2).
+- "SDLC" in the subtitle anchors the expertise without scaring off a beginner in the main name.
+- Not tied to a vendor (Codex/Claude), it will survive a change of tools.
+- The words "ULTIMATE" and "[BETA]" are dropped from the name.
 
-### 2.2. Уровни мастерства (M0–M5, глава 21)
+### 2.2. Mastery levels (M0–M5, chapter 21)
 
-Текущие 4 уровня оригинала (Исследователь → Практик → Оркестратор → Инженер) расширяются до 6 и привязываются к maturity model. Уровень подтверждается проверкой (раздел 10.4), а не только накопленным XP.
+The original's current 4 levels (Explorer → Practitioner → Orchestrator → Engineer) are extended to 6 and tied to the maturity model. A level is confirmed by a check (section 10.4), not only by accumulated XP.
 
-| Уровень | Maturity | Что умеет человек | Exit criterion (глава 21) |
+| Level | Maturity | What the person can do | Exit criterion (chapter 21) |
 |---|---|---|---|
-| 0 · Исследователь | M0 · Conversational | Получает работающий код из чата | Есть прототип |
-| 1 · Практик | M1 · Repeatable | Воспроизводимая среда, одна команда проверки | Чистая среда проходит checks по docs |
-| 2 · Инженер | M2 · Governed | Тикет, PR, независимое review, human gate | Один полный delivery cycle прослеживается |
-| 3 · Оркестратор | M3 · Coordinated | Параллельные агенты, риск, коллизии, merge order, sync | Параллельная волна без потери контрактов и данных |
-| 4 · Архитектор | M4 · Enforced | Правила исполняются технически: permissions, gates, audit | Нарушение невозможно или явно блокируется |
-| 5 · Мастер | M5 · Adaptive | Устойчивая оркестрация, бюджеты, восстановление | Прерванные прогоны восстанавливаются без потери authority и evidence |
+| 0 · Explorer | M0 · Conversational | Gets working code from a chat | There is a prototype |
+| 1 · Practitioner | M1 · Repeatable | Reproducible environment, one check command | A clean environment passes the checks following the docs |
+| 2 · Engineer | M2 · Governed | Ticket, PR, independent review, human gate | One full delivery cycle can be traced |
+| 3 · Orchestrator | M3 · Coordinated | Parallel agents, risk, collisions, merge order, sync | A parallel wave without losing contracts or data |
+| 4 · Architect | M4 · Enforced | Rules are enforced technically: permissions, gates, audit | A violation is impossible or explicitly blocked |
+| 5 · Master | M5 · Adaptive | Resilient orchestration, budgets, recovery | Interrupted runs recover without losing authority or evidence |
 
-Существующий прогресс пользователей мигрирует: накопленный XP и отметки глав сохраняются, уровень пересчитывается по новой шкале (раздел 10.7).
+Existing user progress migrates: accumulated XP and chapter marks are kept, the level is recalculated on the new scale (section 10.7).
 
-### 2.3. Что меняется при ребрендинге (тикет P4-05)
+### 2.3. What changes with the rebranding (ticket P4-05)
 
-- Ребрендинг идёт вместе с новой главной (решение founder 26.10.2026, ADR-0003): тикет P4-05 после P4-01.
-- Название в `content/handbook.md` (первая строка), `src/design/brand.ts`, metadata, `<title>`, Open Graph, футер, главная.
-- FLOW-символ, `by Makkov` SVG и плашка Open Source сохраняются (утверждены в оригинале).
-- Ребрендинг меняет утверждённый бренд из `docs/cloud-handoff.md` («Дизайн и стиль») — это осознанное решение founder, фиксируется ADR (ADR-0003).
-- Перед запуском SHOULD проверить свободность домена (варианты: `masteringagentic.dev`, `agentic-engineering.guide` и т.п.) и хендлов. Выбор домена — founder decision.
+- The rebranding goes together with the new home page (founder decision of 2026-10-26, ADR-0003): ticket P4-05 after P4-01.
+- The name in `content/handbook.md` (first line), `src/design/brand.ts`, metadata, `<title>`, Open Graph, footer, home page.
+- The FLOW symbol, the `by Makkov` SVG and the Open Source badge are kept (approved in the original).
+- The rebranding changes the approved brand from `docs/cloud-handoff.md` ("Design and style") — this is a deliberate founder decision, recorded in an ADR (ADR-0003).
+- Before launch the team SHOULD check that the domain (options: `masteringagentic.dev`, `agentic-engineering.guide`, etc.) and handles are free. Choosing the domain is a founder decision.
 
-### 2.4. Атрибуция
+### 2.4. Attribution
 
-В футере и на главной: «by Makkov».
-
----
-
-## 3. Принципы работы над проектом
-
-1. **Dogfooding.** Проект MUST вестись по процессу из самого гайда: `1 тикет = 1 ветка = 1 сессия автора = 1 PR`, независимое review в чистой сессии, merge только после независимого review READY на HEAD и зелёного CI — по делегированию founder (раздел 14).
-2. **Паритет до улучшений.** Фаза 1 MUST закончиться (acceptance 4.5) до изменений учебного текста и UI. Новые фичи в фазе 1 MAY разрабатываться только как выключенные (feature flag).
-3. **Контент отделён от кода.** Учебный текст MUST жить в `content/handbook.md` (и новых Markdown/JSON-источниках, подключённых к штатному компилятору), а не в JSX.
-4. **Исходник — истина.** `content/handbook.md` на конкретном SHA — канонический учебный текст; сгенерированные файлы не правятся руками.
-5. **Существующий pipeline расширяется, а не заменяется.** Компилятор, coverage audit, identity-registry блоков и publication audit MUST продолжать проходить; новые слои («Обзор», тренажёры, Agent Pack) подключаются к ним.
-6. **Fail closed** в инструментах сборки: если не нашлась глава, термин или якорь — сборка падает, а не молча пропускает.
-7. **Доступность и мобильность** — не опция: WCAG 2.2 AA, ширина 360 px без горизонтального скролла, работа с клавиатуры.
-8. **Без тёмных паттернов в геймификации** (раздел 10.8).
-9. **Визуальное направление — по ADR-0003.** Founder выбрал новое направление 26.10.2026 (концепт «Чертёж» в цветах бренда UIX PRO, модель M3). Новый стиль вводится тикетами P2–P5 по roadmap (раздел 6); FLOW-символ, `by Makkov` SVG и плашка Open Source сохраняются (раздел 2.3). Спецификация — `docs/design/visual-language.md` (P2-02).
+In the footer and on the home page: "by Makkov".
 
 ---
 
-## 4. Фаза 1 — перенос в Claude Code и паритет
+## 3. Working principles for the project
 
-### 4.1. Что уже есть (проверено 22.10.2026)
+1. **Dogfooding.** The project MUST follow the process from the guide itself: `1 ticket = 1 branch = 1 author session = 1 PR`, independent review in a clean session, merge only after independent review READY on HEAD and green CI — under founder delegation (section 14).
+2. **Parity before improvements.** Phase 1 MUST be finished (acceptance 4.5) before changes to learning content and UI. New features in phase 1 MAY be developed only switched off (feature flag).
+3. **Content is separate from code.** Learning content MUST live in `content/handbook.md` (and in new Markdown/JSON sources connected to the standard compiler), not in JSX.
+4. **The source is the truth.** `content/handbook.md` at a specific SHA is the canonical learning content; generated files are not edited by hand.
+5. **The existing pipeline is extended, not replaced.** The compiler, the coverage audit, the block identity registry and the publication audit MUST keep passing; new layers (Overview, drills, Agent Pack) plug into them.
+6. **Fail closed** in build tools: if a chapter, term or anchor is not found, the build fails instead of silently skipping it.
+7. **Accessibility and mobile** are not optional: WCAG 2.2 AA, 360 px width without horizontal scrolling, keyboard operation.
+8. **No dark patterns in gamification** (section 10.8).
+9. **The visual direction follows ADR-0003.** The founder chose a new direction on 2026-10-26 (the "Blueprint" concept in UIX PRO brand colors, the M3 model). The new style is introduced by tickets P2–P5 following the roadmap (section 6); the FLOW symbol, the `by Makkov` SVG and the Open Source badge are kept (section 2.3). Specification: `docs/design/visual-language.md` (P2-02).
 
-Исходник опубликованного сайта лежит в `Makkov-Office/vibe-coding-guidebook` (ветка `main`, HEAD `292ee23`, 11.10.2026). Код и контент совпадают с опубликованной PUBLIC-версией 20 (коммит `a99332c`); после неё добавлены только документы передачи (`docs/cloud-handoff.md`). **Это и есть оригинал 1:1 — воссоздавать с нуля не нужно.**
+---
 
-| Что | Факт |
+## 4. Phase 1 — moving to Claude Code and parity
+
+### 4.1. What already exists (checked 2026-10-22)
+
+The source of the published site is in `Makkov-Office/vibe-coding-guidebook` (branch `main`, HEAD `292ee23`, 2026-10-11). The code and content match the published PUBLIC version 20 (commit `a99332c`); only handoff documents (`docs/cloud-handoff.md`) were added after it. **This is the original 1:1 — there is no need to recreate it from scratch.**
+
+| What | Fact |
 |---|---|
-| Стек | React 19, TypeScript, **Vinext** (Next-совместимый App Router на Vite 8), RSC, Tailwind 4, shadcn/base-ui, Tabler Icons, Cloudflare Workers (wrangler), npm + package-lock |
-| Контент | Один источник `content/handbook.md` (≈2400 строк, 12.6k слов): 22 главы, orientation 00, обзоры инструментов, ресурсы, глоссарий 394 определения / 11 тем |
-| Конвейер | `npm run content`: AST/GFM-компилятор → `src/content/generated.json`, поисковый индекс и anchors в `public/data/`, статичные SVG Mermaid (6 схем, пересобираются только при изменении, нужен Chrome), coverage audit «0 unexplained gaps» |
-| Маршруты | `/`, `/chapters/01–22`, `/glossary`, `/resources`, `/tools`, `/tools/codex`, `/tools/claude-code`, `/print`, `/handbook.md` — 30 пререндеренных маршрутов |
-| Прогресс | localStorage: `handbook-learning-v2`, `handbook-reading-v2`, `practice:*`; fallback в память при отказе storage |
-| Дизайн | Linear-стиль: фон `#010102`, графит, акцент `#5e6ad2`; Manrope + JetBrains Mono self-hosted; Tabler 20 px / 1.75; rail 264 px |
-| Проверки | `npm test` (7 content-тестов), `typecheck`, `lint`, `build` + `postbuild` publication audit, Playwright e2e (нужен запущенный сервер) |
-| Хостинг | ChatGPT native Sites, `project_id` в `.openai/hosting.json`. **Из Claude Code туда не опубликовать.** |
-| Документация | `README.md`, `docs/cloud-handoff.md`, `docs/implementation-notes.md`, аудиты (UX/UI, редакторский, производительность, контраст), 40+ скриншотов, источники и SHA-256 логотипов/скриншотов |
+| Stack | React 19, TypeScript, **Vinext** (Next-compatible App Router on Vite 8), RSC, Tailwind 4, shadcn/base-ui, Tabler Icons, Cloudflare Workers (wrangler), npm + package-lock |
+| Content | A single source `content/handbook.md` (≈2400 lines, 12.6k words): 22 chapters, orientation 00, tool overviews, resources, glossary of 394 definitions / 11 topics |
+| Pipeline | `npm run content`: AST/GFM compiler → `src/content/generated.json`, search index and anchors in `public/data/`, static Mermaid SVGs (6 diagrams, rebuilt only on change, Chrome required), coverage audit "0 unexplained gaps" |
+| Routes | `/`, `/chapters/01–22`, `/glossary`, `/resources`, `/tools`, `/tools/codex`, `/tools/claude-code`, `/print`, `/handbook.md` — 30 prerendered routes |
+| Progress | localStorage: `handbook-learning-v2`, `handbook-reading-v2`, `practice:*`; in-memory fallback when storage is refused |
+| Design | Linear style: background `#010102`, graphite, accent `#5e6ad2`; Manrope + JetBrains Mono self-hosted; Tabler 20 px / 1.75; rail 264 px |
+| Checks | `npm test` (7 content tests), `typecheck`, `lint`, `build` + `postbuild` publication audit, Playwright e2e (needs a running server) |
+| Hosting | ChatGPT native Sites, `project_id` in `.openai/hosting.json`. **It cannot be published there from Claude Code.** |
+| Documentation | `README.md`, `docs/cloud-handoff.md`, `docs/implementation-notes.md`, audits (UX/UI, editorial, performance, contrast), 40+ screenshots, sources and SHA-256 of logos/screenshots |
 
-Проверка в облачной среде Claude Code (Node 22.22, npm 10.9):
-- `npm ci` — **FAIL**: lockfile не синхронизирован с package.json (`Missing: playwright-core@1.57.0 from lock file`).
-- `npm install --no-save` → `npm test` 7/7 PASS, `typecheck` PASS, `build` PASS: 30 маршрутов, publication audit 163 assets, source/download identical.
-- Сборка ссылается на ассеты абсолютными путями (`/_next/...`): статичный хостинг в корне домена (Vercel) подходит без переделки путей.
+Check in the Claude Code cloud environment (Node 22.22, npm 10.9):
+- `npm ci` — **FAIL**: the lockfile is out of sync with package.json (`Missing: playwright-core@1.57.0 from lock file`).
+- `npm install --no-save` → `npm test` 7/7 PASS, `typecheck` PASS, `build` PASS: 30 routes, publication audit 163 assets, source/download identical.
+- The build references assets by absolute paths (`/_next/...`): static hosting at the domain root (Vercel) works without reworking the paths.
 
-### 4.2. Правила, унаследованные от оригинального handoff (MUST)
+### 4.2. Rules inherited from the original handoff (MUST)
 
-- Продолжать существующий проект, не создавать портал заново; сохранять историю Git.
-- Учебный текст, определения, подборки, обзоры и подписи — только в `content/handbook.md`; сгенерированные файлы обновляются штатным `npm run content`.
-- Сохранять дизайн Linear, FLOW-символ, `by Makkov` SVG без изменения байтов, плашку Open Source — **до решения founder о ребрендинге** (раздел 2).
-- Не выдумывать изображения и фирменные знаки; факты в обзорах — только из официальных источников с датой проверки.
-- Недоделки из `docs/cloud-handoff.md` («Последнее обновление и ограничения») не считать согласованными задачами.
-- Не менять ChatGPT Sites и его public-доступ; push в GitHub не равен публикации сайта.
+- Continue the existing project, do not create the portal from scratch; preserve the Git history.
+- Learning content, definitions, collections, overviews and captions live only in `content/handbook.md`; generated files are updated by the standard `npm run content`.
+- Preserve the Linear design, the FLOW symbol, the `by Makkov` SVG without changing its bytes, and the Open Source badge — **until the founder decides on the rebranding** (section 2).
+- Do not invent images or brand marks; facts in the overviews come only from official sources with a check date.
+- Do not treat the gaps from `docs/cloud-handoff.md` ("Latest update and limitations") as agreed tasks.
+- Do not change ChatGPT Sites or its public access; a push to GitHub is not the same as publishing the site.
 
-### 4.3. Новая цель фазы 1
+### 4.3. New goal of phase 1
 
-Сделать репозиторий **рабочим домом для Claude Code**: воспроизводимая установка, harness, CI на GitHub, хостинг на Vercel, который Claude может обновлять через PR. Пользовательский контент и UI в этой фазе MUST NOT меняться (паритет с версией 20).
+Make the repository a **working home for Claude Code**: reproducible setup, harness, CI on GitHub, hosting on Vercel that Claude can update through PRs. User-facing content and UI MUST NOT change in this phase (parity with version 20).
 
-### 4.4. Тикеты фазы 1
+### 4.4. Phase 1 tickets
 
-| ID | Тикет | Risk | Зависит от |
+| ID | Ticket | Risk | Depends on |
 |---|---|---|---|
-| P1-01 | Harness: AGENTS.md, CLAUDE.md, `.claude/settings.json` + guard-hook, PR/Issue templates, ADR-0001. Evidence: попытки push в main / reset --hard / force push блокируются | Medium | — |
-| P1-02 | Синхронизировать `package-lock.json` (`npm install` → `npm ci` проходит с нуля), зафиксировать `.nvmrc`/engines | Medium | P1-01 |
-| P1-03 | `npm run doctor` и `npm run validate` (content + test + typecheck + lint + build) как одна точка входа | Low | P1-02 |
-| P1-04 | GitHub Actions CI: `npm ci`, validate, загрузка `dist` как artifact; Mermaid без Chrome (переиспользование SVG; если схема изменилась — job с Chrome) | Medium | P1-03 |
-| P1-05 | Playwright e2e в CI против собранного сервера (`npm start`), сохранение отчёта | Medium | P1-04 |
-| P1-06 | Vercel: способ деплоя. Вариант A (по умолчанию) — static export: `dist/server/prerendered-routes` (HTML + `.rsc`) + `dist/client` как статичный сайт с `vercel.json` (rewrites для `.rsc`, заголовки из `_headers`, 404). Вариант B — серверный рендер Vinext на Vercel, если A ломает SPA-переходы. Spike + ADR с evidence | Medium | P1-04 |
-| P1-07 | Подключить репозиторий к Vercel: production из `main`, preview на каждый PR, проверки статуса в PR | High (новая инфраструктура) | P1-06, founder gate |
-| P1-08 | Parity-аудит: ChatGPT Sites (версия 20) vs Vercel — визуальные снапшоты 360/1440, SPA-переходы, поиск, тултипы глоссария, XP, print, `/handbook.md`, 404, прямой заход на любую главу | Low | P1-07 |
+| P1-01 | Harness: AGENTS.md, CLAUDE.md, `.claude/settings.json` + guard-hook, PR/Issue templates, ADR-0001. Evidence: attempts to push to main / reset --hard / force push are blocked | Medium | — |
+| P1-02 | Sync `package-lock.json` (`npm install` → `npm ci` passes from scratch), pin `.nvmrc`/engines | Medium | P1-01 |
+| P1-03 | `npm run doctor` and `npm run validate` (content + test + typecheck + lint + build) as a single entry point | Low | P1-02 |
+| P1-04 | GitHub Actions CI: `npm ci`, validate, upload `dist` as an artifact; Mermaid without Chrome (reuse SVGs; if a diagram changed, a job with Chrome) | Medium | P1-03 |
+| P1-05 | Playwright e2e in CI against the built server (`npm start`), keep the report | Medium | P1-04 |
+| P1-06 | Vercel: deployment method. Option A (default) — static export: `dist/server/prerendered-routes` (HTML + `.rsc`) + `dist/client` as a static site with `vercel.json` (rewrites for `.rsc`, headers from `_headers`, 404). Option B — Vinext server rendering on Vercel, if A breaks SPA navigation. Spike + ADR with evidence | Medium | P1-04 |
+| P1-07 | Connect the repository to Vercel: production from `main`, a preview on every PR, status checks in the PR | High (new infrastructure) | P1-06, founder gate |
+| P1-08 | Parity audit: ChatGPT Sites (version 20) vs Vercel — visual snapshots at 360/1440, SPA navigation, search, glossary tooltips, XP, print, `/handbook.md`, 404, direct entry to any chapter | Low | P1-07 |
 
-### 4.5. Acceptance фазы 1
+### 4.5. Phase 1 acceptance
 
-- [ ] `npm ci && npm run validate` проходит с чистого клона в облачной сессии Claude Code.
-- [ ] CI на GitHub зелёный на `main` и на каждом PR; ruleset `main`: PR обязателен, required checks, без force push.
-- [ ] Guard-hook и deny-правила подтверждены evidence.
-- [ ] Vercel отдаёт все 30 маршрутов, включая прямой заход и обновление страницы; preview на PR работает.
-- [ ] Parity-аудит: контент, якоря, поиск, тултипы глоссария, XP-профиль, print и `/handbook.md` совпадают с версией 20; визуальные расхождения задокументированы и одобрены founder.
-- [ ] Старый сайт на ChatGPT Sites не тронут.
+- [ ] `npm ci && npm run validate` passes from a clean clone in a Claude Code cloud session.
+- [ ] CI on GitHub is green on `main` and on every PR; `main` ruleset: PR required, required checks, no force push.
+- [ ] Guard-hook and deny rules are confirmed by evidence.
+- [ ] Vercel serves all 30 routes, including direct entry and page reload; the PR preview works.
+- [ ] Parity audit: content, anchors, search, glossary tooltips, XP profile, print and `/handbook.md` match version 20; visual differences are documented and approved by the founder.
+- [ ] The old site on ChatGPT Sites is untouched.
 
 ---
 
-## 5. Редизайн по модели Material 3 (ADR-0003)
+## 5. Redesign on the Material 3 model (ADR-0003)
 
-Решения founder от 26.10.2026 (план RD-01, решения 01–08). Обоснование и отвергнутые альтернативы — `docs/adr/0003-m3-redesign.md`. Спецификация цвета, шрифтов и движения — `docs/design/visual-language.md` (P2-02), карта адресов — P2-05.
+Founder decisions of 2026-10-26 (plan RD-01, decisions 01–08). Rationale and rejected alternatives: `docs/adr/0003-m3-redesign.md`. Specification of color, fonts and motion: `docs/design/visual-language.md` (P2-02); URL map: P2-05.
 
-### 5.1. Модель: что переносим у m3.material.io
+### 5.1. Model: what we take from m3.material.io
 
-Модель m3.material.io переносится **целиком**: механика и структура. Визуалы, иллюстрации и формы рисуем свои; бренд, иллюстрации и шрифт Google Sans принадлежат Google и MUST NOT копироваться. Механики проверены на живом сайте в Chromium 26.10.2026 (RD-01: главная, Get started, страница Buttons со всеми 4 табами, мега-меню Components).
+The m3.material.io model is adopted **as a whole**: mechanics and structure. We draw our own visuals, illustrations and shapes; the brand, the illustrations and the Google Sans font belong to Google and MUST NOT be copied. The mechanics were checked on the live site in Chromium on 2026-10-26 (RD-01: home page, Get started, the Buttons page with all 4 tabs, the Components mega menu).
 
-| Элемент M3 | Как сделано у M3 | Как делаем у нас | Фаза |
+| M3 element | How M3 does it | How we do it | Phase |
 |---|---|---|---|
-| Navigation rail | 7 пунктов с иконкой и подписью, поиск сверху | 9 пунктов, поиск ⌘K сверху (раздел 5.2) | P3 |
-| Мега-меню по наведению | Панель с деревом раздела поверх контента | То же, плюс прогресс по главам и карточка «Продолжить» | P3 |
-| Кнопки внизу rail | Пауза анимаций и видео, тёмная тема | Тема (3 состояния), Play/Pause анимаций; музыка — в P9 | P3, P9 |
-| Hero главной | Две карточки: заголовок и CTA, коллаж | «Начать изучение», живая схема пути задачи | P4 |
-| Карточки разделов | Визуал сверху, заголовок, одна строка | 8 карточек, у каждой свой визуал в едином стиле | P4 |
-| Next steps | Карточки-ссылки в две колонки | Диагностика, глава 01, памятка, Agent Pack | P4 |
-| Get started | Текст слева, визуал справа меняется по скроллу | «Начать» из 5 шагов со sticky-визуалом (scroll-story) | P4 |
-| 4 таба страницы | Overview, Specs, Guidelines, Accessibility, у каждого свой URL | Обзор, Как устроено, Как применять, Проверь себя (раздел 5.3) | P5 |
-| Табы → шапка | Полоса прилипает и сужается в плавающую «пилюлю» | То же, плюс короткое имя главы в «пилюле» | P5 |
-| On this page | Справа, текущий пункт в «пилюле» | То же, плюс время чтения | P5 |
-| Previous / Up next | Соседний таб или компонент | Соседний таб или глава | P5 |
-| Copy link у заголовков | Кнопка у каждого раздела | То же; «Скопировать для агента» (снята решением founder 29.10.2026, P8-05) | P5, P8 |
-| Появление блоков | Из размытия при загрузке | Мягкое появление без размытия, выключается кнопкой | P3 |
-| Do / Don't / Caution | Пары картинок с цветной плашкой | «Так» / «Не так» / «Осторожно» для правил | P6 |
-| Нумерованная анатомия | Кружки с цифрами и легенда | Разбор шаблонов гайда по номерам (отчёт preflight, тикет, finding) | P6 |
+| Navigation rail | 7 items with icon and label, search at the top | 9 items, ⌘K search at the top (section 5.2) | P3 |
+| Hover mega menu | A panel with the section tree over the content | The same, plus progress by chapter and a "Continue" card | P3 |
+| Buttons at the bottom of the rail | Pause animations and video, dark theme | Theme (3 states), animation Play/Pause; music in P9 | P3, P9 |
+| Home page hero | Two cards: heading and CTA, collage | "Start learning", a live diagram of a task's path | P4 |
+| Section cards | Visual on top, heading, one line | 8 cards, each with its own visual in a single style | P4 |
+| Next steps | Link cards in two columns | Diagnostic, chapter 01, cheat sheet, Agent Pack | P4 |
+| Get started | Text on the left, the visual on the right changes on scroll | "Get started" in 5 steps with a sticky visual (scroll story) | P4 |
+| 4 page tabs | Overview, Specs, Guidelines, Accessibility, each with its own URL | Overview, How it works, How to apply, Test yourself (section 5.3) | P5 |
+| Tabs → header | The bar sticks and narrows into a floating "pill" | The same, plus the chapter's short name in the "pill" | P5 |
+| On this page | On the right, the current item in a "pill" | The same, plus reading time | P5 |
+| Previous / Up next | Neighbouring tab or component | Neighbouring tab or chapter | P5 |
+| Copy link on headings | A button on every section | The same; "Copy for agent" (removed by founder decision of 2026-10-29, P8-05) | P5, P8 |
+| Block appearance | From blur on load | A soft appearance without blur, can be switched off with a button | P3 |
+| Do / Don't / Caution | Image pairs with a colored label | "Do" / "Don't" / "Caution" for rules | P6 |
+| Numbered anatomy | Numbered circles and a legend | Breakdown of the guide's templates by number (preflight report, ticket, finding) | P6 |
 
-### 5.2. Структура: 9 пунктов rail
+### 5.2. Structure: 9 rail items
 
-Гайд сейчас — 27 страниц (`src/content/generated.json` на `main` 876b0e9), самые важные из них слишком длинные: глоссарий, обзоры Claude Code и Codex — больше 80 тыс. знаков HTML каждая; Mermaid-схемы есть только в главах 01, 02, 04, 07, 13 и 17. Делим по модели M3: раздел → страница → 4 таба. Итог — **около 70 страниц** (оценка RD-01).
+The guide is currently 27 pages (`src/content/generated.json` on `main` 876b0e9), and the most important ones are too long: the glossary and the Claude Code and Codex overviews are each over 80 thousand characters of HTML; Mermaid diagrams exist only in chapters 01, 02, 04, 07, 13 and 17. We split along the M3 model: section → page → 4 tabs. The result is **about 70 pages** (RD-01 estimate).
 
-| # | Пункт rail | Что внутри | Главы | Страниц (оценка) |
+| # | Rail item | What is inside | Chapters | Pages (estimate) |
 |---|---|---|---|---|
-| 1 | Главная | Hero, 8 карточек разделов, «Продолжить», Next steps, футер (раздел 7.3) | — | 1 |
-| 2 | Начать | Обзор платформы, как читать и чему доверять, от vibe coding к системе, уровни M0–M5, диагностика за 2 минуты | 00, 01 | ~5 |
-| 3 | Основы | Архитектура и источники истины, agent harness, WSL2 + Dev Container, роли | 02–05 | ~4 |
-| 4 | Процесс | Тикет и DoR, lifecycle, preflight, context engineering, spec/ADR/Docs Impact, Git/GitHub/CI | 06–11 | ~6 |
-| 5 | Контроль | Change risk, параллельные агенты, независимое review, human gates, post-merge sync | 12–16 | ~5 |
-| 6 | Надёжность | Security и least privilege, четыре типичных ошибки, failure modes и recovery | 17–19 | ~3 |
-| 7 | Практика | Тренажёры, аттестация уровня, миссии в своём репозитории, журнал evidence, maturity model | 20, 21 | ~5 |
-| 8 | Инструменты | Обзоры инструментов, Claude Code (14 тем), Codex (15 тем), полезные материалы | — | ~31 |
-| 9 | Agent Pack | Что внутри, AGENTS.md и 6 skills, 6 JSON Schema, `llms.txt` и .zip | — | ~4 |
+| 1 | Home | Hero, 8 section cards, "Continue", Next steps, footer (section 7.3) | — | 1 |
+| 2 | Get started | Platform overview, how to read and what to trust, from vibe coding to a system, levels M0–M5, a 2-minute diagnostic | 00, 01 | ~5 |
+| 3 | Foundations | Architecture and sources of truth, agent harness, WSL2 + Dev Container, roles | 02–05 | ~4 |
+| 4 | Process | Ticket and DoR, lifecycle, preflight, context engineering, spec/ADR/Docs Impact, Git/GitHub/CI | 06–11 | ~6 |
+| 5 | Control | Change risk, parallel agents, independent review, human gates, post-merge sync | 12–16 | ~5 |
+| 6 | Reliability | Security and least privilege, four typical mistakes, failure modes and recovery | 17–19 | ~3 |
+| 7 | Practice | Drills, level certification, missions in your own repository, evidence log, maturity model | 20, 21 | ~5 |
+| 8 | Tools | Tool overviews, Claude Code (14 topics), Codex (15 topics), useful materials | — | ~31 |
+| 9 | Agent Pack | What is inside, AGENTS.md and 6 skills, 6 JSON Schemas, `llms.txt` and .zip | — | ~4 |
 
-**Справочник** (глава 22 «Операционная памятка», глоссарий 394 термина) отдельного пункта в rail не получает: он доступен из поиска ⌘K и футера. Точные адреса, slug-и и 308-редиректы со старых URL задаёт карта URL (P2-05); старые адреса и якоря MUST продолжать работать.
+The **Reference** (chapter 22 "Operational cheat sheet", glossary of 394 terms) does not get its own rail item: it is reachable from ⌘K search and the footer. Exact addresses, slugs and 308 redirects from old URLs are set by the URL map (P2-05); old addresses and anchors MUST keep working.
 
-### 5.3. Анатомия страницы темы: 4 таба
+### 5.3. Anatomy of a topic page: 4 tabs
 
-Каждая глава вместо одной длинной страницы получает 4 таба; у каждого таба свой адрес (схема — P2-05). При скролле полоса табов прилипает к верху и сжимается в шапку-«пилюлю» с коротким именем главы.
+Instead of one long page, each chapter gets 4 tabs; each tab has its own address (scheme: P2-05). On scroll the tab bar sticks to the top and shrinks into a "pill" header with the chapter's short name.
 
-| Таб | Аналог M3 | Что внутри |
+| Tab | M3 counterpart | What is inside |
 |---|---|---|
-| **Обзор** | Overview | Короткий слой: зачем, правило, визуал, три вещи, частая ошибка, где мы в кейсе DEMO-42. До 350 слов (шаблон — раздел 8.2) |
-| **Как устроено** | Specs | Механика и полный текст оригинала: схемы, нумерованная анатомия шаблонов, термины |
-| **Как применять** | Guidelines | Шаги, «Так / Не так», шаг сквозного кейса DEMO-42, шаблоны с кнопкой «Скопировать» |
-| **Проверь себя** | Accessibility | Тренажёр главы на 2–5 минут, прогресс навыка, ссылка на следующий шаг |
+| **Overview** | Overview | The short layer: why, the rule, a visual, three things, a common mistake, where we are in the DEMO-42 case. Up to 350 words (template: section 8.2) |
+| **How it works** | Specs | Mechanics and the original's full text: diagrams, numbered anatomy of templates, terms |
+| **How to apply** | Guidelines | Steps, "Do / Don't", the step of the end-to-end DEMO-42 case, templates with a "Copy" button |
+| **Test yourself** | Accessibility | The chapter's 2–5 minute drill, skill progress, a link to the next step |
 
-Переключатель «Коротко / Полностью» из v1.2 превращается в табы: «Обзор» и есть короткий слой, а полный текст оригинала разложен по «Как устроено» и «Как применять» без потерь. Учебный текст по-прежнему живёт только в `content/` и собирается штатным компилятором (принципы 3–5).
+The "Short / Full" switch from v1.2 becomes the tabs: "Overview" is the short layer, and the original's full text is laid out across "How it works" and "How to apply" without loss. Learning content still lives only in `content/` and is built by the standard compiler (principles 3–5).
 
-### 5.4. Визуальный язык (кратко)
+### 5.4. Visual language (in brief)
 
-Решение 01 (26.10.2026): концепт C **«Чертёж»** в фирменных цветах бренда UIX PRO (makkov.com/uixpro). Детали — `docs/design/visual-language.md` (P2-02) и токены v2 (P2-03); здесь только то, что задаёт рамку для всех тикетов.
+Decision 01 (2026-10-26): concept C **"Blueprint"** in the UIX PRO brand colors (makkov.com/uixpro). Details: `docs/design/visual-language.md` (P2-02) and tokens v2 (P2-03); here only what frames all tickets.
 
-- **Цвет.** Холодный графит и белый; один тёплый пастельный акцент (абрикос, плоская заливка) — только на действии и прогрессе («Твой путь»). Три цвета — три постоянных смысла: «Агент», «Практика», «Решает человек». Один цвет — одно значение на всех страницах.
-- **Плоский стиль (решение founder 29.10.2026, P2-07, #108).** Градиентов нет нигде (рамка баннера главной, кнопки, прогресс), теней нет нигде в обеих темах; hover карточек — смена цвета фона и рамки. Нейтрали и фон чуть холоднее; цвета-смыслы заменены на гармоничный набор (барвинок, шалфей, пыльная роза), в тёмной теме — приглушённые глубокие тона. Значения — `docs/design/visual-language.md` и `docs/design/palette.json`.
-- **Шрифты** (утверждены founder 26.10.2026): Unbounded — hero и H1; Geist — заголовки, текст, интерфейс; Martian Mono — код, аннотации, схемы; Pixelify Sans — игровые метки до трёх слов. Подключаются как собственные файлы в проекте, без загрузки с Google при каждом открытии.
-- **Иконки:** Tabler (уже в зависимостях), контур 1.5 px, словарь по ролям; неиспользуемый `lucide-react` убирается (P2-06).
-- **Движение:** одна кривая и три длительности, четыре приёма (появление, прорисовка, перемещение, смена шага); системный режим «меньше движения» отключает анимации полностью (кнопка паузы в rail снята решением founder 29.10.2026, P3-09).
-- **Форма и отклик (решение founder 29.10.2026, P2-08, #110).** Скругления сильнее, по шкале M3 Expressive (карточка 28 px, hero 32 px, кнопки и табы — пилюли). Кликабельные меняют форму: в покое максимально круглые, на hover углы чуть притупляются, при нажатии — сильнее, обратно — пружиной. По клику — лёгкий световой след из точки касания в духе Apple Liquid Glass (кратковременный, не заливка). Hover входит быстрее, чем уходит; у появления и ухода общая пара кривых. Без анимации — только смена цвета. Детали — `docs/design/visual-language.md`, разделы 6 и 7.
-- **Визуал на каждом табе** по визуальной грамматике MAE (раздел 7.1).
+- **Color.** Cool graphite and white; one warm pastel accent (apricot, flat fill) — only on action and progress ("Your path"). Three colors carry three constant meanings: "Agent", "Practice", "Human decides". One color means one thing on every page.
+- **Flat style (founder decision of 2026-10-29, P2-07, #108).** No gradients anywhere (the home page banner frame, buttons, progress), no shadows anywhere in either theme; card hover is a change of background and border color. Neutrals and background are slightly cooler; the meaning colors are replaced by a harmonious set (periwinkle, sage, dusty rose), with muted deep tones in the dark theme. Values: `docs/design/visual-language.md` and `docs/design/palette.json`.
+- **Fonts** (approved by the founder on 2026-10-26): Unbounded for the hero and H1; Geist for headings, text and interface; Martian Mono for code, annotations and diagrams; Pixelify Sans for game labels of up to three words. They are included as the project's own files, without loading from Google on every visit.
+- **Icons:** Tabler (already a dependency), 1.5 px outline, a vocabulary by role; the unused `lucide-react` is removed (P2-06).
+- **Motion:** one curve and three durations, four techniques (appearance, draw-on, movement, step change); the system "reduce motion" mode switches animations off completely (the pause button in the rail was removed by founder decision of 2026-10-29, P3-09).
+- **Shape and response (founder decision of 2026-10-29, P2-08, #110).** Stronger rounding, on the M3 Expressive scale (card 28 px, hero 32 px, buttons and tabs are pills). Clickable elements change shape: at rest they are as round as possible, on hover the corners blunt slightly, on press more strongly, and they spring back. On click, a light glow trail from the touch point in the spirit of Apple Liquid Glass (brief, not a fill). Hover comes in faster than it goes out; appearance and exit share a pair of curves. Without animation, only a color change. Details: `docs/design/visual-language.md`, sections 6 and 7.
+- **A visual on every tab** following the MAE visual grammar (section 7.1).
 
-### 5.5. Переход без флага
+### 5.5. Transition without a flag
 
-Флага `NEXT_UI` нет (решение 03, ADR-0003): каждый проверенный шаг сразу попадает в production (раздел 14). Чтобы сайт оставался рабочим на каждом шаге:
+There is no `NEXT_UI` flag (decision 03, ADR-0003): every verified step goes straight to production (section 14). To keep the site working at every step:
 
-- сначала строится новая оболочка (P3), затем главная (P4) и шаблон страницы (P5); пока главы не переехали, старые страницы открываются внутри новой оболочки одним табом;
-- каждый merge проходит `validate` и `e2e` в CI; старые адреса работают через 308-редиректы (P2-05) и проверяются тестом всех старых адресов;
-- любой шаг откатывается revert PR.
+- the new shell is built first (P3), then the home page (P4) and the page template (P5); until chapters have moved, old pages open inside the new shell as a single tab;
+- every merge passes `validate` and `e2e` in CI; old addresses work through 308 redirects (P2-05) and are checked by a test of all old addresses;
+- any step can be rolled back with a revert PR.
 
 ---
 
-## 6. Roadmap и тикеты P2–P9
+## 6. Roadmap and tickets P2–P9
 
-### 6.1. Порядок фаз
+### 6.1. Phase order
 
-Неделя 1 начинается 27.10.2026; 14 недель (до ≈ 26.01.2027) — верхняя оценка при 3 авторах. Первые 2 недели идут 3 потока, с 3-й недели — до 5, поэтому реальный срок может быть короче; пересчёт после P2 (P9-02). Фазы пересекаются: порядок работы задаёт граф зависимостей тикетов (раздел 6.2), а не номер фазы.
+Week 1 starts on 2026-10-27; 14 weeks (until ≈ 2027-01-26) is the upper estimate with 3 authors. The first 2 weeks run 3 streams, from week 3 up to 5, so the real duration may be shorter; recalculation after P2 (P9-02). Phases overlap: the order of work is set by the ticket dependency graph (section 6.2), not by the phase number.
 
-| Фаза | Название | Недели (оценка) | Что даёт | Поток |
+| Phase | Name | Weeks (estimate) | What it delivers | Stream |
 |---|---|---|---|---|
-| P2 | Фундамент дизайна | 1–2 | Бриф v1.3 и ADR-0003, финальный концепт, токены (цвет, шрифт, формы, движение), визуальная грамматика, иконки Tabler, карта URL | Критический путь |
-| P3 | Оболочка и навигация | 3–5 | Rail, мега-меню, мобильная навигация, поиск ⌘K, кнопки темы и анимаций, переходы между страницами | Критический путь |
-| P4 | Главная и «Начать» | 5–7 | Hero, 8 карточек с визуалами, Next steps, футер, scroll-story из 5 шагов; ребрендинг в Mastering Agentic Engineering | Критический путь |
-| P5 | Страница темы и дробление | 3–6 | Формат контента с табами, компилятор, шаблон страницы со сжимающимися табами, пилот на главах 01, 08, 12 | Критический путь |
-| P6 | Контент проще и с визуалом | 7–13 | 5 волн по разделам: таб «Обзор», визуал на каждом табе, «Так / Не так»; пробелы аудита старой фазы 2 | Критический путь |
-| P7 | Геймификация v2 | 8–14 | Уровни M0–M5, карта навыков, 10 тренажёров, аттестация, наставник, прогресс в мега-меню | Параллельный |
-| P8 | Agent Pack | 3–7 | AGENTS.md, 6 skills, 6 JSON Schema, `llms.txt`, страница `/agents`, «Скопировать для агента» (снята решением founder 29.10.2026, P8-05), fresh-agent тест | Параллельный |
-| P9 | Музыка | после треков (оценка 12–13) | Плеер без автозапуска, когда будут треки и лицензии | Зависит от внешнего |
+| P2 | Design foundation | 1–2 | Brief v1.3 and ADR-0003, final concept, tokens (color, font, shapes, motion), visual grammar, Tabler icons, URL map | Critical path |
+| P3 | Shell and navigation | 3–5 | Rail, mega menu, mobile navigation, ⌘K search, theme and animation buttons, page transitions | Critical path |
+| P4 | Home page and "Get started" | 5–7 | Hero, 8 cards with visuals, Next steps, footer, a 5-step scroll story; rebranding to Mastering Agentic Engineering | Critical path |
+| P5 | Topic page and splitting | 3–6 | Content format with tabs, compiler, page template with collapsing tabs, pilot on chapters 01, 08, 12 | Critical path |
+| P6 | Simpler content with visuals | 7–13 | 5 waves by section: the Overview tab, a visual on every tab, "Do / Don't"; the audit gaps of the old phase 2 | Critical path |
+| P7 | Gamification v2 | 8–14 | Levels M0–M5, skill map, 10 drills, certification, mentor, progress in the mega menu | Parallel |
+| P8 | Agent Pack | 3–7 | AGENTS.md, 6 skills, 6 JSON Schemas, `llms.txt`, the `/agents` page, "Copy for agent" (removed by founder decision of 2026-10-29, P8-05), fresh-agent test | Parallel |
+| P9 | Music | after the tracks (estimate 12–13) | A player without autoplay, once there are tracks and licenses | Depends on an external input |
 
-Критический путь: дизайн-основа → оболочка → главная и страница темы → контент. Agent Pack и геймификация идут параллельным потоком.
+Critical path: design foundation → shell → home page and topic page → content. Agent Pack and gamification run as a parallel stream.
 
-### 6.2. Тикеты P2–P9
+### 6.2. Tickets P2–P9
 
-Совпадает с планом RD-01 (40 тикетов). Каждый тикет становится GitHub issue по шаблону главы 06: одна ветка, один PR, независимое review. Заведены 26.10.2026: P2-01…P2-06 — #35–#40, P8-01…P8-04 — #41–#44. Risk — классификация главы 12; «Gate founder: да» — контрольная точка founder (раздел 6.3); размер — S / M / L.
+Matches plan RD-01 (40 tickets). Each ticket becomes a GitHub issue following the chapter 06 template: one branch, one PR, independent review. Created on 2026-10-26: P2-01…P2-06 are #35–#40, P8-01…P8-04 are #41–#44. Risk is the chapter 12 classification; "Founder gate: yes" is a founder checkpoint (section 6.3); size is S / M / L.
 
-| ID | Тикет | Risk | Gate founder | Зависит от | Размер |
+| ID | Ticket | Risk | Founder gate | Depends on | Size |
 |---|---|---|---|---|---|
-| P2-01 | Бриф v1.3 и ADR-0003: модель M3, новая структура, порядок фаз | Low | нет | — | S |
-| P2-02 | Финальный концепт «Чертёж» в цветах бренда: палитра, цвета-смыслы, шрифты, движение | Low | нет | — | M |
-| P2-03 | Дизайн-токены v2: цвет от seed, роли, поверхности, шрифт, формы, движение | Medium | нет | P2-02 | M |
-| P2-04 | Визуальная грамматика: примитивы, шаблоны SVG, линтер палитры | Medium | да | P2-03 | M |
-| P2-05 | Карта URL новой структуры и 308-редиректы со старых адресов | Medium | нет | P2-01 | M |
-| P2-06 | Иконки Tabler: словарь иконок по ролям, контур 1.5 px, убрать lucide-react | Low | нет | P2-03 | S |
-| P2-07 | Плоский стиль: без градиентов и теней, один тёплый пастельный акцент, нейтрали холоднее, новые цвета-смыслы (решение founder 29.10.2026) | Medium | нет | P2-03 | M |
-| P3-01 | Navigation rail и мега-меню: наведение, фокус, тап, клавиатура | Medium | да | P2-03, P2-05 | L |
-| P3-02 | Мобильная навигация: нижняя панель и полноэкранное меню | Medium | нет | P3-01 | M |
-| P3-03 | Поиск ⌘K, хлебные крошки, доступ к глоссарию | Medium | нет | P3-01 | M |
-| P3-04 | Кнопки rail: тема (3 состояния), Play/Pause анимаций (Play/Pause снята решением founder 29.10.2026, P3-09) | Low | нет | P3-01 | S |
-| P3-09 | Rail: без кнопки «Анимации», ровный hover у поиска и темы, мега-меню без тени, свой hover «Обводка» (решение founder 29.10.2026) | Medium | нет | P3-01, P3-04 | S |
-| P3-05 | Движение: переходы между страницами, пружины, reduced motion | Medium | нет | P2-03 | M |
-| P4-01 | Главная: hero, 8 карточек разделов, «Продолжить», Next steps, футер | Medium | да | P3-01, P4-02 | M |
-| P4-02 | Иллюстрации: hero и 8 разделов, две темы, анимация | Medium | нет | P2-04 | M |
-| P4-03 | «Начать»: scroll-story на 5 шагов со sticky-визуалом | Medium | нет | P3-05 | M |
-| P4-04 | Тексты главной и «Начать» в content/ | Low | нет | P2-01 | S |
-| P4-05 | Ребрендинг в Mastering Agentic Engineering | Medium | нет | P4-01 | S |
-| P5-01 | Формат контента: страницы и табы в content/, компилятор, coverage audit | High | нет | P2-05 | L |
-| P5-02 | Шаблон страницы: hero, табы → хедер, On this page, соседние страницы | Medium | нет | P3-01, P5-01 | L |
-| P5-03 | Поиск и якоря по новым страницам, старые якоря работают | Medium | нет | P5-01 | M |
-| P5-04 | Пилот: главы 01, 08, 12 в новом формате + тест с 3 людьми | Medium | да | P5-02 | M |
-| P5-05 | Финальная проверка production: старые адреса, скорость, доступность | Medium | нет | P4-01, P5-04 | S |
-| P6-01 | Волна 1: Начать и Основы (00–05) | Medium | нет | P5-04 | L |
-| P6-02 | Волна 2: Процесс (06–11) | Medium | нет | P6-01 | L |
-| P6-03 | Волна 3: Контроль (12–16) | Medium | нет | P6-01 | L |
-| P6-04 | Волна 4: Надёжность и Практика (17–22) | Medium | нет | P6-01 | L |
-| P6-05 | Волна 5: Инструменты (Claude Code и Codex, 29 тем) | Medium | нет | P6-01 | L |
-| P6-06 | Пробелы аудита: reference-harness, память, observability | Medium | нет | P5-01 | L |
-| P6-07 | Глоссарий: фильтр «Базовое / Профессиональное», подсказки в новом стиле | Low | нет | P5-01 | M |
-| P7-01 | ProgressStore и миграция текущего XP без потерь | Medium | нет | — | M |
-| P7-02 | Уровни M0–M5, карта навыков, прогресс в мега-меню | Medium | нет | P7-01, P3-01 | M |
-| P7-03 | Движок тренажёров по JSON-схеме + 10 тренажёров | Medium | нет | P7-01 | L |
-| P7-04 | Аттестация уровня и миссии в своём репозитории | Medium | нет | P7-03 | M |
-| P7-05 | Наставник и режимы «без персонажа» / «без геймификации» | Low | нет | P7-02 | M |
-| P7-06 | Блок «Продолжить» на главной для вернувшихся | Low | нет | P7-02, P4-01 | S |
-| P8-01 | Структура agent-pack/, AGENTS.md, CLAUDE.md | Low | нет | — | M |
-| P8-02 | 6 skills и 6 JSON Schema с примерами | Medium | нет | P8-01 | L |
-| P8-03 | Страница /agents, .zip, llms.txt, «Скопировать для агента» (снята решением founder 29.10.2026, P8-05) | Medium | нет | P8-02, P3-01 | M |
-| P8-04 | Fresh-agent тест, протокол в docs/evals | Low | нет | P8-03 | S |
-| P8-05 | Убрать «Скопировать для агента» и «Markdown страницы» из интерфейса (решение founder 29.10.2026) | Low–Medium | нет | P8-03 | S |
-| P9-01 | Музыка в самом конце: треки и лицензии, плеер, без автозапуска | Low | да | P3-04 | S |
-| P9-02 | Отчёт о волне и обновление брифа после каждой фазы | Low | нет | — | S |
+| P2-01 | Brief v1.3 and ADR-0003: the M3 model, new structure, phase order | Low | no | — | S |
+| P2-02 | Final "Blueprint" concept in brand colors: palette, meaning colors, fonts, motion | Low | no | — | M |
+| P2-03 | Design tokens v2: color from a seed, roles, surfaces, font, shapes, motion | Medium | no | P2-02 | M |
+| P2-04 | Visual grammar: primitives, SVG templates, palette linter | Medium | yes | P2-03 | M |
+| P2-05 | URL map of the new structure and 308 redirects from old addresses | Medium | no | P2-01 | M |
+| P2-06 | Tabler icons: icon vocabulary by role, 1.5 px outline, remove lucide-react | Low | no | P2-03 | S |
+| P2-07 | Flat style: no gradients or shadows, one warm pastel accent, cooler neutrals, new meaning colors (founder decision of 2026-10-29) | Medium | no | P2-03 | M |
+| P3-01 | Navigation rail and mega menu: hover, focus, tap, keyboard | Medium | yes | P2-03, P2-05 | L |
+| P3-02 | Mobile navigation: bottom bar and full-screen menu | Medium | no | P3-01 | M |
+| P3-03 | ⌘K search, breadcrumbs, glossary access | Medium | no | P3-01 | M |
+| P3-04 | Rail buttons: theme (3 states), animation Play/Pause (Play/Pause removed by founder decision of 2026-10-29, P3-09) | Low | no | P3-01 | S |
+| P3-09 | Rail: no "Animations" button, even hover on search and theme, mega menu without a shadow, a custom "Outline" hover (founder decision of 2026-10-29) | Medium | no | P3-01, P3-04 | S |
+| P3-05 | Motion: page transitions, springs, reduced motion | Medium | no | P2-03 | M |
+| P4-01 | Home page: hero, 8 section cards, "Continue", Next steps, footer | Medium | yes | P3-01, P4-02 | M |
+| P4-02 | Illustrations: hero and 8 sections, two themes, animation | Medium | no | P2-04 | M |
+| P4-03 | "Get started": a 5-step scroll story with a sticky visual | Medium | no | P3-05 | M |
+| P4-04 | Home page and "Get started" texts in content/ | Low | no | P2-01 | S |
+| P4-05 | Rebranding to Mastering Agentic Engineering | Medium | no | P4-01 | S |
+| P5-01 | Content format: pages and tabs in content/, compiler, coverage audit | High | no | P2-05 | L |
+| P5-02 | Page template: hero, tabs → header, On this page, neighbouring pages | Medium | no | P3-01, P5-01 | L |
+| P5-03 | Search and anchors across the new pages, old anchors work | Medium | no | P5-01 | M |
+| P5-04 | Pilot: chapters 01, 08, 12 in the new format + a test with 3 people | Medium | yes | P5-02 | M |
+| P5-05 | Final production check: old addresses, speed, accessibility | Medium | no | P4-01, P5-04 | S |
+| P6-01 | Wave 1: Get started and Foundations (00–05) | Medium | no | P5-04 | L |
+| P6-02 | Wave 2: Process (06–11) | Medium | no | P6-01 | L |
+| P6-03 | Wave 3: Control (12–16) | Medium | no | P6-01 | L |
+| P6-04 | Wave 4: Reliability and Practice (17–22) | Medium | no | P6-01 | L |
+| P6-05 | Wave 5: Tools (Claude Code and Codex, 29 topics) | Medium | no | P6-01 | L |
+| P6-06 | Audit gaps: reference harness, memory, observability | Medium | no | P5-01 | L |
+| P6-07 | Glossary: "Basic / Professional" filter, hints in the new style | Low | no | P5-01 | M |
+| P7-01 | ProgressStore and lossless migration of current XP | Medium | no | — | M |
+| P7-02 | Levels M0–M5, skill map, progress in the mega menu | Medium | no | P7-01, P3-01 | M |
+| P7-03 | Drill engine on a JSON schema + 10 drills | Medium | no | P7-01 | L |
+| P7-04 | Level certification and missions in your own repository | Medium | no | P7-03 | M |
+| P7-05 | Mentor and the "no character" / "no gamification" modes | Low | no | P7-02 | M |
+| P7-06 | The "Continue" block on the home page for returning users | Low | no | P7-02, P4-01 | S |
+| P8-01 | agent-pack/ structure, AGENTS.md, CLAUDE.md | Low | no | — | M |
+| P8-02 | 6 skills and 6 JSON Schemas with examples | Medium | no | P8-01 | L |
+| P8-03 | The /agents page, .zip, llms.txt, "Copy for agent" (removed by founder decision of 2026-10-29, P8-05) | Medium | no | P8-02, P3-01 | M |
+| P8-04 | Fresh-agent test, protocol in docs/evals | Low | no | P8-03 | S |
+| P8-05 | Remove "Copy for agent" and "Page Markdown" from the interface (founder decision of 2026-10-29) | Low–Medium | no | P8-03 | S |
+| P9-01 | Music at the very end: tracks and licenses, player, no autoplay | Low | yes | P3-04 | S |
+| P9-02 | Wave report and brief update after each phase | Low | no | — | S |
 
-### 6.3. Контрольные точки founder
+### 6.3. Founder checkpoints
 
-Founder не принимает каждый PR. Он получает строку в треде после каждого merge (смотреть не обязательно), пятничную «сборку недели» и 4 контрольные точки. Тикет с «Gate founder: да» — это контрольная точка: merge идёт по обычному процессу (раздел 14), а после него founder получает пакет. Ответ по желанию: «переделать: …» становится новым тикетом, молчание — всё в порядке. Исключение — P9-01: треки и лицензии — вход от founder, без них тикет не начинается (раздел 12).
+The founder does not accept every PR. They get a line in the thread after every merge (looking is optional), a Friday "build of the week" and 4 checkpoints. A ticket with "Founder gate: yes" is a checkpoint: the merge follows the normal process (section 14), and afterwards the founder gets a package. Replying is optional: "redo: …" becomes a new ticket, silence means all is well. The exception is P9-01: tracks and licenses are an input from the founder, and without them the ticket does not start (section 12).
 
-| Точка | Когда | Тикет | Что смотрит founder |
+| Checkpoint | When | Ticket | What the founder looks at |
 |---|---|---|---|
-| 1 · Витрина | конец недели 2 | P2-04 | Цвета, шрифты, иконки и движение вживую в обеих темах |
-| 2 · Оболочка | неделя 5 | P3-01 | Rail, мега-меню, мобильная навигация, поиск |
-| 3 · Пилот | неделя 6 | P5-04 | Главы 01, 08 и 12 с табами — можно пройти как ученик |
-| 4 · Главная и ребрендинг | неделя 7 | P4-01 (+ P4-05) | Новая главная, «Начать» и имя Mastering Agentic Engineering |
+| 1 · Showcase | end of week 2 | P2-04 | Colors, fonts, icons and motion live in both themes |
+| 2 · Shell | week 5 | P3-01 | Rail, mega menu, mobile navigation, search |
+| 3 · Pilot | week 6 | P5-04 | Chapters 01, 08 and 12 with tabs — can be worked through as a learner |
+| 4 · Home page and rebranding | week 7 | P4-01 (+ P4-05) | The new home page, "Get started" and the name Mastering Agentic Engineering |
 
-Пакет контрольной точки: ссылка на основной сайт, 3–5 пунктов «что потрогать», скриншоты 320 / 360 / 768 / 1024 / 1440 px в обеих темах, статус (влито, CI зелёный, review READY).
+Checkpoint package: a link to the main site, 3–5 "things to try", screenshots at 320 / 360 / 768 / 1024 / 1440 px in both themes, status (merged, CI green, review READY).
 
-### 6.4. Переразметка требований v1.2 → P2–P9
+### 6.4. Remapping v1.2 requirements → P2–P9
 
-Каждое требование старых фаз 2–6 получает дом в новой фазе; ни одно не снимается без записи здесь. В колонке «Раздел v1.2» — номера разделов брифа v1.2, в колонке «Где теперь» — тикеты и разделы v1.3.
+Every requirement of the old phases 2–6 gets a home in a new phase; none is dropped without a record here. The "v1.2 section" column has section numbers of brief v1.2, the "Where now" column has v1.3 tickets and sections.
 
-| Требование v1.2 | Раздел v1.2 | Где теперь |
+| v1.2 requirement | v1.2 section | Where now |
 |---|---|---|
-| Reference-harness: template-repo, скрипты, тесты на real-Git репозиториях | 5.1 | P6-06 (раздел 9.6.1) |
-| Глава «От правила к принуждению» | 5.2 | P6-06 (9.6.2) |
-| Глава «Память агента» | 5.3 | P6-06 (9.6.3) |
-| Глава «Наблюдаемость и качество агентов»: журнал прогонов, 5 метрик, evals, бюджеты | 5.4 | P6-06 (9.6.4) |
-| Risk-based auto-merge (дополнение к главам 12 и 15) | 5.5 | P6-06 (9.6.5) |
-| Изоляция исполнения (дополнение к главам 04 и 17) | 5.6 | P6-06 (9.6.6) |
-| Минимально исполнимая оркестрация (дополнение к главе 21) | 5.7 | P6-06 (9.6.7) |
-| Слой «Инструменты»: даты фактов, бейдж устаревания, плановая проверка источников | 5.8 | P6-05 (9.6.8) |
-| Нормативность MUST / SHOULD / MAY с бейджами | 5.9 | P6-01…P6-05 в табе «Обзор», P8-02 (9.6.9) |
-| Бейдж «Новое в v2» для новых глав и разделов | 5 | P6 (раздел 9) |
-| Диагноз подачи | 6.1 | P6 (9.1) |
-| Два слоя «Коротко / Полностью» и шаблон слоя «Коротко» | 6.2 | 4 таба (5.3): формат P5-01, шаблон «Обзора» (8.2), тексты P6-01…P6-05 |
-| Хранение слоя в `content/short/NN.md` с компилятором, поиском, автоссылками и coverage audit | 6.2 | Формат P5-01 в `content/` с тем же покрытием компилятором (8.1) |
-| Русский first, тон спокойного наставника | 6.3 | P6-01…P6-05 (9.2) |
-| Фильтр глоссария «Базовое / Профессиональное» | 6.3 | P6-07 |
-| Сквозной кейс DEMO-42 и мини-таймлайн «где мы сейчас» | 6.4 | P5-02 (место в шаблоне), P6-01…P6-05 (наполнение) (9.3) |
-| Мини-карта системы, 4 типа callout, таблицы → карточки на мобильных | 6.5 | P2-04 (callout), P5-02 (шаблон, таблицы-карточки), P6 (мини-карта) (9.4) |
-| Слой «Коротко» для всех 22 глав, линтер ограничений | 6.6 | P6 acceptance (9.7) |
-| Юзабилити-тест с 3 людьми, протокол в `docs/research/` | 6.6 | P5-04 (8.4) |
-| Повторный аудит подачи ≥ 85/100 | 6.6 | P6 acceptance (9.7) |
-| Принцип и ядро механик геймификации, XP как валюта | 7.1–7.2 | P7 (10.1–10.2): уровни и карта — P7-02 |
-| Тренажёры по JSON-схеме (минимум 8) | 7.3 | P7-03: движок + 10 тренажёров |
-| Аттестация уровня, миссии в реальном репозитории, журнал evidence | 7.4, 7.6 | P7-04 |
-| Наставник и режим «Без персонажа» | 7.5 | P7-05 |
-| `ProgressStore`, миграция XP, экспорт/импорт, версия схемы | 7.7 | P7-01 |
-| Интервальное повторение | 7.2 | P7-03 (формат карточек), P7-06 (повторение на сегодня) |
-| Этика геймификации (MUST NOT) | 7.8 | Все тикеты P7 (10.8) |
-| Acceptance геймификации | 7.9 | P7 acceptance (10.9) |
-| Гибрид «лендинг для нового / дашборд для вернувшегося», `/about`, ручной переключатель | 8.1 | Заменено: главная M3 для всех (P4-01) + блок «Продолжить» для вернувшихся (P7-06); `/about` не нужен |
-| `/start` — бывшая страница «Как читать» | 8.1 | Пункт rail «Начать» (P4-03), адрес — карта URL (P2-05) |
-| Hero с обещанием и 2 CTA | 8.2.1 | P4-01: «Начать изучение» и «Определить уровень» |
-| «Боль»: до / после из главы 01 | 8.2.2 | «Начать», шаги 1–2 (P4-03, тексты P4-04) |
-| Интерактивная карта системы и счётчики | 8.2.3 | Hero главной — живая схема пути задачи (P4-01, P4-02); «Начать», шаг 2 (P4-03). Снято: кликабельные узлы карты из acceptance 8.6 v1.2 — схема показывает путь, переходы ведут карточки разделов |
-| Путь мастерства M0–M5 | 8.2.4 | «Начать», шаг 4 (P4-03); уровни — P7-02 |
-| Диагностика за 2 минуты (8 вопросов → уровень и маршрут) | 8.2.5 | P7-04; вход — «Начать» и Next steps на главной (P4-01) |
-| «Попробуй прямо здесь» — встроенный мини-тренажёр | 8.2.6 | Тренажёр дня в блоке «Продолжить» (P7-06) на движке P7-03. Снято: мини-тренажёр для нового посетителя на первом экране — новый посетитель идёт в «Начать» (P4-03), тренажёр дня видят вернувшиеся |
-| «Шаблоны, которые заберёшь» с кнопкой «Скопировать» | 8.2.7 | Таб «Как применять» (P6), «Скопировать для агента» (P8-03; снята решением founder 29.10.2026, P8-05) |
-| «Для агентов тоже» | 8.2.8 | Карточка Agent Pack в Next steps (P4-01), пункт rail Agent Pack (P8-03) |
-| Об авторе | 8.2.9 | Футер «by Makkov» (P4-01, раздел 2.4) |
-| FAQ (5–6 вопросов) | 8.2.10 | «Начать», шаг 1 «Что такое MAE» (P4-03, тексты P4-04) |
-| Финальный CTA | 8.2.11 | «Начать», шаг 5: глава 01 / диагностика (P4-03) |
-| Дашборд: уровень, «Продолжить», мини-карта навыков, повторение, журнал, быстрые ссылки | 8.3 | Блок «Продолжить» (P7-06), прогресс в мега-меню (P7-02), Next steps и футер (P4-01) |
-| Метрики лендинга (Vercel Web Analytics, события) | 8.4 | Метрики главной (7.4), P4-01 |
-| 2–3 визуальных направления на выбор founder | 8.5 | Выполнено 26.10.2026: концепт «Чертёж» (ADR-0003); спецификация — P2-02 |
-| Светлая и тёмная тема, дизайн-токены, `prefers-reduced-motion` | 8.5 | P2-03 (токены), P3-04 (тема), P3-05 (движение) |
+| Reference harness: template repo, scripts, tests on real-Git repositories | 5.1 | P6-06 (section 9.6.1) |
+| Chapter "From rule to enforcement" | 5.2 | P6-06 (9.6.2) |
+| Chapter "Agent memory" | 5.3 | P6-06 (9.6.3) |
+| Chapter "Agent observability and quality": run log, 5 metrics, evals, budgets | 5.4 | P6-06 (9.6.4) |
+| Risk-based auto-merge (addition to chapters 12 and 15) | 5.5 | P6-06 (9.6.5) |
+| Execution isolation (addition to chapters 04 and 17) | 5.6 | P6-06 (9.6.6) |
+| Minimal executable orchestration (addition to chapter 21) | 5.7 | P6-06 (9.6.7) |
+| The "Tools" layer: fact dates, a staleness badge, scheduled source checks | 5.8 | P6-05 (9.6.8) |
+| MUST / SHOULD / MAY normativity with badges | 5.9 | P6-01…P6-05 in the Overview tab, P8-02 (9.6.9) |
+| "New in v2" badge for new chapters and sections | 5 | P6 (section 9) |
+| Presentation diagnosis | 6.1 | P6 (9.1) |
+| Two layers "Short / Full" and the template of the "Short" layer | 6.2 | 4 tabs (5.3): format P5-01, Overview template (8.2), texts P6-01…P6-05 |
+| Storing the layer in `content/short/NN.md` with compiler, search, auto-links and coverage audit | 6.2 | Format P5-01 in `content/` with the same compiler coverage (8.1) |
+| Content language first (no language mixing), the tone of a calm mentor | 6.3 | P6-01…P6-05 (9.2) |
+| Glossary filter "Basic / Professional" | 6.3 | P6-07 |
+| The end-to-end DEMO-42 case and the "where we are now" mini timeline | 6.4 | P5-02 (place in the template), P6-01…P6-05 (filling it) (9.3) |
+| System mini map, 4 callout types, tables → cards on mobile | 6.5 | P2-04 (callout), P5-02 (template, table cards), P6 (mini map) (9.4) |
+| The "Short" layer for all 22 chapters, a constraint linter | 6.6 | P6 acceptance (9.7) |
+| Usability test with 3 people, protocol in `docs/research/` | 6.6 | P5-04 (8.4) |
+| Repeat presentation audit ≥ 85/100 | 6.6 | P6 acceptance (9.7) |
+| Gamification principle and core mechanics, XP as currency | 7.1–7.2 | P7 (10.1–10.2): levels and map in P7-02 |
+| Drills on a JSON schema (at least 8) | 7.3 | P7-03: engine + 10 drills |
+| Level certification, missions in a real repository, evidence log | 7.4, 7.6 | P7-04 |
+| Mentor and the "No character" mode | 7.5 | P7-05 |
+| `ProgressStore`, XP migration, export/import, schema version | 7.7 | P7-01 |
+| Spaced repetition | 7.2 | P7-03 (card format), P7-06 (today's review) |
+| Gamification ethics (MUST NOT) | 7.8 | All P7 tickets (10.8) |
+| Gamification acceptance | 7.9 | P7 acceptance (10.9) |
+| Hybrid "landing for new users / dashboard for returning users", `/about`, a manual switch | 8.1 | Replaced: the M3 home page for everyone (P4-01) + the "Continue" block for returning users (P7-06); `/about` is not needed |
+| `/start` — the former "How to read" page | 8.1 | The "Get started" rail item (P4-03), address from the URL map (P2-05) |
+| Hero with a promise and 2 CTAs | 8.2.1 | P4-01: "Start learning" and "Find your level" |
+| "Pain": before / after from chapter 01 | 8.2.2 | "Get started", steps 1–2 (P4-03, texts P4-04) |
+| Interactive system map and counters | 8.2.3 | The home page hero is a live diagram of a task's path (P4-01, P4-02); "Get started", step 2 (P4-03). Dropped: the clickable map nodes from acceptance 8.6 of v1.2 — the diagram shows the path, the section cards provide the navigation |
+| The M0–M5 mastery path | 8.2.4 | "Get started", step 4 (P4-03); levels in P7-02 |
+| 2-minute diagnostic (8 questions → level and route) | 8.2.5 | P7-04; entry via "Get started" and Next steps on the home page (P4-01) |
+| "Try it right here", a built-in mini drill | 8.2.6 | The drill of the day in the "Continue" block (P7-06) on the P7-03 engine. Dropped: a mini drill for a new visitor on the first screen — a new visitor goes to "Get started" (P4-03), returning users see the drill of the day |
+| "Templates you will take away" with a "Copy" button | 8.2.7 | The "How to apply" tab (P6), "Copy for agent" (P8-03; removed by founder decision of 2026-10-29, P8-05) |
+| "For agents too" | 8.2.8 | The Agent Pack card in Next steps (P4-01), the Agent Pack rail item (P8-03) |
+| About the author | 8.2.9 | Footer "by Makkov" (P4-01, section 2.4) |
+| FAQ (5–6 questions) | 8.2.10 | "Get started", step 1 "What is MAE" (P4-03, texts P4-04) |
+| Final CTA | 8.2.11 | "Get started", step 5: chapter 01 / diagnostic (P4-03) |
+| Dashboard: level, "Continue", skill mini map, review, log, quick links | 8.3 | The "Continue" block (P7-06), progress in the mega menu (P7-02), Next steps and footer (P4-01) |
+| Landing metrics (Vercel Web Analytics, events) | 8.4 | Home page metrics (7.4), P4-01 |
+| 2–3 visual directions for the founder to choose from | 8.5 | Done on 2026-10-26: the "Blueprint" concept (ADR-0003); specification in P2-02 |
+| Light and dark theme, design tokens, `prefers-reduced-motion` | 8.5 | P2-03 (tokens), P3-04 (theme), P3-05 (motion) |
 | LCP < 2.5 s, Lighthouse ≥ 90/95 | 8.6 | P5-05 |
-| Старые URL работают | 8.6 | P2-05 (308), P5-03 (якоря), P5-05 (финальная проверка) |
-| Состав Agent Pack, правила, доставка | 9.1–9.3 | P8-01, P8-02, P8-03 (11.1–11.3) |
+| Old URLs work | 8.6 | P2-05 (308), P5-03 (anchors), P5-05 (final check) |
+| Agent Pack contents, rules, delivery | 9.1–9.3 | P8-01, P8-02, P8-03 (11.1–11.3) |
 | Fresh-agent exit test | 9.4 | P8-04 (11.4) |
 
 ---
 
-## 7. Фазы P2–P4: дизайн, оболочка, главная
+## 7. Phases P2–P4: design, shell, home page
 
-### 7.1. P2 — фундамент дизайна
+### 7.1. P2 — design foundation
 
-- **P2-01** — этот бриф v1.3 и ADR-0003.
-- **P2-02** — финальный концепт «Чертёж» в цветах бренда: палитра, цвета-смыслы, шрифты, движение (`docs/design/visual-language.md`).
-- **P2-03** — дизайн-токены v2: цвет от seed, роли, поверхности, шрифт, формы, движение; светлая и тёмная тема.
-- **P2-04** — визуальная грамматика и витрина (контрольная точка 1). Каждый визуал MUST соблюдать 8 правил:
+- **P2-01** — this brief v1.3 and ADR-0003.
+- **P2-02** — the final "Blueprint" concept in brand colors: palette, meaning colors, fonts, motion (`docs/design/visual-language.md`).
+- **P2-03** — design tokens v2: color from a seed, roles, surfaces, font, shapes, motion; light and dark theme.
+- **P2-04** — visual grammar and showcase (checkpoint 1). Every visual MUST follow 8 rules:
 
-| Правило | Как проверяем |
+| Rule | How we check |
 |---|---|
-| Одна картинка — одна мысль | Подпись к визуалу укладывается в 1 предложение |
-| Только примитивы: «пилюля», скруглённый прямоугольник, круг, линия, карточка-документ, токен | SVG собран из библиотеки примитивов, без свободных path |
-| Радиусы только из shape-scale концепта | Линтер SVG сверяет rx со шкалой |
-| Палитра визуала: 4 тона + акцент | Линтер запрещает цвета вне токенов |
-| Одна «камера»: фронтально, без перспективы, поля 24 px | Шаблон артборда 240×140 и 600×300 |
-| Подписи моно, 1–3 слова | Проверка длины подписей в сборке |
-| Движение объясняет процесс, а не украшает | У каждой анимации есть смысл: «токен едет по пути задачи» |
-| Каждый визуал в двух темах и без анимации | Скриншот-тест: светлая, тёмная, reduced motion |
+| One picture, one idea | The visual's caption fits in 1 sentence |
+| Primitives only: "pill", rounded rectangle, circle, line, document card, token | The SVG is assembled from the primitive library, with no free paths |
+| Radii only from the concept's shape scale | The SVG linter checks rx against the scale |
+| Visual palette: 4 tones + accent | The linter forbids colors outside the tokens |
+| One "camera": frontal, no perspective, 24 px margins | Artboard template 240×140 and 600×300 |
+| Mono captions, 1–3 words | Caption length check in the build |
+| Motion explains the process rather than decorating | Every animation has a meaning: "the token travels along the task's path" |
+| Every visual in both themes and without animation | Screenshot test: light, dark, reduced motion |
 
-- **P2-05** — карта URL новой структуры и 308-редиректы со старых адресов.
-- **P2-06** — словарь иконок Tabler по ролям, контур 1.5 px; `lucide-react` убирается из зависимостей.
-- **P2-07** — плоский стиль (решение founder 29.10.2026): без градиентов и теней, один тёплый пастельный акцент, холодные нейтрали, новые цвета-смыслы; hover карточек — сменой цвета.
+- **P2-05** — URL map of the new structure and 308 redirects from old addresses.
+- **P2-06** — Tabler icon vocabulary by role, 1.5 px outline; `lucide-react` is removed from the dependencies.
+- **P2-07** — flat style (founder decision of 2026-10-29): no gradients or shadows, one warm pastel accent, cool neutrals, new meaning colors; card hover by a color change.
 
-### 7.2. P3 — оболочка и навигация
+### 7.2. P3 — shell and navigation
 
-- **Rail (P3-01):** сверху кнопка поиска, ниже 9 пунктов с иконкой и подписью (раздел 5.2); активный пункт — тональная «пилюля» вокруг иконки. Наведение открывает мега-меню поверх контента с деревом раздела; текущая страница выделена. Мега-меню MUST открываться также по фокусу, тапу и стрелке и закрываться по Esc; поведение покрыто e2e.
-- **Мобильная навигация (P3-02):** нижняя панель вместо rail и полноэкранное меню.
-- **Поиск ⌘K, хлебные крошки, доступ к глоссарию (P3-03);** справочник (памятка, глоссарий) доступен из поиска.
-- **Кнопки внизу rail (P3-04):** тема в 3 состояниях (светлая, тёмная, системная). Play/Pause анимаций снята решением founder 29.10.2026 (P3-09). Кнопки музыки до P9 нет.
-- **Hover и мега-меню (P3-09, решение founder 29.10.2026):** собственный hover «Обводка» вместо материального (линия-чертёж обводит пилюлю иконки), одинаковый у пунктов, поиска и темы; мега-меню плоское, без тени.
-- **Движение (P3-05):** переходы между страницами, пружинное движение меню и карточек без перелёта, мягкое появление блоков; `prefers-reduced-motion` отключает анимации полностью.
+- **Rail (P3-01):** a search button on top, below it 9 items with icon and label (section 5.2); the active item is a tonal "pill" around the icon. Hover opens a mega menu over the content with the section tree; the current page is highlighted. The mega menu MUST also open on focus, tap and arrow key and close on Esc; the behavior is covered by e2e.
+- **Mobile navigation (P3-02):** a bottom bar instead of the rail and a full-screen menu.
+- **⌘K search, breadcrumbs, glossary access (P3-03);** the reference (cheat sheet, glossary) is reachable from search.
+- **Buttons at the bottom of the rail (P3-04):** theme in 3 states (light, dark, system). Animation Play/Pause was removed by founder decision of 2026-10-29 (P3-09). There is no music button until P9.
+- **Hover and mega menu (P3-09, founder decision of 2026-10-29):** a custom "Outline" hover instead of the Material one (a blueprint line traces the icon pill), the same on items, search and theme; the mega menu is flat, without a shadow.
+- **Motion (P3-05):** page transitions, spring motion of the menu and cards without overshoot, soft appearance of blocks; `prefers-reduced-motion` switches animations off completely.
 
-### 7.3. P4 — главная, «Начать» и ребрендинг
+### 7.3. P4 — home page, "Get started" and rebranding
 
-Продающий лендинг и отдельный дашборд v1.2 заменяются главной в модели M3 — одной для нового и вернувшегося посетителя; вернувшийся видит блок «Продолжить».
+The v1.2 sales landing page and separate dashboard are replaced by a home page on the M3 model — one for new and returning visitors alike; a returning visitor sees the "Continue" block.
 
-**Главная (P4-01, контрольная точка 4):**
-1. **Hero:** название, подзаголовок (раздел 2.1), CTA «Начать изучение» и «Определить уровень»; рядом — живая схема пути задачи (Founder → тикет → агент → ветка → review → решение человека → `main` → deploy).
-2. **8 карточек разделов** (Начать … Agent Pack): визуал сверху, заголовок, одна строка; наведение «прорисовывает» схему на карточке.
-3. **«Продолжить»** — для вернувшихся: следующая глава или таб, тренажёр дня (наполнение — P7-06).
-4. **Next steps:** диагностика за 2 минуты, глава 01, операционная памятка, Agent Pack.
-5. **Футер:** Учиться (Начать, уровни M0–M5, тренажёры), Справочник (глоссарий, памятка, материалы), Для агентов (Agent Pack, `llms.txt`, GitHub); «by Makkov», Open Source.
+**Home page (P4-01, checkpoint 4):**
+1. **Hero:** name, subtitle (section 2.1), CTAs "Start learning" and "Find your level"; next to it, a live diagram of a task's path (Founder → ticket → agent → branch → review → human decision → `main` → deploy).
+2. **8 section cards** (Get started … Agent Pack): visual on top, heading, one line; hover "draws" the diagram on the card.
+3. **"Continue"** — for returning users: the next chapter or tab, the drill of the day (filled in P7-06).
+4. **Next steps:** the 2-minute diagnostic, chapter 01, the operational cheat sheet, Agent Pack.
+5. **Footer:** Learn (Get started, levels M0–M5, drills), Reference (glossary, cheat sheet, materials), For agents (Agent Pack, `llms.txt`, GitHub); "by Makkov", Open Source.
 
-**«Начать» (P4-03):** scroll-story из 5 шагов; слева текст и карточки-ссылки, справа sticky-визуал, который меняется вместе с шагом.
-1. Что такое MAE: чему учит и для кого (сюда — ответы FAQ v1.2, боль «до / после» из главы 01, счётчики глав и терминов).
-2. Как устроена работа: путь одной задачи от идеи до deploy, сквозной кейс DEMO-42.
-3. 8 разделов: что где лежит, у каждой главы 4 таба.
-4. Уровни M0–M5: куда расти; уровень подтверждается аттестацией, а не прочитанными страницами.
-5. Как учиться: обзор → практика → проверка; CTA «Перейти к главе 01» и «Пройти диагностику».
+**"Get started" (P4-03):** a 5-step scroll story; text and link cards on the left, a sticky visual on the right that changes with the step.
+1. What MAE is: what it teaches and for whom (this takes the v1.2 FAQ answers, the "before / after" pain from chapter 01, the chapter and term counters).
+2. How the work is organised: the path of one task from idea to deploy, the end-to-end DEMO-42 case.
+3. 8 sections: what is where, each chapter has 4 tabs.
+4. Levels M0–M5: where to grow; a level is confirmed by certification, not by pages read.
+5. How to learn: overview → practice → check; CTAs "Go to chapter 01" and "Take the diagnostic".
 
-**Иллюстрации (P4-02):** hero и 8 разделов, в двух темах, с анимацией по правилам раздела 7.1. Паттерн «+» с сайта бренда — только на hero главной и «Начать».
-**Тексты (P4-04):** тексты главной и «Начать» живут в `content/`, не в JSX (принцип 3).
-**Ребрендинг (P4-05):** раздел 2.3.
+**Illustrations (P4-02):** hero and 8 sections, in two themes, animated according to the rules of section 7.1. The "+" pattern from the brand site is used only on the home page hero and in "Get started".
+**Texts (P4-04):** the home page and "Get started" texts live in `content/`, not in JSX (principle 3).
+**Rebranding (P4-05):** section 2.3.
 
-### 7.4. Метрики главной
+### 7.4. Home page metrics
 
-Без внешних трекеров по умолчанию (приватность). В Vercel-версии MAY подключить Vercel Web Analytics с событиями: `landing_view` (просмотр главной), `diagnostic_started`, `diagnostic_completed`, `chapter_01_started`, `drill_completed`. Если для этого нужна новая runtime-зависимость — gate founder (раздел 14).
+No external trackers by default (privacy). The Vercel version MAY connect Vercel Web Analytics with the events: `landing_view` (home page view), `diagnostic_started`, `diagnostic_completed`, `chapter_01_started`, `drill_completed`. If this needs a new runtime dependency, it is a founder gate (section 14).
 
-### 7.5. Acceptance фаз P2–P4
+### 7.5. Acceptance of phases P2–P4
 
-- [ ] Токены v2 и визуальная грамматика: SVG проходят линтер палитры и радиусов; витрина показана founder (точка 1).
-- [ ] Rail и мега-меню работают мышью, тапом и с клавиатуры (Tab, стрелки, Esc); на телефоне — нижняя панель и полноэкранное меню; e2e зелёные.
-- [ ] Тема в 3 состояниях и Play/Pause анимаций работают; в reduced motion анимаций нет.
-- [ ] Главная: hero, 8 карточек, Next steps, футер; каждая карточка и ссылка ведёт в существующий раздел или главу.
-- [ ] «Начать»: 5 шагов со sticky-визуалом, читается и без анимации.
-- [ ] Ребрендинг: имя во всех местах из раздела 2.3; FLOW-символ и `by Makkov` SVG без изменения байтов.
-- [ ] Старые URL открываются (308 на новый адрес).
-- [ ] UI проверен на 320 / 360 / 768 / 1024 / 1440 px, в обеих темах, с клавиатуры и в reduced motion.
+- [ ] Tokens v2 and visual grammar: SVGs pass the palette and radius linter; the showcase was shown to the founder (checkpoint 1).
+- [ ] Rail and mega menu work with the mouse, tap and keyboard (Tab, arrows, Esc); on a phone, the bottom bar and full-screen menu; e2e green.
+- [ ] Theme in 3 states and animation Play/Pause work; in reduced motion there are no animations.
+- [ ] Home page: hero, 8 cards, Next steps, footer; every card and link leads to an existing section or chapter.
+- [ ] "Get started": 5 steps with a sticky visual, readable without animation too.
+- [ ] Rebranding: the name in all places from section 2.3; the FLOW symbol and the `by Makkov` SVG without byte changes.
+- [ ] Old URLs open (308 to the new address).
+- [ ] UI checked at 320 / 360 / 768 / 1024 / 1440 px, in both themes, with the keyboard and in reduced motion.
 
 ---
 
-## 8. Фаза P5 — страница темы и дробление
+## 8. Phase P5 — topic page and splitting
 
-### 8.1. Формат контента (P5-01, High)
+### 8.1. Content format (P5-01, High)
 
-- Страницы и табы описываются в `content/` и собираются штатным компилятором `src/content/compiler.mjs`; поиск, автоссылки на глоссарий, identity-registry блоков и coverage audit MUST распространяться на все табы (принципы 3–6).
-- Полный текст оригинала MUST остаться доступным: разложен по «Как устроено» и «Как применять», а не сокращён.
-- P5-01 решает Docs Impact для правил о месте учебного текста (AGENTS.md, README) в том же PR.
-- Поиск и якоря по новым страницам, старые якоря работают (P5-03).
+- Pages and tabs are described in `content/` and built by the standard compiler `src/content/compiler.mjs`; search, glossary auto-links, the block identity registry and the coverage audit MUST extend to all tabs (principles 3–6).
+- The original's full text MUST remain available: laid out across "How it works" and "How to apply", not shortened.
+- P5-01 settles Docs Impact for the rules about where learning content lives (AGENTS.md, README) in the same PR.
+- Search and anchors across the new pages, old anchors work (P5-03).
 
-### 8.2. Таб «Обзор»: шаблон короткого слоя
+### 8.2. The Overview tab: template of the short layer
 
-По умолчанию глава открывается на табе «Обзор». Шаблон (MUST для каждой главы; хранение — формат P5-01, путь `content/short/NN.md` из v1.2 им заменяется):
+By default a chapter opens on the Overview tab. Template (MUST for every chapter; storage is the P5-01 format, which replaces the v1.2 path `content/short/NN.md`):
 
 ```markdown
 ---
 chapter: "08"
-title: "Preflight: начать правильно"
+title: "Preflight: start right"
 minutes: 3
 rule_strength: MUST
 ---
 ## Зачем
-Одно предложение: какую боль это снимает.
+One sentence: what pain this removes.
 
 ## Правило
-> Одна фраза, которую нужно запомнить. (Обязательно)
+> One phrase to remember. (Mandatory)
 
 ## Как это выглядит
-Шаг сквозного кейса DEMO-42 на этой стадии — 3–6 строк, реальный вывод.
+The step of the end-to-end DEMO-42 case at this stage — 3–6 lines, real output.
 
 ## Три вещи, которые нужно сделать
 1. …
@@ -513,245 +513,247 @@ rule_strength: MUST
 3. …
 
 ## Частая ошибка
-Одна ошибка + как её заметить.
+One mistake + how to notice it.
 
 ## Проверь себя
-Ссылка на тренажёр главы (раздел 10).
+A link to the chapter's drill (section 10).
 ```
 
-Ограничения таба «Обзор»: ≤ 350 слов, ≤ 1 таблица, ≤ 1 схема, без вложенных оговорок.
+The `##` headings are literal tokens the compiler parses (`OVERVIEW_SECTIONS` in `src/content/compiler.mjs`) and must stay exactly as written. In English: Why, Rule, What it looks like, Three things to do, Common mistake, Test yourself.
 
-### 8.3. Шаблон страницы (P5-02)
+Limits of the Overview tab: ≤ 350 words, ≤ 1 table, ≤ 1 diagram, no nested caveats.
 
-- Hero: название главы, одна строка, чипы (время чтения, уровень, шаблон).
-- Полоса из 4 табов под hero; при скролле прилипает и сжимается в «пилюлю» с коротким именем главы.
-- «On this page» с текущим пунктом и временем чтения; внизу — «Предыдущая» и «Дальше» (соседний таб или глава).
-- У каждого заголовка — «copy link». Кнопка «Скопировать для агента» (Markdown, P8-03) снята решением founder 29.10.2026, P8-05.
-- Место под мини-таймлайн DEMO-42 и мини-карту системы (раздел 9.3–9.4); таблицы на мобильных превращаются в карточки.
+### 8.3. Page template (P5-02)
 
-### 8.4. Пилот (P5-04, контрольная точка 3)
+- Hero: chapter name, one line, chips (reading time, level, template).
+- A bar of 4 tabs under the hero; on scroll it sticks and shrinks into a "pill" with the chapter's short name.
+- "On this page" with the current item and reading time; at the bottom, "Previous" and "Next" (neighbouring tab or chapter).
+- Every heading has a "copy link". The "Copy for agent" button (Markdown, P8-03) was removed by founder decision of 2026-10-29, P8-05.
+- A place for the DEMO-42 mini timeline and the system mini map (sections 9.3–9.4); tables turn into cards on mobile.
 
-Главы 01, 08 и 12 в новом формате. Юзабилити-тест с 3 людьми уровня «пробовал вайбкодинг»: после таба «Обзор» главы 01 каждый формулирует главное правило своими словами (протокол в `docs/research/`).
+### 8.4. Pilot (P5-04, checkpoint 3)
 
-### 8.5. Финальная проверка production (P5-05)
+Chapters 01, 08 and 12 in the new format. A usability test with 3 people at the "tried vibe coding" level: after the Overview tab of chapter 01, each states the main rule in their own words (protocol in `docs/research/`).
 
-Старые адреса и якоря, скорость (LCP < 2.5 s на мобильном, Lighthouse ≥ 90/95), доступность (WCAG 2.2 AA, клавиатура).
+### 8.5. Final production check (P5-05)
 
-### 8.6. Acceptance фазы P5
+Old addresses and anchors, speed (LCP < 2.5 s on mobile, Lighthouse ≥ 90/95), accessibility (WCAG 2.2 AA, keyboard).
 
-- [ ] Формат с табами проходит компилятор и coverage audit «0 unexplained gaps»; поиск находит текст всех табов.
-- [ ] Шаблон страницы: табы сжимаются в шапку, On this page, соседние страницы, copy link.
-- [ ] Пилот глав 01, 08, 12 опубликован; протокол теста с 3 людьми в `docs/research/`.
-- [ ] Все старые URL и якоря работают (тест всех старых адресов).
-- [ ] LCP < 2.5 s на мобильном, Lighthouse ≥ 90/95.
+### 8.6. Phase P5 acceptance
+
+- [ ] The tab format passes the compiler and the coverage audit "0 unexplained gaps"; search finds the text of all tabs.
+- [ ] Page template: tabs collapse into the header, On this page, neighbouring pages, copy link.
+- [ ] The pilot of chapters 01, 08, 12 is published; the protocol of the test with 3 people is in `docs/research/`.
+- [ ] All old URLs and anchors work (test of all old addresses).
+- [ ] LCP < 2.5 s on mobile, Lighthouse ≥ 90/95.
 
 ---
 
-## 9. Фаза P6 — контент проще и с визуалом
+## 9. Phase P6 — simpler content with visuals
 
-Пять волн по разделам rail: P6-01 Начать и Основы (00–05), P6-02 Процесс (06–11), P6-03 Контроль (12–16), P6-04 Надёжность и Практика (17–22), P6-05 Инструменты (Claude Code и Codex, 29 тем). В каждой волне главы получают таб «Обзор» (раздел 8.2), визуал на каждом табе по грамматике (раздел 7.1), «Так / Не так» и нумерованную анатомию шаблонов. Плюс P6-06 (пробелы аудита) и P6-07 (глоссарий). Новые главы и разделы помечаются бейджем «Новое в v2».
+Five waves by rail section: P6-01 Get started and Foundations (00–05), P6-02 Process (06–11), P6-03 Control (12–16), P6-04 Reliability and Practice (17–22), P6-05 Tools (Claude Code and Codex, 29 topics). In each wave the chapters get the Overview tab (section 8.2), a visual on every tab following the grammar (section 7.1), "Do / Don't" and the numbered anatomy of templates. Plus P6-06 (audit gaps) and P6-07 (glossary). New chapters and sections are marked with a "New in v2" badge.
 
-### 9.1. Диагноз
+### 9.1. Diagnosis
 
-- Тон раздвоен: «брат» и XP против enterprise-терминологии.
-- Рус-англ смесь в одном предложении.
-- Почти каждый абзац — оговорка; главное действие теряется.
-- Нет одного примера, прошедшего через все главы.
-- Глоссарий перегружен базовыми терминами.
+- The tone is split: "bro" and XP versus enterprise terminology.
+- Mixed languages within one sentence.
+- Almost every paragraph is a caveat; the main action gets lost.
+- There is no single example that runs through all chapters.
+- The glossary is overloaded with basic terms.
 
-### 9.2. Язык
+### 9.2. Language
 
-- **Русский first:** в табе «Обзор» английский термин появляется только как подсказка при наведении/тапе («предварительная проверка · preflight»). В «Как устроено» и «Как применять» — текст оригинала без изменений, кроме раскладки по табам (разделы 5.3 и 8.1).
-- Глоссарий получает фильтр «Базовое / Профессиональное»; базовые Git-термины свёрнуты по умолчанию; подсказки в новом стиле (P6-07).
-- Новый тон: **спокойный наставник**, на «ты», без «брат» в основном тексте. Игровой голос живёт только в геймификации (персонаж-наставник, раздел 10.5) и выключается в настройках.
+- **Content language first:** in the Overview tab an English term appears only as a hint on hover/tap (a native-language phrase followed by "· preflight"). In "How it works" and "How to apply" the original's text is unchanged, apart from being laid out across tabs (sections 5.3 and 8.1).
+- The glossary gets a "Basic / Professional" filter; basic Git terms are collapsed by default; hints in the new style (P6-07).
+- New tone: **a calm mentor**, informal "you", no "bro" in the main text. The playful voice lives only in gamification (the mentor character, section 10.5) and can be switched off in settings.
 
-### 9.3. Сквозной кейс
+### 9.3. End-to-end case
 
-Один тикет **DEMO-42 «Поиск по названию в каталоге»** (уже есть в оригинале) проходит через все главы: тикет (06) → lifecycle (07) → preflight (08) → контекст (09) → Docs Impact (10) → ветка и PR (11) → риск Medium (12) → коллизия с DEMO-43 (13) → review с finding (14) → решение founder (15) → post-merge sync (16). На каждой главе — «где мы сейчас» мини-таймлайн кейса.
+One ticket, **DEMO-42 "Search by name in the catalog"** (already in the original), runs through all chapters: ticket (06) → lifecycle (07) → preflight (08) → context (09) → Docs Impact (10) → branch and PR (11) → Medium risk (12) → collision with DEMO-43 (13) → review with a finding (14) → founder decision (15) → post-merge sync (16). Each chapter has a "where we are now" mini timeline of the case.
 
-### 9.4. Визуальная подача
+### 9.4. Visual presentation
 
-- Визуал на каждом табе по визуальной грамматике MAE (раздел 7.1).
-- Мини-карта системы (из главы 02) как постоянный навигационный элемент: текущая глава подсвечена на схеме.
-- Callout-типы: «Правило», «Ловушка», «Пример», «Проверь» — 4 вида, не больше.
-- Правила — парами «Так» / «Не так» (и «Осторожно»), шаблоны (отчёт preflight, тикет, finding) — нумерованной анатомией.
-- Таблицы на мобильных превращаются в карточки.
+- A visual on every tab following the MAE visual grammar (section 7.1).
+- The system mini map (from chapter 02) as a permanent navigation element: the current chapter is highlighted on the diagram.
+- Callout types: "Rule", "Trap", "Example", "Check" — 4 kinds, no more.
+- Rules come in "Do" / "Don't" (and "Caution") pairs, templates (preflight report, ticket, finding) as numbered anatomy.
+- Tables turn into cards on mobile.
 
-### 9.5. Вычитка упрощённых текстов: агент-редактор
+### 9.5. Proofreading simplified texts: the editor agent
 
-Решение 08 (26.10.2026): упрощённые тексты вычитывает **отдельный агент-редактор**; founder их не вычитывает. Это исключение из правила «изменение учебного текста — решение founder» для тикетов упрощения и дробления существующего текста (P5-04, P6-01…P6-05, P6-07). Новый учебный текст (новые главы и дополнения P6-06) по-прежнему требует founder approval (правило v1.2, раздел 5): агент-редактор проверяет его до founder, но не заменяет.
+Decision 08 (2026-10-26): simplified texts are proofread by **a separate editor agent**; the founder does not proofread them. This is an exception to the rule "changes to learning content are a founder decision" for tickets that simplify and split existing text (P5-04, P6-01…P6-05, P6-07). New learning content (new chapters and the P6-06 additions) still requires founder approval (v1.2 rule, section 5): the editor agent checks it before the founder but does not replace the founder.
 
-- Редактор — отдельная чистая сессия, не автор PR; получает PR, тикет и оригинал на base SHA, а не резюме автора.
-- Сверяет с оригиналом по чек-листу: **определения, MUST-правила, термины, ссылки и якоря**. Смысл правила MUST NOT меняться.
-- Verdict READY или findings, привязанные к HEAD SHA; после нового push вычитка повторяется.
-- Спорные смысловые места редактор выносит отдельной строкой founder — это gate founder; до ответа спорное место не мержится.
-- Merge текстового PR: independent review READY + READY агента-редактора на одном HEAD + зелёный CI.
+- The editor is a separate clean session, not the PR author; it gets the PR, the ticket and the original at the base SHA, not the author's summary.
+- It checks against the original with a checklist: **definitions, MUST rules, terms, links and anchors**. The meaning of a rule MUST NOT change.
+- Verdict READY or findings, bound to the HEAD SHA; after a new push the proofreading is repeated.
+- The editor raises disputed points of meaning as a separate line to the founder — this is a founder gate; until the answer, the disputed point is not merged.
+- Merge of a text PR: independent review READY + editor agent READY on the same HEAD + green CI.
 
-### 9.6. Пробелы аудита (P6-06; бывшая фаза 2)
+### 9.6. Audit gaps (P6-06; formerly phase 2)
 
-P6-06 — зонтичный тикет: каждый пункт 9.6.1–9.6.7 заводится отдельным sub-issue со своей веткой и PR. Пункт 9.6.8 входит в волну P6-05, пункт 9.6.9 — во все волны и в P8-02. Текст оригинала меняется только через тикеты с founder approval; агент-редактор сверяет смысл до founder (раздел 9.5). Место новых глав в rail задаёт карта URL (P2-05).
+P6-06 is an umbrella ticket: each item 9.6.1–9.6.7 is created as a separate sub-issue with its own branch and PR. Item 9.6.8 is part of wave P6-05, item 9.6.9 is part of all waves and of P8-02. The original's text changes only through tickets with founder approval; the editor agent checks the meaning before the founder (section 9.5). The place of new chapters in the rail is set by the URL map (P2-05).
 
-#### 9.6.1. Reference-harness (главный пробел)
+#### 9.6.1. Reference harness (the main gap)
 
-- Новый раздел «Шаблон-репозиторий»: рабочий template-repo `mastering-agentic-engineering-harness-template` (отдельный репозиторий или папка `templates/harness/`), где **все учебные скрипты существуют и работают**: `bootstrap.sh`, `doctor.sh`, `validate.sh`, `preflight.sh`, `post-merge-sync.sh`, PR template с парсером `Implements TICKET-XX` и Docs Impact (одна грамматика, один источник), GitHub ruleset в JSON.
-- Тесты к скриптам на временных real-Git репозиториях (как описано в главе 18.2): ignored-file collision, restricted refspec, divergence, dirty state, lock.
-- Глава 20 получает ссылку «Склонируй и пройди упражнения на этом шаблоне».
+- A new section "Template repository": a working template repo `mastering-agentic-engineering-harness-template` (a separate repository or a `templates/harness/` folder), where **all the learning scripts exist and work**: `bootstrap.sh`, `doctor.sh`, `validate.sh`, `preflight.sh`, `post-merge-sync.sh`, a PR template with an `Implements TICKET-XX` and Docs Impact parser (one grammar, one source), a GitHub ruleset in JSON.
+- Tests for the scripts on temporary real-Git repositories (as described in chapter 18.2): ignored-file collision, restricted refspec, divergence, dirty state, lock.
+- Chapter 20 gets a link "Clone it and do the exercises on this template".
 
-#### 9.6.2. Enforcement на практике
+#### 9.6.2. Enforcement in practice
 
-Новая глава **«От правила к принуждению»** (между 03 и 04 или как 03.4):
-- Как превратить каждое текстовое правило гайда в проверку или ограничение. Таблица: правило → текст → исполнимая проверка → enforcement (Claude Code permissions deny, PreToolUse hook, CI check, branch ruleset, отдельный identity).
-- Готовые примеры: запрет `git push` в `main`, `reset --hard`, `clean -fdx`, `rm -rf` вне worktree, `--force`; reviewer-сессия с read-only permissions; hook, проверяющий, что работа идёт в task-worktree.
-- Честная пометка: что из этого реально блокирует, а что только предупреждает.
+A new chapter **"From rule to enforcement"** (between 03 and 04, or as 03.4):
+- How to turn every text rule of the guide into a check or a restriction. A table: rule → text → executable check → enforcement (Claude Code permissions deny, PreToolUse hook, CI check, branch ruleset, a separate identity).
+- Ready-made examples: blocking `git push` to `main`, `reset --hard`, `clean -fdx`, `rm -rf` outside the worktree, `--force`; a reviewer session with read-only permissions; a hook that checks that work happens in a task worktree.
+- An honest note: which of these really block and which only warn.
 
-#### 9.6.3. Слой памяти
+#### 9.6.3. The memory layer
 
-Новая глава **«Память агента»** (после 09 Context engineering):
-- Три вида памяти: инструкции проекта (AGENTS.md/CLAUDE.md), рабочая память сессии и handoff, долговременные решения (ADR, docs).
-- Правило: память — не источник истины; при конфликте побеждает канонический источник из главы 02.
-- Кто пишет в память, когда, как вычищается устаревшее, как не превратить память в свалку.
-- Контракт: что MUST попасть в durable docs, а что остаётся в сессии.
+A new chapter **"Agent memory"** (after 09 Context engineering):
+- Three kinds of memory: project instructions (AGENTS.md/CLAUDE.md), the session's working memory and handoff, long-term decisions (ADRs, docs).
+- Rule: memory is not a source of truth; in a conflict, the canonical source from chapter 02 wins.
+- Who writes to memory, when, how stale entries are cleaned up, how to keep memory from turning into a dump.
+- Contract: what MUST go into durable docs and what stays in the session.
 
-#### 9.6.4. Observability, evals, стоимость
+#### 9.6.4. Observability, evals, cost
 
-Новая глава **«Наблюдаемость и качество агентов»** (в части «Практика и развитие»):
-- Журнал прогонов: тикет, сессия, модель, HEAD, токены/стоимость, результат, время.
-- 5 метрик процесса: доля PR, прошедших review с первого раза; доля scope creep; среднее число циклов review; доля INCOMPLETE evidence; стоимость на смерженный PR.
-- Evals для инструкций и skills: набор эталонных задач, прогон после изменения AGENTS.md/skill, сравнение результатов.
-- Бюджеты: лимит токенов/стоимости на тикет, правило остановки.
+A new chapter **"Agent observability and quality"** (in the "Practice and growth" part):
+- Run log: ticket, session, model, HEAD, tokens/cost, result, time.
+- 5 process metrics: share of PRs that pass review on the first try; share of scope creep; average number of review cycles; share of INCOMPLETE evidence; cost per merged PR.
+- Evals for instructions and skills: a set of reference tasks, a run after changing AGENTS.md/a skill, comparison of the results.
+- Budgets: a token/cost limit per ticket, a stop rule.
 
 #### 9.6.5. Risk-based auto-merge
 
-Дополнение к главам 12 и 15:
-- Делегированная политика: **Low risk + все required checks PASS на актуальном HEAD + независимое review без findings ≥ MEDIUM → MAY merge без ручного решения**, если founder заранее утвердил эту политику (ADR).
-- Medium и High — по-прежнему явный gate.
-- Как технически: required checks + required review + auto-merge GitHub; отдельный identity без bypass.
+Addition to chapters 12 and 15:
+- A delegated policy: **Low risk + all required checks PASS on the current HEAD + an independent review with no findings ≥ MEDIUM → MAY merge without a manual decision**, if the founder approved this policy in advance (ADR).
+- Medium and High still have an explicit gate.
+- How, technically: required checks + required review + GitHub auto-merge; a separate identity without bypass.
 
-#### 9.6.6. Изоляция исполнения
+#### 9.6.6. Execution isolation
 
-Дополнение к главам 04 и 17:
-- Альтернативы Docker socket: rootless Docker / Podman, dev-контейнер без socket, отдельная sandbox-среда для untrusted-кода, облачные сессии.
-- Egress-политика: allowlist доменов для агента.
-- Таблица «что даёт изоляцию, а что нет» (в стиле оригинала).
+Addition to chapters 04 and 17:
+- Alternatives to the Docker socket: rootless Docker / Podman, a dev container without the socket, a separate sandbox environment for untrusted code, cloud sessions.
+- Egress policy: a domain allowlist for the agent.
+- A table "what provides isolation and what does not" (in the original's style).
 
-#### 9.6.7. Оркестрация (минимально исполнимая)
+#### 9.6.7. Orchestration (minimal executable)
 
-Дополнение к главе 21: как сделать «M3 без Control Center» — очередь готовых тикетов (Todo), один orchestrator-промпт, который выбирает тикет по DAG зависимостей и запускает автора в отдельной сессии/worktree, scheduled tasks для post-merge sync и проверки stale PR.
+Addition to chapter 21: how to do "M3 without a Control Center" — a queue of ready tickets (Todo), one orchestrator prompt that picks a ticket by the dependency DAG and launches an author in a separate session/worktree, scheduled tasks for post-merge sync and for checking stale PRs.
 
-#### 9.6.8. Слой «Инструменты» отдельно от принципов (волна P6-05)
+#### 9.6.8. The "Tools" layer separate from the principles (wave P6-05)
 
-- Обзоры инструментов MUST хранить дату проверки каждого факта (цены, версии, beta-статусы) в frontmatter.
-- Факт старше 45 дней показывается с бейджем «Может быть устаревшим».
-- Отдельный тикет: scheduled task раз в 2 недели проверяет официальные источники и открывает PR с обновлениями (с ссылками на источник). Никаких цифр из памяти модели.
+- Tool overviews MUST store the check date of every fact (prices, versions, beta statuses) in the frontmatter.
+- A fact older than 45 days is shown with a "May be out of date" badge.
+- A separate ticket: a scheduled task every 2 weeks checks the official sources and opens a PR with updates (with links to the source). No numbers from the model's memory.
 
-#### 9.6.9. Нормативность
+#### 9.6.9. Normativity
 
-- Ключевые правила во всех главах получают явную силу: `MUST`, `SHOULD`, `MAY` (в UI — цветные бейджи «Обязательно / Рекомендуется / По ситуации»).
-- Это делается в табе «Обзор» (волны P6-01…P6-05) и в Agent Pack (P8-02); оригинальный текст не переписывается.
+- The key rules in all chapters get an explicit strength: `MUST`, `SHOULD`, `MAY` (in the UI, colored badges "Mandatory / Recommended / Depends on the situation").
+- This is done in the Overview tab (waves P6-01…P6-05) and in the Agent Pack (P8-02); the original text is not rewritten.
 
-### 9.7. Acceptance фазы P6
+### 9.7. Phase P6 acceptance
 
-- [ ] Таб «Обзор» есть для всех 22 глав и проходит линтер ограничений (слова, таблицы, схемы).
-- [ ] У каждого таба есть визуал по грамматике MAE (раздел 7.1).
-- [ ] Каждый текстовый PR волны имеет READY агента-редактора на HEAD; спорные места решены founder.
-- [ ] Пункты 9.6.1–9.6.9 закрыты своими PR; новые главы с бейджем «Новое в v2».
-- [ ] Повторный аудит подачи для человека ≥ 85/100.
+- [ ] The Overview tab exists for all 22 chapters and passes the constraint linter (words, tables, diagrams).
+- [ ] Every tab has a visual following the MAE grammar (section 7.1).
+- [ ] Every text PR of a wave has an editor agent READY on HEAD; disputed points are resolved by the founder.
+- [ ] Items 9.6.1–9.6.9 are closed by their own PRs; new chapters carry the "New in v2" badge.
+- [ ] Repeat audit of presentation for people ≥ 85/100.
 
 ---
 
-## 10. Фаза P7 — геймификация v2
+## 10. Phase P7 — gamification v2
 
-### 10.1. Принцип
+### 10.1. Principle
 
-**Награда за компетенцию, а не за прокрутку.** Прочитанная глава даёт немного очков; основное движение — решения в тренажёрах, которые повторяют реальные развилки из гайда. Пояс нельзя «прочитать» — его можно только сдать.
+**Reward competence, not scrolling.** A chapter read gives a few points; the main progress comes from decisions in drills that replay real forks from the guide. A belt cannot be "read" — it can only be earned by passing a test.
 
-### 10.2. Ядро механик
+### 10.2. Core mechanics
 
-| Механика | Что даёт | Источник в гайде |
+| Mechanic | What it gives | Source in the guide |
 |---|---|---|
-| **Уровни мастерства** M0–M5 (раздел 2.2) | Долгосрочная цель, статус | Глава 21 |
-| **Карта навыков** (skill tree) | Видимость пути, нелинейность | Маршруты из главы 00 |
-| **Тренажёры** (раздел 10.3) | Практика решений | Главы 06–19 |
-| **Аттестация уровня** | Проверка, а не накопление | Сценарии главы 18 |
-| **Миссии в реальном репо** | Перенос в жизнь | Упражнения главы 20 |
-| **Интервальное повторение** | Удержание знаний | Глоссарий, правила |
-| **Журнал evidence** | Гордость за сделанное | Идея evidence record |
+| **Mastery levels** M0–M5 (section 2.2) | A long-term goal, status | Chapter 21 |
+| **Skill map** (skill tree) | Visibility of the path, non-linearity | Routes from chapter 00 |
+| **Drills** (section 10.3) | Practising decisions | Chapters 06–19 |
+| **Level certification** | A check, not accumulation | Scenarios from chapter 18 |
+| **Missions in a real repo** | Transfer to real life | Exercises from chapter 20 |
+| **Spaced repetition** | Knowledge retention | Glossary, rules |
+| **Evidence log** | Pride in what you did | The evidence record idea |
 
-XP сохраняется как внутренняя валюта прогресса, но на экране первичны уровень мастерства и карта. Уровни, карта навыков и прогресс по главам в мега-меню — P7-02; интервальное повторение — формат карточек движка P7-03, «повторение на сегодня» и тренажёр дня — блок «Продолжить» на главной (P7-06).
+XP stays as the internal currency of progress, but on screen the mastery level and the map come first. Levels, the skill map and chapter progress in the mega menu are P7-02; spaced repetition is the card format of the P7-03 engine, while "today's review" and the drill of the day are the "Continue" block on the home page (P7-06).
 
-### 10.3. Тренажёры (интерактивные, MUST минимум 8; P7-03 делает 10)
+### 10.3. Drills (interactive, MUST at least 8; P7-03 delivers 10)
 
-Каждый тренажёр — короткая сессия 2–5 минут, 5–8 карточек-сценариев, мгновенная обратная связь со ссылкой на абзац гайда.
+Each drill is a short 2–5 minute session, 5–8 scenario cards, instant feedback with a link to a paragraph of the guide.
 
-1. **«Готов ли тикет?»** (гл. 06) — показывается тикет; пользователь отмечает, каких полей DoR не хватает. Ошибка → объяснение, почему AC «сделать красиво» не проверяемы.
-2. **«Preflight-диспетчер»** (гл. 08) — состояние репо/тикета; выбрать PASS / FAIL / BLOCKED / INCOMPLETE. Ключевые ловушки: недоступный diff ≠ пустой diff.
-3. **«Сортировка риска»** (гл. 12) — drag-and-drop карточек изменений в Low / Medium / High. Подвох: строка CI permissions опаснее сотен строк docs.
-4. **«Класс коллизии»** (гл. 13) — два PR рядом; выбрать isolated / file overlap / contract dependency / direct conflict.
-5. **«Порядок merge»** (гл. 13.3) — собрать граф зависимостей перетаскиванием; цикл → правильный ответ «плана нет, нужно разделить тикеты».
-6. **«Охота за багом»** (гл. 14) — diff с подсаженным дефектом (например `|| true` на получении diff); найти строку, выбрать severity, описать сценарий по шаблону finding.
-7. **«Что на самом деле значит „готово“»** (гл. 07.2) — фраза агента → что доказано, что нет (READY TO MERGE ≠ разрешение на merge).
-8. **«Источник истины»** (гл. 02.2) — конфликт двух источников; выбрать канонический и следующее действие.
-9. **«Безопасный sync»** (гл. 16) — состояние checkout; выбрать безопасное действие (без reset/clean).
-10. **«Prompt injection»** (гл. 17) — текст из PR/страницы; распознать инструкцию-данные.
+1. **"Is the ticket ready?"** (ch. 06) — a ticket is shown; the user marks which DoR fields are missing. Mistake → an explanation of why the AC "make it pretty" is not testable.
+2. **"Preflight dispatcher"** (ch. 08) — the repo/ticket state; choose PASS / FAIL / BLOCKED / INCOMPLETE. Key traps: an unavailable diff ≠ an empty diff.
+3. **"Risk sorting"** (ch. 12) — drag-and-drop change cards into Low / Medium / High. The catch: one line of CI permissions is more dangerous than hundreds of lines of docs.
+4. **"Collision class"** (ch. 13) — two PRs side by side; choose isolated / file overlap / contract dependency / direct conflict.
+5. **"Merge order"** (ch. 13.3) — build the dependency graph by dragging; a cycle → the correct answer is "there is no plan, the tickets need splitting".
+6. **"Bug hunt"** (ch. 14) — a diff with a planted defect (for example `|| true` on fetching the diff); find the line, choose the severity, describe the scenario using the finding template.
+7. **"What 'done' really means"** (ch. 07.2) — an agent's phrase → what is proven and what is not (READY TO MERGE ≠ permission to merge).
+8. **"Source of truth"** (ch. 02.2) — a conflict between two sources; choose the canonical one and the next action.
+9. **"Safe sync"** (ch. 16) — a checkout state; choose the safe action (no reset/clean).
+10. **"Prompt injection"** (ch. 17) — text from a PR/page; recognise an instruction that is data.
 
-Формат данных тренажёров — JSON по схеме `content/gamification/schema/drill.schema.json` (сценарий, варианты, правильный ответ, объяснение, ссылка на якорь главы, сложность). Добавить новый тренажёр = добавить JSON, без кода.
+The drill data format is JSON following the schema `content/gamification/schema/drill.schema.json` (scenario, options, correct answer, explanation, link to a chapter anchor, difficulty). Adding a new drill = adding a JSON file, no code.
 
-### 10.4. Аттестация уровня и диагностика (P7-04)
+### 10.4. Level certification and diagnostic (P7-04)
 
-- Смешанный набор из тренажёров соответствующих глав + один «кейс-босс» (многошаговый сценарий из главы 18, например «Зависимые изменения и неполный diff»).
-- Проходной балл 80%; при провале — показывается, какие темы повторить; пересдача через 10 минут (антиугадывание).
-- Уровни 4 · Архитектор и 5 · Мастер (M4–M5) MUST требовать миссию в реальном репозитории (раздел 10.6), не только тест.
-- **Диагностика за 2 минуты** (бывший блок лендинга v1.2): 8 вопросов → текущий уровень и персональный маршрут (из трёх маршрутов главы 00); результат сохраняется в прогресс. Тикет P7-04; вход — пункт rail «Начать» и Next steps на главной.
+- A mixed set from the drills of the relevant chapters + one "boss case" (a multi-step scenario from chapter 18, for example "Dependent changes and an incomplete diff").
+- Pass mark 80%; on failure, the topics to review are shown; a retake after 10 minutes (anti-guessing).
+- Levels 4 · Architect and 5 · Master (M4–M5) MUST require a mission in a real repository (section 10.6), not only a test.
+- **The 2-minute diagnostic** (a former v1.2 landing block): 8 questions → the current level and a personal route (one of the three routes from chapter 00); the result is saved in progress. Ticket P7-04; entry via the "Get started" rail item and Next steps on the home page.
 
-### 10.5. Наставник (персонаж, P7-05)
+### 10.5. Mentor (character, P7-05)
 
-- Игровой голос гайда («брат») переезжает в персонажа-наставника. Он появляется в тренажёрах, на экзаменах и в пустых состояниях.
-- Короткие реплики, юмор как в эпиграфах оригинала («у tracker на этот счёт есть собственное мнение»).
-- Настройка «Без персонажа» — для тех, кто хочет строгий режим.
-- Персонаж — оригинальный (собственный дизайн), без заимствования чужих маскотов.
+- The guide's playful voice ("bro") moves into a mentor character. It appears in drills, in exams and in empty states.
+- Short lines, humour as in the original's epigraphs ("the tracker has its own opinion on this").
+- A "No character" setting for those who want a strict mode.
+- The character is original (its own design), with no borrowing of other people's mascots.
 
-### 10.6. Миссии в реальном репозитории (P7-04)
+### 10.6. Missions in a real repository (P7-04)
 
-Пять упражнений главы 20 становятся миссиями с чек-листом evidence:
-- пользователь вставляет ссылки (PR URL, SHA, CI run URL) и отмечает пункты; платформа проверяет только формат (не ходит в GitHub без авторизации);
-- результат попадает в **Журнал evidence** — личную страницу «что я сделал», которую можно экспортировать в Markdown.
+The five exercises of chapter 20 become missions with an evidence checklist:
+- the user pastes links (PR URL, SHA, CI run URL) and ticks items; the platform checks only the format (it does not call GitHub without authorisation);
+- the result goes into the **Evidence log** — a personal "what I did" page that can be exported to Markdown.
 
-### 10.7. Хранение прогресса (P7-01)
+### 10.7. Progress storage (P7-01)
 
-- Интерфейс `ProgressStore` (get/set/export/import/reset) поверх существующих ключей `handbook-learning-v2`, `handbook-reading-v2`, `practice:*` (`src/components/localState.ts`, `learning-profile.ts`). Существующий прогресс пользователей MUST мигрировать без потерь: текущие XP-правила (глава +100, упражнение +50) переводятся в новую систему, а не обнуляются.
-- Адаптер 1: `localStorage`, все вызовы в try/catch, приложение работает и без него.
-- Адаптер 2 (позже, если появятся аккаунты): синхронизация через бэкенд — отдельное решение founder, в фазах P1–P9 этого брифа не делается.
-- Экспорт/импорт прогресса в JSON-файл.
-- Схема прогресса версионируется (`progress.version`), миграции покрыты тестами.
+- A `ProgressStore` interface (get/set/export/import/reset) on top of the existing keys `handbook-learning-v2`, `handbook-reading-v2`, `practice:*` (`src/components/localState.ts`, `learning-profile.ts`). Existing user progress MUST migrate without loss: the current XP rules (chapter +100, exercise +50) are carried into the new system, not reset.
+- Adapter 1: `localStorage`, all calls in try/catch, the application works without it too.
+- Adapter 2 (later, if accounts appear): sync through a backend — a separate founder decision, not done in phases P1–P9 of this brief.
+- Export/import of progress to a JSON file.
+- The progress schema is versioned (`progress.version`), migrations are covered by tests.
 
-### 10.8. Этика геймификации (MUST NOT)
+### 10.8. Gamification ethics (MUST NOT)
 
-- Не наказывать за пропуск дней (стрик — только как мягкий индикатор, без «сгорания»).
-- Не давать очки за время на странице или скорость прокрутки.
-- Не использовать фейковые счётчики, искусственный дефицит, давление «осталось 2 часа».
-- Не прятать контент за уровнями: весь текст гайда доступен всегда, геймификация — слой поверх.
+- Do not punish for skipped days (a streak only as a soft indicator, without "burning out").
+- Do not give points for time on page or scroll speed.
+- Do not use fake counters, artificial scarcity, "2 hours left" pressure.
+- Do not hide content behind levels: all of the guide's text is always available, gamification is a layer on top.
 
-### 10.9. Acceptance фазы P7
+### 10.9. Phase P7 acceptance
 
-- [ ] 8+ тренажёров по JSON-схеме, каждый со ссылками на якоря глав.
-- [ ] Аттестации на 6 уровней; уровни 4 и 5 требуют миссию.
-- [ ] Карта навыков отражает реальный прогресс.
-- [ ] Прогресс переживает перезагрузку, экспортируется и импортируется; работает при заблокированном storage (без падений).
-- [ ] Все механики доступны с клавиатуры, drag-and-drop имеет альтернативу кнопками.
-- [ ] Режим «Без персонажа» и «Без геймификации».
-- [ ] Прогресс по главам виден в мега-меню; блок «Продолжить» на главной ведёт к следующему шагу (P7-02, P7-06).
-- [ ] Диагностика выдаёт уровень и маршрут, сохраняет результат.
+- [ ] 8+ drills on the JSON schema, each with links to chapter anchors.
+- [ ] Certifications for 6 levels; levels 4 and 5 require a mission.
+- [ ] The skill map reflects real progress.
+- [ ] Progress survives a reload, is exported and imported; works with storage blocked (no crashes).
+- [ ] All mechanics are keyboard accessible, drag-and-drop has a button alternative.
+- [ ] The "No character" and "No gamification" modes.
+- [ ] Chapter progress is visible in the mega menu; the "Continue" block on the home page leads to the next step (P7-02, P7-06).
+- [ ] The diagnostic gives a level and a route and saves the result.
 
 ---
 
-## 11. Фаза P8 — Agent Pack (подача для ИИ)
+## 11. Phase P8 — Agent Pack (presentation for AI)
 
-### 11.1. Состав (P8-01, P8-02)
+### 11.1. Contents (P8-01, P8-02)
 
 ```text
 agent-pack/
-├─ AGENTS.md            # ≤ 150 строк: роли, жизненный цикл, gates, ссылки на skills
-├─ CLAUDE.md            # @AGENTS.md + специфика Claude Code
+├─ AGENTS.md            # ≤ 150 lines: roles, lifecycle, gates, links to skills
+├─ CLAUDE.md            # @AGENTS.md + Claude Code specifics
 ├─ skills/
 │  ├─ preflight/SKILL.md
 │  ├─ independent-review/SKILL.md
@@ -767,102 +769,102 @@ agent-pack/
 │  ├─ handoff.schema.json
 │  └─ decision-packet.schema.json
 ├─ claude/
-│  ├─ settings.json     # deny-список опасных команд, hooks
+│  ├─ settings.json     # deny list of dangerous commands, hooks
 │  └─ hooks/
-├─ llms.txt             # карта для LLM: что читать и в каком порядке
+├─ llms.txt             # a map for LLMs: what to read and in what order
 └─ README.md
 ```
 
-### 11.2. Правила
+### 11.2. Rules
 
-- Каждое правило с явной силой MUST/SHOULD/MAY.
-- Без пояснений для людей, без юмора, без эпиграфов.
-- Каждый skill ≤ 300 строк, загружается по необходимости (progressive disclosure).
-- Шаблоны оригинала превращаются в JSON Schema + пример валидного документа.
+- Every rule has an explicit MUST/SHOULD/MAY strength.
+- No explanations for people, no humour, no epigraphs.
+- Every skill ≤ 300 lines, loaded on demand (progressive disclosure).
+- The original's templates become JSON Schema + an example of a valid document.
 
-### 11.3. Доставка (P8-03)
+### 11.3. Delivery (P8-03)
 
-- Кнопка «Скачать Agent Pack (.zip)» и страница `/agents` с описанием.
-- `/llms.txt` и `/llms-full.txt` в корне сайта.
-- Markdown каждой главы раздаётся по адресу страницы + `.md` (через `/agents` и `llms.txt`). Кнопка «Скопировать для агента» и ссылка «Markdown страницы» на страницах и табах (раздел 8.3) сняты решением founder 29.10.2026 (P8-05): не вписываются в стиль.
-- Пункт rail «Agent Pack» (раздел 5.2).
+- A "Download Agent Pack (.zip)" button and an `/agents` page with a description.
+- `/llms.txt` and `/llms-full.txt` at the site root.
+- The Markdown of every chapter is served at the page address + `.md` (via `/agents` and `llms.txt`). The "Copy for agent" button and the "Page Markdown" link on pages and tabs (section 8.3) were removed by founder decision of 2026-10-29 (P8-05): they do not fit the style.
+- The "Agent Pack" rail item (section 5.2).
 
 ### 11.4. Acceptance (fresh-agent exit test, P8-04)
 
-Новая сессия Claude Code в пустом тестовом репозитории получает только Agent Pack и тикет DEMO-42. Успех: агент сам находит правила, делает preflight-отчёт по схеме, работает в отдельной ветке/worktree, открывает PR с evidence по схеме и останавливается до merge. Протокол прогона сохраняется в `docs/evals/`.
+A new Claude Code session in an empty test repository gets only the Agent Pack and the ticket DEMO-42. Success: the agent finds the rules by itself, writes a preflight report following the schema, works in a separate branch/worktree, opens a PR with evidence following the schema and stops before merge. The run protocol is saved in `docs/evals/`.
 
 ---
 
-## 12. Фаза P9 — музыка
+## 12. Phase P9 — music
 
-- **P9-01** — музыка в самом конце: треки и лицензии, плеер, без автозапуска. Вход — треки и лицензии от founder (gate); без подтверждённой лицензии трек не подключается. До P9-01 кнопки музыки в rail нет.
-- Звук включается только по кнопке; есть громкость, выбор запоминается.
-- **P9-02** — отчёт о волне и обновление брифа после каждой фазы (пересчёт сроков, переразметка, новые решения founder).
+- **P9-01** — music at the very end: tracks and licenses, player, no autoplay. Input: tracks and licenses from the founder (gate); a track without a confirmed license is not added. Until P9-01 there is no music button in the rail.
+- Sound is switched on only with a button; there is a volume control, and the choice is remembered.
+- **P9-02** — wave report and brief update after each phase (recalculating timelines, remapping, new founder decisions).
 
 ---
 
-## 13. Публикация
+## 13. Publication
 
-| Канал | Что | Когда |
+| Channel | What | When |
 |---|---|---|
-| ChatGPT Sites | Текущая PUBLIC-версия 20 — замораживается как есть | Не трогаем |
-| Vercel | Production из `main` на `vibe-coding-guidebook-ivory.vercel.app` (P1-16, ADR-0002): каждый merge — production-деплой; preview на каждый PR под Deployment Protection | С фазы 1; редизайн — без флага (раздел 14) |
-| GitHub | Исходники, Agent Pack, harness-шаблон | Постоянно |
+| ChatGPT Sites | The current PUBLIC version 20 — frozen as is | Not touched |
+| Vercel | Production from `main` on `vibe-coding-guidebook-ivory.vercel.app` (P1-16, ADR-0002): every merge is a production deploy; a preview on every PR behind Deployment Protection | From phase 1; the redesign without a flag (section 14) |
+| GitHub | Sources, Agent Pack, harness template | Always |
 
-Свой домен или alias, перевод аудитории со старого адреса, изменения на ChatGPT Sites и ослабление Deployment Protection — founder gate.
-
----
-
-## 14. Процесс разработки (dogfooding)
-
-- **Трекер:** GitHub Issues + Projects в репозитории (MAY Linear, если founder решит). Каждый тикет — по шаблону главы 06 (YAML-блок в описании issue).
-- **Ветки:** `p1-04-content-pipeline` (фаза-номер-слаг).
-- **PR:** шаблон с `Implements #NN`, Risk, Docs Impact, Evidence, Limitations.
-- **Review:** отдельная чистая сессия (subagent или отдельный запуск) по reviewer-промпту главы 14.4; verdict привязан к HEAD SHA. Для упрощённых учебных текстов — дополнительно агент-редактор (раздел 9.5).
-- **Без флага `NEXT_UI`** (ADR-0003): новый UI и новые тексты выходят сразу, без переключателя и параллельной версии сайта.
-- **Merge** (делегирование founder 22.10.2026 и 26.10.2026): каждый PR мержится после independent review READY на актуальном HEAD и зелёного CI на этом HEAD — оба check, `validate` и `e2e`; для текстов — плюс READY агента-редактора. Мержит оркестратор — сессия, которая ведёт волну или поток тикетов по поручению координатора проекта (делегирование founder 22.10.2026: «мерджи всё сам после независимых ревью»; 26.10.2026: без флага, скорость в приоритете); автор тикета, helper-субагенты и reviewer не мержат — автор останавливается перед merge и передаёт пакет (AGENTS.md). Merge — squash с проверкой ожидаемого HEAD SHA; затем post-merge sync.
-- **Production:** merge в `main` сразу создаёт production-деплой; после merge MUST проверить, что деплой READY на SHA merge-коммита. **Откат — revert PR** по тому же процессу; ручные promote и rollback в Vercel — только решением founder (ADR-0002).
-- **Что видит founder:** строка в треде после каждого merge, пятничная «сборка недели», 4 контрольные точки (раздел 6.3). Пакет PR до merge (по желанию founder): Vercel preview, для UI — скриншоты 320 / 360 / 768 / 1024 / 1440 px в обеих темах и 3–5 пунктов «что потрогать»; присылается только после зелёного CI и review READY. Для телефона — временная share-ссылка Vercel, Deployment Protection не ослабляется. Локальный запуск у founder — только по его просьбе, через Remote Control.
-- **Gate founder (остаётся):** свой домен или alias; ChatGPT Sites и `.openai/hosting.json`; ослабление Deployment Protection, ручной promote/rollback; новые runtime-зависимости вне брифа; спорный смысл учебного текста (раздел 9.5); треки и лицензии музыки (P9-01); бэкенд с аккаунтами (раздел 10.7).
-- **Параллельность:** первые 2 недели — 3 потока, с 3-й недели — до 5; коллизии и merge order — по главе 13.
-- **GitHub auto-merge** (merge без оркестратора) не включён, пока founder не утвердит ADR (раздел 9.6.5).
-- **Отчёт после каждой волны:** что сделано, PR, evidence, что заблокировано, следующие тикеты (P9-02).
+A custom domain or alias, moving the audience from the old address, changes on ChatGPT Sites and weakening Deployment Protection are a founder gate.
 
 ---
 
-## 15. Риски проекта
+## 14. Development process (dogfooding)
 
-| Риск | Влияние | Митигация |
+- **Tracker:** GitHub Issues + Projects in the repository (MAY be Linear, if the founder decides). Every ticket follows the chapter 06 template (a YAML block in the issue description).
+- **Branches:** `p1-04-content-pipeline` (phase-number-slug).
+- **PR:** a template with `Implements #NN`, Risk, Docs Impact, Evidence, Limitations.
+- **Review:** a separate clean session (a subagent or a separate run) using the reviewer prompt from chapter 14.4; the verdict is bound to the HEAD SHA. For simplified learning texts, additionally the editor agent (section 9.5).
+- **No `NEXT_UI` flag** (ADR-0003): the new UI and new texts ship straight away, without a switch or a parallel version of the site.
+- **Merge** (founder delegation of 2026-10-22 and 2026-10-26): every PR is merged after independent review READY on the current HEAD and green CI on that HEAD — both checks, `validate` and `e2e`; for texts, also an editor agent READY. The merge is done by the orchestrator — the session that runs a wave or stream of tickets on behalf of the project coordinator (founder delegation of 2026-10-22: "merge everything yourself after independent reviews"; 2026-10-26: no flag, speed is the priority); the ticket author, helper subagents and the reviewer do not merge — the author stops before merge and hands over the package (AGENTS.md). Merge is a squash with a check of the expected HEAD SHA; then post-merge sync.
+- **Production:** a merge to `main` immediately creates a production deploy; after the merge you MUST check that the deploy is READY on the merge commit's SHA. **Rollback is a revert PR** through the same process; manual promote and rollback in Vercel only by founder decision (ADR-0002).
+- **What the founder sees:** a line in the thread after every merge, a Friday "build of the week", 4 checkpoints (section 6.3). A PR package before merge (if the founder wants it): the Vercel preview, for UI — screenshots at 320 / 360 / 768 / 1024 / 1440 px in both themes and 3–5 "things to try"; sent only after green CI and review READY. For a phone, a temporary Vercel share link; Deployment Protection is not weakened. A local run on the founder's machine only at their request, via Remote Control.
+- **Founder gate (remains):** a custom domain or alias; ChatGPT Sites and `.openai/hosting.json`; weakening Deployment Protection, manual promote/rollback; new runtime dependencies outside the brief; disputed meaning of learning content (section 9.5); music tracks and licenses (P9-01); a backend with accounts (section 10.7).
+- **Parallelism:** the first 2 weeks, 3 streams; from week 3, up to 5; collisions and merge order per chapter 13.
+- **GitHub auto-merge** (merge without the orchestrator) is not enabled until the founder approves an ADR (section 9.6.5).
+- **Report after each wave:** what was done, PRs, evidence, what is blocked, the next tickets (P9-02).
+
+---
+
+## 15. Project risks
+
+| Risk | Impact | Mitigation |
 |---|---|---|
-| Vinext в beta (1.0.0-beta.5) | Поломки при обновлениях, сложность переноса хостинга | Пины версий, обновления отдельными тикетами, ADR хостинга (P1-06) |
-| Mermaid-рендер требует Chrome | Новые схемы не собираются в CI | Переиспользование SVG по hash; отдельный CI-job с Chrome |
-| Два живых адреса (ChatGPT Sites и новый) | Расхождение версий у читателей | Старый адрес заморожен; после запуска нового — решение founder о переадресации |
-| Права на скриншоты сторонних продуктов | Юридический | Хранить только официальные кадры со ссылкой на источник, при сомнении — ссылка без копии |
-| Устаревание фактов в обзорах инструментов | Доверие | Даты фактов, бейдж устаревания, плановое обновление (9.6.8) |
-| Геймификация отвлекает от смысла | Качество обучения | Награда за решения, режим «без геймификации», этика 10.8 |
-| Static export ломает SPA-переходы (RSC) на Vercel | Паритет | Spike P1-06 с evidence; запасной вариант B — серверный рендер |
-| Расползание scope | Сроки | Порядок по графу зависимостей тикетов (раздел 6.2), всё новое — отдельные тикеты |
-| Упрощённый текст незаметно меняет смысл правил, а founder его не вычитывает | Высокое | Агент-редактор сверяет с оригиналом: определения, MUST-правила, термины, ссылки; спорное — отдельной строкой founder (9.5) |
-| Без флага сайт какое-то время наполовину старый, наполовину новый | Низкое | Сайтом пока не пользуются; сначала новая оболочка, старые главы открываются в ней одним табом; каждый merge проходит `validate` и `e2e` (5.5) |
-| «Перенять полностью» превращается в копию: иллюстрации, бренд и шрифт Google Sans принадлежат Google | Среднее | Берём механику и структуру, визуалы и формы рисуем свои (5.1) |
-| Мега-меню по наведению недоступно с телефона и клавиатуры | Среднее | Открытие по фокусу, тапу и стрелке, закрытие по Esc, e2e-тесты (7.2) |
-| Анимации тормозят загрузку и укачивают | Среднее | Reduced motion (кнопка паузы снята, P3-09), спокойное движение без постоянных анимаций, бюджет LCP < 2.5 s (8.5) |
-| Дробление ломает старые ссылки и якоря | Среднее | 308-редиректы и тест всех старых адресов (P2-05, P5-03, P5-05) |
-| Упрощение искажает смысл правил | Среднее | Полный текст остаётся в «Как устроено» и «Как применять», review и редактор сверяют смысл |
-| Музыка раздражает или включается сама | Низкое | Только по кнопке, громкость, выбор запоминается (раздел 12) |
+| Vinext is in beta (1.0.0-beta.5) | Breakage on updates, harder hosting migration | Pinned versions, updates as separate tickets, hosting ADR (P1-06) |
+| Mermaid rendering requires Chrome | New diagrams do not build in CI | Reuse SVGs by hash; a separate CI job with Chrome |
+| Two live addresses (ChatGPT Sites and the new one) | Readers see diverging versions | The old address is frozen; after the new one launches, a founder decision on redirection |
+| Rights to screenshots of third-party products | Legal | Keep only official frames with a link to the source; when in doubt, a link without a copy |
+| Facts in the tool overviews go stale | Trust | Fact dates, a staleness badge, scheduled updates (9.6.8) |
+| Gamification distracts from the meaning | Learning quality | Rewards for decisions, a "no gamification" mode, ethics 10.8 |
+| Static export breaks SPA navigation (RSC) on Vercel | Parity | Spike P1-06 with evidence; fallback option B — server rendering |
+| Scope creep | Timelines | Order by the ticket dependency graph (section 6.2), everything new as separate tickets |
+| Simplified text quietly changes the meaning of rules, and the founder does not proofread it | High | The editor agent checks against the original: definitions, MUST rules, terms, links; disputed points as a separate line to the founder (9.5) |
+| Without a flag the site is for a while half old, half new | Low | The site is not in use yet; the new shell comes first, old chapters open inside it as a single tab; every merge passes `validate` and `e2e` (5.5) |
+| "Adopt it as a whole" turns into a copy: the illustrations, brand and Google Sans font belong to Google | Medium | We take the mechanics and structure and draw our own visuals and shapes (5.1) |
+| The hover mega menu is inaccessible from a phone and the keyboard | Medium | Opening on focus, tap and arrow key, closing on Esc, e2e tests (7.2) |
+| Animations slow down loading and cause motion sickness | Medium | Reduced motion (the pause button was removed, P3-09), calm motion without constant animations, an LCP budget < 2.5 s (8.5) |
+| Splitting breaks old links and anchors | Medium | 308 redirects and a test of all old addresses (P2-05, P5-03, P5-05) |
+| Simplification distorts the meaning of rules | Medium | The full text stays in "How it works" and "How to apply", review and the editor check the meaning |
+| Music is annoying or turns on by itself | Low | Only with a button, volume control, the choice is remembered (section 12) |
 
 ---
 
-## 16. Решения, которые нужны от founder
+## 16. Decisions needed from the founder
 
-Приняты 26.10.2026 (план RD-01, ADR-0003): концепт «Чертёж» в цветах бренда UIX PRO и шрифты (01); новый порядок фаз и замена лендинга главной M3 (02); без флага нового UI (03); ребрендинг вместе с новой главной, P4-05 (04); 9 разделов rail (05); иконки Tabler (06); музыка в конце, P9 (07); вычитка текстов агентом-редактором (08).
+Made on 2026-10-26 (plan RD-01, ADR-0003): the "Blueprint" concept in UIX PRO brand colors and the fonts (01); the new phase order and replacing the landing page with the M3 home page (02); no flag for the new UI (03); rebranding together with the new home page, P4-05 (04); 9 rail sections (05); Tabler icons (06); music at the end, P9 (07); text proofreading by the editor agent (08).
 
-Открыто:
+Open:
 
-1. ~~Имя~~ — решено: Mastering Agentic Engineering, ребрендинг — P4-05. Открыто: домен (раздел 2.3).
-2. Хостинг — Vercel (решено 22.10.2026), production из `main` (23.10.2026, P1-16). Открыто: свой домен и что делать со старым адресом на ChatGPT Sites.
-3. ~~Визуальное направление~~ — решено 26.10.2026 (ADR-0003).
-4. Трекер: GitHub Issues (по умолчанию) или Linear.
-5. Утверждение политики GitHub auto-merge без оркестратора (ADR) — позже (раздел 9.6.5).
-6. Публичный или приватный репозиторий и лицензия (оригинал подписан «Open Source» — нужна конкретная лицензия, например MIT для кода и CC BY 4.0 для текста).
-7. Треки и лицензии для музыки (P9-01).
+1. ~~Name~~ — decided: Mastering Agentic Engineering, rebranding in P4-05. Open: the domain (section 2.3).
+2. Hosting — Vercel (decided 2026-10-22), production from `main` (2026-10-23, P1-16). Open: a custom domain and what to do with the old address on ChatGPT Sites.
+3. ~~Visual direction~~ — decided on 2026-10-26 (ADR-0003).
+4. Tracker: GitHub Issues (default) or Linear.
+5. Approval of the GitHub auto-merge policy without the orchestrator (ADR) — later (section 9.6.5).
+6. Public or private repository and license (the original is labelled "Open Source" — a specific license is needed, for example MIT for code and CC BY 4.0 for text).
+7. Tracks and licenses for the music (P9-01).

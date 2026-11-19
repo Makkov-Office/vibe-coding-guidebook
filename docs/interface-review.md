@@ -6,7 +6,7 @@ Reviewed: initial reader, grouped navigation, local outline, search dialog and h
 
 - **Accessibility:** native landmarks/dialogs/controls, labels, keyboard focus, touch targets, reduced motion, contrast, no-JS; automated axe and keyboard exercised. Actual screen-reader speech not verified.
 - **Layout:** 248px sidebar, 800px reading column, conditional local outline; narrow screens collapse navigation, code/tables scroll locally. No document overflow in specified widths.
-- **Writing:** Russian instructional copy, actionable errors, explicitly simulated evidence; historical and future claims visibly bounded.
+- **Writing:** instructional copy in the site's content language, actionable errors, explicitly simulated evidence; historical and future claims visibly bounded.
 - **Typography:** self-hosted Cyrillic Manrope/JetBrains Mono; 18px desktop / 16px mobile, 1.7 line height, compact chrome separated from reading type.
 - **Colors:** Linear black/graphite/violet, restrained borders and term underlines; measured contrast report plus rendered axe scan.
 - **UI craft:** consistent 8–12px radii, selected states, copy fallback, explicit reading resume, native drawer/dialog behavior and term arrival feedback.

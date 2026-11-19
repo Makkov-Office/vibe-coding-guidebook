@@ -47,7 +47,7 @@ test('hover opens the menu after a short delay and leaving closes it',async({pag
  await item(page,'agents').click();await expect(page).toHaveURL(/\/agents$/);await expect(item(page,'agents')).toHaveAttribute('aria-current','true');
 });
 
-// Hover «Обводка» (P3-09): search, sections and the theme react alike — the contour line is drawn,
+// Hover "Outline" (P3-09): search, sections and the theme react alike — the contour line is drawn,
 // the background stays; the mega-menu is flat; keyboard focus has its own ring.
 test('hover draws the contour on every rail control without a background, the mega-menu has no shadow',async({page})=>{
  await page.setViewportSize({width:1440,height:900});await ready(page,'/flow/08-preflight');
@@ -137,7 +137,7 @@ test('progress in the menu follows chapter completion',async({page})=>{
  await expect(menu(page,'flow').locator('.mega-progress')).toContainText('2 из 6 пройдено');
  await expect(menu(page,'flow').locator('.mega-progress a')).toHaveAttribute('href','/flow/08-preflight');
  await expect(menu(page,'flow').locator('.nav-ring-done')).toHaveCount(2);
- // The reference group (cheat sheet 22) counts toward «Практика».
+ // The reference group (cheat sheet 22) counts toward "Practice".
  await item(page,'practice').hover();await expect(menu(page,'practice').locator('.mega-progress')).toContainText('1 из 3 пройдено');
 });
 
@@ -160,7 +160,7 @@ test('axe: no serious or critical violations with the menu closed and open',asyn
   await ready(page,path);
   for(const open of [false,true]){
    if(open){await item(page,'flow').focus();await expect(menu(page,'flow')).toBeVisible();}
-   // Contrast is measured on the settled UI: the menu fades in («Появление»), mid-fade colours are not final.
+   // Contrast is measured on the settled UI: the menu fades in ("Appear"), mid-fade colours are not final.
    await page.evaluate(()=>Promise.all(document.getAnimations().filter(a=>Number.isFinite(Number(a.effect?.getComputedTiming().endTime))).map(a=>a.finished.catch(()=>undefined))));
    await page.addScriptTag({path:'node_modules/axe-core/axe.min.js'});
    const violations=await page.evaluate(async()=>{const result=await(window as unknown as {axe:{run:(context:unknown,options:object)=>Promise<{violations:{id:string;impact:string}[]}>}}).axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}});return result.violations.filter(v=>v.impact==='serious'||v.impact==='critical').map(v=>v.id);});

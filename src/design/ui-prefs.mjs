@@ -63,7 +63,7 @@ export function subscribePrefs(listener){
 }
 
 /**
- * The next theme of the cycle. After «Как в системе» comes the opposite of the system theme, so
+ * The next theme of the cycle. After "System" comes the opposite of the system theme, so
  * the first click always changes the page. @param {UiPrefs['theme']} theme @param {boolean} systemDark
  * @returns {UiPrefs['theme']}
  */

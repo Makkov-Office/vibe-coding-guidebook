@@ -1,70 +1,70 @@
-> **Заменён (22.10.2026).** Этот промпт больше не используется. Актуальный стартовый промпт — [`docs/ORCHESTRATOR_PROMPT.md`](ORCHESTRATOR_PROMPT.md). Файл сохранён для истории.
+> **Replaced (2026-10-22).** This prompt is no longer used. The current starting prompt is [`docs/ORCHESTRATOR_PROMPT.md`](ORCHESTRATOR_PROMPT.md). The file is kept for the record.
 
-# Стартовый промпт для Claude Code
+# Starting prompt for Claude Code
 
-Вставь блок ниже первым сообщением в новую сессию Claude Code (claude.ai/code → репозиторий `Makkov-Office/vibe-coding-guidebook`). Бриф лежит в `docs/PLATFORM_BRIEF.md`, правила — в `AGENTS.md` и `CLAUDE.md`.
+Paste the block below as the first message in a new Claude Code session (claude.ai/code → repository `Makkov-Office/vibe-coding-guidebook`). The brief is in `docs/PLATFORM_BRIEF.md`, the rules are in `AGENTS.md` and `CLAUDE.md`.
 
 ---
 
 ```text
-Продолжаем существующий проект ULTIMATE Vibe-coder guidebook (новое название
-продукта — Mastering Agentic Engineering) в репозитории Makkov-Office/vibe-coding-guidebook.
-Проект собран в Codex и опубликован на ChatGPT Sites:
+We are continuing the existing project ULTIMATE Vibe-coder guidebook (the product's new
+name is Mastering Agentic Engineering) in the repository Makkov-Office/vibe-coding-guidebook.
+The project was built in Codex and published on ChatGPT Sites:
 https://agentic-engineering-handbook-makkov.makkov.chatgpt.site/
-Теперь разработка идёт в Claude Code. Ничего не создавай заново: код и контент
-в репозитории — это оригинал 1:1 (PUBLIC-версия 20).
+Development now continues in Claude Code. Do not create anything from scratch: the code and content
+in the repository are the original 1:1 (PUBLIC version 20).
 
-Я — founder (Makkov). Решения о merge, production-деплое, хостинге, имени/домене,
-изменении учебного текста и UI, новых зависимостях вне брифа принимаю я.
+I am the founder (Makkov). I make the decisions on merge, production deploy, hosting, name/domain,
+changes to learning content and UI, and new dependencies outside the brief.
 
-## Канонические источники (в этом порядке)
-1. docs/PLATFORM_BRIEF.md — Product HQ: цели, фазы, тикеты, acceptance.
-2. AGENTS.md и CLAUDE.md — как работать в репозитории.
-3. docs/cloud-handoff.md и README.md — правила и устройство оригинала.
-   Действуют, если бриф их явно не меняет.
-4. Код и content/handbook.md на конкретном SHA.
-Расхождение источников → остановись и пришли SPEC CONFLICT (глава 10.4).
+## Canonical sources (in this order)
+1. docs/PLATFORM_BRIEF.md — Product HQ: goals, phases, tickets, acceptance.
+2. AGENTS.md and CLAUDE.md — how to work in the repository.
+3. docs/cloud-handoff.md and README.md — rules and structure of the original.
+   They apply unless the brief explicitly changes them.
+4. The code and content/handbook.md at a specific SHA.
+Sources disagree → stop and send a SPEC CONFLICT (chapter 10.4).
 
-## Как мы работаем (проект живёт по правилам самого гайда)
-- 1 тикет = 1 ветка = 1 сессия автора = 1 PR. В main не пишем.
-- Тикеты — GitHub Issues по шаблону .github/ISSUE_TEMPLATE/task.md.
-- Перед правками — preflight-отчёт (глава 08.2). FAIL / BLOCKED / INCOMPLETE ≠ PASS.
-- Evidence привязано к SHA. Старый PASS не переносится на новый HEAD.
-- После реализации — независимое review отдельным субагентом без авторского
-  контекста, по reviewer-промпту главы 14.4.
-- Остановись перед merge и пришли пакет решения (глава 15.1).
-- Учебный текст — только в content/handbook.md, генерация — npm run content.
-- Не трогай ChatGPT Sites и .openai/hosting.json.
+## How we work (the project lives by the rules of the guide itself)
+- 1 ticket = 1 branch = 1 author session = 1 PR. We do not write to main.
+- Tickets are GitHub Issues using the template .github/ISSUE_TEMPLATE/task.md.
+- Before any edits — a preflight report (chapter 08.2). FAIL / BLOCKED / INCOMPLETE ≠ PASS.
+- Evidence is bound to a SHA. An old PASS does not carry over to a new HEAD.
+- After implementation — an independent review by a separate subagent without the author's
+  context, using the reviewer prompt from chapter 14.4.
+- Stop before merge and send the decision package (chapter 15.1).
+- Learning content only in content/handbook.md, generation via npm run content.
+- Do not touch ChatGPT Sites or .openai/hosting.json.
 
-## Задача на эту сессию — волна 1 фазы 1
-1. Прочитай PLATFORM_BRIEF.md (особенно раздел 4), AGENTS.md, cloud-handoff.md.
-   Вопросы задавай, только если без ответа нельзя начать; по открытым решениям
-   раздела 13 бери дефолты из брифа.
-2. Создай GitHub Issues для P1-01 … P1-08 (раздел 4.4) с зависимостями и risk.
-   Не получилось — заведи docs/backlog.md в том же формате и скажи об этом.
-3. P1-01 (harness): проверь, что guard-hook и deny-правила реально блокируют
-   push в main, reset --hard, force push и clean; приложи evidence.
-4. P1-02: синхронизируй package-lock.json так, чтобы npm ci проходил с нуля
-   (сейчас падает: Missing playwright-core@1.57.0). Затем npm test, typecheck,
-   lint, build — evidence с SHA.
-5. P1-03 и P1-04: npm run doctor / npm run validate и GitHub Actions CI.
-6. Предложи план волны 2 (P1-05 … P1-08: что параллельно, collision class,
-   merge order по главе 13) и остановись.
+## Task for this session — phase 1, wave 1
+1. Read PLATFORM_BRIEF.md (especially section 4), AGENTS.md, cloud-handoff.md.
+   Ask questions only if you cannot start without an answer; for the open decisions
+   in section 13 take the defaults from the brief.
+2. Create GitHub Issues for P1-01 … P1-08 (section 4.4) with dependencies and risk.
+   If that fails, create docs/backlog.md in the same format and say so.
+3. P1-01 (harness): check that the guard-hook and the deny rules really block
+   push to main, reset --hard, force push and clean; attach evidence.
+4. P1-02: sync package-lock.json so that npm ci passes from scratch
+   (it currently fails: Missing playwright-core@1.57.0). Then npm test, typecheck,
+   lint, build — evidence with SHA.
+5. P1-03 and P1-04: npm run doctor / npm run validate and GitHub Actions CI.
+6. Propose the wave 2 plan (P1-05 … P1-08: what runs in parallel, collision class,
+   merge order per chapter 13) and stop.
 
-## Как отчитываться
-Один отчёт в конце: сделано (issues, ветки, PR, SHA); evidence (команды и
-результаты); BLOCKED / INCOMPLETE с причинами; решения, нужные от меня
-(конкретные действия); следующий шаг. По-русски, коротко.
+## How to report
+One report at the end: done (issues, branches, PRs, SHA); evidence (commands and
+results); BLOCKED / INCOMPLETE with reasons; decisions needed from me
+(concrete actions); next step. Short, in the founder's language.
 ```
 
 ---
 
-## Короткие команды на потом
+## Short commands for later
 
-| Что нужно | Что написать |
+| What you need | What to write |
 |---|---|
-| Следующая волна | `Бери следующую волну по брифу. Preflight, авторы по тикетам, независимое review, остановись до merge.` |
-| Один тикет | `Бери P1-06.` |
-| Review | `Независимое review PR #NN по главе 14.4. Код не меняй.` |
-| После merge | `PR #NN смержен. Post-merge sync по главе 16: main SHA, результат, зависимые PR для refresh.` |
-| Деплой | `Проверь preview-деплой Vercel для PR #NN: все маршруты, поиск, тултипы, XP. Отчёт со ссылкой.` |
+| Next wave | `Take the next wave from the brief. Preflight, authors per ticket, independent review, stop before merge.` |
+| One ticket | `Take P1-06.` |
+| Review | `Independent review of PR #NN per chapter 14.4. Do not change the code.` |
+| After merge | `PR #NN is merged. Post-merge sync per chapter 16: main SHA, result, dependent PRs to refresh.` |
+| Deploy | `Check the Vercel preview deploy for PR #NN: all routes, search, tooltips, XP. Report with a link.` |

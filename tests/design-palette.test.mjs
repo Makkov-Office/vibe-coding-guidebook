@@ -1,4 +1,4 @@
-// «Чертёж» v2 palette (P2-02): every pair passes WCAG thresholds, the report
+// "Blueprint" v2 palette (P2-02): every pair passes WCAG thresholds, the report
 // and the spec table are fresh, and the values match the approved concept.
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -84,7 +84,7 @@ test('palette keeps the approved brand and concept values', () => {
     ['#FFFFFF', '#FDDCD4', '#FBB9A9', '#F9967D', '#F87352', '#AA6858', '#84635A', '#5D5D5D']);
   assert.deepEqual([palette.brand['module-lilac'], palette.brand['module-mint'], palette.brand['module-peach']],
     ['#E4CAFF', '#CAFFDA', '#FFE9CA']);
-  // P2-07 (#108, решение founder 29.10.2026): плоский абрикосовый акцент, холодные нейтрали, новые цвета-смыслы.
+  // P2-07 (#108, founder decision 2026-10-29): flat apricot accent, cool neutrals, new meaning colours.
   const { light, dark } = palette.themes;
   assert.deepEqual([light.background, light['on-surface'], light['on-surface-variant'], light.primary],
     ['#F6F7F9', '#111318', '#545A64', '#9E4A22']);

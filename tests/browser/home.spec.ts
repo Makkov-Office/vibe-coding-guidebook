@@ -1,6 +1,6 @@
 import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
-// P4-01: Главная на «/», вводная глава 00 на /start/00-how-to-read. Вид P4-06 (RD-01): hero из двух карточек, карточки с иллюстрацией.
+// P4-01: the home page at "/", introductory chapter 00 at /start/00-how-to-read. Look from P4-06 (RD-01): a hero of two cards, cards with an illustration.
 const home=JSON.parse(fs.readFileSync('src/content/generated.json','utf8')).home;
 async function ready(page:Page,path:string){await page.goto(path);await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();}
 async function settled(page:Page){await page.evaluate(()=>Promise.all(document.getAnimations().filter(a=>Number.isFinite(Number(a.effect?.getComputedTiming().endTime))).map(a=>a.finished.catch(()=>undefined))));}
@@ -15,8 +15,8 @@ test('home: hero, task path, 8 sections, next steps and footer; every link answe
  await expect(actions).toHaveText(['Начать изучение','Определить уровень']);
  await expect(actions.first()).toHaveAttribute('href','/start/00-how-to-read');
  await expect(page.locator('.home-eyebrow')).toHaveText(home.eyebrow);
- // Справа одна спокойная схема (P4-07): путь задачи — четыре карточки (человек, агент, проверка, решение)
- // с подписями шагов из контента, один акцент на последнем шаге, без бегущей точки.
+ // On the right, one calm diagram (P4-07): the task path as four cards (human, agent, check, decision)
+ // with step labels from the content, one accent on the last step, no running dot.
  await expect(page.getByRole('img',{name:home.path.title})).toBeVisible();
  await expect(page.locator('.home-path .hh-card')).toHaveCount(4);
  for(const step of home.path.steps)await expect(page.locator('.home-path svg')).toContainText(step.label);
@@ -26,23 +26,23 @@ test('home: hero, task path, 8 sections, next steps and footer; every link answe
  await expect(page.locator('.home-cards h3')).toHaveText(['Начать','Основы','Процесс','Контроль','Надёжность','Практика','Инструменты','Agent Pack']);
  await expect(page.locator('.home-cards a.home-card')).toHaveCount(8);
  await expect(page.locator('.home-cards a.home-card').last()).toHaveAttribute('href','/agents');
- // У каждой карточки иллюстрация сверху; мета-строка — из данных сборки.
+ // Each card has an illustration on top; the meta line comes from build data.
  await expect(page.locator('.home-cards .home-card-vis svg')).toHaveCount(8);
  await expect(page.locator('.home-card[data-section=flow] .home-card-meta')).toHaveText('главы 06–11');
  await expect(page.locator('.home-card[data-section=control] .home-card-vis')).toHaveClass(/home-card-vis--human/);
  await expect(page.locator('.home-next h3')).toHaveText(home.next.items.map((item:{label:string})=>item.label));
  await expect(page.getByRole('navigation',{name:home.footer.heading}).getByRole('heading')).toHaveText(['Учиться','Справочник','Для агентов']);
- // Новичок не видит «Продолжить».
+ // A newcomer does not see "Continue".
  await expect(page.locator('.home-resume')).toHaveCount(0);
  const hrefs=[...new Set(await page.locator('main a[href^="/"]').evaluateAll(links=>links.map(link=>link.getAttribute('href')!)))];
  expect(hrefs.length).toBeGreaterThanOrEqual(13);
  for(const href of hrefs)expect((await request.get(href)).status(),href).toBe(200);
- // Карточка раздела ведёт на его первую страницу без перезагрузки.
+ // A section card leads to its first page without a reload.
  await page.locator('.home-cards a.home-card').first().click();await expect(page).toHaveURL(/\/start\/00-how-to-read$/);await expect(page.locator('main .intro-hero')).toBeVisible();
  expect(errors).toEqual([]);
 });
 
-test('home: «Продолжить» for a returning reader, introduction at its new address and old /#ch-00 links',async({page})=>{
+test('home: "Continue" for a returning reader, introduction at its new address and old /#ch-00 links',async({page})=>{
  await ready(page,'/flow/08-preflight/apply');
  await page.evaluate(()=>scrollTo(0,600));await page.waitForTimeout(900);await page.evaluate(()=>scrollTo(0,640));
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('mae-progress')??'null')?.reading?.tab)).toBe('apply');
@@ -53,9 +53,9 @@ test('home: «Продолжить» for a returning reader, introduction at its
  await expect(resume.locator('.home-resume-place')).toHaveText('Preflight: начать правильно');
  await expect(resume.locator('.home-resume-tab')).toHaveText('Как применять · таб 3 из 4');
  await expect(resume.locator('.resume-button')).toHaveAttribute('href','/flow/08-preflight/apply?resume=1');
- // Рядом тренажёр этой же главы 08 (P7-03).
+ // Next to it, the drill of the same chapter 08 (P7-03).
  await expect(resume.locator('.home-drill')).toHaveAttribute('href','/flow/08-preflight/check');
- // axe для вернувшегося читателя: «Продолжить» и карточка тренажёра в обеих темах.
+ // axe for a returning reader: "Continue" and the drill card in both themes.
  for(const theme of ['light','dark']){
   await page.evaluate(t=>document.documentElement.setAttribute('data-theme',t),theme);
   await settled(page);await page.addScriptTag({path:'node_modules/axe-core/axe.min.js'});
@@ -63,23 +63,23 @@ test('home: «Продолжить» for a returning reader, introduction at its
   expect(violations,`resume ${theme}`).toEqual([]);
  }
  await page.evaluate(()=>document.documentElement.removeAttribute('data-theme'));
- // Главная не записывает позицию чтения.
+ // The home page does not record a reading position.
  await page.evaluate(()=>scrollTo(0,400));await page.waitForTimeout(900);
  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('mae-progress')??'null')?.reading?.page)).toBe('ch-08');
- // У главы без тренажёра карточки тренажёра нет, «Продолжить» во всю ширину.
+ // A chapter without a drill has no drill card, and "Continue" spans the full width.
  await page.evaluate(()=>localStorage.setItem('mae-progress',JSON.stringify({version:2,completed:[],exercises:[],practice:{},drills:{},reading:{page:'ch-01',y:0}})));
  await ready(page,'/');
  await expect(resume.locator('.home-resume-place')).toHaveText('От vibe coding к инженерной системе');
  await expect(resume.locator('.home-drill')).toHaveCount(0);
  await expect(resume.locator('.home-resume-grid')).toHaveClass(/home-resume-grid--single/);
- // Вводная глава: учебный профиль и прежний текст.
+ // Introductory chapter: the learning profile and the previous text.
  await ready(page,'/start/00-how-to-read');
  await expect(page.locator('main .intro-hero')).toBeVisible();await expect(page.locator('.learning-profile-home')).toBeVisible();
  await expect(page.locator('.rail-entry[data-section=start] .rail-item')).toHaveAttribute('aria-current',/page|true/);
- // Из главы 01 «Предыдущий раздел» ведёт на вводную главу, а не на Главную.
+ // From chapter 01, "Previous section" leads to the introductory chapter, not the home page.
  await ready(page,'/chapters/01');
  await expect(page.locator('.pagination-previous')).toHaveAttribute('href','/start/00-how-to-read');
- // Старая ссылка /#ch-00-… приводит на новый адрес с якорем.
+ // An old /#ch-00-… link leads to the new address with the anchor.
  await page.goto('/#ch-00-b1002');
  await expect(page).toHaveURL(/\/start\/00-how-to-read#ch-00-b1002$/);
  await expect(page.locator('#ch-00-b1002')).toBeAttached();
@@ -88,21 +88,21 @@ test('home: «Продолжить» for a returning reader, introduction at its
 test('home: widths, keyboard, reduced motion and axe',async({page})=>{
  for(const width of [320,360,768,1024,1440]){
   await page.setViewportSize({width,height:900});await ready(page,'/');
-  // Шаги пути доступны скринридеру и тогда, когда узко и схема скрыта.
+  // The path steps are available to screen readers even when narrow and the diagram is hidden.
   expect(await page.locator('#home-path-steps').evaluate(e=>e.checkVisibility()&&e.textContent!.includes('Deploy')),`${width}: path steps`).toBe(true);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth),`${width}: no page scroll`).toBe(true);
   const small=await page.evaluate(()=>[...document.querySelectorAll('main a, main button')].filter(e=>{const r=e.getBoundingClientRect();return r.width&&(r.height<44||r.width<44);}).map(e=>e.textContent));
   expect(small,`${width}: 44 px`).toEqual([]);
  }
- // Клавиатура: первая кнопка hero получает видимый фокус.
+ // Keyboard: the first hero button gets visible focus.
  await page.setViewportSize({width:1440,height:900});await ready(page,'/');
  const cta=page.locator('.home-actions a').first();await cta.focus();await expect(cta).toHaveCSS('outline-style','solid');
  const card=page.locator('a.home-card').first();await card.focus();await expect(card).toHaveCSS('outline-style','solid');
- // Фокус и наведение прорисовывают линии иллюстрации один раз; постоянной анимации на главной нет.
+ // Focus and hover draw the illustration lines once; there is no constant animation on the home page.
  await expect(card.locator('.hi-ln[pathLength]').first()).toHaveCSS('animation-name','home-draw');
  await page.locator('body').click({position:{x:1,y:1}});await settled(page);
  expect(await page.evaluate(()=>document.getAnimations().filter(a=>a.effect?.getComputedTiming().iterations===Infinity&&(a.effect as KeyframeEffect).target?.closest('main')).length)).toBe(0);
- // Reduced motion и data-motion="off": схема сразу в итоговом состоянии, точка стоит в конце пути.
+ // Reduced motion and data-motion="off": the diagram is in its final state at once, the dot sits at the end of the path.
  for(const mode of ['reduce','off']){
   if(mode==='reduce')await page.emulateMedia({reducedMotion:'reduce'});else{await page.emulateMedia({reducedMotion:'no-preference'});await page.evaluate(()=>document.documentElement.setAttribute('data-motion','off'));}
   await ready(page,'/');if(mode==='off')await page.evaluate(()=>document.documentElement.setAttribute('data-motion','off'));
@@ -123,7 +123,7 @@ test('home: widths, keyboard, reduced motion and axe',async({page})=>{
 });
 
 test('home: hero spans the workspace, everything below sits in the inner container',async({page})=>{
- // P3-08 (как M3): баннер шире внутреннего контейнера; блоки ниже hero и подвал Reader — в контейнере по центру.
+ // P3-08 (like M3): the banner is wider than the inner container; the blocks below the hero and the Reader footer are in the centred container.
  for(const width of [1440,2560,360]){
   await page.setViewportSize({width,height:900});await ready(page,'/');
   const hero=(await page.locator('.home-hero').boundingBox())!;

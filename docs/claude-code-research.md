@@ -1,239 +1,239 @@
-# Claude Code: исследовательская карта для обзора
+# Claude Code: research map for the overview
 
-Проверено 11 октября 2026. Только официальные документы, help center, объявления и репозиторий Anthropic. Это рабочие заметки для редактора, не отдельный публикуемый учебный источник. Формулировки ниже — пересказ; не копировать документацию большими фрагментами. У каждой страницы web-источника лимит пересказа 200 слов; при подготовке публичного материала распределять подробности между отдельными страницами, не раздувать один источник.
+Checked October 11, 2026. Only official documentation, the help center, announcements and the Anthropic repository. These are working notes for the editor, not a separately published learning source. The wording below is a paraphrase; do not copy the documentation in large fragments. Each web source page has a paraphrase limit of 200 words; when preparing public material, spread the details across separate pages rather than inflating one source.
 
-## 1. Проверка свежести
+## 1. Freshness check
 
-- Последний опубликованный GitHub release — **v2.1.296 от 9 октября 2026**: [release](https://github.com/anthropics/claude-code/releases/tag/v2.1.296).
-- [Полный CHANGELOG](https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md) также начинается с 2.1.296. В нём есть новые настройки subagent auto-compaction и многочисленные исправления permissions, MCP, Remote Control, gateway, Windows и UI. Это подтверждение актуальности версии, а не повод перечислять все bug fixes читателю.
-- [Help center release notes](https://support.claude.com/en/articles/12138966-release-notes) подтверждают Haiku 5.5 и ежемесячные API credits 7 октября; Sonnet 5.5 — 28 сентября.
-- [Каталог product announcements](https://claude.com/resources/product-announcements) содержит Mods 1 октября, Haiku 5.5 7 октября и выход Docs/Slides/Design из beta 8 октября. Weekly digest в docs отстаёт: последняя видимая неделя 37; не использовать его как единственное доказательство свежести.
+- The latest published GitHub release is **v2.1.296 of October 9, 2026**: [release](https://github.com/anthropics/claude-code/releases/tag/v2.1.296).
+- The [full CHANGELOG](https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md) also starts with 2.1.296. It has new subagent auto-compaction settings and numerous fixes to permissions, MCP, Remote Control, gateway, Windows and UI. This confirms the version is current; it is not a reason to list every bug fix to the reader.
+- The [Help center release notes](https://support.claude.com/en/articles/12138966-release-notes) confirm Haiku 5.5 and monthly API credits on October 7; Sonnet 5.5 on September 28.
+- The [product announcements catalog](https://claude.com/resources/product-announcements) has Mods on October 1, Haiku 5.5 on October 7 and Docs/Slides/Design leaving beta on October 8. The weekly digest in the docs lags behind: the latest visible week is 37; do not use it as the only proof of freshness.
 
-## 2. Что представляет собой продукт
+## 2. What the product is
 
-Источник: [Overview](https://code.claude.com/docs/en/overview), проверено 2026-10-11; статус: документированная основная возможность.
+Source: [Overview](https://code.claude.com/docs/en/overview), checked 2026-10-11; status: a documented core capability.
 
-Claude Code читает репозиторий, меняет несколько файлов, запускает команды и работает с инструментами разработки. Это агентный рабочий процесс с реальным checkout, diff и проверкой результата. Поверхности: CLI, VS Code, JetBrains, Desktop Code tab, web/cloud и mobile. Возможности и аутентификация различаются; нельзя обещать одинаковый набор на каждой поверхности. CLI/VS Code/JetBrains поддерживают также API и сторонние model providers. Desktop имеет visual diff, несколько сессий и cloud tasks. API не превращает всю cloud/mobile инфраструктуру в доступную автоматически.
+Claude Code reads the repository, changes several files, runs commands and works with development tools. It is an agentic workflow with a real checkout, diff and verification of the result. Surfaces: CLI, VS Code, JetBrains, Desktop Code tab, web/cloud and mobile. Capabilities and authentication differ; do not promise the same set on every surface. CLI/VS Code/JetBrains also support the API and third-party model providers. Desktop has a visual diff, several sessions and cloud tasks. The API does not automatically make all the cloud/mobile infrastructure available.
 
-## 3. Подписки и цены
+## 3. Subscriptions and prices
 
-Источник: [Pricing](https://claude.com/pricing), проверено 2026-10-11. USD, без налогов, цены могут измениться.
+Source: [Pricing](https://claude.com/pricing), checked 2026-10-11. USD, excluding taxes; prices may change.
 
-| План | Claude Code | Цена и существенная разница |
+| Plan | Claude Code | Price and essential difference |
 | --- | --- | --- |
-| Free | Не включён | $0; Claude chat/Artifacts не означают доступ к Code |
-| Pro | Включён | $20/месяц или $200/год; официальный экран округляет годовую цену до $17/месяц |
-| Max 5x | Включён | $100/месяц; 5x allowance Pro |
-| Max 20x | Включён | $200/месяц; 20x allowance Pro |
-| Team Standard | Включён | $25/seat monthly, $20/seat/month annual; Team 2–150 человек |
-| Team Premium | Включён | $125 monthly, $100 annual; 5x Standard |
-| Enterprise | Включён | $20/seat/month annual **плюс всё использование по API rates** |
+| Free | Not included | $0; Claude chat/Artifacts do not mean access to Code |
+| Pro | Included | $20/month or $200/year; the official screen rounds the annual price to $17/month |
+| Max 5x | Included | $100/month; 5x the Pro allowance |
+| Max 20x | Included | $200/month; 20x the Pro allowance |
+| Team Standard | Included | $25/seat monthly, $20/seat/month annual; Team of 2–150 people |
+| Team Premium | Included | $125 monthly, $100 annual; 5x Standard |
+| Enterprise | Included | $20/seat/month annual **plus all usage at API rates** |
 
-Лимит зависит от модели, контекста, сложности и инструментов; фиксированное число запросов не обещать. У paid есть пятичасовые окна и недельные ограничения, могут добавляться другие caps. Claude и Code используют общий allowance. API PAYG — отдельная схема оплаты, не подписка Pro/Max. Fable на Pro требует usage credits; Max и Team Premium имеют отдельные ограничения семейства.
+The limit depends on the model, context, complexity and tools; do not promise a fixed number of requests. Paid plans have five-hour windows and weekly limits; other caps may be added. Claude and Code share one allowance. API PAYG is a separate billing scheme, not a Pro/Max subscription. Fable on Pro requires usage credits; Max and Team Premium have separate limits for the family.
 
-## 4. Что изменилось в Team/Enterprise
+## 4. What changed in Team/Enterprise
 
-Источники: [Team/Enterprise Code access](https://support.claude.com/en/articles/11845131-use-claude-code-with-your-team-or-enterprise-plan), [Enterprise plan](https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan), проверено 2026-10-11.
+Sources: [Team/Enterprise Code access](https://support.claude.com/en/articles/11845131-use-claude-code-with-your-team-or-enterprise-plan), [Enterprise plan](https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan), checked 2026-10-11.
 
-На **каждом Team seat**, включая Standard, Code уже включён. Старое утверждение «только Premium» неверно. Новая Enterprise схема — один seat type, fee за доступ, usage отдельно; token allowance в seat fee не входит, администратор задаёт user/org spend limits. Legacy Enterprise Chat/Chat+Code или Standard/Premium ещё могут существовать до продления договора. На legacy проверять назначенный seat, не переносить новую модель на старый контракт. Точную доступность cloud и preview также проверять в настройках организации: часть docs всё ещё использует legacy названия seats.
+On **every Team seat**, including Standard, Code is already included. The old claim "Premium only" is wrong. The new Enterprise scheme is one seat type, a fee for access, usage separately; a token allowance is not part of the seat fee, the administrator sets user/org spend limits. Legacy Enterprise Chat/Chat+Code or Standard/Premium may still exist until the contract is renewed. On legacy, check the assigned seat; do not carry the new model over to an old contract. Also check the exact availability of cloud and preview in the organization settings: some docs still use the legacy seat names.
 
-## 5. API credits и extra usage — разные кошельки
+## 5. API credits and extra usage are different wallets
 
-Источник: [Monthly API credits for Max and Team](https://support.claude.com/en/articles/17154008-monthly-api-credits-for-max-and-team-plans), проверено 2026-10-11; rollout объявлен 7 октября.
+Source: [Monthly API credits for Max and Team](https://support.claude.com/en/articles/17154008-monthly-api-credits-for-max-and-team-plans), checked 2026-10-11; rollout announced October 7.
 
-Max 5x получает $100, Max 20x $200 API credits за billing cycle. Team: $20 Standard/$100 Premium per seat, единый pool максимум $500/month. Надо связать Console organization; offer постепенно появляется после семи дней eligible plan. Credits истекают, не переносятся.
+Max 5x gets $100 and Max 20x $200 of API credits per billing cycle. Team: $20 Standard/$100 Premium per seat, a single pool of at most $500/month. You need to link a Console organization; the offer gradually appears after seven days on an eligible plan. Credits expire and do not roll over.
 
-Они предназначены для собственного API/SDK-продукта и **не оплачивают interactive Claude Code или extra usage**. Самостоятельно запущенные `claude -p`/Agent SDK с API key связанной Console org покрываются; те же команды с Claude subscription login расходуют allowance. GitHub Action, IDE extension и Desktop runs классифицируются как Code usage и этим бонусом не покрываются. Не путать с отдельными платными usage credits для продолжения Code после лимита.
+They are meant for your own API/SDK product and **do not pay for interactive Claude Code or extra usage**. Self-launched `claude -p`/Agent SDK with an API key of the linked Console org are covered; the same commands with a Claude subscription login spend the allowance. GitHub Action, IDE extension and Desktop runs are classified as Code usage and are not covered by this bonus. Do not confuse them with the separate paid usage credits for continuing Code after the limit.
 
-Дополнительный источник оплаты: [Manage usage credits](https://support.claude.com/en/articles/12429409-manage-usage-credits-for-paid-claude-plans). Когда included session/weekly limit закончился, можно продолжать с usage credits по тарифам потребления; включать это осознанно со spend cap.
+An additional payment source: [Manage usage credits](https://support.claude.com/en/articles/12429409-manage-usage-credits-for-paid-claude-plans). When the included session/weekly limit runs out, you can continue with usage credits at consumption rates; enable this deliberately with a spend cap.
 
-## 6. Практический старт и проверка оплаты
+## 6. Practical start and checking billing
 
-Источник: [Pro/Max setup](https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-or-max-plan), проверено 2026-10-11.
+Source: [Pro/Max setup](https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-or-max-plan), checked 2026-10-11.
 
-Для подписки войти тем же Claude account. `/login` меняет метод входа, `claude update` обновляет CLI, `/status` помогает проверить account/provider. `ANTHROPIC_API_KEY` может переключить аутентификацию на API billing вместо подписки. Нельзя обещать, что установленный Pro автоматически оплатит все запуски с экспортированным API key.
+For a subscription, sign in with the same Claude account. `/login` changes the sign-in method, `claude update` updates the CLI, `/status` helps check the account/provider. `ANTHROPIC_API_KEY` can switch authentication to API billing instead of the subscription. Do not promise that an installed Pro will automatically pay for all runs with an exported API key.
 
-Установка Windows из [Overview](https://code.claude.com/docs/en/overview): `winget install Anthropic.ClaudeCode`; затем `claude --version`, перейти в проект и `claude`. Native install auto-updates; WinGet требует `winget upgrade Anthropic.ClaudeCode`. Не включать длинные установки для всех OS в основной текст: дать короткий Windows старт и official setup link.
+Windows install from the [Overview](https://code.claude.com/docs/en/overview): `winget install Anthropic.ClaudeCode`; then `claude --version`, go to the project and run `claude`. The native install auto-updates; WinGet requires `winget upgrade Anthropic.ClaudeCode`. Do not put long installs for every OS in the main text: give a short Windows start and the official setup link.
 
-## 7. Модели, effort и контекст
+## 7. Models, effort and context
 
-Источник: [Model configuration](https://code.claude.com/docs/en/model-config), проверено 2026-10-11.
+Source: [Model configuration](https://code.claude.com/docs/en/model-config), checked 2026-10-11.
 
-Anthropic API aliases сейчас: `opus`→Opus 5.5, `sonnet`→Sonnet 5.5, `haiku`→Haiku 5.5. `default` для Pro/Max/Team/Enterprise/API — Opus 5.5 на текущей версии, если settings/admin не задают другое. На provider clouds aliases могут указывать на старые версии.
+Anthropic API aliases now: `opus`→Opus 5.5, `sonnet`→Sonnet 5.5, `haiku`→Haiku 5.5. `default` for Pro/Max/Team/Enterprise/API is Opus 5.5 on the current version, unless settings/admin set something else. On provider clouds, aliases may point to older versions.
 
-Fable 5.1 доступен через `/model fable`; это отдельный выбор для длинных сложных задач, не default. Может требовать usage credits. В Claude apps gateway alias может разрешаться в Fable 5. Не обещать одинаковую Fable доступность всем seats.
+Fable 5.1 is available via `/model fable`; it is a separate choice for long complex tasks, not the default. It may require usage credits. In the Claude apps, the gateway alias may resolve to Fable 5. Do not promise the same Fable availability on all seats.
 
-`/model` выбирает модель, `/effort` — effort. `opusplan` использует Opus для плана, затем Sonnet для исполнения. Новые Opus/Sonnet имеют native 1M context; контекст не равен постоянной памяти, auto-compaction всё равно сжимает длинный диалог. Для воспроизводимости version pin, для обычного пользователя alias и проверка `/status`. Minimum CLI: Opus 5.5 2.1.280, Sonnet 5.5 2.1.284, Haiku 5.5 2.1.293.
+`/model` picks the model, `/effort` the effort. `opusplan` uses Opus for the plan, then Sonnet for execution. The new Opus/Sonnet have a native 1M context; context is not persistent memory, and auto-compaction still compresses a long conversation. For reproducibility, pin the version; for an ordinary user, use the alias and check `/status`. Minimum CLI: Opus 5.5 2.1.280, Sonnet 5.5 2.1.284, Haiku 5.5 2.1.293.
 
 ## 8. Fast mode
 
-Источник: [Fast mode](https://code.claude.com/docs/en/fast-mode), проверено 2026-10-11; **research preview**.
+Source: [Fast mode](https://code.claude.com/docs/en/fast-mode), checked 2026-10-11; **research preview**.
 
-`/fast` включает ускоренную конфигурацию того же Opus, не другую модель. Поддерживаются Opus 5.5/5/4.8, не Sonnet/Haiku. Это lower latency и higher per-token cost; полезно для коротких итераций и live debugging. На подписках расходует **только отдельные usage credits**, даже если allowance не закончился. Team/Enterprise Owner должен разрешить функцию. API Console нужна provisioned access; cloud providers Bedrock/Google/Foundry не поддерживают. Opus 5.5 fast: $8 input/$40 output за миллион tokens. Не делать fast default в учебном рецепте. Effort и fast — независимые настройки; снижение effort меняет объём рассуждения, fast приоритет обслуживания.
+`/fast` enables a faster configuration of the same Opus, not a different model. Opus 5.5/5/4.8 are supported, not Sonnet/Haiku. It means lower latency and a higher per-token cost; useful for short iterations and live debugging. On subscriptions it spends **only separate usage credits**, even if the allowance has not run out. A Team/Enterprise Owner must allow the feature. The API Console needs provisioned access; the Bedrock/Google/Foundry cloud providers do not support it. Opus 5.5 fast: $8 input/$40 output per million tokens. Do not make fast the default in a learning recipe. Effort and fast are independent settings; lowering effort changes the amount of reasoning, fast changes the service priority.
 
-## 9. План, approvals и sandbox
+## 9. Plan, approvals and sandbox
 
-Источник: [Permission modes](https://code.claude.com/docs/en/permission-modes), проверено 2026-10-11.
+Source: [Permission modes](https://code.claude.com/docs/en/permission-modes), checked 2026-10-11.
 
-`/plan` или `claude --permission-mode plan` исследует код и предлагает план до edits. `Shift+Tab` переключает режим в CLI. Plan допускает read-only/classifier-approved commands, не обещать абсолютное отсутствие любых действий.
+`/plan` or `claude --permission-mode plan` explores the code and proposes a plan before edits. `Shift+Tab` switches the mode in the CLI. Plan allows read-only/classifier-approved commands; do not promise the absolute absence of any action.
 
-Manual (`default`/`manual`) спрашивает перед действиями; Accept edits заранее допускает file edits; Auto использует background classifier; DontAsk отвергает непредодобренные действия. На CLI/VS Code >=2.1.283 Auto — starting default с оговорками settings/provider/availability. Это не «полный доступ без проверки». Bypass не рекомендовать новичку; контейнер/VM нужен для unattended workflows.
+Manual (`default`/`manual`) asks before actions; Accept edits pre-allows file edits; Auto uses a background classifier; DontAsk rejects actions that were not pre-approved. On CLI/VS Code >=2.1.283, Auto is the starting default, with caveats about settings/provider/availability. It is not "full access without checks". Do not recommend Bypass to a beginner; a container/VM is needed for unattended workflows.
 
-Источник: [Sandbox](https://code.claude.com/docs/en/sandboxing). `/sandbox` ограничивает shell-команды средствами OS: macOS, Linux, WSL2; **native Windows без этого sandbox**. File tools, hooks, MCP и mods этой оболочкой не изолируются. Permissions управляют разрешением действия, sandbox — тем, куда уже разрешённое действие доберётся.
+Source: [Sandbox](https://code.claude.com/docs/en/sandboxing). `/sandbox` restricts shell commands with OS facilities: macOS, Linux, WSL2; **native Windows has no such sandbox**. File tools, hooks, MCP and mods are not isolated by this layer. Permissions control whether an action is allowed; the sandbox controls where an already allowed action can reach.
 
-## 10. Инструкции и память
+## 10. Instructions and memory
 
-Источник: [Memory](https://code.claude.com/docs/en/memory), проверено 2026-10-11.
+Source: [Memory](https://code.claude.com/docs/en/memory), checked 2026-10-11.
 
-`CLAUDE.md` — ваши команды сборки, соглашения и границы проекта. `.claude/rules/` задаёт более узкие правила, в том числе по paths. `/init` предлагает starter; `/memory` редактирует настройки памяти, `/context` показывает реально загруженные memory files. Claude Code теперь поддерживает `AGENTS.md` через встроенную возможность с условиями: не писать, что он всегда игнорируется или всегда равнозначен CLAUDE.md.
+`CLAUDE.md` holds your build commands, conventions and project boundaries. `.claude/rules/` sets narrower rules, including by paths. `/init` proposes a starter; `/memory` edits the memory settings, `/context` shows the memory files actually loaded. Claude Code now supports `AGENTS.md` through a built-in capability with conditions: do not write that it is always ignored or always equivalent to CLAUDE.md.
 
-Auto memory — заметки Claude о предпочтениях и corrections, per repository, shared across worktrees. Это редактируемый контекст, **не гарантированная enforced policy**. Security boundary задавать permissions/hooks. `/doctor prompt-audit` (>=2.1.283) ищет устаревшие/противоречивые инструкции и показывает proposals, не применяет edits до просьбы пользователя.
+Auto memory is Claude's notes about preferences and corrections, per repository, shared across worktrees. It is editable context, **not a guaranteed enforced policy**. Set the security boundary with permissions/hooks. `/doctor prompt-audit` (>=2.1.283) looks for outdated/contradictory instructions and shows proposals; it does not apply edits until the user asks.
 
-## 11. Skills и reusable app checks
+## 11. Skills and reusable app checks
 
-Источник: [Skills](https://code.claude.com/docs/en/skills), проверено 2026-10-11.
+Source: [Skills](https://code.claude.com/docs/en/skills), checked 2026-10-11.
 
-`.claude/skills/<name>/SKILL.md` задаёт workflow; можно вызвать `/<name>` или автоматически по релевантности. Personal skills находятся в `~/.claude/skills/`, project skills коммитятся вместе с repo; account synced skills имеют отдельный scope. Они загружаются по необходимости, не заменяют весь CLAUDE.md.
+`.claude/skills/<name>/SKILL.md` defines a workflow; it can be invoked as `/<name>` or automatically by relevance. Personal skills live in `~/.claude/skills/`, project skills are committed with the repo; account synced skills have a separate scope. They are loaded when needed and do not replace the whole CLAUDE.md.
 
-Bundled `/run`, `/verify`, `/run-skill-generator` запускают приложение и проверяют поведение. `/verify` подтверждает результат на running app, а не только typecheck/tests; специальную процедуру можно записать как project skill. `/run-skill-generator` фиксирует рабочую launch recipe для последующих агентов. Для новичка полезно: «проверь экран на 360px, воспроизведи пользовательский сценарий, покажи evidence». Возможность не означает доступность любого браузера/GUI без настройки.
+The bundled `/run`, `/verify`, `/run-skill-generator` launch the application and check behaviour. `/verify` confirms the result on the running app, not only typecheck/tests; a special procedure can be recorded as a project skill. `/run-skill-generator` records a working launch recipe for later agents. Useful for a beginner: "check the screen at 360px, reproduce the user scenario, show the evidence". The capability does not mean any browser/GUI is available without setup.
 
-## 12. Plugins, code intelligence и Mods
+## 12. Plugins, code intelligence and Mods
 
-Источник: [Plugins overview](https://code.claude.com/docs/en/plugins/overview). Plugin упаковывает skills, agents, hooks, MCP и другие компоненты; marketplaces позволяют установить один повторяемый набор. `/plugin` управляет ими; scopes различаются. Это исполняемые расширения, не просто текстовая подсказка.
+Source: [Plugins overview](https://code.claude.com/docs/en/plugins/overview). A plugin packages skills, agents, hooks, MCP and other components; marketplaces let you install one repeatable set. `/plugin` manages them; scopes differ. These are executable extensions, not just a text hint.
 
-Источник: [Code intelligence](https://code.claude.com/docs/en/plugins/code-intelligence). LSP plugin даёт symbol navigation, references и diagnostics после edits; нужно установить соответствующий language server. Полезно при больших TypeScript проектах, но не обещать встроенную поддержку всех языков без зависимостей.
+Source: [Code intelligence](https://code.claude.com/docs/en/plugins/code-intelligence). An LSP plugin gives symbol navigation, references and diagnostics after edits; you need to install the matching language server. Useful for large TypeScript projects, but do not promise built-in support for all languages without dependencies.
 
-Источник: [Mods overview](https://code.claude.com/docs/en/plugins/mods/overview), проверено 2026-10-11; введены в публичные docs, CLI >=2.1.287, Desktop runtime >=2.1.286.
+Source: [Mods overview](https://code.claude.com/docs/en/plugins/mods/overview), checked 2026-10-11; introduced into the public docs, CLI >=2.1.287, Desktop runtime >=2.1.286.
 
-Mods — JS/TS event handlers в plugin: собственная панель, команда, tool-call guard, оформление interface. UI рисуется в CLI/Desktop; VS Code/cloud/headless могут выполнить hooks, но не показывают panes. Mods не sandboxed и работают с user permissions; доверие к автору обязательно. Новичку достаточно обзора и примеров «счётчик контекста / видимый diff», не большого шаблона исполнения.
+Mods are JS/TS event handlers in a plugin: a custom panel, command, tool-call guard, interface styling. The UI is drawn in CLI/Desktop; VS Code/cloud/headless can run the hooks but do not show panes. Mods are not sandboxed and run with user permissions; trust in the author is mandatory. A beginner needs only an overview and examples like "context counter / visible diff", not a large execution template.
 
-## 13. MCP и hooks
+## 13. MCP and hooks
 
-Источник: [MCP](https://code.claude.com/docs/en/mcp). Это доступ к внешним tools/data, а не дополнительные знания модели сами по себе. HTTP preferred; локальный stdio также поддерживается. Проверенные commands: `claude mcp add --transport http notion https://mcp.notion.com/mcp`, `claude mcp list`, `/mcp`. OAuth, scopes, approvals и отдельные credentials потребуются. Project `.mcp.json` не может сам себе дать trust. Claude Desktop config и standalone CLI не обязаны совпадать.
+Source: [MCP](https://code.claude.com/docs/en/mcp). It is access to external tools/data, not additional model knowledge by itself. HTTP is preferred; local stdio is also supported. Verified commands: `claude mcp add --transport http notion https://mcp.notion.com/mcp`, `claude mcp list`, `/mcp`. OAuth, scopes, approvals and separate credentials will be required. A project `.mcp.json` cannot grant itself trust. The Claude Desktop config and the standalone CLI do not have to match.
 
-Источник: [Hooks guide](https://code.claude.com/docs/en/hooks-guide). Hooks автоматически запускают scripts/HTTP/prompt logic на lifecycle events: форматирование после edit, защита перед tool call, notification по завершении. `PreToolUse` может блокировать действие детерминированной проверкой. В отличие от skill это реакция на событие, не workflow по запросу. Hooks — исполняемый код, избегать установки непроверенных чужих scripts.
+Source: [Hooks guide](https://code.claude.com/docs/en/hooks-guide). Hooks automatically run scripts/HTTP/prompt logic on lifecycle events: formatting after an edit, protection before a tool call, a notification on completion. `PreToolUse` can block an action with a deterministic check. Unlike a skill, it is a reaction to an event, not a workflow on request. Hooks are executable code; avoid installing unverified third-party scripts.
 
-## 14. Subagents, teams и workflows
+## 14. Subagents, teams and workflows
 
-Источник: [Subagents](https://code.claude.com/docs/en/sub-agents). Worker имеет собственный context, tools/model/instructions; полезен для repo exploration, независимого review или исследования. Foreground блокирует до результата, background идёт одновременно; approvals приходят в main session. `/tasks` показывает работу. Custom definitions — `.claude/agents/`, `/agents` помогает создавать. Не обещать бесплатное параллелирование: tokens/allowance расходуются.
+Source: [Subagents](https://code.claude.com/docs/en/sub-agents). A worker has its own context, tools/model/instructions; useful for repo exploration, independent review or research. Foreground blocks until the result, background runs concurrently; approvals come to the main session. `/tasks` shows the work. Custom definitions live in `.claude/agents/`, `/agents` helps create them. Do not promise free parallelism: tokens/allowance are spent.
 
-Источник: [Agent teams](https://code.claude.com/docs/en/agent-teams); **experimental**, off by default. `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` включает координацию peer sessions, shared tasks и messaging. Desktop coordinated teams не поддерживает. One team/session, no nested teams, resumption ограничен; для обычного feature не включать по умолчанию.
+Source: [Agent teams](https://code.claude.com/docs/en/agent-teams); **experimental**, off by default. `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` enables coordination of peer sessions, shared tasks and messaging. Desktop does not support coordinated teams. One team/session, no nested teams, resumption is limited; do not enable by default for an ordinary feature.
 
-Источник: [Dynamic workflows](https://code.claude.com/docs/en/workflows). JS runtime orchestration держит intermediate state в script, допускает много workers и repeatable cross-check. Paid/API/provider access; Pro включает из `/config`. `/deep-research` и `/workflows` — проверенные команды. Полезно для большой миграции/аудита, а не каждого CSS изменения.
+Source: [Dynamic workflows](https://code.claude.com/docs/en/workflows). JS runtime orchestration keeps intermediate state in a script, allows many workers and a repeatable cross-check. Paid/API/provider access; Pro enables it from `/config`. `/deep-research` and `/workflows` are verified commands. Useful for a large migration/audit, not for every CSS change.
 
-## 15. Background agents и worktrees
+## 15. Background agents and worktrees
 
-Источник: [Agent view](https://code.claude.com/docs/en/agent-view); **research preview**.
+Source: [Agent view](https://code.claude.com/docs/en/agent-view); **research preview**.
 
-`claude agents` — панель нескольких полных local sessions, `claude --bg` запускает background session. Можно читать status, открыть, направить сообщение, увидеть Needs input. Сессия живёт на вашей машине; shutdown её останавливает, это не cloud. Параллельные sessions быстрее расходуют allowance. Для isolation использовать worktree, не отдавать нескольким writers одни файлы.
+`claude agents` is a panel of several full local sessions, `claude --bg` starts a background session. You can read the status, open a session, send it a message, see Needs input. The session lives on your machine; shutdown stops it; it is not cloud. Parallel sessions use up the allowance faster. For isolation use a worktree; do not give several writers the same files.
 
-Источник: [Worktrees](https://code.claude.com/docs/en/worktrees). `claude --worktree feature-name` даёт отдельную рабочую директорию/ветку. `.worktreeinclude` помогает с нужными gitignored local files. Это изоляция checkout, не автоматическая независимость API/contracts; merge/review остаётся явным шагом. Репозиторий должен иметь первый commit. Не обещать, что .env всегда сам переносится.
+Source: [Worktrees](https://code.claude.com/docs/en/worktrees). `claude --worktree feature-name` gives a separate working directory/branch. `.worktreeinclude` helps with needed gitignored local files. This is checkout isolation, not automatic independence of APIs/contracts; merge/review remains an explicit step. The repository must have a first commit. Do not promise that .env is always carried over by itself.
 
-## 16. Undo, checkpoints и сохранение диалога
+## 16. Undo, checkpoints and saving the conversation
 
-Источник: [Checkpointing](https://code.claude.com/docs/en/checkpointing).
+Source: [Checkpointing](https://code.claude.com/docs/en/checkpointing).
 
-`/rewind` или Esc Esc позволяет вернуть conversation/code checkpoint либо summarise нужную часть. **Не заменяет Git.** Shell file operations, внешние edits и большинство subagent edits не возвращаются этим механизмом; symlink/hardlink paths пропускаются. Для экспериментальной UI итерации полезно, но snapshot/commit остаётся надёжной границей.
+`/rewind` or Esc Esc lets you restore a conversation/code checkpoint or summarise the needed part. **It does not replace Git.** Shell file operations, external edits and most subagent edits are not restored by this mechanism; symlink/hardlink paths are skipped. Useful for an experimental UI iteration, but a snapshot/commit remains the reliable boundary.
 
-Источник: [Sessions](https://code.claude.com/docs/en/sessions). `/resume`/`claude --continue` возвращают локальную историю; `/branch` сохраняет исходную conversation для другой идеи. `/fork` — отдельный background session, не то же самое. `/compact` с фокусом на contracts и unresolved tasks поддерживает длинный процесс; после compaction критичные instructions лучше иметь в repo.
+Source: [Sessions](https://code.claude.com/docs/en/sessions). `/resume`/`claude --continue` restore the local history; `/branch` keeps the original conversation for another idea. `/fork` is a separate background session, not the same thing. `/compact` with a focus on contracts and unresolved tasks supports a long process; after compaction, critical instructions are better kept in the repo.
 
-## 17. Desktop и браузерная проверка
+## 17. Desktop and browser verification
 
-Источник: [Desktop](https://code.claude.com/docs/en/desktop), проверено 2026-10-11.
+Source: [Desktop](https://code.claude.com/docs/en/desktop), checked 2026-10-11.
 
-Code tab: local/SSH/cloud sessions, side-by-side panes, visual diff, integrated terminal/file editor, preview app и PR monitoring. Browser pane использует **чистый отдельный профиль**, Chrome extension — ваш logged-in браузер. Это важное различие для auth testing. Desktop Linux beta; Computer Use на Linux отсутствует. Coordinated agent teams есть в CLI, не Desktop. Не описывать autocomplete как фичу Desktop: работа conversational + explicit edits.
+Code tab: local/SSH/cloud sessions, side-by-side panes, visual diff, integrated terminal/file editor, app preview and PR monitoring. The browser pane uses a **clean separate profile**; the Chrome extension uses your logged-in browser. This is an important difference for auth testing. Desktop Linux is beta; Computer Use is not available on Linux. Coordinated agent teams are in the CLI, not Desktop. Do not describe autocomplete as a Desktop feature: the work is conversational + explicit edits.
 
-Источник: [Chrome](https://code.claude.com/docs/en/chrome). `claude --chrome`, `/chrome`; Chromium browser, Claude in Chrome extension >=1.0.36 и Pro/Max/Team/Enterprise subscription login. Не API-key/provider-only session. Позволяет реальные клики, screenshots, console/network debug и UX verification с site permissions. General availability подтверждена [week27](https://code.claude.com/docs/en/whats-new/2026-w27) от 29 июня–3 июля.
+Source: [Chrome](https://code.claude.com/docs/en/chrome). `claude --chrome`, `/chrome`; a Chromium browser, the Claude in Chrome extension >=1.0.36 and a Pro/Max/Team/Enterprise subscription login. Not an API-key/provider-only session. Allows real clicks, screenshots, console/network debugging and UX verification with site permissions. General availability is confirmed by [week27](https://code.claude.com/docs/en/whats-new/2026-w27) of June 29–July 3.
 
-Источник: [CLI Computer use](https://code.claude.com/docs/en/computer-use); **research preview**, Pro/Max, macOS interactive CLI, не `-p`, не Team/Enterprise. Desktop также macOS/Windows, off by default. Это actual screen/apps; не смешивать с browser-only inspection.
+Source: [CLI Computer use](https://code.claude.com/docs/en/computer-use); **research preview**, Pro/Max, macOS interactive CLI, not `-p`, not Team/Enterprise. Desktop also macOS/Windows, off by default. This is the actual screen/apps; do not mix it up with browser-only inspection.
 
-## 18. Projects — новая координация длительной работы
+## 18. Projects — new coordination of long-running work
 
-Источник: [Claude Projects](https://code.claude.com/docs/en/claude-projects), проверено 2026-10-11; **public beta, gradual rollout, Pro/Max**, не Team/Enterprise.
+Source: [Claude Projects](https://code.claude.com/docs/en/claude-projects), checked 2026-10-11; **public beta, gradual rollout, Pro/Max**, not Team/Enterprise.
 
-Одна ongoing conversation принимает связанные задачи и координирует parallel threads с общими repos, instructions/memory. Threads обычно cloud; local-only resources доступны через Remote Control. Web/Desktop/mobile, не CLI/VS Code/JetBrains. Полезно для нескольких связанных bugs или API+web+mobile migration. Не смешивать с обычными Chat Projects, папкой Desktop или agent teams. Если нет пункта в UI, аккаунт ещё не получил rollout.
+One ongoing conversation takes related tasks and coordinates parallel threads with shared repos, instructions/memory. Threads are usually cloud; local-only resources are available through Remote Control. Web/Desktop/mobile, not CLI/VS Code/JetBrains. Useful for several related bugs or an API+web+mobile migration. Do not mix it up with ordinary Chat Projects, a Desktop folder or agent teams. If there is no such item in the UI, the account has not yet received the rollout.
 
-Источник объявления: [Projects redesigned](https://claude.com/blog/projects-redesigned), **17 сентября 2026**, подтверждает beta и новую coordinator model. Использовать короткую ссылку «что нового», а не переносить marketing claims.
+Announcement source: [Projects redesigned](https://claude.com/blog/projects-redesigned), **September 17, 2026**, confirms the beta and the new coordinator model. Use a short "what's new" link rather than carrying over marketing claims.
 
-## 19. Remote Control и Cloud — принципиальная граница
+## 19. Remote Control and Cloud — a fundamental boundary
 
-Источник: [Remote Control](https://code.claude.com/docs/en/remote-control).
+Source: [Remote Control](https://code.claude.com/docs/en/remote-control).
 
-`/remote-control`/`claude remote-control` — окно в local session с телефона/web. Local files/MCP доступны, но компьютер и процесс должны работать. Pro/Max/Team/Enterprise, Owner enablement у org; API keys, provider-only и custom gateway не поддерживаются. Открытие mobile не переносит вычисления на сервер.
+`/remote-control`/`claude remote-control` is a window into a local session from a phone/web. Local files/MCP are available, but the computer and the process must be running. Pro/Max/Team/Enterprise, with Owner enablement for an org; API keys, provider-only and a custom gateway are not supported. Opening it on mobile does not move the computation to a server.
 
-Источник: [Cloud sessions](https://code.claude.com/docs/en/claude-code-on-the-web).
+Source: [Cloud sessions](https://code.claude.com/docs/en/claude-code-on-the-web).
 
-Web/mobile/Desktop/`claude --cloud` запускают отдельный cloud checkout, работа идёт после закрытия ноутбука. `claude --teleport` получает branch+history обратно в local checkout с требованиями same repo/account, clean git state и pushed branch. Последующие local сообщения не синхронизируют cloud copy автоматически. Repo access/setup scripts/network policy готовятся отдельно. Нет отдельной цены VM, usage берётся из plan; API/provider authentication имеет отдельные ограничения. Документ доступности Enterprise ещё называет legacy seats — не обещать cloud любой Enterprise configuration.
+Web/mobile/Desktop/`claude --cloud` start a separate cloud checkout; the work continues after the laptop is closed. `claude --teleport` brings branch+history back into a local checkout, with requirements: same repo/account, clean git state and a pushed branch. Later local messages do not sync the cloud copy automatically. Repo access/setup scripts/network policy are prepared separately. There is no separate VM price; usage comes from the plan; API/provider authentication has separate limits. The Enterprise availability document still names legacy seats — do not promise cloud for any Enterprise configuration.
 
-## 20. Artifacts, дизайн и presentation
+## 20. Artifacts, design and presentation
 
-Источник: [Artifacts](https://code.claude.com/docs/en/artifacts).
+Source: [Artifacts](https://code.claude.com/docs/en/artifacts).
 
-Из output session можно сделать live interactive page на private claude.ai URL, показать annotated diff, UI варианты, dashboard или investigation timeline. Share нужно выбрать отдельно. Pro/Max/Team/Enterprise и Claude subscription login; API-only не даёт этой publishing поверхности. Artifact — self-contained single page без своего backend и multi-route hosting. Поэтому preview/report полезен для vibe coding, а production app требует отдельного deploy.
+From a session's output you can make a live interactive page at a private claude.ai URL, show an annotated diff, UI variants, a dashboard or an investigation timeline. Sharing must be chosen separately. Pro/Max/Team/Enterprise and a Claude subscription login; API-only does not give this publishing surface. An Artifact is a self-contained single page without its own backend and multi-route hosting. So a preview/report is useful for vibe coding, while a production app needs a separate deploy.
 
-`/design <brief>` делает editable artboards в canvas; `/slides <brief>` — презентацию. Docs integration использует connector, не выдумывать `/docs`. Документация Artifacts всё ещё называет templates beta. Более свежий [официальный announcement catalog](https://claude.com/resources/product-announcements) 8 октября сообщает Docs/Slides/Design **out of beta** в Claude apps: явно различать статус продукта и Code template integration, не расширять Free chat support до Free Claude Code.
+`/design <brief>` makes editable artboards on a canvas; `/slides <brief>` makes a presentation. The Docs integration uses a connector; do not invent `/docs`. The Artifacts documentation still calls templates beta. The more recent [official announcement catalog](https://claude.com/resources/product-announcements) of October 8 reports Docs/Slides/Design **out of beta** in the Claude apps: clearly distinguish the product status from the Code template integration; do not extend Free chat support to Free Claude Code.
 
-## 21. Три вида scheduling
+## 21. Three kinds of scheduling
 
-Источник: [Routines](https://code.claude.com/docs/en/routines). Cloud routine работает при выключенном компьютере, triggers: schedule/API/GitHub. Pro/Max/Team/Enterprise, org может отключить. `/schedule` создаёт routine из local CLI subscription session, в cloud-session этот command не доступен; web UI работает. Runtime клонирует repo и uses configured connectors, не получает весь local environment автоматически.
+Source: [Routines](https://code.claude.com/docs/en/routines). A cloud routine runs while the computer is off; triggers: schedule/API/GitHub. Pro/Max/Team/Enterprise; an org can disable it. `/schedule` creates a routine from a local CLI subscription session; in a cloud session this command is not available; the web UI works. The runtime clones the repo and uses the configured connectors; it does not get the whole local environment automatically.
 
-Источник: [Desktop scheduled tasks](https://code.claude.com/docs/en/desktop-scheduled-tasks). Local task доступен в Routines Desktop, persistent across restart, но запускается лишь при открытом app и awake machine. Пример полезного workflow: review вчерашних изменений, dependency audit; не создавать speculative unattended production actions.
+Source: [Desktop scheduled tasks](https://code.claude.com/docs/en/desktop-scheduled-tasks). A local task is available in Desktop Routines, persistent across restarts, but runs only while the app is open and the machine is awake. An example of a useful workflow: a review of yesterday's changes, a dependency audit; do not create speculative unattended production actions.
 
-Источник: [Goal](https://code.claude.com/docs/en/goal). `/goal` задаёт observable completion condition; Claude продолжает до успеха/невозможности/error. Это sustained task execution, не календарное событие. `/loop` повторяет prompt внутри живой session; нельзя обещать выполнение после shutdown. Для polling CI подходит loop; для ночного запуска без laptop — cloud routine.
+Source: [Goal](https://code.claude.com/docs/en/goal). `/goal` sets an observable completion condition; Claude continues until success/impossibility/error. This is sustained task execution, not a calendar event. `/loop` repeats a prompt inside a live session; do not promise execution after shutdown. For polling CI, loop fits; for a nightly run without a laptop, a cloud routine.
 
-## 22. Review, CI и API automation
+## 22. Review, CI and API automation
 
-Источник: [Code Review](https://code.claude.com/docs/en/code-review); managed GitHub service **research preview, Team/Enterprise**.
+Source: [Code Review](https://code.claude.com/docs/en/code-review); a managed GitHub service, **research preview, Team/Enterprise**.
 
-Fleet анализирует PR и публикует severity findings; не approve/merge. Настраивается CLAUDE.md/REVIEW.md, token billing отдельно через usage credits, не included allowance (официальная оценка average $15–25, **не фиксированная цена**). Local `/code-review` доступен и другим планам и проверяет diff; `--fix` меняет код, поэтому выбор явный.
+A fleet analyses the PR and publishes severity findings; it does not approve/merge. It is configured with CLAUDE.md/REVIEW.md; token billing is separate through usage credits, not the included allowance (the official estimate is an average of $15–25, **not a fixed price**). The local `/code-review` is available on other plans too and checks the diff; `--fix` changes code, so the choice is explicit.
 
-Источник: [Ultrareview](https://code.claude.com/docs/en/ultrareview); **research preview**. `/code-review ultra` запускает multi-agent verification в cloud, требует subscription auth; dialog показывает scope/estimated spend. Pro/Max имеют 3 free runs, далее usage credits. API-key-only/providers/ZDR/HIPAA исключены; когда unavailable, command может выполнить local review. Не гарантировать, что слово ultra всегда означает cloud.
+Source: [Ultrareview](https://code.claude.com/docs/en/ultrareview); **research preview**. `/code-review ultra` runs multi-agent verification in the cloud and requires subscription auth; a dialog shows the scope/estimated spend. Pro/Max have 3 free runs, then usage credits. API-key-only/providers/ZDR/HIPAA are excluded; when unavailable, the command may perform a local review. Do not guarantee that the word ultra always means cloud.
 
-Источник: [GitHub Actions](https://code.claude.com/docs/en/github-actions). GitHub Action запускает tasks/review на собственном runner, требуется account credentials или поддержанный provider + repo permissions. Это отдельная от managed Review схема и costs. Для программных flows `claude -p`/Agent SDK с explicit permissions/budget; не публиковать magic auth secrets в YAML.
+Source: [GitHub Actions](https://code.claude.com/docs/en/github-actions). The GitHub Action runs tasks/review on your own runner; account credentials or a supported provider + repo permissions are required. This is a scheme and costs separate from managed Review. For programmatic flows, use `claude -p`/Agent SDK with explicit permissions/budget; do not publish magic auth secrets in YAML.
 
 ## 23. Data boundary
 
-Источник: [Data usage](https://code.claude.com/docs/en/data-usage).
+Source: [Data usage](https://code.claude.com/docs/en/data-usage).
 
-Local execution не означает offline inference: prompts/code context уходят model provider. У consumer Pro/Max использование для model improvement зависит от privacy setting; commercial Team/Enterprise/API не обучают на code/prompts по умолчанию. Session transcripts сохраняются локально plaintext для resume. Cloud checkout и transcripts находятся на server-side infrastructure по plan policies. Remote Control тоже синхронизирует transcript. В публичном обзоре достаточно короткого практического блока: проверить privacy setting, исключить secrets, не подключать production write credentials ради первой UI итерации. Не обещать ZDR всем Enterprise seats.
+Local execution does not mean offline inference: prompts/code context go to the model provider. For consumer Pro/Max, use for model improvement depends on the privacy setting; commercial Team/Enterprise/API do not train on code/prompts by default. Session transcripts are stored locally in plaintext for resume. The cloud checkout and transcripts are on server-side infrastructure under the plan policies. Remote Control also syncs the transcript. In the public overview a short practical block is enough: check the privacy setting, exclude secrets, do not connect production write credentials for the sake of a first UI iteration. Do not promise ZDR on all Enterprise seats.
 
-Источник: [Self-hosted environments](https://code.claude.com/docs/en/self-hosted-environments); **public beta Team/Enterprise, off by default**. Execution можно разместить на своей инфраструктуре, но requests к model API и session coordination не становятся offline/local-only. Отдельный advanced блок, не обязательная установка начинающему.
+Source: [Self-hosted environments](https://code.claude.com/docs/en/self-hosted-environments); **public beta Team/Enterprise, off by default**. Execution can be placed on your own infrastructure, but requests to the model API and session coordination do not become offline/local-only. A separate advanced block, not a mandatory install for a beginner.
 
-## 24. Проверенные команды для компактной шпаргалки
+## 24. Verified commands for a compact cheat sheet
 
-Ниже только документированные команды; availability зависит от поверхности и account. [Commands](https://code.claude.com/docs/en/commands) подтверждает названия, detail pages выше — semantics.
+Below are only documented commands; availability depends on the surface and account. [Commands](https://code.claude.com/docs/en/commands) confirms the names, the detail pages above confirm the semantics.
 
-| Намерение | Команда | Оговорка |
+| Intent | Command | Caveat |
 | --- | --- | --- |
-| Начать | `claude` | В папке project |
-| Проверить среду | `claude --version`, `/status`, `/doctor` | CLI/app runtime версии могут различаться |
-| Изучить до edits | `/plan` | Или `claude --permission-mode plan` |
-| Project instructions | `/init`, `/memory` | Проверить предложенные правила |
-| Выбрать model/effort | `/model`, `/effort` | Provider/admin ограничения |
-| Контекст | `/context`, `/compact` | Компактизация не бесконечная память |
-| Side question | `/btw` | Не добавляет обычный turn в main history |
-| Diff/review | `/diff`, `/code-review` | Review не merge |
-| Run app | `/run`, `/verify` | Browser/GUI tools требуют настройки |
-| Расширения | `/plugin`, `/mcp` | Доверенные sources/credentials |
+| Start | `claude` | In the project folder |
+| Check the environment | `claude --version`, `/status`, `/doctor` | CLI/app runtime versions may differ |
+| Explore before edits | `/plan` | Or `claude --permission-mode plan` |
+| Project instructions | `/init`, `/memory` | Check the proposed rules |
+| Choose model/effort | `/model`, `/effort` | Provider/admin restrictions |
+| Context | `/context`, `/compact` | Compaction is not infinite memory |
+| Side question | `/btw` | Does not add an ordinary turn to the main history |
+| Diff/review | `/diff`, `/code-review` | Review is not merge |
+| Run app | `/run`, `/verify` | Browser/GUI tools need setup |
+| Extensions | `/plugin`, `/mcp` | Trusted sources/credentials |
 | Parallel tasks | `/tasks`, `/agents`, `claude agents` | Subagent definitions != Agent view |
-| Isolation | `claude --worktree ui-polish` | Первый commit обязателен |
-| Restore | `/rewind`, `/resume` | Checkpoint limitations выше |
+| Isolation | `claude --worktree ui-polish` | A first commit is required |
+| Restore | `/rewind`, `/resume` | Checkpoint limitations above |
 | Browser | `claude --chrome`, `/chrome` | Subscription + extension |
-| Remote | `/remote-control` | Компьютер включён |
+| Remote | `/remote-control` | The computer is on |
 | Cloud handoff | `claude --cloud`, `claude --teleport` | Git state/account/repo requirements |
-| Schedule | `/schedule` | Local subscription CLI создаёт cloud routine |
-| Long task | `/goal` | Чёткое completion condition |
+| Schedule | `/schedule` | A local subscription CLI creates a cloud routine |
+| Long task | `/goal` | A clear completion condition |
 
-## 25. Редакторские решения и независимые практические примеры
+## 25. Editorial decisions and independent practical examples
 
-Рекомендация: обзор отдельной reference-страницей, вне 22 глав и XP. В начале — что делает продукт и короткий маршрут «установить → определить scope → plan → build → run/verify → diff/review». Затем раскрываемые карточки по задачам: UI iteration; existing repo; repeating workflow; parallel work; work from phone; subscription/budget. Core differences оплачиваемости держать видимыми.
+Recommendation: the overview as a separate reference page, outside the 22 chapters and XP. At the start: what the product does and a short route "install → define scope → plan → build → run/verify → diff/review". Then expandable cards by task: UI iteration; existing repo; repeating workflow; parallel work; work from a phone; subscription/budget. Keep the core billing differences visible.
 
-Независимые авторские scenario prompts (не цитаты документации):
+Independent authored scenario prompts (not documentation quotes):
 
-- «Сначала найди компоненты этого экрана и предложи план. После согласования исправь только мобильную шапку; покажи, какие файлы изменились».
-- «Воспроизведи clipping диалога на 360px в реальном browser. Исправь причину, затем повтори тот же сценарий и приложи evidence».
-- «Подготовь review текущего diff: ищи regressions, доступность keyboard и broken states; не меняй файлы до обсуждения findings».
-- «Запиши как project skill нашу процедуру: запуск dev app, проверка login, 360px и desktop, подтверждение exact source copy».
-- «Два независимых subagents исследуют причины медленного navigation и UI overflow. Writers не должны одновременно менять одни файлы».
+- "First find the components of this screen and propose a plan. After approval, fix only the mobile header; show which files changed."
+- "Reproduce the dialog clipping at 360px in a real browser. Fix the cause, then repeat the same scenario and attach the evidence."
+- "Prepare a review of the current diff: look for regressions, keyboard accessibility and broken states; do not change files until the findings are discussed."
+- "Record our procedure as a project skill: launching the dev app, checking login, 360px and desktop, confirming the exact source copy."
+- "Two independent subagents investigate the causes of slow navigation and UI overflow. Writers must not change the same files at the same time."
 
-Не сравнивать продукты, не ранжировать, не писать гарантированный “делает всё сам”, не связывать fast/parallel/model effort с количеством гарантированных запросов.
+Do not compare products, do not rank them, do not write a guaranteed "does everything by itself", do not tie fast/parallel/model effort to a number of guaranteed requests.

@@ -1,4 +1,4 @@
-// Линтер палитры (P2-04): текущее дерево чистое, фикстуры с чужими цветами ловятся, fail closed.
+// Palette linter (P2-04): the current tree is clean, fixtures with foreign colours are caught, fail closed.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { ALLOWED, NAMED_COLORS, findColors, lint, listFiles } from '../scripts/palette-lint.mjs';
@@ -27,11 +27,11 @@ test('allowed files are explicit and really carry literals', () => {
     assert.ok(listFiles().includes(file), `${file} is listed but missing`);
   }
   assert.ok(findColors('<path fill="#5e6ad2"/>', 'x.svg').length === 1);
-  // Все 148 именованных цветов CSS Color 4 плюс системные; системные допустимы только в forced-colors.
+  // All 148 CSS Color 4 named colours plus system colours; system colours are allowed only in forced-colors.
   assert.equal(NAMED_COLORS.size, 148 + 19);
   assert.deepEqual(findColors('@media (forced-colors:active){a{color:Highlight;fill:red}}', 'x.css').map((h) => h.match), ['fill:red']);
   assert.deepEqual(findColors('a{color:var(--color-x, red);font:600 13px var(--font-text)}', 'x.css').map((h) => h.match), ['color:red']);
-  // Вложенные правила не прячут декларации родителя; имена keyframes и grid-area — не цвета.
+  // Nested rules do not hide the parent's declarations; keyframes and grid-area names are not colours.
   assert.deepEqual(findColors('.n{color:red;&:hover{color:var(--color-primary)}}', 'x.css').map((h) => h.match), ['color:red']);
   assert.deepEqual(findColors('.n{&:hover{fill:white} border:1px solid black}', 'x.css').map((h) => h.match), ['fill:white', 'border:black']);
   assert.deepEqual(findColors('a{animation:highlight 1s;grid-area:field;view-transition-name:mark;transition:color 1s}', 'x.css'), []);

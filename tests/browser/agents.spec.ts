@@ -18,8 +18,8 @@ test('/agents offers the archive, llms.txt and the pack description',async({page
  await expect(page.locator('.route-loading')).toBeEmpty();
 });
 
-// P8-05: «Скопировать для агента» и «Markdown страницы» сняты решением founder 29.10.2026; Markdown страниц по-прежнему раздаётся агентам.
-test('pages have no «Скопировать для агента» or «Markdown страницы», the page Markdown is still served',async({page,request})=>{
+// P8-05: "Copy for agent" and "Page Markdown" were removed by founder decision on 2026-10-29; page Markdown is still served to agents.
+test('pages have no "Copy for agent" or "Page Markdown", the page Markdown is still served',async({page,request})=>{
  const expected=await (await request.get('/flow/08-preflight.md')).text();
  // The address the pack used before the move still serves the same Markdown.
  expect(await (await request.get('/chapters/08.md')).text()).toBe(expected);

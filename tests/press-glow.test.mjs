@@ -1,5 +1,5 @@
-// Световой след и смена формы (P2-08): список кликабельных в скрипте и в CSS совпадает, встроенный скрипт ставит
-// точку касания и атрибут, а при reduced motion, data-motion="off", неосновной кнопке и disabled ничего не делает.
+// Light trail and shape change (P2-08): the list of clickables in the script and in CSS match, the inline script sets
+// the touch point and the attribute, and does nothing under reduced motion, data-motion="off", a non-primary button or disabled.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';

@@ -1,4 +1,4 @@
-// Contrast check for the «Чертёж» v2 palette (P2-02).
+// Contrast check for the "Blueprint" v2 palette (P2-02).
 // Reads docs/design/palette.json, computes WCAG 2.x contrast for every pair in
 // both themes and fails closed: an unknown role or a ratio below the threshold
 // is a FAIL. `--write` refreshes docs/design/contrast-v2.json and the table

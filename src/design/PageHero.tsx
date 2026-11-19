@@ -1,7 +1,7 @@
-// Баннер страницы (P3-07): две карточки M3 рядом, как M3 Buttons и «Страница темы» RD-01.
-// Слева текст (надзаголовок, заголовок Unbounded, одна строка описания, мета и действия), справа тонированная
-// карточка со спокойной схемой из примитивов «Чертежа». Стили — page-hero.css; на всю ширину рабочей области
-// баннер выводит класс .page-hero (app/globals.css, «Оболочка M3»).
+// Page banner (P3-07): two M3 cards side by side, like M3 Buttons and the RD-01 "Topic page".
+// On the left the text (eyebrow, Unbounded heading, one line of description, meta and actions), on the right a tinted
+// card with a calm diagram from "Blueprint" primitives. Styles: page-hero.css; the .page-hero class spreads the banner
+// over the full width of the work area (app/globals.css, "M3 shell").
 import type {ReactNode} from 'react';
 
 export type HeroTone='neutral'|'agent'|'practice'|'human';
@@ -9,12 +9,12 @@ export type HeroTone='neutral'|'agent'|'practice'|'human';
 type Props={
   id?:string;
   eyebrow?:ReactNode;
-  /** Заголовок текстом; titleHtml — готовый h1 из компилятора контента (с id и терминами). */
+  /** The heading as text; titleHtml is a ready h1 from the content compiler (with id and terms). */
   title?:ReactNode;
   titleHtml?:string;
   description?:ReactNode;
   descriptionHtml?:string;
-  /** Мета-чипы: список ul.page-hero__meta с подписью aria-label. */
+  /** Meta chips: a ul.page-hero__meta list labelled with aria-label. */
   meta?:ReactNode;
   actions?:ReactNode;
   visual:ReactNode;
@@ -22,10 +22,10 @@ type Props={
   className?:string;
 };
 
-/** Убирает из h1 компилятора ссылку «#» (у баннера нет copy link). */
+/** Removes the "#" link from the compiler h1 (the banner has no copy link). */
 export const heroTitle=(html:string)=>html.replace(/<a [^>]*class="permalink"[^>]*>#<\/a>/,'');
 
-/** Делит HTML страницы: h1, первый абзац сразу после него (описание баннера) и остальной текст. */
+/** Splits the page HTML: the h1, the first paragraph right after it (the banner description) and the rest of the text. */
 export function splitLead(html:string){
   const close=html.indexOf('</h1>');if(close<0)return {title:'',lead:'',rest:html};
   const end=close+'</h1>'.length,after=html.slice(end),lead=/^\s*<p[ >][\s\S]*?<\/p>/.exec(after)?.[0]??'';

@@ -1,16 +1,16 @@
-# ADR 0001: Один primary author на тикет, работа только в task-ветках
+# ADR 0001: One primary author per ticket, work only in task branches
 
-Status: Accepted — 22.10.2026, решение founder, вместе с merge PR #1 (https://github.com/Makkov-Office/vibe-coding-guidebook/pull/1). Изменён 27.10.2026 (решение founder): правило merge заменено делегированием оркестратору — ADR-0003, Decision 6; бриф v1.3, раздел 14.
+Status: Accepted — 2026-10-22, founder decision, together with the merge of PR #1 (https://github.com/Makkov-Office/vibe-coding-guidebook/pull/1). Amended 2026-10-27 (founder decision): the merge rule was replaced by delegation to the orchestrator — ADR-0003, Decision 6; brief v1.3, section 14.
 
-Context: Проект разрабатывается агентами в облачных сессиях, часть работы идёт параллельно. Параллельные правки в одном checkout скрывают владение и портят evidence.
+Context: The project is developed by agents in cloud sessions, and part of the work runs in parallel. Parallel edits in one checkout hide ownership and corrupt evidence.
 
-Decision: Каждый тикет имеет одного primary author, одну ветку `p<фаза>-<номер>-<slug>` и один PR. Прямые коммиты и push в `main` запрещены и блокируются `.claude/settings.json` и `.claude/hooks/guard-git.sh`. Merge — после independent review READY на HEAD и зелёного CI; делает оркестратор по делегированию founder (решения 22.10.2026 и 26.10.2026), автор тикета останавливается перед merge. До изменения 27.10.2026: только по явному решению founder.
+Decision: Each ticket has one primary author, one branch `p<phase>-<number>-<slug>` and one PR. Direct commits and pushes to `main` are forbidden and blocked by `.claude/settings.json` and `.claude/hooks/guard-git.sh`. Merge happens after independent review READY on HEAD and green CI; it is done by the orchestrator under the founder's delegation (decisions of 2026-10-22 and 2026-10-26), and the ticket author stops before merge. Before the 2026-10-27 amendment: only on an explicit founder decision.
 
-Alternatives: общий checkout; работа последовательно в main; независимые клоны.
+Alternatives: a shared checkout; sequential work in main; independent clones.
 
-Consequences: дополнительный lifecycle веток/worktree; ясная ответственность, воспроизводимое evidence.
+Consequences: extra branch/worktree lifecycle; clear ownership, reproducible evidence.
 
-Validation: попытка `git push origin main` и `git reset --hard` из сессии агента блокируется (evidence в PR P1-01). На GitHub — branch ruleset для `main` (required PR, required checks, без force push).
-Статус проверки: P1-01 (`docs/evidence/p1-01-guard-hook.md`) — FAIL в живой сессии. P1-01b (`docs/evidence/p1-01b-harness-enforcement.md`) — hook переписан, регрессия в `npm test`; в облачных thread'ах Claude Code Projects settings репозитория по документации не применяются, поэтому в них блокировку обеспечивает только ruleset `main`; живая проверка в сессии, которая читает settings, — после merge.
+Validation: an attempt to run `git push origin main` or `git reset --hard` from an agent session is blocked (evidence in PR P1-01). On GitHub — a branch ruleset for `main` (required PR, required checks, no force push).
+Check status: P1-01 (`docs/evidence/p1-01-guard-hook.md`) — FAIL in a live session. P1-01b (`docs/evidence/p1-01b-harness-enforcement.md`) — the hook was rewritten, with a regression test in `npm test`; according to the documentation, repository settings do not apply in Claude Code Projects cloud threads, so there the block is enforced only by the `main` ruleset; a live check in a session that reads settings comes after merge.
 
-Revisit trigger: founder утверждает ADR о low-risk auto-merge (бриф, раздел 9.6.5).
+Revisit trigger: the founder approves an ADR on low-risk auto-merge (brief, section 9.6.5).

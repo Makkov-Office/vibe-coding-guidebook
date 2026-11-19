@@ -1,4 +1,4 @@
-/* P7-03: тренажёр главы в табе «Проверь себя». Только токены (app/tokens.css) и примитивы «Чертежа». */
+/* P7-03: the chapter drill in the "Check yourself" tab. Tokens only (app/tokens.css) and "Blueprint" primitives. */
 .drill{display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-6);border:var(--stroke-border) solid var(--color-outline-variant);border-radius:var(--radius-l);background:var(--color-surface);color:var(--color-on-surface);margin:var(--space-6) 0}
 .drill h2{font-size:1.375rem;line-height:1.4;font-weight:600;margin:0;letter-spacing:-.3px}
 .drill h2:focus{outline:0}

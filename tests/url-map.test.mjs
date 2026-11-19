@@ -57,7 +57,7 @@ test('redirects only to pages that exist in the build, one hop', () => {
   assert.ok(routes.every((route) => route.status === 308));
   const regex = new RegExp(routes[0].src);
   assert.ok(regex.test('/chapters/08') && regex.test('/chapters/08/') && !regex.test('/chapters/081'));
-  // `/` keeps serving Главная: its content moves, the address does not redirect;
+  // `/` keeps serving the home page: its content moves, the address does not redirect;
   // only the alias /chapters/00 leads to the introduction (P4-01).
   assert.deepEqual(redirectRoutes(map, new Set(['/start/00-how-to-read'])).map((route) => [route.src, route.headers.Location]), [['^/chapters/00/?$', '/start/00-how-to-read']]);
 });
@@ -74,7 +74,7 @@ test('a redirect is refused while the anchor registry still points to the old ad
   const moved = structuredClone(before);
   for (const [id, target] of Object.entries(resolveAnchors(map, generated))) moved.anchors[id] = { id, path: target.path };
   assert.deepEqual(staleAnchors(map, moved, built), []);
-  // `/` stays Главная, but once the intro page exists its anchors must follow it.
+  // `/` stays the home page, but once the intro page exists its anchors must follow it.
   assert.equal(staleAnchors(map, generated, new Set(['/start/00-how-to-read'])).length, Object.values(generated.anchors).filter((anchor) => anchor.path === '/').length);
 });
 
@@ -124,7 +124,7 @@ test('broken entries fail the check', () => {
     ['duplicate address', (copy) => { page(copy, '/chapters/09').new = '/flow/08-preflight'; }, /also the address/],
     ['listed twice', (copy) => { copy.pages.push({ ...page(copy, '/print') }); }, /listed twice/],
     ['chapter left out', (copy) => { page(copy, '/tools/codex').chapter = undefined; delete page(copy, '/tools/codex').chapter; }, /chapter ch-codex is not in the map/],
-    ['moved onto Главная', (copy) => { page(copy, '/chapters/22').new = '/'; page(copy, '/chapters/22').section = 'service'; }, /section landing page/],
+    ['moved onto the home page', (copy) => { page(copy, '/chapters/22').new = '/'; page(copy, '/chapters/22').section = 'service'; }, /section landing page/],
     ['moved onto a section root', (copy) => { page(copy, '/chapters/06').new = '/flow'; }, /section landing page/],
     ['service page moves', (copy) => { page(copy, '/chapters/22').new = '/flow/22-x'; page(copy, '/chapters/22').section = 'service'; }, /service page keeps its address/],
     ['tabs without anchors', (copy) => { delete page(copy, '/chapters/01').anchors; }, /tabs need an anchors object/],

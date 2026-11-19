@@ -1,6 +1,6 @@
 "use client";
-// Rail controls (P3-04, docs/design/visual-language.md «Навигация»): the theme in three states.
-// Shown at the bottom of the rail and in the mobile «Разделы» menu; both copies share one record
+// Rail controls (P3-04, docs/design/visual-language.md "Navigation"): the theme in three states.
+// Shown at the bottom of the rail and in the mobile "Sections" menu; both copies share one record
 // (src/design/ui-prefs.mjs). The animation switch is gone (founder 29.10.2026, P3-09): motion
 // follows prefers-reduced-motion only.
 import {useState,useSyncExternalStore} from 'react';

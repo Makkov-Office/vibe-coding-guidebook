@@ -1,4 +1,4 @@
-// URL map of the 9-section structure (P2-05, RD-01 «Структура»).
+// URL map of the 9-section structure (P2-05, RD-01 "Structure").
 // src/content/url-map.json says where every current page and anchor goes;
 // this module validates it, resolves anchors to their new page and tab, and
 // builds the 308 redirects. Used by scripts/vercel-output.mjs (redirects,
@@ -14,7 +14,7 @@ export function loadUrlMap(root = process.cwd()) {
 }
 
 // An entry redirects when its content leaves the old address and the old
-// address does not stay a live page of its own (`keep`, e.g. `/` → Главная).
+// address does not stay a live page of its own (`keep`, e.g. `/` → the home page).
 export const redirects = (entry) => entry.old !== entry.new && !entry.keep;
 
 export function tabPath(map, entry, tabId) {
@@ -50,7 +50,7 @@ export function resolveAnchors(map, generated) {
   const byOld = new Map(map.pages.filter((entry) => !entry.alias).map((entry) => [entry.old, entry]));
   // A live page (its new page is built) is already registered at its new address, a chapter with tabs at its tab addresses.
   for (const entry of map.pages) if (entry.live) for (const address of livePaths(map, entry)) byOld.set(address, entry);
-  // A kept old address (`/` → Главная) has given its content to the new page: the registry uses the new address (P4-01).
+  // A kept old address (`/` → the home page) has given its content to the new page: the registry uses the new address (P4-01).
   for (const entry of map.pages) if (entry.keep) byOld.set(entry.new, entry);
   const chapters = new Map(generated.chapters.map((chapter) => [chapter.id, chapter]));
   const sectionOf = new Map();
@@ -97,7 +97,7 @@ export function validateUrlMap(map, generated) {
     if (!section) errors.push(`${name}: unknown section ${entry.section}`);
     else if (section.path !== "/" && entry.new !== section.path && !entry.new?.startsWith(`${section.path}/`)) errors.push(`${name}: ${entry.new} is outside section ${section.path}`);
     if (entry.keep && entry.old === entry.new) errors.push(`${name}: keep without a move`);
-    // `/` is Главная and a section root is that section's landing page: only
+    // `/` is the home page and a section root is that section's landing page: only
     // the page that already lives there may map onto it. A service page
     // (outside the rail) does not move.
     if (entry.new === "/" || (section && entry.new === section.path && entry.old !== entry.new)) errors.push(`${name}: ${entry.new} is a section landing page`);

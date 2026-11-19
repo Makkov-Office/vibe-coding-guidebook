@@ -1,6 +1,6 @@
-// Схемы для баннеров страниц (P3-07): примитивы «Чертежа» — скруглённые прямоугольники, пилюли, линии, круг,
-// моно-подписи в 1–3 слова; фронтально, монохром и не больше одного акцента (класс phv-accent). Декоративные:
-// смысл страницы несёт текст баннера, поэтому схема скрыта от вспомогательных технологий (aria-hidden у карточки).
+// Diagrams for page banners (P3-07): "Blueprint" primitives: rounded rectangles, pills, lines, a circle,
+// mono labels of 1–3 words; frontal, monochrome and at most one accent (the phv-accent class). Decorative:
+// the banner text carries the page meaning, so the diagram is hidden from assistive technology (aria-hidden on the card).
 import type {ReactNode} from 'react';
 
 function Frame({children}:{children:ReactNode}){
@@ -8,7 +8,7 @@ function Frame({children}:{children:ReactNode}){
 }
 const Check=({x,y}:{x:number;y:number})=><path className="phv-check" d={`M${x-5} ${y}l3.5 3.5 6.5-7`}/>;
 
-/** Глоссарий: три термина, один выбран, линия к его определению. */
+/** Glossary: three terms, one selected, a line to its definition. */
 export function GlossaryVisual(){
   return <Frame>
     {['agent','preflight','evidence'].map((term,i)=><g key={term} className={i===1?'phv-accent':'phv-term'}>
@@ -26,7 +26,7 @@ export function GlossaryVisual(){
   </Frame>;
 }
 
-/** Операционная памятка: четыре чек-листа по этапам, текущий отмечен. */
+/** Operational cheat sheet: four checklists by stage, the current one marked. */
 export function ChecklistVisual(){
   const rows=['до старта','перед review','перед merge','после merge'];
   return <Frame>
@@ -40,7 +40,7 @@ export function ChecklistVisual(){
   </Frame>;
 }
 
-/** Agent Pack: архив и файлы, которые получает агент. */
+/** Agent Pack: the archive and the files the agent receives. */
 export function AgentPackVisual(){
   const files=['AGENTS.md','llms.txt','главы .md'];
   return <Frame>
@@ -55,7 +55,7 @@ export function AgentPackVisual(){
   </Frame>;
 }
 
-/** Обзоры инструментов: путь от идеи к review. */
+/** Tool reviews: the path from idea to review. */
 export function ToolsVisual(){
   const steps=['идея','прототип','проверка','review'];
   return <Frame>
@@ -68,7 +68,7 @@ export function ToolsVisual(){
   </Frame>;
 }
 
-/** Codex: окно задачи — запрос, diff, проверка. */
+/** Codex: a task window with request, diff, check. */
 export function CodexVisual(){
   return <Frame>
     <rect className="phv-card" x="40" y="34" width="320" height="192" rx="20"/>
@@ -82,7 +82,7 @@ export function CodexVisual(){
   </Frame>;
 }
 
-/** Claude Code: проект, в котором агент меняет файлы и запускает проверку. */
+/** Claude Code: a project where the agent changes files and runs a check. */
 export function ClaudeCodeVisual(){
   const tree=['app/','src/','tests/'];
   return <Frame>
@@ -102,7 +102,7 @@ export function ClaudeCodeVisual(){
   </Frame>;
 }
 
-/** Полезные материалы: три стопки — видео, статьи, документация. */
+/** Useful resources: three stacks of videos, articles, documentation. */
 export function ResourcesVisual(){
   const shelves=['видео','статьи','доки'];
   return <Frame>
@@ -116,7 +116,7 @@ export function ResourcesVisual(){
   </Frame>;
 }
 
-/** Как читать руководство: маршрут по главам, начало отмечено. */
+/** How to read the handbook: a route through the chapters, the start marked. */
 export function RouteVisual(){
   const stops=['00','01','08','15','23'];
   return <Frame>

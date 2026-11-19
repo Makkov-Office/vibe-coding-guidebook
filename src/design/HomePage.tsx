@@ -1,7 +1,7 @@
-// Главная (P4-01, вид — P4-06 по экрану «Главная» RD-01 f): hero из двух карточек (текст и одна
-// спокойная схема пути задачи), 8 карточек разделов с иллюстрацией, «Продолжить» для вернувшихся,
-// следующие шаги и подвал. Тексты — content/home.md (generated.home), разделы и их адреса —
-// navSections() (P3-01), иллюстрации — home-illustrations.tsx. Стили — src/design/home.css.
+// Home page (P4-01, look from P4-06 per the RD-01 f "Home" screen): a hero of two cards (text and one
+// calm diagram of the task path), 8 section cards with an illustration, "Continue" for returning readers,
+// next steps and the footer. Texts: content/home.md (generated.home); sections and their addresses:
+// navSections() (P3-01); illustrations: home-illustrations.tsx. Styles: src/design/home.css.
 import Link from 'next/link';
 import {handbook} from '../components/HandbookPage';
 import {ReaderPageData} from '../components/ReaderPageData';
@@ -15,7 +15,7 @@ import type {HomeContent} from '../content/types';
 
 const pageData={chapterId:'home',outline:[],hasChecklists:false,terms:[],levels:null,blocks:[]};
 
-/** Мета-строка карточки из данных сборки: номера глав раздела или число страниц; шаблоны — «## Подписи» в content/home.md. */
+/** The card meta line from build data: chapter numbers of the section or the page count; templates are "## Подписи" (Labels) in content/home.md. */
 function meta(section:NavSection,labels:HomeContent['labels']){
   const numbers=section.pages.map(page=>page.number).filter(Boolean);
   if(numbers.length&&numbers.length===section.pages.length)return numbers.length===1?fillLabel(labels.chapter,{n:numbers[0]}):fillLabel(labels.chapters,{from:numbers[0],to:numbers.at(-1)!});
@@ -28,7 +28,7 @@ export function HomePage(){
   const sections=navSections(handbook.chapters.map(({id,number,title,href})=>({id,number,title,path:href}))).filter(section=>section.id!=='home');
   const sectionOf=(id:string)=>sections.find(item=>[...item.pages,...item.groups.flatMap(group=>group.pages)].some(page=>page.chapter===id))?.label??'';
   const chapters=Object.fromEntries(handbook.chapters.map(chapter=>[chapter.id,{title:chapter.title,section:sectionOf(chapter.id)}]));
-  // Тренажёр — только своей главы читателя (P7-03): у главы без тренажёра карточки нет.
+  // The drill is only for the reader's own chapter (P7-03): a chapter without a drill gets no card.
   const drills=Object.fromEntries(handbook.drills.map(drill=>[drill.chapter,{title:drill.title,text:drill.intro,minutes:drill.minutes,href:pageHref(drill.chapter,'check')}]));
   return <><ReaderPageData value={pageData}/><main id="reader" tabIndex={-1} className="home shell-wide">
     <div className="home-hero page-hero">

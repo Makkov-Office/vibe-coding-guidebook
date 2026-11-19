@@ -29,4 +29,4 @@ Screenshot update, checked again October11: fresh snapshots in `.sites-runtime/r
 | Scheduled / scripted work | https://learn.chatgpt.com/docs/automations and https://learn.chatgpt.com/docs/non-interactive-mode | Local running host vs cloud/event surfaces distinguished |
 | Sites | https://learn.chatgpt.com/docs/sites | Public beta, eligible plans, all deployment URLs production |
 
-Published text is an original Russian synthesis with sources beside each feature. Prompts and workflow advice are authored recommendations. No cross-product rankings, speed benchmarks or fixed successful-task counts. Review is a dated snapshot; no automatic freshness mechanism is claimed.
+Published text is an original synthesis with sources beside each feature. Prompts and workflow advice are authored recommendations. No cross-product rankings, speed benchmarks or fixed successful-task counts. Review is a dated snapshot; no automatic freshness mechanism is claimed.

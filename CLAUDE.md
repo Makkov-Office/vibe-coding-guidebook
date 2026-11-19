@@ -1,12 +1,12 @@
 @AGENTS.md
 
-## Специфика Claude Code
+## Claude Code specifics
 
-- Работай в отдельной ветке/worktree на тикет, не в основном checkout.
-- Plan mode для тикетов Medium/High: сначала план, потом правки.
-- Независимое review — отдельный субагент без авторского контекста: передай ему PR, тикет и ссылки на правила, не своё резюме.
-- Вычитка упрощённых учебных текстов (P5-04, P6-01…P6-05, P6-07) — так же отдельный субагент-редактор (новый текст P6-06 — ещё и founder approval): PR, тикет и оригинал на base SHA; без его READY на HEAD текстовый PR не мержится (бриф, раздел 9.5).
-- `.claude/settings.json` содержит deny-правила и PreToolUse-hook `.claude/hooks/guard-git.sh` (анализатор `guard_git.py`, регрессия `tests/guard-git.test.mjs` в `npm test`). Не ослабляй их; изменение этих файлов — High risk, нужен founder.
-- Где это действует: локальная сессия и облачная сессия с одним репозиторием вне Projects читают `.claude/settings.json`. В облачных thread'ах Claude Code Projects permission rules и hooks репозитория **не применяются**: так говорит страница Settings документации Claude Code и так наблюдалось в сессиях P1-01 и P1-01b. Оговорка: страница Projects утверждает обратное для проекта с одним репозиторием, противоречие не разрешено (`docs/evidence/p1-01b-harness-enforcement.md`). Поэтому на hook и deny в Projects не полагайся. Там правила AGENTS.md соблюдаешь сам, а техническая защита `main` — только на стороне GitHub. Hook запускается из `$CLAUDE_PROJECT_DIR` (каталог старта сессии), то есть в версии из `main`.
-- Хостинг — Vercel (проект `vibe-coding-guidebook`, команда `makkov-design`): preview на каждый PR, закрыт Deployment Protection. Production из `main` включён решением founder 23.10.2026 (P1-16, ADR-0002): merge в `main` создаёт production-деплой на `vibe-coding-guidebook-ivory.vercel.app`; после merge проверь, что деплой READY на SHA merge-коммита. ChatGPT Sites остаётся отдельным адресом, его не трогай.
-- Отчёты founder — по-русски, коротко: сделано, evidence, BLOCKED, нужные решения, следующий шаг.
+- Work in a separate branch/worktree per ticket, not in the main checkout.
+- Plan mode for Medium/High tickets: plan first, then edits.
+- Independent review is a separate subagent without the author's context: give it the PR, the ticket and links to the rules, not your summary.
+- Proofreading of simplified learning texts (P5-04, P6-01…P6-05, P6-07) is likewise a separate editor subagent (the new text of P6-06 also needs founder approval): the PR, the ticket and the original at the base SHA; without its READY on HEAD a text PR is not merged (brief, section 9.5).
+- `.claude/settings.json` contains deny rules and the PreToolUse hook `.claude/hooks/guard-git.sh` (analyzer `guard_git.py`, regression test `tests/guard-git.test.mjs` in `npm test`). Do not weaken them; changing these files is High risk and needs the founder.
+- Where this applies: a local session and a cloud session with a single repository outside Projects read `.claude/settings.json`. In Claude Code Projects cloud threads, repository permission rules and hooks are **not applied**: the Claude Code documentation's Settings page says so, and this was observed in sessions P1-01 and P1-01b. Caveat: the Projects page claims the opposite for a project with one repository; the contradiction is unresolved (`docs/evidence/p1-01b-harness-enforcement.md`). So do not rely on the hook and deny rules in Projects. There you follow the AGENTS.md rules yourself, and the technical protection of `main` is only on the GitHub side. The hook runs from `$CLAUDE_PROJECT_DIR` (the session's start directory), that is, in the version from `main`.
+- Hosting is Vercel (project `vibe-coding-guidebook`, team `makkov-design`): a preview for every PR, behind Deployment Protection. Production from `main` was enabled by founder decision on 2026-10-23 (P1-16, ADR-0002): a merge to `main` creates a production deploy to `vibe-coding-guidebook-ivory.vercel.app`; after merge, check that the deploy is READY on the merge commit's SHA. ChatGPT Sites stays a separate address; do not touch it.
+- Reports to the founder are in the founder's language, short: done, evidence, BLOCKED, decisions needed, next step.

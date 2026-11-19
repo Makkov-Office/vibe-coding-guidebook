@@ -24,7 +24,7 @@ const PACK='agent-pack',ZIP='/agent-pack.zip';
 
 /** Markdown of every page: the handbook split at its chapter headings, the top-level `##` of the
  *  CommonMark tree (so a `##` inside code, a quote or a list never starts a page). A chapter with
- *  an overview (P5-01) gets it first, under «### Обзор», as on its site page. */
+ *  an overview (P5-01) gets it first, under "### Обзор" (Overview), as on its site page. */
 export function splitPages(source,chapters){
   const lines=source.split('\n');
   const starts=unified().use(remarkParse).use(remarkGfm).parse(source).children.filter(node=>node.type==='heading'&&node.depth===2).map(node=>node.position.start.line-1);
@@ -50,7 +50,7 @@ export function splitPages(source,chapters){
   return pages;
 }
 /** The overview file of a tabbed chapter as Markdown for agents: no front matter, its `##` sections
- *  one level below «### Обзор», and `#anchor` links pointed at the tab that holds the anchor. */
+ *  one level below "### Обзор" (Overview), and `#anchor` links pointed at the tab that holds the anchor. */
 export function overviewMarkdown(source,chapter){
   const where=`content/overview/${chapter.number}.md`;
   const body=source.replace(/^---\n[\s\S]*?\n---\n/,'');

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "about": "P2-05: old address -> address in the 9-section structure (RD-01, ADR-0003). Edited by hand, checked by tests/url-map.test.mjs; redirects are built from it by scripts/vercel-output.mjs only for entries whose target page exists in the build. How to add a page: README.md, section «Карта адресов».",
+  "about": "P2-05: old address -> address in the 9-section structure (RD-01, ADR-0003). Edited by hand, checked by tests/url-map.test.mjs; redirects are built from it by scripts/vercel-output.mjs only for entries whose target page exists in the build. How to add a page: README.md, section \"URL map\".",
   "tabs": [
     { "id": "overview", "segment": "", "label": "Обзор" },
     { "id": "how-it-works", "segment": "how-it-works", "label": "Как устроено" },

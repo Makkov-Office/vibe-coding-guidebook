@@ -1,4 +1,4 @@
-// Additional Russian inflections; definitions stay in content/handbook.md.
+// Additional inflections; definitions stay in content/handbook.md.
 export const inflections = {
   'term-agent': ['агенты','агенту','агенте'], 'term-repository':['репозиторию','репозиториев','репозиториях'],
   'term-ticket':['тикета','тикету','тикеты','тикетов','тикетами'], 'term-commit':['коммиту','коммитами'],

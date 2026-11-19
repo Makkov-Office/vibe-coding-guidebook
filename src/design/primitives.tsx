@@ -1,5 +1,5 @@
-// Примитивы «Чертежа» (P2-04): из них собираются экраны фаз 3–7. Стили — src/design/primitives.css,
-// спецификация — docs/design/visual-language.md, раздел «Примитивы и шаблоны».
+// "Blueprint" primitives (P2-04): the screens of phases 3–7 are built from them. Styles: src/design/primitives.css,
+// spec: docs/design/visual-language.md, section "Primitives and templates".
 import {createElement,useId,type AnchorHTMLAttributes,type ButtonHTMLAttributes,type CSSProperties,type ReactNode} from 'react';
 import {iconProps,iconRoles} from './icons.mjs';
 
@@ -18,7 +18,7 @@ export function Card({href,tone='surface',className,children}:{href?:string;tone
   return href?<a className={classes} href={href}>{children}</a>:<div className={classes}>{children}</div>;
 }
 
-/** Цвет-смысл всегда с подписью и иконкой роли, чтобы читался без цвета (раздел 4). */
+/** A meaning colour always comes with a label and a role icon, so it reads without colour (section 4). */
 export function Pill({meaning,icon=true,children}:{meaning:Meaning;icon?:boolean;children:ReactNode}){
   return <span className={`bp-pill bp-pill--${meaning}`}>{icon&&<RoleIcon role={meaningIcon[meaning]}/>}{children}</span>;
 }
@@ -36,7 +36,7 @@ export function ButtonLink({variant='fill',icon,children,...props}:ButtonProps&A
   return <a className={`bp-button bp-button--${variant}`} {...props}>{children}{icon&&<RoleIcon role={icon}/>}</a>;
 }
 
-/** Линия шага: шаги до current пройдены; animate включает приём «Смена шага». */
+/** Step line: steps before current are done; animate turns on the "Step change" technique. */
 export function StepLine({steps,current,animate=false,label}:{steps:string[];current:number;animate?:boolean;label:string}){
   return <ol className={cx('bp-steps',animate&&'bp-steps--animate')} aria-label={label}>
     {steps.map((step,i)=>{
@@ -55,7 +55,7 @@ export function ProgressDots({total,current,label}:{total:number;current:number;
 export function Annotation({children}:{children:ReactNode}){return <span className="bp-anno">{children}</span>;}
 export function GameLabel({children}:{children:ReactNode}){return <span className="bp-game">{children}</span>;}
 
-/** Баннер с паттерном «+» (8 px в ячейке 28 px) и фирменной рамкой: только hero главной и «Начать». */
+/** Banner with the "+" pattern (8 px in a 28 px cell) and the brand frame: only the hero of the home page and "Start". */
 export function PlusBanner({children}:{children:ReactNode}){
   const id=useId();
   return <section className="bp-banner">
@@ -67,8 +67,8 @@ export function PlusBanner({children}:{children:ReactNode}){
   </section>;
 }
 
-/* Шаблоны SVG «Чертёж». Схема не сжимается меньше ширины viewBox (подписи не мельче 10.5 px):
-   на узком экране она прокручивается в рамке, рамка доступна с клавиатуры. */
+/* "Blueprint" SVG templates. A diagram never shrinks below the viewBox width (labels no smaller than 10.5 px):
+   on a narrow screen it scrolls inside its frame, and the frame is keyboard accessible. */
 export function Blueprint({viewBox,title,children}:{viewBox:string;title:string;children:ReactNode}){
   const id=useId();
   const width=Number(viewBox.trim().split(/[\s,]+/)[2]);
@@ -95,5 +95,5 @@ export function BpArrow({d,dashed=false,draw=false}:{d:string;dashed?:boolean;dr
 
 export function BpLabel({x,y,children}:{x:number;y:number;children:ReactNode}){return <text className="bp-label" x={x} y={y}>{children}</text>;}
 
-/** Приём «Бег точки»: одна точка идёт по пути задачи, пауза в конце; на схеме не больше одной. */
+/** The "Running dot" technique: one dot moves along the task path, pauses at the end; at most one per diagram. */
 export function BpRunDot({d}:{d:string}){return <circle className="bp-run" r="4" style={{offsetPath:`path('${d}')`}}/>;}

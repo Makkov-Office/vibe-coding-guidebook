@@ -1,8 +1,8 @@
-// Визуал баннера главы (P5-05): SVG из примитивов «Чертежа» — пилюли, скруглённые прямоугольники, линии, моно-подписи.
-// Для главы 08 — чек-лист проверок preflight и четыре результата (RD-01, экран «Страница темы»);
-// для остальных глав — спокойный общий визуал: номер главы и четыре таба страницы.
-// Цвета — только токены через классы chapter-template.css (.cv-*). Декоративный: смысл несёт текст баннера,
-// поэтому карточка визуала скрыта от вспомогательных технологий (aria-hidden в ChapterTemplate).
+// Chapter banner visual (P5-05): SVG from "Blueprint" primitives: pills, rounded rectangles, lines, mono labels.
+// For chapter 08, a checklist of preflight checks and four results (RD-01, the "Topic page" screen);
+// for the other chapters, a calm shared visual: the chapter number and the four tabs of the page.
+// Colours are tokens only, through the chapter-template.css classes (.cv-*). Decorative: the banner text carries the meaning,
+// so the visual card is hidden from assistive technology (aria-hidden in ChapterTemplate).
 
 import type {CSSProperties} from 'react';
 
@@ -31,7 +31,7 @@ function PreflightVisual(){
   </svg>;
 }
 
-/** Номер главы и четыре таба; выделен текущий таб страницы. */
+/** The chapter number and four tabs; the current tab of the page is highlighted. */
 function GenericVisual({number,tabs,current}:{number:string;tabs:string[];current:number}){
   return <svg className="cv motion-draw" viewBox="0 0 520 300" focusable="false">
     <circle className="cv-card" cx="120" cy="150" r="76"/>

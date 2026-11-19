@@ -63,7 +63,7 @@ test('the glossary and the cheat sheet live at their new addresses; links lead t
  await expect(page.locator('main h1')).toContainText('Операционная памятка');
  await expect(page.locator('.sidebar a[href="/reference/22-cheatsheet"]')).toHaveAttribute('aria-current','page');
  await expect(page.locator('main .term-link').first()).toHaveAttribute('href',/^\/reference\/glossary#term-/);
- // P3-07: the header link is gone; below 1024 px the glossary is in «Разделы» (the current section starts open).
+ // P3-07: the header link is gone; below 1024 px the glossary is in "Sections" (the current section starts open).
  await page.setViewportSize({width:800,height:900});await page.locator('.bottom-bar').getByRole('button',{name:'Разделы'}).click();await page.locator('#section-menu a[href="/reference/glossary"]').click();
  await expect(page).toHaveURL(/\/reference\/glossary$/);await expect(page.locator('main [data-chapter="ch-23"]')).toBeVisible();
  await expect(page).toHaveTitle(/^Глоссарий · /);

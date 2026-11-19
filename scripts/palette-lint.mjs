@@ -1,22 +1,22 @@
-// Линтер палитры «Чертежа» (P2-04): CSS, SVG и код интерфейса в src/, app/, public/brand
-// используют только токены app/tokens.css (var(--…), currentColor) или файлы из разрешённого списка.
-// Запуск: node scripts/palette-lint.mjs [файл…]; входит в npm test (tests/palette-lint.test.mjs).
+// "Blueprint" palette linter (P2-04): CSS, SVG and interface code in src/, app/, public/brand
+// use only app/tokens.css tokens (var(--…), currentColor) or files from the allow list.
+// Run: node scripts/palette-lint.mjs [file…]; part of npm test (tests/palette-lint.test.mjs).
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 export const ROOTS = ['src', 'app', 'public/brand'];
-const EXTENSIONS = /\.(?:css|svg|tsx?|jsx?|mjs)$/; // JSON (в том числе сгенерированный контент) не проверяется
+const EXTENSIONS = /\.(?:css|svg|tsx?|jsx?|mjs)$/; // JSON (including generated content) is not checked
 
-// Разрешённые файлы с цветовыми литералами — каждый с причиной.
+// Allowed files with colour literals, each with a reason.
 export const ALLOWED = {
-  'app/tokens.css': 'источник токенов: значения из docs/design/palette.json',
-  'public/brand/flow.svg': 'утверждённый знак FLOW, меняется с ребрендингом P4-05',
-  'public/brand/makkov.svg': 'подпись автора by Makkov, байты не меняются (белая, инвертируется --signature-filter)',
+  'app/tokens.css': 'token source: values from docs/design/palette.json',
+  'public/brand/flow.svg': 'approved FLOW mark, changes with the P4-05 rebrand',
+  'public/brand/makkov.svg': 'by Makkov author signature, bytes do not change (white, inverted by --signature-filter)',
 };
 
 const LITERAL = /#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|oklch|oklab|lab|lch|color)\(/gi;
-// Все 148 именованных цветов CSS Color 4 и системные цвета; transparent и currentColor разрешены.
+// All 148 CSS Color 4 named colours and the system colours; transparent and currentColor are allowed.
 export const NAMED_COLORS = new Set(`aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue blueviolet brown burlywood
 cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan darkblue darkcyan darkgoldenrod darkgray darkgreen darkgrey
 darkkhaki darkmagenta darkolivegreen darkorange darkorchid darkred darksalmon darkseagreen darkslateblue darkslategray darkslategrey
@@ -31,10 +31,10 @@ skyblue slateblue slategray slategrey snow springgreen steelblue tan teal thistl
 yellowgreen accentcolor accentcolortext activetext buttonborder buttonface buttontext canvas canvastext field fieldtext graytext
 highlight highlighttext linktext mark marktext selecteditem selecteditemtext visitedtext`.split(/\s+/));
 
-// Свойства и атрибуты, где значение — цвет или содержит цвет (CSS, SVG, JSX, объекты style в JS).
+// Properties and attributes whose value is or contains a colour (CSS, SVG, JSX, style objects in JS).
 const COLOR_ATTR = /(?<![-\w])(fill|stroke|stop-?color|flood-?color|lighting-?color|color)\s*=\s*\{?\s*(["'`])([^"'`]*)\2/gi;
 const STYLE_ATTR = /(?<![-\w])style\s*=\s*(["'])([^"']*)\1/gi;
-// Ключи объектов style в JS, которые принимают цвет (camelCase и kebab-case).
+// Keys of JS style objects that take a colour (camelCase and kebab-case).
 const JS_COLOR_KEY = /(?<![-\w$])(["']?)((?:color|fill|stroke|background(?:-?color|-?image)?|border(?:-?(?:top|right|bottom|left|block|inline))?(?:-?color)?|outline(?:-?color)?|(?:box|text)-?shadow|(?:caret|accent|stop|flood|lighting|column-?rule|text-?decoration)-?color))\1\s*:\s*(["'`])([^"'`]*)\3/gi;
 
 function stripComments(text, file) {
@@ -43,23 +43,23 @@ function stripComments(text, file) {
   return text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
 }
 
-/** Именованные цвета в значении: отдельные слова, не имена функций, не части var(--…) и не строки. */
+/** Named colours in a value: separate words, not function names, not parts of var(--…) and not strings. */
 function namedIn(value) {
   const clean = value.replace(/(["'])[^"']*\1/g, ' ').replace(/url\([^)]*\)/gi, ' ');
   return [...clean.matchAll(/(?<![-\w#.])([a-z]+)(?![-\w(])/gi)].map((m) => m[1].toLowerCase()).filter((w) => NAMED_COLORS.has(w));
 }
 
-// Свойства, которые не принимают цвет: слово-цвет в них — имя (keyframes, grid-area, view-transition), а не цвет.
+// Properties that take no colour: a colour word in them is a name (keyframes, grid-area, view-transition), not a colour.
 const NOT_COLOR_PROP = /^(?:animation(?:-name)?|transition(?:-property)?|will-change|grid(?:-[a-z-]+)?|[a-z-]*-name|font-family|content|counter-[a-z]+|list-style-type|quotes)$/i;
 
-/** Декларации CSS «свойство: значение» на любом уровне вложенности (вложенные правила, @media, атрибут style). */
+/** CSS "property: value" declarations at any nesting level (nested rules, @media, the style attribute). */
 function* declarations(css, offset = 0) {
   let depth = 0, start = 0;
   for (let i = 0; i <= css.length; i++) {
     const c = css[i];
     if (c !== '{' && c !== '}' && i < css.length) continue;
     if (depth > 0) {
-      // Перед «{» после последней «;» стоит селектор вложенного правила, а не декларация.
+      // Before "{" and after the last ";" stands the selector of a nested rule, not a declaration.
       let body = css.slice(start, i);
       if (c === '{') body = body.slice(0, Math.max(0, body.lastIndexOf(';')));
       for (const d of body.matchAll(/([-\w]+)\s*:\s*([^;]+)/g)) if (!NOT_COLOR_PROP.test(d[1])) yield { prop: d[1], value: d[2], index: offset + start + d.index };
@@ -71,7 +71,7 @@ function* declarations(css, offset = 0) {
 
 const SYSTEM_COLORS = new Set('accentcolor accentcolortext activetext buttonborder buttonface buttontext canvas canvastext field fieldtext graytext highlight highlighttext linktext mark marktext selecteditem selecteditemtext visitedtext'.split(' '));
 
-/** Диапазоны [начало, конец] блоков @media (forced-colors: active). */
+/** [start, end] ranges of @media (forced-colors: active) blocks. */
 function forcedColorRanges(css) {
   const ranges = [];
   for (const m of css.matchAll(/@media[^{]*forced-colors\s*:\s*active[^{]*\{/gi)) {
@@ -82,21 +82,21 @@ function forcedColorRanges(css) {
   return ranges;
 }
 
-/** Цветовые литералы и именованные цвета в тексте файла: [{match, line}]. */
+/** Colour literals and named colours in the file text: [{match, line}]. */
 export function findColors(text, file) {
   const code = stripComments(text, file);
   const found = [];
   const lineOf = (index) => code.slice(0, index).split('\n').length;
   const named = (prop, value, index) => { for (const w of namedIn(value)) found.push({ match: `${prop}:${w}`, line: lineOf(index) }); };
   for (const m of code.matchAll(LITERAL)) {
-    // В коде «#…» после href — якорь ссылки, а не цвет.
+    // In code, "#…" after href is a link anchor, not a colour.
     if (!/\.(?:css|svg)$/.test(file) && m[0].startsWith('#') && /href\s*[=:]\s*\{?\s*["'`]$/.test(code.slice(Math.max(0, m.index - 16), m.index))) continue;
     found.push({ match: m[0], line: lineOf(m.index) });
   }
   if (file.endsWith('.css')) {
     const forced = forcedColorRanges(code);
     for (const d of declarations(code)) {
-      // В @media (forced-colors: active) системные цвета обязательны (Windows High Contrast).
+      // In @media (forced-colors: active) system colours are required (Windows High Contrast).
       if (forced.some(([from, to]) => d.index > from && d.index < to)) { for (const w of namedIn(d.value)) if (!SYSTEM_COLORS.has(w)) found.push({ match: `${d.prop}:${w}`, line: lineOf(d.index) }); }
       else named(d.prop, d.value, d.index);
     }
@@ -124,7 +124,7 @@ export function listFiles(root = process.cwd()) {
   return out.sort();
 }
 
-/** Нарушения по файлам; разрешённые файлы пропускаются. Fail closed: пустой список файлов — ошибка. */
+/** Violations per file; allowed files are skipped. Fail closed: an empty file list is an error. */
 export function lint(files, root = process.cwd()) {
   if (files.length === 0) throw new Error('palette-lint: no files to check');
   const problems = [];

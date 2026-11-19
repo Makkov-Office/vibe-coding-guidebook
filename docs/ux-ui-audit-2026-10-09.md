@@ -1,42 +1,42 @@
-# Независимый UX/UI аудит — 9 октября 2026
+# Independent UX/UI audit — October 9, 2026
 
-Аудит выполнен отдельным агентом. Проверялись исходники и локальный сайт `http://127.0.0.1:5173` через временную браузерную вкладку. Пользовательская вкладка и production не изменялись. Исправления выполнял основной агент; этот агент не менял код интерфейса.
+The audit was performed by a separate agent. The sources and the local site `http://127.0.0.1:5173` were checked through a temporary browser tab. The user's tab and production were not changed. Fixes were made by the main agent; this agent did not change interface code.
 
-## Находки
+## Findings
 
-| Приоритет | Место | Проблема и доказательство | Исправление / перепроверка |
+| Priority | Location | Problem and evidence | Fix / recheck |
 | --- | --- | --- | --- |
-| P2 | `src/components/Reader.tsx`, поиск | Запрос «агент», 8 нажатий ArrowDown: выбранная запись имела top 1479 px, когда видимая область результатов была 281–655 px. У input отсутствовал `aria-activedescendant`. Выбор был невидимым и не сообщался assistive technology. | Исправлено основным агентом. Повторный browser check: выбранный результат видим, input `role=combobox`, `aria-activedescendant=search-result-8`, запись `role=option`. Escape возвращает focus кнопке поиска. |
-| P2 | `src/content/compiler.mjs`, `Reader.tsx`, чеклисты | Полный текст пункта находился в соседнем `div.practice-text`, а label включал только checkbox. Текст не активировал checkbox. | Основной агент добавил активацию текстовой области с исключением links/controls. Browser: click текста меняет false→true; собственная тестовая отметка возвращена в false. |
-| P2 | `app/chapters/[number]/page.tsx`, `/glossary`, `/print` | Все страницы наследовали одинаковый brand title: вкладки и история не различали разделы. | Добавлены отдельные metadata. Browser: glossary title «Глоссарий · ULTIMATE Vibe-coder guidebook [BETA]». |
-| P2 | `Reader.tsx`, footer | Сброс чеклистов показывался даже на страницах без чеклистов. При первом исправлении оказался скрыт и в главе 06: chapter.html в client metadata намеренно пуст. | Основной агент передал серверный признак наличия чеклистов. Browser: chapter06 и chapter22 показывают reset; chapter03 не показывает. |
-| P2 | `ContextPreview.tsx` | Термины в панели примера не получали role/button и «Объяснить термин», поскольку MutationObserver наблюдал только reader. В reader и contextual panel были разные семантики одной функции. | Расширено наблюдение панели. Browser: term links в example panel получают `role=button`, tooltip находится внутри dialog. |
-| P2 | `ContextPreview.tsx`, copy status | Сообщение копирования не очищалось при открытии другого содержимого панели и могло относиться к предыдущему примеру. Подтверждено чтением state/update code. | Основной агент добавил очистку status при смене content. Не проверялся реальный отказ clipboard или повторное копирование в браузере. |
-| P2 | `Reader.tsx`, мобильный drawer | Нажатие по подложке не закрывало меню. Browser320: drawer rect left38/right320; click x8/y400 оставлял `open=true`. | Передано основному агенту для закрытия по backdrop с проверкой bounds. Состояние исправления нужно сверить после финальных изменений. |
-| P2 | `Reader.tsx`, Enter в поиске | Основной агент при своем browser QA воспроизвел повторное открытие поиска: Enter закрыл dialog, onClose вернул focus на trigger, default Enter активировал trigger. | Основной агент добавил preventDefault и подавление возврата focus при переходе к результату. Независимый агент не перепроверял этот finding. |
+| P2 | `src/components/Reader.tsx`, search | Query "agent", 8 ArrowDown presses: the selected entry had top 1479 px while the visible results area was 281–655 px. The input had no `aria-activedescendant`. The selection was invisible and not announced to assistive technology. | Fixed by the main agent. Repeat browser check: the selected result is visible, input `role=combobox`, `aria-activedescendant=search-result-8`, entry `role=option`. Escape returns focus to the search button. |
+| P2 | `src/content/compiler.mjs`, `Reader.tsx`, checklists | The full item text was in the neighbouring `div.practice-text`, and the label held only the checkbox. The text did not activate the checkbox. | The main agent added activation of the text area, excluding links/controls. Browser: clicking the text changes false→true; our own test mark was set back to false. |
+| P2 | `app/chapters/[number]/page.tsx`, `/glossary`, `/print` | All pages inherited the same brand title: tabs and history did not distinguish sections. | Separate metadata added. Browser: glossary title "Glossary · ULTIMATE Vibe-coder guidebook [BETA]". |
+| P2 | `Reader.tsx`, footer | Checklist reset was shown even on pages without checklists. With the first fix it was also hidden in chapter 06: chapter.html in the client metadata is intentionally empty. | The main agent passed a server-side flag for whether checklists exist. Browser: chapter06 and chapter22 show reset; chapter03 does not. |
+| P2 | `ContextPreview.tsx` | Terms in the example panel did not get role/button and "Explain term", because the MutationObserver watched only the reader. The reader and the contextual panel had different semantics for the same feature. | Observation extended to the panel. Browser: term links in the example panel get `role=button`, the tooltip is inside the dialog. |
+| P2 | `ContextPreview.tsx`, copy status | The copy message was not cleared when other panel content opened and could refer to the previous example. Confirmed by reading the state/update code. | The main agent added clearing of the status on content change. A real clipboard failure or repeated copying was not checked in the browser. |
+| P2 | `Reader.tsx`, mobile drawer | Tapping the backdrop did not close the menu. Browser320: drawer rect left38/right320; click x8/y400 left `open=true`. | Handed to the main agent for closing on backdrop with a bounds check. The fix state must be rechecked after the final changes. |
+| P2 | `Reader.tsx`, Enter in search | The main agent, during its own browser QA, reproduced search reopening: Enter closed the dialog, onClose returned focus to the trigger, the default Enter activated the trigger. | The main agent added preventDefault and suppressed the focus return when jumping to a result. The independent agent did not recheck this finding. |
 
-## Фактическая проверка
+## Actual verification
 
-- Карта главы 02 на 320, 360, 768, 1024 и 1440 px: horizontal document overflow отсутствует; sidebar скрыт до1024 и виден от1024; outline появляется на1440. Reading column: 288/328/688/680/800 px соответственно.
-- Мобильное меню: переход к главе02 заканчивается actual navigation и закрытым drawer. Прежняя гипотеза о незакрывающемся меню отвергнута: Reader remount закрывает dialog.
-- Guided карта320: один видимый узел; переход «Далее» меняет шаг1→2 и detail на Repository knowledge.
-- DEMO-42: проверены Happy path, Review findings и Unavailable evidence. Текст результата соответствует выбранному сценарию. Отдельный Post-merge sync узел меняет detail.
-- Tooltip Entrypoint в chapter03 открывается над термином, получает `aria-describedby=term-tooltip`, закрывается Escape.
-- Example drawer desktop: немодальный `dialog.show()`. Mobile360: `:modal=true`, body scroll locked, высота680px при viewport800px (85dvh), horizontal overflow отсутствует; tooltip укладывается в горизонтальные границы; закрытие снимает lock и возвращает focus к «Открыть рядом».
-- Chapter06 после исправления: outline headings H1→H2→H2. Chapter22@320: 20 checkbox, каждый20px; horizontal overflow отсутствует.
-- Glossary:394 определения; невозможный запрос скрывает все, reset возвращает394 и пустой query.
-- В проверенной вкладке отсутствовали captured console errors на этапе проверки checkbox.
-- Desktop screenshot lifecycle визуально проверен: карточки pagination выровнены, radio labels не перекрываются, detail и nodes читаемы.
-- Collision panel13: все4 кнопки меняют detail title и соответствующий aria-label SVG. Disclosure контракта открывается, copy control включен.
-- Maturity21: M0–M5 проверены; detail меняется и содержит capabilities / exit критерии.
-- Прогресс21: первая отметка меняет1→2, отмена возвращает1. Reset click привел к CDP timeout; getJsDialog вернул undefined, последующие DOM/close тоже timeout. Тестовая вкладка2 могла остаться с native confirm. Reset не принимался; факт успешного cancel не утверждается. Основному агенту сообщено для восстановления браузера.
+- Chapter 02 map at 320, 360, 768, 1024 and 1440 px: no horizontal document overflow; the sidebar is hidden below 1024 and visible from 1024; the outline appears at 1440. Reading column: 288/328/688/680/800 px respectively.
+- Mobile menu: jumping to chapter02 ends in actual navigation and a closed drawer. The earlier hypothesis that the menu does not close was rejected: the Reader remount closes the dialog.
+- Guided map 320: one visible node; the "Next" transition changes step 1→2 and the detail to Repository knowledge.
+- DEMO-42: Happy path, Review findings and Unavailable evidence checked. The result text matches the selected scenario. A separate Post-merge sync node changes the detail.
+- The Entrypoint tooltip in chapter03 opens above the term, gets `aria-describedby=term-tooltip`, closes with Escape.
+- Example drawer on desktop: non-modal `dialog.show()`. Mobile360: `:modal=true`, body scroll locked, height 680px at viewport 800px (85dvh), no horizontal overflow; the tooltip fits within the horizontal bounds; closing removes the lock and returns focus to "Open alongside".
+- Chapter06 after the fix: outline headings H1→H2→H2. Chapter22@320: 20 checkboxes, each 20px; no horizontal overflow.
+- Glossary: 394 definitions; an impossible query hides all, reset returns 394 and an empty query.
+- The checked tab had no captured console errors during the checkbox check stage.
+- Desktop screenshot of lifecycle visually checked: pagination cards aligned, radio labels do not overlap, detail and nodes are readable.
+- Collision panel13: all 4 buttons change the detail title and the matching SVG aria-label. The contract disclosure opens, the copy control is enabled.
+- Maturity21: M0–M5 checked; the detail changes and contains capabilities / exit criteria.
+- Progress21: the first mark changes 1→2, undoing returns 1. The Reset click led to a CDP timeout; getJsDialog returned undefined, the following DOM/close calls also timed out. Test tab 2 may have been left with a native confirm. Reset was not accepted; a successful cancel is not claimed. Reported to the main agent to restore the browser.
 
-## Границы проверки
+## Verification limits
 
-Не выполнялись полный screen-reader проход, измерение всех rendered contrast pairs, реальное 200% browser zoom, browser no-JS/print, искусственные storage/clipboard failures и полный перебор всех glossary definitions/anchors. Native mobile focus trap основан на showModal; полный циклический клавиатурный обход требует отдельного подтверждения (Tab с последнего элемента может переводить focus в chrome браузера). В процессе локального аудита основной агент редактировал код, поэтому отдельные наблюдения делались до/после HMR; это явно отражено в таблице.
+Not performed: a full screen-reader pass, measurement of all rendered contrast pairs, real 200% browser zoom, browser no-JS/print, artificial storage/clipboard failures and a full sweep of all glossary definitions/anchors. The native mobile focus trap relies on showModal; a full cyclic keyboard traversal needs separate confirmation (Tab from the last element may move focus into the browser chrome). During the local audit the main agent was editing code, so some observations were made before/after HMR; this is stated explicitly in the table.
 
-Проверка является аудитом основных взаимодействий и responsive состояний, а не доказательством отсутствия всех возможных багов.
+The check is an audit of the main interactions and responsive states, not proof of the absence of all possible bugs.
 
-## Перепроверка основным агентом
+## Recheck by the main agent
 
-После финальных правок: mobile320 click backdrop x8/y400 закрывает drawer, focus возвращается «Открыть меню глав». Поиск материала How I use LLMs + Enter:0 открытых dialogs, hash и focus у ch-resources-item-how-i-use-llms-andrej-karpathy. Исправления backdrop и Enter подтверждены root browser QA. Нормализованы уровни заголовков reader H1/H2/H3 и interactive panels H2/H3 с сохранением типографики. Очистка copy status подтверждена кодом; повторный browser failure-injection не выполнялся. Все8 принятых findings исправлены; перечисленные границы проверки сохраняются.
+After the final edits: mobile320 click on backdrop x8/y400 closes the drawer, focus returns to "Open chapter menu". Search for the How I use LLMs resource + Enter: 0 open dialogs, hash and focus on ch-resources-item-how-i-use-llms-andrej-karpathy. The backdrop and Enter fixes were confirmed by root browser QA. Heading levels normalised: reader H1/H2/H3 and interactive panels H2/H3, typography kept. Copy status clearing confirmed by code; a repeated browser failure-injection was not performed. All 8 accepted findings fixed; the listed verification limits remain.
