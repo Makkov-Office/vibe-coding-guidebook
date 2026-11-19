@@ -498,26 +498,28 @@ title: "Preflight: start right"
 minutes: 3
 rule_strength: MUST
 ---
-## Why
+## Зачем
 One sentence: what pain this removes.
 
-## Rule
+## Правило
 > One phrase to remember. (Mandatory)
 
-## What it looks like
+## Как это выглядит
 The step of the end-to-end DEMO-42 case at this stage — 3–6 lines, real output.
 
-## Three things to do
+## Три вещи, которые нужно сделать
 1. …
 2. …
 3. …
 
-## Common mistake
+## Частая ошибка
 One mistake + how to notice it.
 
-## Test yourself
+## Проверь себя
 A link to the chapter's drill (section 10).
 ```
+
+The `##` headings are literal tokens the compiler parses (`OVERVIEW_SECTIONS` in `src/content/compiler.mjs`) and must stay exactly as written. In English: Why, Rule, What it looks like, Three things to do, Common mistake, Test yourself.
 
 Limits of the Overview tab: ≤ 350 words, ≤ 1 table, ≤ 1 diagram, no nested caveats.
 
