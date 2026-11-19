@@ -1,6 +1,6 @@
 ---
-name: Задача
-about: Исполнимый тикет по шаблону главы 06
+name: Task
+about: Executable ticket following the chapter 06 template
 title: "P?-??: "
 labels: ["task"]
 ---
@@ -27,8 +27,8 @@ validation:
 ```
 
 ### Definition of Ready
-- [ ] Outcome понятен
-- [ ] Scope и Out of scope ограничены
-- [ ] AC проверяемы
-- [ ] Зависимости разрешены
-- [ ] Risk, Docs Impact и validation обозначены
+- [ ] Outcome is clear
+- [ ] Scope and Out of scope are bounded
+- [ ] AC are verifiable
+- [ ] Dependencies are resolved
+- [ ] Risk, Docs Impact and validation are stated

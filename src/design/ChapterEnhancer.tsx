@@ -1,6 +1,6 @@
 'use client';
-// Поведение текста таба (P5-02): copy link у заголовков, таблицы-карточки на мобильных, текущий пункт «На этой странице».
-// HTML таба приходит готовым из компилятора, поэтому кнопки и подписи ячеек добавляются после монтирования.
+// Tab text behaviour (P5-02): copy link on headings, tables as cards on mobile, the current "On this page" item.
+// The tab HTML comes ready from the compiler, so buttons and cell labels are added after mount.
 import {useEffect,useRef,useState} from 'react';
 import {RoleIcon} from './primitives';
 
@@ -11,10 +11,10 @@ export function ChapterEnhancer(){
     const main=icon.current?.closest('.ct');const prose=main?.querySelector('.ct-prose');
     if(!main||!prose)return;
     const cleanup:(()=>void)[]=[];
-    // Тот же текст подряд live region не объявит: сначала очистить, затем показать.
+    // A live region will not announce the same text twice in a row: clear first, then show.
     let timer=0;const announce=(text:string)=>{setStatus('');clearTimeout(timer);timer=window.setTimeout(()=>setStatus(text),50);};
     cleanup.push(()=>clearTimeout(timer));
-    // 1. Copy link: кнопка вместо старого «#»; адрес — текущая страница с якорем заголовка.
+    // 1. Copy link: a button instead of the old "#"; the address is the current page with the heading anchor.
     for(const h of prose.querySelectorAll<HTMLElement>('h2[id],h3[id]')){
       h.querySelector('.permalink')?.remove();
       const button=document.createElement('button');
@@ -23,7 +23,7 @@ export function ChapterEnhancer(){
       button.innerHTML=icon.current!.innerHTML;
       const copy=async()=>{
         const url=`${location.origin}${location.pathname}#${encodeURIComponent(h.id)}`;
-        // Имя раздела в сообщении: повторное копирование другого раздела снова объявляется.
+        // The section name is in the message: copying another section again is announced again.
         const name=h.textContent?.trim();
         try{await navigator.clipboard.writeText(url);announce(`Ссылка на раздел «${name}» скопирована.`);}
         catch{announce(`Не удалось скопировать. Адрес раздела: ${decodeURI(url)}`);}
@@ -31,14 +31,14 @@ export function ChapterEnhancer(){
       button.addEventListener('click',copy);h.appendChild(button);
       cleanup.push(()=>{button.removeEventListener('click',copy);button.remove();});
     }
-    // 2. Таблицы: подпись столбца у каждой ячейки, чтобы ниже 600 px строка читалась карточкой.
+    // 2. Tables: a column label on every cell, so that below 600 px a row reads as a card.
     for(const table of prose.querySelectorAll('table')){
       const head=[...table.querySelectorAll('thead th')].map(th=>th.textContent?.trim()??'');
       if(!head.length)continue;
       table.classList.add('ct-cards');
       for(const row of table.querySelectorAll('tbody tr'))[...row.children].forEach((cell,i)=>head[i]&&cell.setAttribute('data-label',head[i]));
     }
-    // 3. «На этой странице»: текущий пункт — последний заголовок выше середины экрана; у конца страницы — последний.
+    // 3. "On this page": the current item is the last heading above the middle of the screen; at the end of the page, the last one.
     const headings=[...prose.querySelectorAll<HTMLElement>('h2[id]')];
     if(headings.length){
       let frame=0;

@@ -39,7 +39,7 @@ const chapterMarkup=id=>chapterProduct(id)?productMarkup(chapterProduct(id)):ico
 const featureIcon=title=>title.includes('Dots')?'dots':title.includes('Artifacts')?'docs':title.includes('Design')?'design':title.includes('Security')?'security':title.includes('Appshots')?'photo':title.includes('Подписки')?'tags':title.includes('Cloud')?'cloud':title.includes('Расписание')?'schedule':title.includes('От прототипа')?'world':title.includes('Браузер')||title.includes('Визуальный')?'world':title.includes('Review')||title.includes('review')?'review':title.includes('агент')||title.includes('Агенты')?'users':title.includes('План')||title.includes('/goal')?'lifecycle':title.includes('Контекст')?'context':title.includes('Модел')||title.includes('Mods')||title.includes('навыки')||title.includes('plugins')?'setup':'terminal';
 export const normalize = s => s.normalize('NFKC').toLocaleLowerCase('ru').replaceAll('ё','е');
 const toolPages={'Обзоры инструментов':{id:'ch-tools',path:'/tools'},'Codex: от идеи до проверенного результата':{id:'ch-codex',path:'/tools/codex'},'Claude Code: рабочий процесс внутри проекта':{id:'ch-claude-code',path:'/tools/claude-code'}};
-// The introduction (ch-00) moved from «/» to its page in «Начать» (P4-01); «/» is Главная.
+// The introduction (ch-00) moved from "/" to its page in "Start" (P4-01); "/" is the home page.
 export const INTRO_PATH='/start/00-how-to-read';
 // The old address of a page: the url-map key. Links use href (new address of a moved page), not path.
 export const chapterPath = id => Object.values(toolPages).find(page=>page.id===id)?.path??(id==='ch-00'?INTRO_PATH:id==='ch-23'?'/glossary':id==='ch-resources'?'/resources':`/chapters/${id.slice(3)}`);
@@ -108,11 +108,11 @@ export function parseOverview(number,text){
 }
 
 const HOME_SECTIONS=['Первый экран','Путь задачи','Разделы','Продолжить','Следующие шаги','Ссылки руководства','Подписи'];
-// «Подписи» (P4-06): interface templates of Главная, «Название: шаблон» with {placeholders}.
-// «Страницы» holds three plural forms (1 / 2–4 / 5+) separated by « | ».
+// "Подписи" (Labels, P4-06): interface templates of the home page, "Label: template" with {placeholders}.
+// "Страницы" (Pages) holds three plural forms (1 / 2–4 / 5+) separated by " | ".
 const HOME_LABELS={'Глава':['chapter',['n']],'Главы':['chapters',['from','to']],'Страницы':['pages',['n']],'Таб':['tab',['tab','n','total']],'Тренажёр':['drill',['minutes']]};
-// Главная (P4-01): content/home.md. Plain text and links in a fixed order of
-// sections; the cards follow the rail sections of url-map (without Главная).
+// Home page (P4-01): content/home.md. Plain text and links in a fixed order of
+// sections; the cards follow the rail sections of url-map (without the home page).
 // Throws with the broken rule; the result goes to generated.json as `home`.
 export function parseHome(text,railLabels){
   const fail=message=>{throw Error(`content/home.md: ${message}`);};
@@ -133,7 +133,7 @@ export function parseHome(text,railLabels){
   const items=(section,list=section.nodes.find(node=>node.type==='list'))=>{if(!list||list.ordered)fail(`«${section.title}» needs a bulleted list`);return list.children.map(item=>{if(item.children.length!==1||item.children[0].type!=='paragraph')fail(`«${section.title}»: one line per item`);return item.children[0];});};
   // Only the footer may link out, and only to the project repository on GitHub.
   const link=(node,section,external=false)=>{const first=node.children[0];if(first?.type!=='link')return null;if(!/^\/(?!\/)/.test(first.url)&&!(external&&/^https:\/\/github\.com\/Makkov-Office\//.test(first.url)))fail(`«${section.title}»: link ${first.url} must be a site path`);if(!plain(first))fail(`«${section.title}»: empty link text`);return {label:plain(first),href:first.url,rest:toString({type:'paragraph',children:node.children.slice(1)}).replace(/^:\s*/,'').trim()};};
-  const pair=(node,section)=>{const m=plain(node).match(/^([^:]+):\s+(.+)$/);if(!m)fail(`«${section.title}»: «${plain(node)}» is not «Название: текст»`);return {label:m[1].trim(),text:m[2].trim()};};
+  const pair=(node,section)=>{const m=plain(node).match(/^([^:]+):\s+(.+)$/);if(!m)fail(`«${section.title}»: «${plain(node)}» is not «Label: text»`);return {label:m[1].trim(),text:m[2].trim()};};
   const actions=items(hero).map(node=>link(node,hero)??fail('«Первый экран»: every action is a link'));
   if(actions.length!==2||actions.some(action=>action.rest))fail('«Первый экран» needs exactly 2 links');
   const steps=items(path).map(node=>{const {label,text}=pair(node,path);return {label,sub:text};});
@@ -526,7 +526,7 @@ export async function compileHandbook(source, {urlMap, overviews={}, glossaryLev
   if(drillInputs.length&&!drillSchema)throw Error('Drills need content/gamification/schema/drill.schema.json');
   const drills=compileDrills(drillInputs,drillSchema??{},id=>targets[id]?.path);
   const levelNames=levels?Object.fromEntries(LEVELS.map(level=>[level,levels.names[level].trim()])):null;
-  // Главная (P4-01): the rail sections after Главная are its cards.
+  // Home page (P4-01): the rail sections after the home page are its cards.
   const homePage=home!==undefined?parseHome(home,(urlMap?.sections??[]).filter(section=>section.rail&&section.id!=='home').map(section=>section.label)):null;
   return {home:homePage,html:finalHtml,intro,chapters,terms,topics,levels:levelNames,search,diagrams,blocks,panels,presentation,anchors,drills,audit};
 }

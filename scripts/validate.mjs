@@ -47,7 +47,7 @@ const before = snapshot();
 let failed = false;
 for (const [index, step] of STEPS.entries()) {
   if (failed) {
-    results.push({ name: step, status: "SKIP", detail: "не запускался: предыдущий шаг FAIL" });
+    results.push({ name: step, status: "SKIP", detail: "not run: a previous step FAILed" });
     continue;
   }
   console.log(`\n==> validate ${index + 1}/${STEPS.length}: npm run ${step}\n`);
@@ -70,7 +70,7 @@ for (const [index, step] of STEPS.entries()) {
 // files, new untracked output). git unavailable means "not verified" → FAIL.
 const after = before && snapshot();
 if (!before || !after) {
-  results.push({ name: "tree", status: "FAIL", detail: "git status не выполнился; чистоту дерева проверить нельзя" });
+  results.push({ name: "tree", status: "FAIL", detail: "git status failed; cannot check that the tree is clean" });
 } else {
   const changed = [...new Set([...before.keys(), ...after.keys()])]
     .filter((file) => before.get(file) !== after.get(file))
@@ -79,17 +79,17 @@ if (!before || !after) {
   const known = changed.filter((file) => KNOWN_CHANGES.has(file));
   const note = known.map((file) => `${file} (${KNOWN_CHANGES.get(file)})`).join("; ");
   if (unexpected.length) {
-    results.push({ name: "tree", status: "FAIL", detail: `validate изменил файлы: ${unexpected.join(", ")}`, changed: unexpected, known });
+    results.push({ name: "tree", status: "FAIL", detail: `validate changed files: ${unexpected.join(", ")}`, changed: unexpected, known });
   } else if (known.length) {
-    results.push({ name: "tree", status: "WARN", detail: `без неожиданных изменений; известное: ${note}`, changed: [], known });
+    results.push({ name: "tree", status: "WARN", detail: `no unexpected changes; known: ${note}`, changed: [], known });
   } else {
-    results.push({ name: "tree", status: "PASS", detail: "validate не изменил рабочее дерево", changed: [], known });
+    results.push({ name: "tree", status: "PASS", detail: "validate did not change the working tree", changed: [], known });
   }
 }
 
 const failures = results.filter((r) => r.status === "FAIL").map((r) => r.name);
 const width = Math.max(...results.map((r) => r.name.length));
-console.log("\nvalidate: сводка");
+console.log("\nvalidate: summary");
 for (const { status, name, detail } of results) console.log(`  ${status.padEnd(4)}  ${name.padEnd(width)}  ${detail}`);
 console.log(failures.length ? `validate: FAIL (${failures.join(", ")})` : "validate: PASS");
 console.log(JSON.stringify({

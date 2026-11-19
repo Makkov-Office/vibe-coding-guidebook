@@ -105,11 +105,11 @@ test('reduced motion and data-motion="off" zero every duration token', () => {
   }
 });
 
-// Плоский стиль (P2-07, решение founder 29.10.2026): ни градиентов, ни теней — в светлой и тёмной теме.
-// Разрешены: жёсткая полоса фона rail (linear-gradient в globals.css, не виден как градиент) и световой след
-// по клику P2-08 (radial-gradient в ::after на время нажатия, src/design/interaction.css). Тени: только none; токены --shadow-* остаются со значением none.
+// Flat style (P2-07, founder decision 2026-10-29): no gradients and no shadows, in the light and the dark theme.
+// Allowed: the hard rail background stripe (linear-gradient in globals.css, not visible as a gradient) and the P2-08 click
+// light trail (radial-gradient in ::after while pressed, src/design/interaction.css). Shadows: none only; the --shadow-* tokens stay with the value none.
 test('flat style: no gradient roles, no shadows, no visible gradients, no hover lift in stylesheets', () => {
-  assert.equal(palette.aliases, undefined, 'palette.json: псевдонимы *-gradient удалены (P2-07)');
+  assert.equal(palette.aliases, undefined, 'palette.json: the *-gradient aliases are removed (P2-07)');
   assert.doesNotMatch(tokens, /--color-[\w-]*gradient/);
   for (const theme of Object.values(palette.themes)) {
     for (const [role, value] of Object.entries(theme)) {
@@ -125,12 +125,12 @@ test('flat style: no gradient roles, no shadows, no visible gradients, no hover 
       if (value !== 'none' && !/^var\(--shadow-[\w-]+\)$/.test(value)) offenders.push(`${file}: ${match[0]}`);
     }
     for (const match of css.matchAll(/drop-shadow\(|(?:radial|conic|repeating-linear)-gradient\(/g)) {
-      // Исключение одно: световой след по клику P2-08 — кратковременный ::after с radial-gradient, в покое его нет.
+      // One exception: the P2-08 click light trail, a short-lived ::after with radial-gradient; at rest it is absent.
       const line = css.slice(css.lastIndexOf('\n', match.index) + 1, css.indexOf('\n', match.index));
       if (file === 'src/design/interaction.css' && /^\s*background:radial-gradient\(circle var\(--glow-r\)/.test(line)) continue;
       offenders.push(`${file}: ${match[0]}`);
     }
-    // Hover меняет цвет, а не поднимает карточку: translateY на :hover запрещён.
+    // Hover changes the colour, it does not lift the card: translateY on :hover is forbidden.
     for (const [, selector, body] of css.matchAll(/([^{}]*:hover[^{}]*)\{([^{}]*)\}/g)) {
       if (/translateY\(/.test(body)) offenders.push(`${file}: translateY on ${selector.trim().slice(0, 80)}`);
     }

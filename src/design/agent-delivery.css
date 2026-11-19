@@ -1,5 +1,5 @@
-/* Agent delivery (P8-03): the /agents page. «Скопировать для агента» снята решением founder 29.10.2026 (P8-05). */
-/* Скачивание — действие баннера страницы (P3-07). */
+/* Agent delivery (P8-03): the /agents page. "Copy for agent" was removed by founder decision on 2026-10-29 (P8-05). */
+/* Download is an action of the page banner (P3-07). */
 .agents-download{display:grid;gap:var(--space-2)}
 .agents-download .primary-action{justify-self:start}
 .agents-links{display:flex;flex-wrap:wrap;gap:var(--space-2) var(--space-4)}

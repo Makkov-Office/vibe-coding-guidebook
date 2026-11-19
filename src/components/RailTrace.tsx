@@ -1,4 +1,4 @@
-// Hover of the rail (P3-09, docs/design/visual-language.md «Навигация»): a thin drafting line traces
+// Hover of the rail (P3-09, docs/design/visual-language.md "Navigation"): a thin drafting line traces
 // the contour of the 56×32 pill around the icon. Two halves start together at the bottom centre and
 // meet at the top, like a compass closing a circle. CSS draws them (stroke-dashoffset, nav-rail.css);
 // without motion the contour appears at once.

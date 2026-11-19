@@ -1,7 +1,7 @@
 "use client";
-// «Продолжить» на главной (P4-01, вид — P4-06 по RD-01): последняя позиция чтения из progressStore
-// (P7-01) с табом (P5-02b) и рядом тренажёр этой главы (P7-03), если он у главы есть. Новичок без
-// сохранённой позиции блок не видит. Подписи — шаблоны «## Подписи» из content/home.md.
+// "Continue" on the home page (P4-01, look from P4-06 per RD-01): the last reading position from progressStore
+// (P7-01) with its tab (P5-02b), and next to it the drill of that chapter (P7-03), if the chapter has one. A newcomer
+// with no saved position does not see the block. Labels are the "## Подписи" (Labels) templates from content/home.md.
 import {useEffect,useState} from 'react';
 import Link from 'next/link';
 import {progressStore} from '../components/progress-store.mjs';

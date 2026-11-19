@@ -1,62 +1,62 @@
-# Продолжение разработки в облаке
+# Continuing development in the cloud
 
-Дата передачи: 11 октября 2026. Репозиторий: https://github.com/Makkov-Office/vibe-coding-guidebook, ветка `main`. Это существующий проект: продолжать разработку, не создавать портал заново.
+Handoff date: 2026-10-11. Repository: https://github.com/Makkov-Office/vibe-coding-guidebook, branch `main`. This is an existing project: continue development, do not create the portal from scratch.
 
-## Актуальная версия
+## Current version
 
-Сайт: https://agentic-engineering-handbook-makkov.makkov.chatgpt.site. Успешно опубликована PUBLIC-версия 20 из коммита `a99332ce9cd9d8e40a88552c7803b5bd5ccbf0f7`. После него добавлена только документация передачи контекста; учебный контент и код приложения совпадают с опубликованной версией. История Git сохранена.
+Site: https://agentic-engineering-handbook-makkov.makkov.chatgpt.site. PUBLIC version 20 was published successfully from commit `a99332ce9cd9d8e40a88552c7803b5bd5ccbf0f7`. Only context-handoff documentation was added after it; the learning content and the application code match the published version. Git history is preserved.
 
-## Что разрабатываем
+## What we are building
 
-ULTIMATE Vibe-coder guidebook [BETA] — русскоязычный учебный портал для брата об инженерной работе с AI-агентами. React, TypeScript, Vinext, npm и package-lock.json. Backend и реальный агентный runtime не добавлять без отдельного запроса.
+ULTIMATE Vibe-coder guidebook [BETA] is a learning portal, built for the author's brother, about engineering work with AI agents. React, TypeScript, Vinext, npm and package-lock.json. Do not add a backend or a real agent runtime without a separate request.
 
-- Учебный текст, определения, подборки, обзоры и подписи изображений редактируются только в `content/handbook.md`; слой «Обзор» глав с табами — в `content/overview/NN.md` (бриф 8.1–8.2, P5-01). Генерируемые файлы обновляются штатным pipeline.
-- Главная `/`, 22 главы `/chapters/01`–`/chapters/22`, `/glossary`, `/resources`, `/tools`, `/tools/codex`, `/tools/claude-code`, `/print`. Orientation 00; 394 определения, 11 тем, 6 Mermaid-схем.
-- Реализованы глобальный поиск, раскрываемые детали, определения в контексте чтения, панели примеров, интерактивная карта, локальные чеклисты и учебный профиль: 100 XP за главу, 50 за упражнение, четыре уровня и достижения. Нет экзаменов и обязательного прохождения.
-- Общий интерфейс сохраняется между страницами; поисковый индекс загружается отдельно, определения передаются по странице, Mermaid генерируется при сборке. Есть индикатор перехода и skeleton; текст доступен в первоначальном HTML.
-- Короткие определения открываются над термином: обычные — tooltip, со ссылкой на сервис — компактный popover без крестика. Длинные — desktop drawer / mobile bottom sheet. Официальная ссылка текстовая со стрелкой вправо-вверх. Сохранять клавиатуру, focus, history, no-JS и reduced motion.
+- Learning content, definitions, collections, overviews and image captions are edited only in `content/handbook.md`; the chapters' Overview layer with tabs lives in `content/overview/NN.md` (brief 8.1–8.2, P5-01). Generated files are updated by the standard pipeline.
+- Home page `/`, 22 chapters `/chapters/01`–`/chapters/22`, `/glossary`, `/resources`, `/tools`, `/tools/codex`, `/tools/claude-code`, `/print`. Orientation 00; 394 definitions, 11 topics, 6 Mermaid diagrams.
+- Implemented: global search, expandable details, in-context definitions while reading, example panels, an interactive map, local checklists and a learning profile: 100 XP per chapter, 50 per exercise, four levels and achievements. There are no exams and no mandatory completion.
+- The shared interface persists across pages; the search index loads separately, definitions are delivered per page, Mermaid is generated at build time. There is a navigation progress indicator and a skeleton; the text is available in the initial HTML.
+- Short definitions open above the term: plain ones as a tooltip, ones with a link to a service as a compact popover without a close button. Long ones open as a desktop drawer / mobile bottom sheet. The official link is text with an up-right arrow. Preserve keyboard support, focus, history, no-JS and reduced motion.
 
-## Дизайн и стиль
+## Design and style
 
-Заменено визуальным языком «Чертёж» v2 (бриф v1.3, ADR-0003, `docs/design/visual-language.md`, токены `app/tokens.css`); ниже — исходное описание стиля оригинала.
+Replaced by the "Blueprint" v2 visual language (brief v1.3, ADR-0003, `docs/design/visual-language.md`, tokens `app/tokens.css`); below is the original style description.
 
-Linear: фон #010102, графитовые поверхности, фиолетовый #5e6ad2, тонкие границы. Self-hosted Manrope и JetBrains Mono. Tabler Outline 20 px / stroke 1.75. Фирменные знаки сервисов 20 × 20 px, без растягивания; Context7 — широкий оригинальный wordmark высотой 20 px.
+Linear: background #010102, graphite surfaces, violet #5e6ad2, thin borders. Self-hosted Manrope and JetBrains Mono. Tabler Outline 20 px / stroke 1.75. Service brand marks 20 × 20 px, not stretched; Context7 is the wide original wordmark at 20 px height.
 
-Утверждены FLOW-символ, название ULTIMATE Vibe-coder guidebook [BETA], исходный SVG by Makkov и плашка Open Source. Desktop rail закреплён слева; мобильное меню — drawer. В навигации нет лишних номеров глав. Основные кнопки с заливкой; не возвращать подчёркнутые ссылки вместо важных кнопок. Избегать повторяющихся действий, пустых оглавлений, двойных разделителей и поясняющего UI-шума. Пользователь просит сильный дизайн в каждой мелочи, краткий русский текст без воды.
+Approved: the FLOW symbol, the name ULTIMATE Vibe-coder guidebook [BETA], the source SVG by Makkov and the Open Source badge. The desktop rail is pinned on the left; the mobile menu is a drawer. Navigation has no extra chapter numbers. Primary buttons are filled; do not bring back underlined links in place of important buttons. Avoid repeated actions, empty tables of contents, double dividers and explanatory UI noise. The user asks for strong design in every detail and concise text without filler.
 
-## Последнее обновление и ограничения
+## Latest update and limitations
 
-В обзоры Codex/Claude добавлены Dots, Mods, Artifacts и другие возможности, подписки и ограничения; дата исследования видна — 11 октября 2026. Есть 29 проверенных иллюстраций (15 Codex / 14 Claude), 26 блоков «Где найти / Польза / Когда использовать», 26 официальных логотипов. Источники и SHA-256: `docs/codex-screenshot-sources.json`, `docs/claude-screenshot-sources.json`, `docs/product-logo-sources.json`. Иллюстрации локальные, ленивые, открываются в полном размере.
+The Codex/Claude overviews gained Dots, Mods, Artifacts and other capabilities, subscriptions and limits; the research date is shown: 2026-10-11. There are 29 verified illustrations (15 Codex / 14 Claude), 26 "Where to find / Benefit / When to use" blocks, 26 official logos. Sources and SHA-256: `docs/codex-screenshot-sources.json`, `docs/claude-screenshot-sources.json`, `docs/product-logo-sources.json`. Illustrations are local, lazy-loaded and open at full size.
 
-Последний аудит честно установил неполное покрытие; это не новые согласованные задачи:
+The latest audit honestly established incomplete coverage; these are not new agreed tasks:
 
-- Скриншоты даны по группам возможностей, не отдельно для каждой подфичи. Шесть иллюстраций Claude показывают документацию, не продуктовый UI. Исторические кадры подписаны.
-- Значки функций пока преимущественно Tabler; Sites обозначен обычным глобусом, не подтверждённым фирменным знаком.
-- Не все названия получили собственные логотипы: JetBrains, npm/pnpm/Yarn, Corepack, Dev Container.
+- Screenshots are given per group of capabilities, not separately for each sub-feature. Six Claude illustrations show documentation, not product UI. Historical frames are labelled.
+- Feature icons are still mostly Tabler; Sites is marked with a plain globe, not a confirmed brand mark.
+- Not every name has its own logo: JetBrains, npm/pnpm/Yarn, Corepack, Dev Container.
 
-Не объявлять эти пункты завершёнными и не исправлять автоматически вместо нового запроса пользователя. Не выдумывать изображения или фирменные значки. Для изменений обзоров проверять актуальные официальные документацию, releases, цены и ограничения.
+Do not declare these items done and do not fix them automatically in place of a new user request. Do not invent images or brand icons. For changes to the overviews, check the current official documentation, releases, pricing and limits.
 
-## Как продолжить
+## How to continue
 
-1. Прочитать этот файл, `README.md`, актуальную часть `docs/implementation-notes.md`, затем нужный код и `content/handbook.md`.
-2. Проверить `git status`, текущую ветку и фактическую среду. Работать с существующей историей, без force push и несогласованных рефакторингов.
-3. Обычная установка: Node.js >=22.13, `npm ci`. Разработка: `npm run dev`. Проверки: `npm test`, `npm run typecheck`, `npm run build`. Для изменения Mermaid в новой среде нужен доступный Chrome и при необходимости `MERMAID_CHROME_PATH`; неизменённые SVG переиспользуются.
-4. Последние подтверждённые проверки опубликованной версии: 7 content tests, typecheck, production build с 30 пререндеренными маршрутами, 0 unexplained gaps. Обзоры проверены на 320/360/768/1024/1440 px. Подробные результаты и ограничения — в implementation-notes; не выдавать старые проверки за свежие.
-5. `.sites-runtime`, node_modules, dist, локальные credentials и состояние браузера не входят в GitHub. Первоначальные документы из родительской Windows-папки не входят в этот вложенный репозиторий; рабочий учебный source уже внутри него.
-6. GitHub хранит исходники; опубликованный сайт обслуживает native Sites. Публикация использует существующий project_id `appgprj_6ac7663d93808191be53ad452b2eb4d7` из `.openai/hosting.json` и сохраняет согласованный public-доступ. Не создавать новый Site и не менять хостинг. Если в облачной сессии native Sites недоступен, честно сообщить об ограничении; push в GitHub сам по себе не считать публикацией сайта.
+1. Read this file, `README.md`, the current part of `docs/implementation-notes.md`, then the relevant code and `content/handbook.md`.
+2. Check `git status`, the current branch and the actual environment. Work with the existing history, without force push and without unagreed refactorings.
+3. Standard setup: Node.js >=22.13, `npm ci`. Development: `npm run dev`. Checks: `npm test`, `npm run typecheck`, `npm run build`. To change Mermaid in a new environment you need an available Chrome and, if necessary, `MERMAID_CHROME_PATH`; unchanged SVGs are reused.
+4. The latest confirmed checks of the published version: 7 content tests, typecheck, production build with 30 prerendered routes, 0 unexplained gaps. The overviews were checked at 320/360/768/1024/1440 px. Detailed results and limitations are in implementation-notes; do not present old checks as fresh ones.
+5. `.sites-runtime`, node_modules, dist, local credentials and browser state are not in GitHub. The original documents from the parent Windows folder are not in this nested repository; the working learning source is already inside it.
+6. GitHub stores the sources; the published site is served by native Sites. Publishing uses the existing project_id `appgprj_6ac7663d93808191be53ad452b2eb4d7` from `.openai/hosting.json` and keeps the agreed public access. Do not create a new Site and do not change hosting. If native Sites is unavailable in a cloud session, report the limitation honestly; a push to GitHub by itself does not count as publishing the site.
 
-## Промпт для первой облачной сессии
+## Prompt for the first cloud session
 
 ```text
-Продолжаем разработку ULTIMATE Vibe-coder guidebook [BETA] в репозитории Makkov-Office/vibe-coding-guidebook, ветка main. Это перенесённый в GitHub существующий проект; ничего не создавать заново.
+We are continuing development of ULTIMATE Vibe-coder guidebook [BETA] in the repository Makkov-Office/vibe-coding-guidebook, branch main. This is an existing project moved to GitHub; do not create anything from scratch.
 
-Сначала прочитай docs/cloud-handoff.md, README.md и последнюю часть docs/implementation-notes.md. Проверь git status, окружение и текущую реализацию. Сохраняй текущий дизайн Linear, бренд FLOW/by Makkov, контентный pipeline и историю Git. Учебный текст меняй через content/handbook.md. Пиши кратко по-русски, без воды. Не считай перечисленные в handoff недоделки автоматически согласованными задачами.
+First read docs/cloud-handoff.md, README.md and the last part of docs/implementation-notes.md. Check git status, the environment and the current implementation. Preserve the current Linear design, the FLOW/by Makkov brand, the content pipeline and the Git history. Change learning content through content/handbook.md. Write concisely in the founder's language, without filler. Do not treat the gaps listed in the handoff as automatically agreed tasks.
 
-После ознакомления коротко подтверди понимание текущего состояния. Следующим сообщением я дам конкретную правку для реализации.
+After reviewing, briefly confirm your understanding of the current state. In my next message I will give a specific change to implement.
 ```
 
-## Промпт для следующей правки
+## Prompt for the next change
 
 ```text
-Продолжай существующий проект по контексту docs/cloud-handoff.md. Задача: [вставить правку]. Внеси только необходимые изменения, проверь соответствующие сценарии и адаптацию, выполни подходящие проверки. Передай результат через обычный workflow этой облачной сессии и укажи, что изменено и проверено. Состояние GitHub и публикацию сайта описывай отдельно; не меняй хостинг или public-доступ.
+Continue the existing project using the context in docs/cloud-handoff.md. Task: [insert the change]. Make only the necessary changes, check the relevant scenarios and responsive layout, run the appropriate checks. Deliver the result through the normal workflow of this cloud session and state what was changed and checked. Describe the GitHub state and the site publication separately; do not change hosting or public access.
 ```

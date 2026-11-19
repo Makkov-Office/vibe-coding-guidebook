@@ -1,4 +1,4 @@
-/* Раскладка витрины /design (P2-04); только токены. */
+/* Layout of the /design showcase (P2-04); tokens only. */
 .ds{max-width:1120px;margin:0 auto;padding:var(--space-10) var(--space-6) var(--space-12);display:grid;gap:var(--space-10);background:var(--color-background);color:var(--color-on-surface)}
 .ds h1{margin:var(--space-3) 0;font:500 var(--type-h1)/1.05 var(--font-display);letter-spacing:var(--tracking-display)}
 .ds-section>h2{margin:0 0 var(--space-4);font:600 var(--type-h2)/1.2 var(--font-text);letter-spacing:var(--tracking-heading)}

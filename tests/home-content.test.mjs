@@ -1,4 +1,4 @@
-// P4-01: тексты главной — content/home.md, разбор parseHome (src/content/compiler.mjs).
+// P4-01: home page texts are content/home.md, parsed by parseHome (src/content/compiler.mjs).
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -20,17 +20,17 @@ test('content/home.md compiles into generated.home', () => {
   assert.equal(home.subtitle, 'Полный цикл разработки с AI-агентами — от вайбкодинга до top-tier SDLC');
   assert.deepEqual(home.actions.map(action => action.label), ['Начать изучение', 'Определить уровень']);
   assert.equal(home.path.steps.length, 8);
-  // Единственная внешняя ссылка — репозиторий в подвале (бриф 7.3, п. 5).
+  // The only external link is the repository in the footer (brief 7.3, item 5).
   assert.deepEqual(home.footer.groups.at(-1).links.at(-1), {label: 'GitHub', href: 'https://github.com/Makkov-Office/vibe-coding-guidebook'});
-  // Подпись узла 124 px: Martian Mono 10.5 px, 14 знаков при равных отступах 14 px.
+  // Node label of 124 px: Martian Mono 10.5 px, 14 characters with equal 14 px padding.
   for (const step of home.path.steps) assert.ok([...step.sub].length <= 14, `${step.label}: «${step.sub}» longer than 14`);
   assert.deepEqual(home.sections.cards.map(card => card.label), rail);
-  // P4-06: подписи главной — шаблоны в content/home.md, не в коде.
+  // P4-06: home page labels are templates in content/home.md, not in code.
   assert.deepEqual(Object.keys(home.labels).sort(), ['chapter', 'chapters', 'drill', 'pages', 'tab']);
   assert.equal(home.labels.pages.length, 3);
 });
 
-test('every link of Главная is a page the map knows or a published file', () => {
+test('every link of the home page is a page the map knows or a published file', () => {
   const home = parseHome(source, rail);
   const known = mappedPaths(urlMap);
   const links = [...home.actions, ...home.next.items.filter(item => item.href), ...home.footer.groups.flatMap(group => group.links)];
@@ -45,7 +45,7 @@ test('a broken home.md fails with the rule', () => {
     [broken('(/chapters/21)\n\n## Путь', '(https://example.com)\n\n## Путь'), /must be a site path/],
     [broken('(https://github.com/Makkov-Office/vibe-coding-guidebook)', '(https://example.com/repo)'), /must be a site path/],
     [broken('Путь одной задачи', '<b>Путь</b> одной задачи'), /raw HTML/],
-    [broken('- Founder: ставит цель', '- Founder ставит цель'), /is not «Название: текст»/],
+    [broken('- Founder: ставит цель', '- Founder ставит цель'), /is not «Label: text»/],
     [broken('## Продолжить\n', '## Продолжить\n\n**Важно.**\n'), /only plain text and links|one paragraph/],
     [broken('- Тренажёр: тренажёр · {minutes} мин\n', ''), /missing Тренажёр/],
     [broken('- Главы: главы {from}–{to}', '- Главы: главы {from}'), /must use exactly \{from\}, \{to\}/],

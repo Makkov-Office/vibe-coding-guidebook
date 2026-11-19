@@ -12,6 +12,6 @@
 .term-copy-fallback{grid-column:1/-1;margin:var(--space-2) 0 0;font-size:var(--type-label);color:var(--color-on-surface-variant);overflow-wrap:anywhere}
 .term-copy-fallback code{user-select:all}
 
-/* Баннер страницы — PageHero (P3-07, page-hero.css); абзацы описания там же разделены только между собой. */
+/* The page banner is PageHero (P3-07, page-hero.css); its description paragraphs are spaced only from each other, also there. */
 .chapter.glossary-page{padding-top:0}
 .glossary-page>.glossary-filter{margin:0}

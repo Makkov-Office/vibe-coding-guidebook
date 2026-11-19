@@ -2,7 +2,7 @@ import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
 import {plural} from '../../src/components/plural';
 const generated=JSON.parse(fs.readFileSync('src/content/generated.json','utf8')) as {terms:unknown[];topics:unknown[]};
-// P6-07c: глоссарий в шаблоне «Чертежа» — баннер страницы (P3-07), вводный текст в нём, фильтр под баннером, copy link у тем.
+// P6-07c: the glossary in the "Blueprint" template: page banner (P3-07), intro text inside it, filter below the banner, copy link on topics.
 async function ready(page:Page){await page.goto('/reference/glossary');await page.waitForSelector('html.js-enabled');await expect(page.locator('.rail-search')).toBeEnabled();await page.locator('.ct-live').waitFor({state:'attached'});}
 async function settled(page:Page){await page.evaluate(()=>Promise.all(document.getAnimations().filter(a=>Number.isFinite(Number(a.effect?.getComputedTiming().endTime))).map(a=>a.finished.catch(()=>undefined))));}
 
@@ -17,12 +17,12 @@ test('glossary hero: title, chips, lead, then filter, then topics',async({page})
  await expect(hero.locator('h1 .permalink')).toHaveCount(0);
  await expect(hero.getByRole('list',{name:'О глоссарии'}).locator('li')).toHaveText([plural(generated.terms.length,['термин','термина','терминов']),plural(generated.topics.length,['тема','темы','тем']),'2 уровня']);
  await expect(hero.locator('.page-hero__description')).toContainText('Сначала выбери тему');
- // «Скопировать для агента» снята решением founder 29.10.2026 (P8-05).
+ // "Copy for agent" was removed by founder decision on 2026-10-29 (P8-05).
  await expect(hero.getByRole('button',{name:'Скопировать для агента'})).toHaveCount(0);
- // Порядок: hero → фильтр → первая тема.
+ // Order: hero → filter → first topic.
  const order=await page.evaluate(()=>{const at=(s:string)=>document.querySelector(s)!;const after=(a:Element,b:Element)=>!!(a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_FOLLOWING);return after(at('.glossary-page>.page-hero'),at('.glossary-filter'))&&after(at('.glossary-filter'),at('.ct-prose h2'));});
  expect(order).toBe(true);
- // Темы получают copy link шаблона вместо «#».
+ // Topics get the template copy link instead of "#".
  const topics=page.locator('.ct-prose h2[id]');
  await expect(page.locator('.ct-prose h2 .ct-copy')).toHaveCount(await topics.count());
  await expect(page.locator('.ct-prose .permalink')).toHaveCount(0);

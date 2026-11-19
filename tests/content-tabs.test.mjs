@@ -90,7 +90,7 @@ test('an overview compiles through the same pipeline and opens the chapter', asy
   assert.ok(overview.includes('class="code-shell"'));
   assert.ok(!overview.includes('class="permalink"'));
   assert.ok(search.some(entry => entry.id.startsWith('ch-08-overview-') && entry.tab === 'overview' && entry.text.includes('preflight')));
-  // The first paragraph (Зачем) is its own block with a glossary link and a search entry.
+  // The first paragraph ("Why") is its own block with a glossary link and a search entry.
   assert.match(overview, /<p id="ch-08-overview-b001">(?:(?!<\/p>)[\s\S])*class="term-link"/);
   assert.ok(search.some(entry => entry.id === 'ch-08-overview-b001' && entry.tab === 'overview'));
   assert.equal(audit.tabs.overviews, 1);

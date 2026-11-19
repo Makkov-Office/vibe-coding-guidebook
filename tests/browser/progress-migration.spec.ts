@@ -20,7 +20,7 @@ test('progress saved by the previous version is shown after the update, once mig
  // The old keys are kept for a rollback.
  expect(await page.evaluate(()=>localStorage.getItem('handbook-learning-v2'))).toBe(fixture.storage['handbook-learning-v2']);
  await page.reload();await expect(page.locator('.learning-heading strong')).toHaveText(fixture.shown.completed);
- // «Продолжить» on Главная goes back to the saved position of chapter 08 (y 960, or the bottom of a shorter page).
+ // "Continue" on the home page goes back to the saved position of chapter 08 (y 960, or the bottom of a shorter page).
  await ready(page,'/');await page.locator('.resume-button').click();await expect(page).toHaveURL(/\/flow\/08-preflight$/);await expect.poll(()=>page.evaluate(()=>scrollY===Math.min(960,document.documentElement.scrollHeight-innerHeight))).toBe(true);
  await expect(page.getByRole('button',{name:/Глава изучена · отменить/})).toHaveAttribute('aria-pressed','true');
  await ready(page,'/chapters/20');const exercises=page.locator('[data-exercise]');

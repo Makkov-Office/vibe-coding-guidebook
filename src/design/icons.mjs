@@ -20,7 +20,7 @@ import {
 import {createElement,forwardRef} from 'react';
 
 // The only module that imports @tabler/icons-react (P2-06). All interface icons share
-// one optical size and the «Чертёж» stroke 1.5 px; no per-instance overrides.
+// one optical size and the "Blueprint" stroke 1.5 px; no per-instance overrides.
 export const ICON_STROKE=1.5;
 export const iconProps={size:20,stroke:ICON_STROKE,'aria-hidden':true,focusable:false,className:'project-icon'};
 export const icons={
@@ -45,10 +45,10 @@ export const chapterIcons={
   'ch-21':'maturity','ch-22':'notes','ch-23':'glossary','ch-24':'sources','ch-resources':'sources','ch-tools':'setup','ch-codex':'terminal','ch-claude-code':'context',
 };
 
-// Словарь ролей: 38 смыслов интерфейса → иконка Tabler; filled — для активного пункта rail
-// (docs/design/visual-language.md, раздел «Иконки»).
+// Role dictionary: 38 interface meanings → a Tabler icon; filled is for the active rail item
+// (docs/design/visual-language.md, section "Icons").
 export const iconRoles={
-  // Rail: 9 разделов.
+  // Rail: 9 sections.
   home:{group:'rail',icon:IconHome,filled:IconHomeFilled},
   start:{group:'rail',icon:IconFlag,filled:IconFlagFilled},
   foundations:{group:'rail',icon:IconStack2,filled:IconStack2Filled},
@@ -58,12 +58,12 @@ export const iconRoles={
   practice:{group:'rail',icon:IconTarget},
   tools:{group:'rail',icon:IconTool},
   agentPack:{group:'rail',icon:IconPackage},
-  // Табы главы.
+  // Chapter tabs.
   tabOverview:{group:'tabs',icon:IconInfoCircle,filled:IconInfoCircleFilled},
   tabMechanics:{group:'tabs',icon:IconLayoutGrid,filled:IconLayoutGridFilled},
   tabApply:{group:'tabs',icon:IconListCheck,filled:IconListCheckFilled},
   tabCheck:{group:'tabs',icon:IconChecks},
-  // Интерфейс.
+  // Interface.
   search:{group:'ui',icon:IconSearch},
   menu:{group:'ui',icon:IconMenu2},
   close:{group:'ui',icon:IconX},
@@ -75,29 +75,29 @@ export const iconRoles={
   copy:{group:'ui',icon:IconCopy},
   externalLink:{group:'ui',icon:IconExternalLink},
   anchorLink:{group:'ui',icon:IconLink},
-  // Шаблон главы (P5-02): время чтения, шаблон, соседние страницы.
+  // Chapter template (P5-02): reading time, template, neighbouring pages.
   readingTime:{group:'ui',icon:IconClock},
   template:{group:'ui',icon:IconTemplate},
   previous:{group:'ui',icon:IconArrowLeft},
   next:{group:'ui',icon:IconArrowRight},
-  // Цвета-смыслы.
+  // Meaning colours.
   agent:{group:'meaning',icon:IconSparkles},
   practiceMeaning:{group:'meaning',icon:IconBarbell},
   human:{group:'meaning',icon:IconUserCheck},
-  // Прогресс и игровой слой.
+  // Progress and the game layer.
   progress:{group:'game',icon:IconProgressCheck},
   xp:{group:'game',icon:IconBolt},
   level:{group:'game',icon:IconTrophy},
-  // Git и разработка.
+  // Git and development.
   branch:{group:'git',icon:IconGitBranch},
   pullRequest:{group:'git',icon:IconGitPullRequest},
-  // Логотипы без официального пресс-кита в проекте.
+  // Logos without an official press kit in the project.
   github:{group:'logo',icon:IconBrandGithub},
   openai:{group:'logo',icon:IconBrandOpenai},
 };
 
-// Иконки для компонентов components/ui (раньше — отдельная библиотека Lucide): те же Tabler, тот же контур.
-// Контур не переопределяется пропсами; aria-hidden по умолчанию, как было у Lucide (кнопка-иконка получает aria-label сама).
+// Icons for components/ui components (previously the separate Lucide library): the same Tabler icons, the same stroke.
+// Props do not override the stroke; aria-hidden by default, as with Lucide (an icon button gets its own aria-label).
 /** @param {import('@tabler/icons-react').Icon} Icon @returns {import('@tabler/icons-react').Icon} */
 const ui=(Icon)=>{
   const Wrapped=/** @type {import('@tabler/icons-react').Icon} */(forwardRef((props,ref)=>createElement(Icon,{'aria-hidden':true,...props,stroke:ICON_STROKE,strokeWidth:ICON_STROKE,ref})));

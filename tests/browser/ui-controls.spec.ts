@@ -23,7 +23,7 @@ test('theme cycles system → opposite → same as system → system and survive
  await page.waitForSelector('html.js-enabled');await expect(theme(page)).toHaveAccessibleName(/^Тема: Тёмная/);
  await theme(page).click();await expect(theme(page)).toHaveAccessibleName(/^Тема: Светлая/);expect(await html(page,'data-theme')).toBe('light');
  await theme(page).click();expect(await html(page,'data-theme')).toBeNull();
- // «Как в системе» follows the system setting.
+ // "System" follows the system setting.
  await page.emulateMedia({colorScheme:'dark'});expect(await canvas(page)).toBe(dark);
 });
 

@@ -1,5 +1,5 @@
 "use client";
-// Breadcrumbs (P3-03, docs/design/visual-language.md «Навигация»): «Главная › Раздел › Страница»
+// Breadcrumbs (P3-03, docs/design/visual-language.md "Navigation"): "Home › Section › Page"
 // from the rail sections of src/content/url-map.json. A page outside every section (print, 404)
 // and the home page get none.
 import Link from 'next/link';
@@ -13,7 +13,7 @@ export function Breadcrumbs({chapters,pathname}:{chapters:NavChapter[];pathname:
  const id=pathname==='/'?null:currentSection(sections,pathname),section=sections.find(s=>s.id===id);
  if(!section)return null;
  const page=[...section.pages,...section.groups.flatMap(g=>g.pages)].find(p=>onPage(p.href,pathname));
- // A chapter tab other than «Обзор» (P5-02b) is one more crumb after its chapter.
+ // A chapter tab other than "Overview" (P5-02b) is one more crumb after its chapter.
  const route=liveRoute(pathname),tab=route&&route.tab!=='overview'?chapterTabs.find(t=>t.id===route.tab):undefined;
  // A section with its own page (Agent Pack) is the last crumb itself.
  const sectionIsPage=!page&&section.href===pathname;

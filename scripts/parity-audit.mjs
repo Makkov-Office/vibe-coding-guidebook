@@ -82,7 +82,7 @@ async function open(site, viewport, options = {}) {
 }
 // "load" can wait on a slow third-party resource; the page is ready when the
 // DOM is parsed, fonts are loaded and the reader has hydrated: js-enabled is
-// set and the buttons that wait for it (search, "Глава изучена") are enabled.
+// set and the buttons that wait for it (search, "Chapter studied") are enabled.
 // Pages without the reader (404) have nothing to hydrate.
 const hydrated = () => !document.querySelector(".reading-shell") || (document.documentElement.classList.contains("js-enabled") && !document.querySelector(".rail-search[disabled], .completion-button[disabled]"));
 async function settle(page, js = true) {

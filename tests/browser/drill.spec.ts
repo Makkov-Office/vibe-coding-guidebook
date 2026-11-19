@@ -1,6 +1,6 @@
 import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
-// P7-03: the drill of chapter 08 in its «Проверь себя» tab.
+// P7-03: the drill of chapter 08 in its "Check yourself" tab.
 type Card={id:string;scenario:string;question:string;options:{id:string;label:string}[];answer:string;explanation:string;href:string};
 const data:{drills:{id:string;chapter:string;title:string;cards:Card[]}[]}=JSON.parse(fs.readFileSync('src/content/generated.json','utf8'));
 const drill=data.drills.find(item=>item.chapter==='ch-08')!;
@@ -72,7 +72,7 @@ test('without JavaScript the drill is readable with its answers',async({browser}
  const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();
  await page.goto('/flow/08-preflight/check');
  const fallback=page.locator('.drill-static');
- // The player needs JavaScript, so it is hidden: no dead «Начать» button above the answers.
+ // The player needs JavaScript, so it is hidden: no dead "Start" button above the answers.
  await expect(page.locator('section.drill:not(.drill-static)')).toBeHidden();
  await expect(fallback.locator('li')).toHaveCount(total);
  await fallback.locator('summary').first().click();

@@ -11,7 +11,7 @@ for(const file of overviewFiles.sort()){
 }
 // Level of each glossary term (P6-07); the file is required.
 const glossaryLevels=JSON.parse(await fs.readFile('content/glossary-levels.json','utf8'));
-// Главная (P4-01); the file is required.
+// Home page (P4-01); the file is required.
 const home=await fs.readFile('content/home.md','utf8');
 // Drills of the chapters (P7-03): content/gamification/drills/*.json against the schema.
 const drillFiles=(await fs.readdir('content/gamification/drills')).sort();

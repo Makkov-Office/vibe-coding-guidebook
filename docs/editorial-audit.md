@@ -1,88 +1,88 @@
-# Редакционный аудит: предложения, без внесения изменений
+# Editorial audit: proposals, no changes made
 
-Проверены весь учебный Markdown и дополнительные presentation blocks сайта. Учебный текст, навигация, search index и опубликованный сайт не менялись. Ниже — отдельные решения для согласования.
+All the learning Markdown and the site's additional presentation blocks were checked. The learning content, navigation, search index and the published site were not changed. Below are separate decisions for approval.
 
-Источник ссылок: `content/handbook.md`. Найдено 19 внешних ссылок: 4 на private PR, 1 на личную ChatGPT conversation, 14 на публичную техническую документацию (7 разных страниц, каждая продублирована в главе 24). В Markdown 33 вхождения AI Artefacts / ai-artefacts, включая URL. Имена и внутренние номера не нужны для понимания переносимых уроков.
+Link source: `content/handbook.md`. 19 external links found: 4 to private PRs, 1 to a personal ChatGPT conversation, 14 to public technical documentation (7 distinct pages, each duplicated in chapter 24). The Markdown has 33 occurrences of AI Artefacts / ai-artefacts, including URLs. Names and internal numbers are not needed to understand the transferable lessons.
 
-## 1. Удалить главу 24 целиком
+## 1. Remove chapter 24 entirely
 
-Строки 1684–1704. «Основание AI Artefacts» описывает запрос пользователя, личную переписку, локальные context files, предоставленный гайд Claude и прошлые reviews. Это история подготовки документа. Private conversation link находится на строке 1689. Семь публичных technical sources повторяют уже существующие inline links в главах 04/11.
+Lines 1684–1704. "The basis of AI Artefacts" describes the user's request, personal correspondence, local context files, the provided Claude guide and past reviews. This is the history of how the document was prepared. The private conversation link is on line 1689. The seven public technical sources repeat inline links that already exist in chapters 04/11.
 
-Рекомендация: убрать главу, пункт navigation и previous/next references. Полезные публичные links оставить в соответствующих учебных объяснениях. Не заменять главу большим блоком служебных оговорок.
+Recommendation: remove the chapter, its navigation item and previous/next references. Keep the useful public links in the matching learning explanations. Do not replace the chapter with a large block of service caveats.
 
-## 2. Удалить все private PR links
+## 2. Remove all private PR links
 
-- Строка 937: глава 18.2, PR #3, TICKET-19.
-- Строка 945: глава 18.3, PR #12 и PR #13, TICKET-25 и TICKET-23.
-- Строка 969: глава 18.4, PR #8, TICKET-21; рядом упоминается временный PR #9.
+- Line 937: chapter 18.2, PR #3, TICKET-19.
+- Line 945: chapter 18.3, PR #12 and PR #13, TICKET-25 and TICKET-23.
+- Line 969: chapter 18.4, PR #8, TICKET-21; a temporary PR #9 is mentioned nearby.
 
-Рекомендация: удалить URL, номера реальных PR/тикетов и provenance. Сохранить сами технические проблемы в обезличенных учебных примерах. Это не означает удаление уроков про ignored files, restricted refspec, fail closed и hosted CI wiring.
+Recommendation: remove the URLs, the numbers of real PRs/tickets and the provenance. Keep the technical problems themselves as anonymised learning examples. This does not mean removing the lessons about ignored files, restricted refspec, fail closed and hosted CI wiring.
 
-## 3. Обезличить всю главу 18
+## 3. Anonymise all of chapter 18
 
-Строки 923–973. Убрать описание продукта «Your Personal AI Source of Truth» (925), внутренние TICKET-37/22/24/26 и PR #10/11 (929–931), PR #12/13 и ADR 0005/0006 (943–965), TICKET-21/37 и временный PR #9 (969–971).
+Lines 923–973. Remove the description of the product "Your Personal AI Source of Truth" (925), the internal TICKET-37/22/24/26 and PR #10/11 (929–931), PR #12/13 and ADR 0005/0006 (943–965), TICKET-21/37 and the temporary PR #9 (969–971).
 
-Новое направление заголовка: «Четыре типичных ошибки и как их предотвратить». Сохранить четыре кейса: забытый issue transition; green CI без safety coverage; зависимые PR и неполный diff; unit tests без проверки CI event wiring. Реальные номера заменить задачами/ветками A и B.
+New direction for the heading: "Four typical mistakes and how to prevent them". Keep the four cases: a forgotten issue transition; green CI without safety coverage; dependent PRs and an incomplete diff; unit tests without a check of CI event wiring. Replace the real numbers with tasks/branches A and B.
 
-Дополнительный UI timeline тоже требует этого решения: `src/content/compiler.mjs:190`, отображение `app/page.tsx:18`. Он отдельно повторяет PR #12 → refresh #13 и ADR 0005/0006. Недостаточно удалить только Markdown ссылки. Recommendation: заменить переносимой последовательностью review A → integrate A → refresh B → revalidate B → review/integrate B.
+The additional UI timeline also needs this decision: `src/content/compiler.mjs:190`, rendered in `app/page.tsx:18`. It separately repeats PR #12 → refresh #13 and ADR 0005/0006. Removing only the Markdown links is not enough. Recommendation: replace with the transferable sequence review A → integrate A → refresh B → revalidate B → review/integrate B.
 
-## 4. Сократить служебное вступление и orientation
+## 4. Shorten the service introduction and orientation
 
-Строка 3: убрать «Case study — AI Artefacts». Строки 23–33: убрать происхождение из переписки/гайда Claude, даты дополнений, результаты непроведённого live audit, три provenance labels и статус внутренних TICKET-24/26/23/25.
+Line 3: remove "Case study — AI Artefacts". Lines 23–33: remove the origin from the correspondence/Claude guide, the dates of additions, the results of a live audit that was not performed, three provenance labels and the status of the internal TICKET-24/26/23/25.
 
-Оставить аудиторию, результаты чтения, три маршрута и короткое полезное правило: учебные примеры нужно адаптировать к текущим правилам своего репозитория. Историю подготовки и реализации не показывать читателю.
+Keep the audience, the reading outcomes, the three routes and a short useful rule: learning examples must be adapted to your own repository's current rules. Do not show the reader the history of preparation and implementation.
 
-## 5. Убрать проектные привязки в остальных учебных главах
+## 5. Remove project ties in the other learning chapters
 
-Конкретные места:
+Specific places:
 
-| Строки | Что сейчас | Рекомендация |
+| Lines | What it is now | Recommendation |
 | --- | --- | --- |
-| 105 | «Практика AI Artefacts» и его набор сервисов | «Пример распределения источников истины», без обязательного копирования stack |
-| 158, 170 | «Пример AI Artefacts», scripts «из истории» | «Пример реализации»; имена скриптов как учебные примеры |
-| 194, 219, 259 | История конкретной Windows/WSL/Docker машины, гайд Claude от 6 октября, pnpm проекта, future PR | Оставить переносимые environment rules и lifecycle hooks; историю машины удалить |
-| 294 | «не точная схема Linear AI Artefacts» в шаблоне | Просто «Учебный шаблон задачи» |
-| 340 | «Канонический lifecycle AI Artefacts» | «Пример lifecycle задачи» |
-| 438 | Проектный комплект context docs и historical snapshot | Универсальный пример распределения контекста; принцип freshness сохранить |
-| 506 | ADR «не существующий ... в AI Artefacts» | «Учебный пример ADR»; правило сохранения решений оставить |
-| 518 | История его PR header/parser | Общее правило machine-readable PR declarations |
-| 545, 552 | Комментарии «не bootstrap AI Artefacts», branch workflow конкретного repo | Универсальный worktree example; ownership protections сохранить |
-| 599 | Advisory checks и ограничения его private repo | Общее объяснение required checks/branch rules, без исторической подписки проекта |
-| 608 | Risk matrix «согласована с ... AI Artefacts» | Обозначить как учебную матрицу и адаптировать к risk policy |
-| 1066, 1077, 1097 | Оценка зрелости и implementation status AI Artefacts | Убрать оценку проекта; maturity model и концептуальный статус архитектуры сохранить |
-| 1210 | Linear «где в AI Artefacts...» | Нейтральное определение сервиса |
-| 1586–1587 | AI Artefacts как glossary term, Standalone как «не feature» этого проекта | AI Artefacts удалить; Standalone переписать нейтрально, если термин нужен |
+| 105 | "AI Artefacts practice" and its set of services | "Example of distributing sources of truth", with no obligation to copy the stack |
+| 158, 170 | "AI Artefacts example", scripts "from history" | "Implementation example"; script names as learning examples |
+| 194, 219, 259 | History of a specific Windows/WSL/Docker machine, the Claude guide of October 6, the project's pnpm, a future PR | Keep the transferable environment rules and lifecycle hooks; remove the machine's history |
+| 294 | "not the exact Linear schema of AI Artefacts" in the template | Just "Learning task template" |
+| 340 | "The canonical AI Artefacts lifecycle" | "Example task lifecycle" |
+| 438 | The project's set of context docs and a historical snapshot | A universal example of distributing context; keep the freshness principle |
+| 506 | ADR "not existing ... in AI Artefacts" | "Learning ADR example"; keep the rule of preserving decisions |
+| 518 | The history of its PR header/parser | A general rule for machine-readable PR declarations |
+| 545, 552 | Comments "not the AI Artefacts bootstrap", the branch workflow of a specific repo | A universal worktree example; keep the ownership protections |
+| 599 | Advisory checks and the limits of its private repo | A general explanation of required checks/branch rules, without the project's historical subscription |
+| 608 | Risk matrix "agreed with ... AI Artefacts" | Label it a learning matrix and adapt it to the risk policy |
+| 1066, 1077, 1097 | Maturity assessment and implementation status of AI Artefacts | Remove the project assessment; keep the maturity model and the conceptual status of the architecture |
+| 1210 | Linear "where in AI Artefacts..." | A neutral definition of the service |
+| 1586–1587 | AI Artefacts as a glossary term, Standalone as "not a feature" of this project | Remove AI Artefacts; rewrite Standalone neutrally if the term is needed |
 
-## 6. Убрать персональное обращение
+## 6. Remove the personal address
 
-Строка 1051: «20.2. Упражнения для брата». Recommendation: «Практические упражнения». Сами пять упражнений полезны и остаются.
+Line 1051: "20.2. Exercises for my brother". Recommendation: "Practical exercises". The five exercises themselves are useful and stay.
 
-## 7. Убрать или существенно сократить glossary 23.12
+## 7. Remove or substantially shorten glossary 23.12
 
-Строки 1622–1682, 55 определений. Значительная часть описывает реализацию именно этого сайта: reading progress, term highlight, dotted underline, Manrope/JetBrains Mono, localStorage, Clipboard API, longest-match, favicon, glow/glassmorphism, Lighthouse.
+Lines 1622–1682, 55 definitions. A large share describes the implementation of this particular site: reading progress, term highlight, dotted underline, Manrope/JetBrains Mono, localStorage, Clipboard API, longest-match, favicon, glow/glassmorphism, Lighthouse.
 
-48 из 55 терминов не имеют ссылок из intro и глав 01–22 (проверка generated reader HTML; это не доказательство ненужности каждого технического понятия). Recommendation: убрать тему «Интерфейс, чтение и доступность сайта» из учебного glossary; действительно нужные термины UI/UX, responsive и т.п. при необходимости оставить с нейтральными определениями в подходящей теме. Строка 1682 «Покрытие при обновлении...» — инструкция автору сайта, её убрать из читательского текста независимо от судьбы темы.
+48 of the 55 terms have no links from the intro and chapters 01–22 (a check of the generated reader HTML; this does not prove that each technical concept is unnecessary). Recommendation: remove the topic "Interface, reading and site accessibility" from the learning glossary; keep the truly needed UI/UX, responsive and similar terms, if necessary, with neutral definitions in a suitable topic. Line 1682 "Coverage when updating..." is an instruction to the site's author; remove it from the reader-facing text regardless of what happens to the topic.
 
-## 8. Выборочно очистить glossary 23.11
+## 8. Selectively clean up glossary 23.11
 
-Строки 1582–1620, 35 определений. Убрать AI Artefacts, Sites, Manifest с aliases hosting.json/project_id и объяснения о сборке/хостинге данного handbook. Переписать Backend, Markdown, Build-time, CMS и Hosting, если они остаются, без привязок к текущему сайту и процедуре его передачи.
+Lines 1582–1620, 35 definitions. Remove AI Artefacts, Sites, Manifest with the aliases hosting.json/project_id, and the explanations of how this handbook is built/hosted. Rewrite Backend, Markdown, Build-time, CMS and Hosting, if they stay, without ties to the current site and its handover procedure.
 
-Не рекомендую удалять всю тему: API, MCP, JSON, YAML, README и другие понятия могут быть полезны для разработки с агентами. Отсутствие term link само по себе не основание удалять термин. 21 из 35 не имеют ссылок из intro/глав 01–22 — это сигнал для отбора, а не автоматический delete list.
+I do not recommend removing the whole topic: API, MCP, JSON, YAML, README and other concepts can be useful for development with agents. The absence of a term link is not by itself a reason to remove a term. 21 of 35 have no links from the intro/chapters 01–22 — this is a signal for selection, not an automatic delete list.
 
-## 9. Отдельное решение: будущий Control Center
+## 9. A separate decision: the future Control Center
 
-Глава 21.1–21.3, строки 1079–1127; glossary 23.10, строки 1553–1581 (24 термина). Это относится к agentic engineering, но уводит базовый handbook в проектирование будущего runtime: adapters, normalized events, ownership leases, durable workflows и control plane.
+Chapter 21.1–21.3, lines 1079–1127; glossary 23.10, lines 1553–1581 (24 terms). This belongs to agentic engineering, but it leads the basic handbook into designing a future runtime: adapters, normalized events, ownership leases, durable workflows and the control plane.
 
-Recommendation: maturity M0–M5 сохранить; архитектуру Control Center сократить до короткого необязательного advanced-блока. Альтернатива — оставить целиком, если гайд должен учить проектированию orchestration platforms. Это не очевидный мусор и не предлагается к безусловному удалению.
+Recommendation: keep maturity M0–M5; shorten the Control Center architecture to a short optional advanced block. The alternative is to keep it whole, if the guide should teach the design of orchestration platforms. This is not obvious junk and is not proposed for unconditional removal.
 
-## 10. Уменьшить плотность glossary links
+## 10. Reduce the density of glossary links
 
-Текущий content audit насчитывает 2470 размеченных occurrences. Это внутренние ссылки, а не private URLs, но повторные links на общие слова создают визуальный шум.
+The current content audit counts 2470 marked-up occurrences. These are internal links, not private URLs, but repeated links on common words create visual noise.
 
-Recommendation: ссылка при первом упоминании термина в главе плюс повтор для сложного понятия, когда он полезен читателю. Последующие обычные вхождения — plain text. Сохранить поиск, glossary и точные definition targets. Это отдельное изменение ранее согласованного all-occurrences правила и требует решения пользователя.
+Recommendation: a link on the first mention of a term in a chapter, plus a repeat for a complex concept when it helps the reader. Later ordinary occurrences are plain text. Keep search, the glossary and the exact definition targets. This is a separate change to the previously agreed all-occurrences rule and needs the user's decision.
 
-## Что рекомендую оставить
+## What I recommend keeping
 
-Публичные inline links на Git worktree, VS Code WSL, Docker persistence/WSL backend, Dev Container specification и GitHub checks/branch rules (221, 245, 251, 259, 540, 597, 599) непосредственно подтверждают технические объяснения. Уроки про safety, authority, актуальный HEAD и сохранение данных остаются после обезличивания. DEMO-42 — самостоятельная учебная симуляция, не ссылка на private repo; её сохраняем. Generic TICKET-XX и placeholders в шаблонах остаются, если нужны для формата примера.
+The public inline links to Git worktree, VS Code WSL, Docker persistence/WSL backend, the Dev Container specification and GitHub checks/branch rules (221, 245, 251, 259, 540, 597, 599) directly support the technical explanations. The lessons about safety, authority, the current HEAD and preserving data remain after anonymisation. DEMO-42 is a self-contained learning simulation, not a link to a private repo; we keep it. Generic TICKET-XX and placeholders in templates stay if they are needed for the example format.
 
-Для применения можно утвердить решения по номерам 1–10. Никакие удаления и публикации в рамках этого аудита не выполнены.
+To apply, decisions 1–10 can be approved by number. No removals or publications were made within this audit.

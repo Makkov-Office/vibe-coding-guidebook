@@ -1,12 +1,12 @@
 {
-  "$comment": "Палитра «Чертёж» v2 (P2-02, #36). Единственный машинный источник цветов для токенов P2-03. Контраст считает scripts/design-contrast.mjs; после правки запусти `node scripts/design-contrast.mjs --write`. P2-07 (#108, решение founder 29.10.2026): плоский стиль — без градиентов и теней, один тёплый пастельный акцент (абрикос), холодные нейтрали, новые цвета-смыслы.",
+  "$comment": "The \"Blueprint\" v2 palette (P2-02, #36). The single machine-readable source of colours for the P2-03 tokens. Contrast is computed by scripts/design-contrast.mjs; after an edit, run `node scripts/design-contrast.mjs --write`. P2-07 (#108, founder decision 2026-10-29): flat style with no gradients or shadows, one warm pastel accent (apricot), cool neutrals, new semantic colours.",
   "version": "2.1",
   "checked": "2026-10-29",
   "sources": {
-    "brand": "https://makkov.com/uixpro — CSS и SVG страницы, проверено 26.10.2026",
-    "concept": "План RD-01, раздел «Концепты», вариант f «Чертёж в цветах бренда» (копия /mnt/project-files/redesign/mae-redesign.html)",
-    "error": "Material 3 baseline scheme: error #B3261E / on-error #FFFFFF (светлая), #F2B8B5 / #601410 (тёмная)",
-    "flat": "Решение founder 29.10.2026 18:44Z и 18:47Z (P2-07, #108): плоский стиль, абрикосовый акцент, холодные нейтрали, новые цвета-смыслы — значения подобраны автором P2-07"
+    "brand": "https://makkov.com/uixpro — the page CSS and SVG, checked 2026-10-26",
+    "concept": "Plan RD-01, section \"Concepts\", variant f \"Blueprint in brand colours\" (copy at /mnt/project-files/redesign/mae-redesign.html)",
+    "error": "Material 3 baseline scheme: error #B3261E / on-error #FFFFFF (light), #F2B8B5 / #601410 (dark)",
+    "flat": "Founder decision 2026-10-29 18:44Z and 18:47Z (P2-07, #108): flat style, apricot accent, cool neutrals, new semantic colours; values chosen by the P2-07 author"
   },
   "brand": {
     "graphite-950": "#101010",
@@ -122,7 +122,7 @@
     { "fg": "action", "bg": ["background", "surface", "surface-container-high"], "kind": "ui", "theme": "dark", "use": "заливка прогресса и текущей точки на тёмном фоне" }
   ],
   "forbidden": [
-    { "fg": "primary", "bg": "surface-container-high", "theme": "light", "reason": "правило P2-02 (тогда 4.43:1 < 4.5) сохраняется: нажатая ссылка и активный пункт используют primary-container, а не surface-container-high" }
+    { "fg": "primary", "bg": "surface-container-high", "theme": "light", "reason": "the P2-02 rule (then 4.43:1 < 4.5) still holds: a pressed link and the active item use primary-container, not surface-container-high" }
   ],
   "decorative": ["outline-variant", "outline-variant-strong", "agent-accent", "practice-accent", "human-accent", "pattern-plus", "primary-line"]
 }

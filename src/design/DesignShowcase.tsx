@@ -1,6 +1,6 @@
 'use client';
-// Витрина /design (P2-04): все примитивы, цвета-смыслы, шрифты, четыре приёма движения, обе темы.
-// Страница служебная: noindex, не в навигации; для контрольной точки founder (неделя 2).
+// The /design showcase (P2-04): all primitives, meaning colours, fonts, the four motion techniques, both themes.
+// An internal page: noindex, not in the navigation; for the founder checkpoint (week 2).
 import {useEffect,useRef,useState} from 'react';
 import {iconRoles} from './icons.mjs';
 import {Annotation,Blueprint,BpArrow,BpLabel,BpNode,BpRunDot,Button,ButtonLink,Card,Chip,GameLabel,Pill,PlusBanner,ProgressDots,RoleIcon,StepLine,type Meaning} from './primitives';
@@ -19,7 +19,7 @@ const fonts=[
   {name:'Pixelify Sans 500',role:'игровые метки',className:'ds-font-game',sample:'XP 120 · LVL 2'},
 ];
 const steps=['Тикет','Preflight','Правки','Evidence','Review'];
-// Один непрерывный путь задачи: агент → практика → человек.
+// One continuous task path: agent → practice → human.
 const taskPath='M168 60 H 452';
 
 export function DesignShowcase(){
@@ -27,7 +27,7 @@ export function DesignShowcase(){
   const [motion,setMotion]=useState(true);
   const [run,setRun]=useState(0);
   const [chips,setChips]=useState<string[]>(['Основы']);
-  // Витрина меняет html только по нажатию и при уходе возвращает то, что было до неё (выбор пользователя, P3-04).
+  // The showcase changes html only on click and, on leaving, restores what was there before (the user's choice, P3-04).
   const initial=useRef<{theme?:string;motion?:string}>({});
   const setData=(key:'theme'|'motion',value?:string)=>{const data=document.documentElement.dataset;if(value===undefined)delete data[key];else data[key]=value;};
   useEffect(()=>{
@@ -102,7 +102,7 @@ export function DesignShowcase(){
       <div key={run} className="ds-stack">
         <Card className="bp-appear">
           <Blueprint viewBox="0 0 620 144" title="Путь задачи: агент делает, практика проверяет, человек решает">
-            {/* Точка рисуется первой: внутри узлов она уходит под них, а не бежит по подписям. */}
+            {/* The dot is drawn first: inside nodes it goes beneath them instead of running over the labels. */}
             <BpRunDot d={taskPath}/>
             <BpNode x={20} y={32} meaning="agent" label="Агент" sub="делает правки"/>
             <BpArrow d="M168 60 H 236" draw/>

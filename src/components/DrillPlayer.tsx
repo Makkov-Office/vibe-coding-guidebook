@@ -15,7 +15,7 @@ export function DrillPlayer({drill,next}:{drill:Drill;next?:{href:string;label:s
  const [best,setBest]=useState<number|null>(null),[ready,setReady]=useState(false),[saved,setSaved]=useState(true);
  const heading=useRef<HTMLHeadingElement>(null),actions=useRef<HTMLDivElement>(null);
  useEffect(()=>{const frame=requestAnimationFrame(()=>{const saved=progressStore.get().drills[drill.id];setBest(saved?.total===total?saved.best:null);setReady(true);});return()=>cancelAnimationFrame(frame);},[drill.id,total]);
- // Focus follows the step: the new card or result heading, the «Дальше» button after an answer.
+ // Focus follows the step: the new card or result heading, the "Next" button after an answer.
  useEffect(()=>{if(ready&&phase!=='intro'&&chosen===null)heading.current?.focus();},[phase,index,chosen,ready]);
  useEffect(()=>{if(chosen!==null)actions.current?.querySelector('button')?.focus();},[chosen]);
  const card=drill.cards[index];
